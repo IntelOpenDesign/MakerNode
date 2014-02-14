@@ -1,5 +1,4 @@
 jsPlumb.bind('ready', function() {
-    console.log('hey there');
     jsPlumb.Defaults.Container = $('#field');
     var $field = $('#field');
     var w = $field.width();
@@ -15,12 +14,13 @@ jsPlumb.bind('ready', function() {
         });
     }
 
+    /*
     jsPlumb.makeSource($('.el'));
     jsPlumb.makeTarget($('.el'), {anchor: 'Continuous'});
+    */
 
-    /*
-    $('.el').on('mousedown', function(ev) {
-        console.log('mousedown');
+    $('.el').on('vmousedown', function(ev) {
+        console.log('vmousedown');
         var $this = $(this);
         var $others = $('.el.highlight');
         if ($others.length > 1) {
@@ -37,7 +37,6 @@ jsPlumb.bind('ready', function() {
             $this.toggleClass('highlight');
         }
     });
-    */
 
     $('.el').on('tap', function(e) { $('#debug-text').append('tap '); });
     $('.el').on('taphold', function(e) { $('#debug-text').append('taphold '); });
