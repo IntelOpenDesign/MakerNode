@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ConnectAnything">
+<head>
+    <title>CAT</title>
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+    <script src="/static/js/jquery.jsPlumb-1.4.1-all.js"></script>
+    <script src="/static/js/jquery.mobile-1.4.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
+    <link rel="stylesheet" href="/static/css/app.css">
+    <script src="/static/js/underscore-min.js"></script>
+    <script src="/static/js/app.js"></script>
+</head>
+<body>
+    <div id="container" ng-controller="PinsCtrl">
+        <div id="field">
+            <div id="sensors">
+                <div ng-repeat="sensor in sensors()" class="sensor pin"></div>
+            </div>
+            <div id="actuators">
+                <div ng-repeat="actuator in actuators()" class="actuator pin"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
