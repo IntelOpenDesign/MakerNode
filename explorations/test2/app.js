@@ -9,12 +9,21 @@ YUI().use('node', 'event', function(Y) {
               .setStyle('width', 1/7*.8*w)
               .setStyle('height', 1/7*.8*h);
         els[i].on('mousedown', function(e) {
-            console.log('mousedown ev', e, 'this', this);
+            console.log('mousedown');
             this.addClass('highlight');
         });
         els[i].on('mouseup', function(e) {
-            console.log('mouseup ev', e, 'this', this);
+            console.log('mouseup');
             this.removeClass('highlight');
+        });
+        els[i].on('drag', function(e) {
+            console.log('drag');
+        });
+        els[i].on('dragstart', function(e) {
+            console.log('dragstart');
+        });
+        els[i].on('dragend', function(e) {
+            console.log('dragend');
         });
         jsPlumb.makeSource('el'+i);
         jsPlumb.makeTarget('el'+i, {anchor: 'Continuous'});
