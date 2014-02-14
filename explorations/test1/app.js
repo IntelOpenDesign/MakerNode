@@ -15,4 +15,12 @@ jsPlumb.bind('ready', function() {
     jsPlumb.makeSource($('.el'));
     jsPlumb.makeTarget($('.el'), {anchor: 'Continuous'});
 
+    $('.el').on('mousedown', function(ev) {
+        console.log('mousedown ev', ev, 'this', this);
+        $(this).addClass('highlight');
+    });
+    $('.el').on('mouseup', function(ev) {
+        console.log('mouseup ev', ev, 'this', this);
+        $(this).removeClass('highlight');
+    });
 });

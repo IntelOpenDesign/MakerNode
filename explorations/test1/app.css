@@ -20,3 +20,7 @@ html, body {
     height: 50px;
     background: black;
 }
+
+.highlight {
+    background: green;
+}
