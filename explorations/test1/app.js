@@ -8,11 +8,11 @@ jsPlumb.bind('ready', function() {
     var points = [];
     for (var i = 1; i <= 7; i++) {
         $els[i] = $('#el'+i).css({top: 1/7*(i-.5)*h, left: 1/7*(i-.5)*w});
-        jsPlumb.addEndpoint($els[i]);
-        jsPlumb.draggable($els[i]);
     }
     console.log('points',points);
     console.log('els', $els);
 
-    jsPlumb.connect({source: $els[1], target: $els[2]});
+    jsPlumb.makeSource($('.el'));
+    jsPlumb.makeTarget($('.el'), {anchor: 'Continuous'});
+
 });
