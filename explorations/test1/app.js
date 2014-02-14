@@ -7,7 +7,12 @@ jsPlumb.bind('ready', function() {
     var $els = [];
     var points = [];
     for (var i = 1; i <= 7; i++) {
-        $els[i] = $('#el'+i).css({top: 1/7*(i-.5)*h, left: 1/7*(i-.5)*w});
+        $els[i] = $('#el'+i).css({
+            top: 1/7*(i-1)*h,
+            left: 1/7*(i-1)*w,
+            width: 1/7*.8*w,
+            height: 1/7*.8*h,
+        });
     }
     console.log('points',points);
     console.log('els', $els);
