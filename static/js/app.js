@@ -4,16 +4,15 @@ $(document).bind('pageinit', function() {
 
 var cat = angular.module('ConnectAnything', []);
 
-cat.controller('PinsCtrl', ['$scope', function($scope, server) {
+cat.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
 
-    $scope.sensors = function() {
-        // TODO return sensors
-    };
-
-    $scope.actuators = function() {
-        // TODO return actuators
-    };
-
+    $scope.pins = server.getPins();
+    $scope.sensors = _.filter($scope.pins, function(pin) {
+        return pin.is_input;
+    });
+    $scope.actuators = _.filter($scope.pins, function(pin) {
+        return !pin.is_input;
+    });
 }]);
 
 cat.factory('server', function($http) {
@@ -43,9 +42,27 @@ cat.factory('server', function($http) {
 
     function getPins() {
         var pins = {};
-        _.each(pin_defaults, function(val, key) {
-
+        _.each(pin_defaults, function(obj, IorO) { // input or output
+            _.each(obj, function(nums, AorD) { // analog or digital
+                _.each(nums, function(num) { // all pin numbers of this type
+                    var is_input = IorO === 'input';
+                    var is_analog = AorD === 'analog';
+                    var name = pin_name(num, is_analog, is_input);
+                    pins[name] = {
+                        'label': 'Label for ' + name,
+                        'is_analog': is_analog,
+                        'is_input': is_input,
+                        'value': 0,
+                        'connections': [],
+                    };
+                });
+            });
         });
+        return pins;
     }
+
+    return {
+        getPins: getPins,
+    };
 
 });
