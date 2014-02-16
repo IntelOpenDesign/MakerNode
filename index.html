@@ -17,12 +17,12 @@
     <div class="container" ng-controller="PinsCtrl">
         <div id="field" class="row">
             <div id="sensors" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                <div ng-repeat="pin in sensors" class="sensor pin">
+                <div ng-repeat="pin in sensors" class="sensor pin" data-name="{{pin.name}}" sensor>
                     {{pin.name}}
                 </div>
             </div>
             <div id="actuators" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                <div ng-repeat="pin in actuators" class="actuator pin">
+                <div ng-repeat="pin in actuators" class="actuator pin" data-name="{{pin.name}}" actuator>
                     {{pin.name}}
                 </div>
             </div>

@@ -5,3 +5,9 @@
     margin-bottom: 10%;
     background: gray;
 }
+.sensor.activated {
+    background: green;
+}
+.actuator.activated {
+    background: blue;
+}

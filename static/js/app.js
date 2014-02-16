@@ -1,5 +1,5 @@
-$(document).bind('pageinit', function() {
-
+jsPlumb.bind('ready', function() {
+    jsPlumb.Defaults.Container = $('#field');
 });
 
 var cat = angular.module('ConnectAnything', []);
@@ -13,9 +13,50 @@ cat.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
     $scope.actuators = _.filter($scope.pins, function(pin) {
         return !pin.is_input;
     });
-    console.log('sensors', $scope.sensors);
-    console.log('actuators', $scope.actuators);
+    //TODO add $watch to update sensors and actuators when we get new pins from server
+
+    $scope.connect = function(sensor, actuator) {
+        // sensor and actuator are jQuery objects
+        jsPlumb.connect({source: sensor, target: actuator});
+        // TODO send connection info to server
+    };
+
 }]);
+
+cat.directive('sensor', function($document) {
+    function link($scope, $el, attrs) {
+        $el.on('mousedown', function(e) {
+            var already_activated = $el.hasClass('activated');
+            $('.pin').removeClass('activated');
+            if (!already_activated) {
+                $el.addClass('activated');
+                $('.actuator').addClass('activated');
+            }
+        });
+    }
+
+    return {
+        link: link,
+    }
+});
+
+cat.directive('actuator', function($document) {
+    function link($scope, $el, attrs) {
+        console.log('actuator attrs', attrs);
+        $el.on('mousedown', function(e) {
+            if (!$el.hasClass('activated')) {
+                return;
+            }
+            var $sensor = $('.sensor.activated').first();
+            $scope.connect($sensor, $el);
+            $('.pin').removeClass('activated');
+        });
+    }
+
+    return {
+        link: link,
+    }
+});
 
 cat.factory('server', function($http) {
     // TODO replace this with real server data
