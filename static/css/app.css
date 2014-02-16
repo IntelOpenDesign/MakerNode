@@ -1,9 +1,17 @@
 .pin {
-    width: 100%;
-    height: 80%;
-    margin-top: 10%;
-    margin-bottom: 10%;
+    width: 85%;
+    height: 100px;
+    margin-top: 25px;
+    margin-bottom: 25px;
     background: gray;
+}
+.pin.sensor {
+    margin-left: 10%;
+    margin-right: 5%;
+}
+.pin.actuator {
+    margin-left: 5%;
+    margin-right: 10%;
 }
 .sensor.activated {
     background: green;

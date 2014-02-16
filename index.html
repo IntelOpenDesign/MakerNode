@@ -5,23 +5,24 @@
     <link rel="shortcut icon" href="/favicon.ico"/>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
-    <script src="/static/js/jquery.jsPlumb-1.4.1-all.js"></script>
-    <!--<script src="/static/js/jquery.mobile-1.4.1.js"></script>-->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
+    <script src="/static/js/jquery.jsPlumb-1.4.1-all.js"></script>
+    <script src="/static/js/jquery.mobile-1.4.1.js"></script>
     <script src="/static/js/underscore-min.js"></script>
     <script src="/static/js/app.js"></script>
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="/static/css/jquery.mobile-1.4.1.min.css">
     <link rel="stylesheet" href="/static/css/app.css">
 </head>
 <body>
     <div class="container" ng-controller="PinsCtrl">
-        <div id="field" class="row">
-            <div id="sensors" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <div id="field" class="ui-grid-a">
+            <div id="sensors" class="ui-block-a">
                 <div ng-repeat="pin in sensors" class="sensor pin" data-name="{{pin.name}}" sensor>
                     {{pin.name}}
                 </div>
             </div>
-            <div id="actuators" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <div id="actuators" class="ui-block-b">
                 <div ng-repeat="pin in actuators" class="actuator pin" data-name="{{pin.name}}" actuator>
                     {{pin.name}}
                 </div>
