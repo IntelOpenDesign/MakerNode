@@ -13,6 +13,8 @@ cat.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
     $scope.actuators = _.filter($scope.pins, function(pin) {
         return !pin.is_input;
     });
+    console.log('sensors', $scope.sensors);
+    console.log('actuators', $scope.actuators);
 }]);
 
 cat.factory('server', function($http) {
@@ -49,6 +51,7 @@ cat.factory('server', function($http) {
                     var is_analog = AorD === 'analog';
                     var name = pin_name(num, is_analog, is_input);
                     pins[name] = {
+                        'name': name,
                         'label': 'Label for ' + name,
                         'is_analog': is_analog,
                         'is_input': is_input,
