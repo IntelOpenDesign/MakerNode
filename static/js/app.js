@@ -1,10 +1,20 @@
 jsPlumb.bind('ready', function() {
     jsPlumb.Defaults.Container = $('#field');
+
+    /* some combination of this might work -- laggy/buggy though
+     * ALSO: how to do it on mobile?
+    $('#sensors').sortable();
+    $('#actuators').sortable();
+    jsPlumb.draggable($('.sensor'), {containment: '#sensors'});
+    jsPlumb.draggable($('.actuator'), {containment: '#actuators'});
+    */
 });
 
-var cat = angular.module('ConnectAnything', []);
+var cat = {};
 
-cat.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
+cat.app = angular.module('ConnectAnything', []);
+
+cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
 
     $scope.pins = server.getPins();
     $scope.sensors = _.filter($scope.pins, function(pin) {
@@ -15,17 +25,50 @@ cat.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
     });
     //TODO add $watch to update sensors and actuators when we get new pins from server
 
+    // TODO this does not belong in a controller
     $scope.connect = function(sensor, actuator) {
         // sensor and actuator are jQuery objects
-        jsPlumb.connect({source: sensor, target: actuator});
+        jsPlumb.connect({
+            source: sensor.attr('id'),
+            target: actuator.attr('id'),
+            connector: ['Bezier', {curviness: 70}],
+            cssClass: 'connection',
+            endpoint: 'Blank',
+            endpointClass: 'endpoint',
+            anchors: ['Right', 'Left'],
+            paintStyle: {
+                lineWidth: 4,
+                strokeStyle: '#aabbaa',
+                outlineWidth: 1,
+                outlineColor: '#000',
+            },
+            endpointStyle: {
+                fillStyle: '#a7b04b',
+            },
+            hoverPaintStyle: {
+                strokeStyle: '#fff',
+            },
+        });
         // TODO send connection info to server
     };
 
 }]);
 
-cat.directive('sensor', function($document) {
+// shared between sensors and actuators
+cat.pin_initializer = function($document, $scope, $el, attrs) {
+    var that = {};
+    that.$endpoint = $el.find('.endpoint');
+    that.clickevent = 'mousedown';
+    that.name = attrs.name;
+    return that;
+};
+
+cat.app.directive('sensor', function($document) {
     function link($scope, $el, attrs) {
-        $el.on('mousedown', function(e) {
+
+        var that = cat.pin_initializer($document, $scope, $el, attrs);
+
+        that.$endpoint.on(that.clickevent, function(e) {
             var already_activated = $el.hasClass('activated');
             $('.pin').removeClass('activated');
             if (!already_activated) {
@@ -40,10 +83,12 @@ cat.directive('sensor', function($document) {
     }
 });
 
-cat.directive('actuator', function($document) {
+cat.app.directive('actuator', function($document) {
     function link($scope, $el, attrs) {
-        console.log('actuator attrs', attrs);
-        $el.on('mousedown', function(e) {
+
+        var that = cat.pin_initializer($document, $scope, $el, attrs);
+
+        that.$endpoint.on(that.clickevent, function(e) {
             if (!$el.hasClass('activated')) {
                 return;
             }
@@ -58,7 +103,7 @@ cat.directive('actuator', function($document) {
     }
 });
 
-cat.factory('server', function($http) {
+cat.app.factory('server', function($http) {
     // TODO replace this with real server data
     // TODO i think the inputs will be sensors and the outputs will be actuators - right?
     var pin_defaults = {

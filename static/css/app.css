@@ -1,9 +1,12 @@
+#field {
+    background: antiquewhite;
+}
 .pin {
     width: 85%;
     height: 100px;
     margin-top: 25px;
     margin-bottom: 25px;
-    background: gray;
+    position: relative;
 }
 .pin.sensor {
     margin-left: 10%;
@@ -13,9 +16,46 @@
     margin-left: 5%;
     margin-right: 10%;
 }
-.sensor.activated {
-    background: green;
+.pin-box {
+    height: 100%;
+    background: rgb(107,48,0);
+    width: 90%;
 }
-.actuator.activated {
-    background: blue;
+.actuator .pin-box {
+    float: right;
+    text-align: right;
+}
+.pin-port {
+    position: absolute;
+    top: 0;
+    height: 120px;
+    width: 120px;
+    margin-top: -10px; /* (.pin height - .pin-port height)/2 */
+}
+.sensor .pin-port {
+    right: 0;
+}
+.actuator .pin-port {
+    .left: 0;
+}
+.endpoint {
+    width: 80px;
+    height: 80px;
+    border-width: 20px;
+    border-style: solid;
+    border-radius: 60px;
+}
+.sensor .endpoint {
+    border-color: rgb(0, 102, 24);
+    background: rgb(0,102,24);
+}
+.actuator .endpoint {
+    border-color: rgb(232, 52, 8);
+    background: antiquewhite;
+}
+.sensor.activated .endpoint {
+    background: rgb(0, 138, 45);
+}
+.actuator.activated .endpoint {
+    background: rgb(0, 138, 45);
 }
