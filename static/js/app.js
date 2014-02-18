@@ -14,26 +14,31 @@ var cat = {};
 
 cat.app = angular.module('ConnectAnything', []);
 
+cat.app.filter('sensors', function() {
+    return function(pins) {
+        return _.filter(pins, function(pin) {
+            return pin.is_input && pin.is_visible;
+        });
+    };
+});
+
+cat.app.filter('actuators', function() {
+    return function(pins) {
+        return _.filter(pins, function(pin) {
+            return !pin.is_input && pin.is_visible;
+        });
+    };
+});
+
 cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
 
     $scope.sync = function() {
         $scope.pins = server.getPins();
-        $scope.sensors = _.filter($scope.pins, function(pin) {
-            return pin.is_input && pin.is_visible;
-        });
-        $scope.actuators = _.filter($scope.pins, function(pin) {
-            return !pin.is_input && pin.is_visible;
-        });
         $scope.connections = server.getConnections();
     };
 
-    function update_pin = function(name, attr, val) {
+    function update_pin(name, attr, val) {
         $scope.pins[name][attr] = val;
-        if ($scope.pins[name].is_input) {
-            $scope.sensors[name][attr] = val;
-        } else {
-            $scope.actuators[name][attr] = val;
-        }
         server.update();
     }
     $scope.addPin = function(name) {

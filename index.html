@@ -18,7 +18,7 @@
     <div class="container" ng-controller="PinsCtrl">
         <div id="field" class="ui-grid-a">
             <div id="sensors" class="ui-block-a">
-                <div id="{{pin.name}}" ng-repeat="pin in sensors" class="sensor pin" data-name="{{pin.name}}" sensor>
+                <div id="{{pin.name}}" ng-repeat="pin in pins | sensors" class="sensor pin" data-name="{{pin.name}}" sensor>
                     <div class="pin-box">
                         {{pin.name}}
                     </div>
@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div id="actuators" class="ui-block-b">
-                <div id="{{pin.name}}" ng-repeat="pin in actuators" class="actuator pin" data-name="{{pin.name}}" actuator>
+                <div id="{{pin.name}}" ng-repeat="pin in pins | actuators" class="actuator pin" data-name="{{pin.name}}" actuator>
                     <div class="pin-box">
                         {{pin.name}}
                     </div>
