@@ -49,6 +49,7 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
     };
 
     $scope.sync();
+    server.addSubscriber(this, $scope.sync);
 
     //TODO add $watch to update sensors and actuators when we get new pins from server
 
@@ -141,7 +142,7 @@ cat.app.directive('actuator', function($document) {
     }
 });
 
-cat.app.factory('server', ['$http', '$scope', function($http, $scope) {
+cat.app.factory('server', function($http) {
     // TODO replace this with real server data
     // TODO i think the inputs will be sensors and the outputs will be actuators - right?
     // The server is just for communicating with the server
@@ -149,6 +150,7 @@ cat.app.factory('server', ['$http', '$scope', function($http, $scope) {
 
     var pins = {};
     var connections = [];
+    var subscribers = [];
 
     function getPins() {
         return pins;
@@ -156,6 +158,10 @@ cat.app.factory('server', ['$http', '$scope', function($http, $scope) {
 
     function getConnections() {
         return connections;
+    }
+
+    function addSubscriber(context, func) {
+        subscribers.push({context: context, func: func});
     }
 
     var pin_defaults = {
@@ -212,7 +218,9 @@ cat.app.factory('server', ['$http', '$scope', function($http, $scope) {
     function update() {
         write();
         read();
-        $scope.sync();
+        _.each(subscribers, function(o) {
+            o.func.call(o.context);
+        });
     }
 
     read();
@@ -220,7 +228,8 @@ cat.app.factory('server', ['$http', '$scope', function($http, $scope) {
     return {
         getPins: getPins,
         getConnections: getConnections,
+        addSubscriber: addSubscriber,
         update: update,
     };
 
-}]);
+});
