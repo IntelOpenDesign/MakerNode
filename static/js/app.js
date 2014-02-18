@@ -16,19 +16,41 @@ cat.app = angular.module('ConnectAnything', []);
 
 cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
 
-    $scope.pins = server.getPins();
-    $scope.sensors = _.filter($scope.pins, function(pin) {
-        return pin.is_input;
-    });
-    $scope.actuators = _.filter($scope.pins, function(pin) {
-        return !pin.is_input;
-    });
+    $scope.sync = function() {
+        $scope.pins = server.getPins();
+        $scope.sensors = _.filter($scope.pins, function(pin) {
+            return pin.is_input && pin.is_visible;
+        });
+        $scope.actuators = _.filter($scope.pins, function(pin) {
+            return !pin.is_input && pin.is_visible;
+        });
+        $scope.connections = server.getConnections();
+    };
+
+    function update_pin = function(name, attr, val) {
+        $scope.pins[name][attr] = val;
+        if ($scope.pins[name].is_input) {
+            $scope.sensors[name][attr] = val;
+        } else {
+            $scope.actuators[name][attr] = val;
+        }
+        server.update();
+    }
+    $scope.addPin = function(name) {
+        update_pin(name, 'is_visible', true);
+    };
+    $scope.removePin = function(name) {
+        update_pin(name, 'is_visible', false);
+    };
+
+    $scope.sync();
+
     //TODO add $watch to update sensors and actuators when we get new pins from server
 
     // TODO this does not belong in a controller
     $scope.connect = function(sensor, actuator) {
         // sensor and actuator are jQuery objects
-        jsPlumb.connect({
+        var connection = jsPlumb.connect({
             source: sensor.attr('id'),
             target: actuator.attr('id'),
             connector: ['Bezier', {curviness: 70}],
@@ -52,6 +74,13 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
         sensor.addClass('connected');
         actuator.addClass('connected');
         // TODO send connection info to server
+        console.log('connection', connection);
+        connection.bind('mousedown', function(e) {
+            connection.unbind('mousedown');
+            setTimeout(function() {
+                delete connection;
+            }, 0);
+        });
     };
 
 }]);
@@ -80,6 +109,8 @@ cat.app.directive('sensor', function($document) {
         });
     }
 
+    // TODO is there an unlink function i should write so that i can remove listeners when this gets deleted?
+
     return {
         link: link,
     }
@@ -105,9 +136,23 @@ cat.app.directive('actuator', function($document) {
     }
 });
 
-cat.app.factory('server', function($http) {
+cat.app.factory('server', ['$http', '$scope', function($http, $scope) {
     // TODO replace this with real server data
     // TODO i think the inputs will be sensors and the outputs will be actuators - right?
+    // The server is just for communicating with the server
+    // The PinsCtrl maintains consistent state for the model of this app
+
+    var pins = {};
+    var connections = [];
+
+    function getPins() {
+        return pins;
+    }
+
+    function getConnections() {
+        return connections;
+    }
+
     var pin_defaults = {
         'input': {
             'analog': [0, 1, 2, 3, 4, 5],
@@ -130,8 +175,9 @@ cat.app.factory('server', function($http) {
         }
     }
 
-    function getPins() {
-        var pins = {};
+    function read() {
+        // TODO HTTP GET
+        pins = {};
         _.each(pin_defaults, function(obj, IorO) { // input or output
             _.each(obj, function(nums, AorD) { // analog or digital
                 _.each(nums, function(num) { // all pin numbers of this type
@@ -144,16 +190,32 @@ cat.app.factory('server', function($http) {
                         'is_analog': is_analog,
                         'is_input': is_input,
                         'value': 0,
-                        'connections': [],
+                        'is_visible': true,
                     };
                 });
             });
         });
-        return pins;
+
+        connections = [];
     }
+
+    function write() {
+        // TODO format data from $scope.pins and $scope.connections
+        // TODO HTTP POST
+    }
+
+    function update() {
+        write();
+        read();
+        $scope.sync();
+    }
+
+    read();
 
     return {
         getPins: getPins,
+        getConnections: getConnections,
+        update: update,
     };
 
-});
+}]);
