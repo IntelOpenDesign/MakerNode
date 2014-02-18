@@ -47,15 +47,18 @@
 }
 .sensor .endpoint {
     border-color: rgb(0, 102, 24);
-    background: rgb(0,102,24);
+    background: rgb(232, 189, 0);
 }
 .actuator .endpoint {
     border-color: rgb(232, 52, 8);
     background: antiquewhite;
 }
 .sensor.activated .endpoint {
-    background: rgb(0, 138, 45);
+    background: rgb(250, 250, 60);
 }
 .actuator.activated .endpoint {
-    background: rgb(0, 138, 45);
+    background: rgb(250, 250, 60);
+}
+.actuator.connected .endpoint {
+    background: rgb(232, 189, 0);
 }

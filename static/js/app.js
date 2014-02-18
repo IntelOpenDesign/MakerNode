@@ -37,18 +37,20 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
             endpointClass: 'endpoint',
             anchors: ['Right', 'Left'],
             paintStyle: {
-                lineWidth: 4,
-                strokeStyle: '#aabbaa',
-                outlineWidth: 1,
-                outlineColor: '#000',
+                lineWidth: 15,
+                strokeStyle: 'rgb(232, 189, 0)',
+                outlineWidth: 2,
+                outlineColor: 'antiquewhite',
             },
             endpointStyle: {
                 fillStyle: '#a7b04b',
             },
             hoverPaintStyle: {
-                strokeStyle: '#fff',
+                strokeStyle: 'rgb(250, 250, 60)',
             },
         });
+        sensor.addClass('connected');
+        actuator.addClass('connected');
         // TODO send connection info to server
     };
 
