@@ -37,6 +37,9 @@
                     </div>
                 </div>
             </div>
+            <div id="connections">
+                <div id="connect-{{c.sensor}}-{{c.actuator}}" ng-repeat="c in connections" class="connection" data-sensor="{{c.sensor}}" data-actuator="{{c.actuator}}" connection></div>
+            </div>
         </div>
     </div>
 

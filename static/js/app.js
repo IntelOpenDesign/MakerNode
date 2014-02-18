@@ -32,7 +32,11 @@ cat.app.filter('actuators', function() {
 
 cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
 
+    // TODO take this out when done debugging
+    window.$scope = $scope;
+
     $scope.sync = function() {
+        // TODO it might be better to modify $scope.pins and $scope.connections only in the ways they differ to avoid redrawing everything all the time... but we'll see if this works fine it'll be simpler
         $scope.pins = server.getPins();
         $scope.connections = server.getConnections();
     };
@@ -51,43 +55,22 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
     $scope.sync();
     server.addSubscriber(this, $scope.sync);
 
-    //TODO add $watch to update sensors and actuators when we get new pins from server
-
-    // TODO this does not belong in a controller
-    $scope.connect = function(sensor, actuator) {
-        // sensor and actuator are jQuery objects
-        var connection = jsPlumb.connect({
-            source: sensor.attr('id'),
-            target: actuator.attr('id'),
-            connector: ['Bezier', {curviness: 70}],
-            cssClass: 'connection',
-            endpoint: 'Blank',
-            endpointClass: 'endpoint',
-            anchors: ['Right', 'Left'],
-            paintStyle: {
-                lineWidth: 15,
-                strokeStyle: 'rgb(232, 189, 0)',
-                outlineWidth: 2,
-                outlineColor: 'antiquewhite',
-            },
-            endpointStyle: {
-                fillStyle: '#a7b04b',
-            },
-            hoverPaintStyle: {
-                strokeStyle: 'rgb(250, 250, 60)',
-            },
-        });
-        sensor.addClass('connected');
-        actuator.addClass('connected');
-        // TODO send connection info to server
-        console.log('connection', connection);
-        connection.bind('mousedown', function(e) {
-            connection.unbind('mousedown');
-            setTimeout(function() {
-                delete connection;
-            }, 0);
+    $scope.connect = function($sensor, $actuator) {
+        // TODO server
+        $scope.connections.push({
+            sensor: $sensor.attr('id'),
+            actuator: $actuator.attr('id'),
         });
     };
+
+    $scope.disconnect = function($sensor, $actuator) {
+        // TODO server
+        var sensor_pin = $sensor.attr('id');
+        var actuator_pin = $actuator.attr('id');
+        $scope.connections = _.filter($scope.connections, function(c) {
+            return !(c.sensor == sensor_pin && c.actuator == actuator_pin);
+        });
+    }
 
 }]);
 
@@ -132,7 +115,9 @@ cat.app.directive('actuator', function($document) {
                 return;
             }
             var $sensor = $('.sensor.activated').first();
-            $scope.connect($sensor, $el);
+            $scope.$apply(function() {
+                $scope.connect($sensor, $el);
+            });
             $('.pin').removeClass('activated');
         });
     }
@@ -140,6 +125,56 @@ cat.app.directive('actuator', function($document) {
     return {
         link: link,
     }
+});
+
+cat.app.directive('connection', function($document) {
+    function link($scope, $el, attrs) {
+
+        var $sensor = $('#'+attrs.sensor);
+        var $actuator = $('#'+attrs.actuator);
+
+        var connection = jsPlumb.connect({
+            source: attrs.sensor,
+            target: attrs.actuator,
+            connector: ['Bezier', {curviness: 70}],
+            cssClass: 'connection pins-'+attrs.sensor+'-'+attrs.actuator,
+            endpoint: 'Blank',
+            endpointClass: 'endpoint pins-'+attrs.sensor+'-'+attrs.actuator,
+            anchors: ['Right', 'Left'],
+            paintStyle: {
+                lineWidth: 15,
+                strokeStyle: 'rgb(232, 189, 0)',
+                outlineWidth: 2,
+                outlineColor: 'antiquewhite',
+            },
+            endpointStyle: {
+                fillStyle: '#a7b04b',
+            },
+            hoverPaintStyle: {
+                strokeStyle: 'rgb(250, 250, 60)',
+            },
+        });
+
+        $sensor.addClass('connected');
+
+        $actuator.addClass('connected');
+
+        var msg = 'Do you want to delete the ' + $sensor.attr('id') + ' - ' + $actuator.attr('id') + ' connection?';
+
+        connection.bind('mousedown', function(e) {
+            if (confirm(msg)) {
+                connection.unbind('mousedown');
+                $scope.$apply(function() {
+                    $scope.disconnect($sensor, $actuator);
+                });
+                jsPlumb.detach(connection);
+            }
+        });
+    }
+
+    return {
+        link: link,
+    };
 });
 
 cat.app.factory('server', function($http) {
