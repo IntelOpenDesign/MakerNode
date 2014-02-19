@@ -1,0 +1,9 @@
+testing out events. what can i catch?
+mousedown works on computer and phone
+taphold usually does taphold followed by tap - how to handle this?
+what should be like taphold on computer - double click?
+
+maybe i should monkey wrench a couple of events to be my own thing just for this app, ex.
+(taphold + optionally tap) or (doubleclick) --> my_long_press_event
+mousedown --> my_click_event
+
