@@ -7,3 +7,6 @@ maybe i should monkey wrench a couple of events to be my own thing just for this
 (taphold + optionally tap) or (doubleclick) --> my_long_press_event
 mousedown --> my_click_event
 
+conclusion so far:
+nice helper function to listen to taphold and tap makes it so that the first tap following a taphold does not trigger the tap event handler (see app.js)
+
