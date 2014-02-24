@@ -96,6 +96,10 @@ cat.app.directive('sensor', function($document) {
                 $('.actuator').addClass('activated');
             }
         });
+
+        $el.on('$destroy', function() {
+            that.$endpoint.off(that.clickevent);
+        });
     }
 
     // TODO is there an unlink function i should write so that i can remove listeners when this gets deleted?
@@ -119,6 +123,10 @@ cat.app.directive('actuator', function($document) {
                 $scope.connect($sensor, $el);
             });
             $('.pin').removeClass('activated');
+        });
+
+        $el.on('$destroy', function() {
+            that.$endpoint.off(that.clickevent);
         });
     }
 
@@ -169,6 +177,10 @@ cat.app.directive('connection', function($document) {
                 });
                 jsPlumb.detach(connection);
             }
+        });
+
+        $el.on('$destroy', function() {
+            connection.unbind('mousedown');
         });
     }
 
