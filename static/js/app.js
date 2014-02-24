@@ -196,7 +196,7 @@ cat.app.directive('connection', function($document) {
     };
 });
 
-cat.app.factory('server', function($http) {
+cat.app.factory('server', ['$q', '$rootScope', function($q, $rootScope) {
     // TODO replace this with real server data
     // TODO i think the inputs will be sensors and the outputs will be actuators - right?
     // The server is just for communicating with the server
@@ -205,6 +205,20 @@ cat.app.factory('server', function($http) {
     var pins = {};
     var connections = [];
     var subscribers = [];
+
+    // http://clintberry.com/2013/angular-js-websocket-service/
+    var ws = new WebSocket("ws://localhost:8001");
+    ws.onopen = function() {
+        console.log('socket opened');
+    };
+    ws.onmessage = function(message) {
+        console.log('websocket message', message.data);
+    };
+    function sendMessage() {
+        ws.send('hello from browser land');
+    }
+    // TODO remove this when done testing
+    window.sendMessage = sendMessage;
 
     function getPins() {
         return pins;
@@ -285,6 +299,7 @@ cat.app.factory('server', function($http) {
         getConnections: getConnections,
         addSubscriber: addSubscriber,
         update: update,
+        sendMessage: sendMessage,
     };
 
-});
+}]);
