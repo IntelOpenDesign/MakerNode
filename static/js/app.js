@@ -203,6 +203,7 @@ cat.app.factory('server', ['$q', '$rootScope', function($q, $rootScope) {
     // The PinsCtrl maintains consistent state for the model of this app
 
     var pins = {};
+    var pin_order = ['0', '1', '2', '~3', '4', '~5', '~6', '7', '8', '~9', '~10', '~11', '12', '13', 'A0', 'A1', 'A2', 'A3', 'A4', 'A5'];
     var connections = [];
     var subscribers = [];
 
@@ -213,6 +214,13 @@ cat.app.factory('server', ['$q', '$rootScope', function($q, $rootScope) {
     };
     ws.onmessage = function(message) {
         console.log('websocket message', message.data);
+        var pin_states = message.data.split(',');
+        for (var i = 0; i < pin_states.length; i++) {
+            pins[pin_order[i]].value = parseFloat(pin_states[i]);
+        }
+        _.each(subscribers, function(o) {
+            o.func.call(o.context);
+        });
     };
     function sendMessage() {
         ws.send('hello from browser land');
