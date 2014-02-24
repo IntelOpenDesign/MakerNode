@@ -55,20 +55,31 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
     $scope.sync();
     server.addSubscriber(this, $scope.sync);
 
+    // TODO this should probably be in a ConnectionsCtrl
     $scope.connect = function($sensor, $actuator) {
         // TODO server
+        var sensor = $sensor.attr('id');
+        var actuator = $actuator.attr('id');
         $scope.connections.push({
-            sensor: $sensor.attr('id'),
-            actuator: $actuator.attr('id'),
+            sensor: sensor,
+            actuator: actuator,
         });
+        $scope.pins[sensor].connected_to.push(actuator);
+        $scope.pins[actuator].connected_to.push(sensor);
     };
 
     $scope.disconnect = function($sensor, $actuator) {
         // TODO server
-        var sensor_pin = $sensor.attr('id');
-        var actuator_pin = $actuator.attr('id');
+        var sensor = $sensor.attr('id');
+        var actuator = $actuator.attr('id');
         $scope.connections = _.filter($scope.connections, function(c) {
-            return !(c.sensor == sensor_pin && c.actuator == actuator_pin);
+            return !(c.sensor === sensor && c.actuator === actuator);
+        });
+        $scope.pins[sensor].connected_to = _.filter($scope.pins[sensor].connected_to, function(pin) {
+            return !(pin === actuator);
+        });
+        $scope.pins[actuator].connected_to = _.filter($scope.pins[actuator].connected_to, function(pin) {
+            return !(pin === sensor);
         });
     }
 
@@ -163,10 +174,6 @@ cat.app.directive('connection', function($document) {
             },
         });
 
-        $sensor.addClass('connected');
-
-        $actuator.addClass('connected');
-
         var msg = 'Do you want to delete the ' + $sensor.attr('id') + ' - ' + $actuator.attr('id') + ' connection?';
 
         connection.bind('mousedown', function(e) {
@@ -249,6 +256,7 @@ cat.app.factory('server', function($http) {
                         'is_input': is_input,
                         'value': 0,
                         'is_visible': true,
+                        'connected_to': [],
                     };
                 });
             });
