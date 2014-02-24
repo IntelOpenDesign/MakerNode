@@ -1,0 +1,1 @@
+trying to understand touchmove events and how i might be able to translate them into drag events that jquery ui's sortable function will listen to
