@@ -32,18 +32,55 @@ cat.app.filter('actuators', function() {
     };
 });
 
+cat.is_safe_to_render_connections = function() {
+    // connections can only draw themselves AFTER their pins have drawn
+
+    var $document = $(document);
+    var visible_pins, rendered_pins, all_pins_rendered;
+
+    function init() {
+        visible_pins = _.filter($scope.pins, function(pin) {
+            return pin.is_visible;
+        });
+        rendered_pins = {};
+        all_pins_rendered = false;
+    }
+
+    init();
+
+    $document.on('reset-pins', function() {
+        init();
+    });
+
+    $document.on('rendered-pin', function(o) {
+        rendered_pins[o.pin] = true;
+        if (rendered_pins.keys().length === visible_pins.length) {
+            // all pins are rendered now, so it is safe to draw connections
+            all_pins_rendered = true;
+            $('.connection').trigger('render-connection');
+        }
+    });
+
+    return function() {
+        // TODO could I use a promise for this instead? I promise to get back to you when it's safe to render?
+        return all_pins_rendered;
+    }
+}();
+
 cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
 
     // TODO take this out when done debugging
-    window.$scope = $scope;
+    window.$PinsCtrlScope = $scope;
 
-    $scope.sync = function() {
-        // TODO it might be better to modify $scope.pins and $scope.connections only in the ways they differ to avoid redrawing everything all the time... but we'll see if this works fine it'll be simpler
-        console.log('controller $scope.sync');
+    var $document = $(document);
+    var sync = function() {
+        // TODO maybe just update the changes rather than rewrite?
         $scope.pins = server.getPins();
-        $scope.connections = server.getConnections();
+        $document.trigger('reset-pins');
     };
 
+    sync();
+    server.addSubscriber(this, sync);
 
     function update_pin(name, attr, val) {
         $scope.pins[name][attr] = val;
@@ -55,9 +92,20 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
     $scope.removePin = function(name) {
         update_pin(name, 'is_visible', false);
     };
+}]);
 
-    $scope.sync();
-    server.addSubscriber(this, $scope.sync);
+cat.app.controller('ConnectionsCtrl', ['$scope', 'server', function($scope, server) {
+
+    // TODO debugging
+    window.$ConnectionsCtrlScope = $scope;
+
+    var sync = function() {
+        // TODO maybe just update how things differ rather than rewrite?
+        $scope.connections = server.getConnections();
+    };
+
+    sync();
+    server.addSubscriber(this, sync);
 
     // TODO this should probably be in a ConnectionsCtrl
     $scope.connect = function($sensor, $actuator) {
@@ -85,8 +133,7 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
         $scope.pins[actuator].connected_to = _.filter($scope.pins[actuator].connected_to, function(pin) {
             return !(pin === sensor);
         });
-    }
-
+    };
 }]);
 
 // shared between sensors and actuators
@@ -117,10 +164,15 @@ cat.app.directive('sensor', function($document) {
         });
     }
 
+    function postLink() {
+        $(document).trigger('rendered-pin', {pin: attrs.name});
+    }
+
     // TODO is there an unlink function i should write so that i can remove listeners when this gets deleted?
 
     return {
         link: link,
+        postLink: postLink //TODO check name of this function
     }
 });
 
@@ -145,53 +197,72 @@ cat.app.directive('actuator', function($document) {
         });
     }
 
+    function postLink() {
+        $(document).trigger('rendered-pin', {pin: attrs.name});
+    }
+
     return {
         link: link,
+        postLink: postLink,
     }
 });
 
 cat.app.directive('connection', function($document) {
     function link($scope, $el, attrs) {
 
-        var $sensor = $('#'+attrs.sensor);
-        var $actuator = $('#'+attrs.actuator);
-
-        var connection = jsPlumb.connect({
-            source: attrs.sensor,
-            target: attrs.actuator,
-            connector: ['Bezier', {curviness: 70}],
-            cssClass: 'connection pins-'+attrs.sensor+'-'+attrs.actuator,
-            endpoint: 'Blank',
-            endpointClass: 'endpoint pins-'+attrs.sensor+'-'+attrs.actuator,
-            anchors: ['Right', 'Left'],
-            paintStyle: {
-                lineWidth: 15,
-                strokeStyle: 'rgb(232, 189, 0)',
-                outlineWidth: 2,
-                outlineColor: 'antiquewhite',
-            },
-            endpointStyle: {
-                fillStyle: '#a7b04b',
-            },
-            hoverPaintStyle: {
-                strokeStyle: 'rgb(250, 250, 60)',
-            },
-        });
-
+        var $sensor = null;
+        var $actuator = null;
+        var connection = null;
         var msg = 'Do you want to delete the ' + $sensor.attr('id') + ' - ' + $actuator.attr('id') + ' connection?';
 
-        connection.bind('mousedown', function(e) {
-            if (confirm(msg)) {
-                connection.unbind('mousedown');
-                $scope.$apply(function() {
-                    $scope.disconnect($sensor, $actuator);
-                });
-                jsPlumb.detach(connection);
-            }
-        });
+        function render() {
+            $sensor = $('#'+attrs.sensor);
+            $actuator = $('#'+attrs.actuator);
+            connection = jsPlumb.connect({
+                source: attrs.sensor,
+                target: attrs.actuator,
+                connector: ['Bezier', {curviness: 70}],
+                cssClass: 'connection pins-'+attrs.sensor+'-'+attrs.actuator,
+                endpoint: 'Blank',
+                endpointClass: 'endpoint pins-'+attrs.sensor+'-'+attrs.actuator,
+                anchors: ['Right', 'Left'],
+                paintStyle: {
+                    lineWidth: 15,
+                    strokeStyle: 'rgb(232, 189, 0)',
+                    outlineWidth: 2,
+                    outlineColor: 'antiquewhite',
+                },
+                endpointStyle: {
+                    fillStyle: '#a7b04b',
+                },
+                hoverPaintStyle: {
+                    strokeStyle: 'rgb(250, 250, 60)',
+                },
+            });
+
+            connection.bind('mousedown', function(e) {
+                if (confirm(msg)) {
+                    connection.unbind('mousedown');
+                    $scope.$apply(function() {
+                        $scope.disconnect($sensor, $actuator);
+                    });
+                    jsPlumb.detach(connection);
+                }
+            });
+        }
+
+        if (cat.is_safe_to_render_connections()) {
+            render();
+        } else {
+            $el.on('render-connection', function() {
+                render();
+            });
+        }
 
         $el.on('$destroy', function() {
-            connection.unbind('mousedown');
+            if (connection !== null) {
+                connection.unbind('mousedown');
+            }
         });
     }
 
