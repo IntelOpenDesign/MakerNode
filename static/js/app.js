@@ -216,8 +216,11 @@ cat.app.factory('server', ['$q', '$rootScope', function($q, $rootScope) {
     ws.onopen = function() {
         console.log('socket opened');
     };
+    var $debug_log = $('#debug-log');
     ws.onmessage = function(message) {
         console.log('websocket message', message.data);
+        //TODO remove when done debugging
+        $debug_log.html(message.data);
         var pin_states = message.data.split(',');
         for (var i = 0; i < pin_states.length; i++) {
             pins[pin_order[i]].value = parseFloat(pin_states[i])*100;

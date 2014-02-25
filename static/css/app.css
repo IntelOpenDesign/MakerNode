@@ -1,3 +1,13 @@
+/* TODO remove when done debugging*/
+#debug-log {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: .7;
+    width: 100%;
+    background: blanchedalmond;
+    word-break: break-all;
+}
 #field {
     background: antiquewhite;
 }
