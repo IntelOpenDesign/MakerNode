@@ -34,25 +34,28 @@ cat.app.filter('actuators', function() {
 
 cat.is_safe_to_render_connections = function() {
     // connections can only draw themselves AFTER their pins have drawn
+    console.log('is_safe_to_render_connections constructor function');
 
     var $document = $(document);
-    var visible_pins, rendered_pins, all_pins_rendered;
+    var visible_pins, rendered_pins;
+    var all_pins_rendered = false;
 
-    function init() {
-        visible_pins = _.filter($scope.pins, function(pin) {
+    function init(pins) {
+        console.log('is_safe_to_render_connections init with pins', pins);
+        visible_pins = _.filter(pins, function(pin) {
             return pin.is_visible;
         });
         rendered_pins = {};
         all_pins_rendered = false;
     }
 
-    init();
-
-    $document.on('reset-pins', function() {
-        init();
+    $document.on('reset-pins', function(o) {
+        console.log('is_safe_to_render_connections caught reset-pins event with data', o);
+        init(o.pins);
     });
 
     $document.on('rendered-pin', function(o) {
+        console.log('is_safe_to_render_connections caught rendered-pin event with data', o);
         rendered_pins[o.pin] = true;
         if (rendered_pins.keys().length === visible_pins.length) {
             // all pins are rendered now, so it is safe to draw connections
@@ -63,6 +66,7 @@ cat.is_safe_to_render_connections = function() {
 
     return function() {
         // TODO could I use a promise for this instead? I promise to get back to you when it's safe to render?
+        console.log('is_safe_to_render_connections() returning', all_pins_rendered);
         return all_pins_rendered;
     }
 }();
@@ -76,7 +80,8 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
     var sync = function() {
         // TODO maybe just update the changes rather than rewrite?
         $scope.pins = server.getPins();
-        $document.trigger('reset-pins');
+        console.log('$document about to trigger reset-pins from within PinsCtrl');
+        $document.trigger('reset-pins', {pins: $scope.pins});
     };
 
     sync();
@@ -162,9 +167,7 @@ cat.app.directive('sensor', function($document) {
         $el.on('$destroy', function() {
             that.$endpoint.off(that.clickevent);
         });
-    }
 
-    function postLink() {
         $(document).trigger('rendered-pin', {pin: attrs.name});
     }
 
@@ -172,7 +175,6 @@ cat.app.directive('sensor', function($document) {
 
     return {
         link: link,
-        postLink: postLink //TODO check name of this function
     }
 });
 
@@ -195,9 +197,7 @@ cat.app.directive('actuator', function($document) {
         $el.on('$destroy', function() {
             that.$endpoint.off(that.clickevent);
         });
-    }
 
-    function postLink() {
         $(document).trigger('rendered-pin', {pin: attrs.name});
     }
 
@@ -210,14 +210,13 @@ cat.app.directive('actuator', function($document) {
 cat.app.directive('connection', function($document) {
     function link($scope, $el, attrs) {
 
-        var $sensor = null;
-        var $actuator = null;
-        var connection = null;
-        var msg = 'Do you want to delete the ' + $sensor.attr('id') + ' - ' + $actuator.attr('id') + ' connection?';
+        var $sensor, $actuator, connection, msg;
+        $sensor = $actuator = connection = msg = null;
 
         function render() {
             $sensor = $('#'+attrs.sensor);
             $actuator = $('#'+attrs.actuator);
+            msg = 'Do you want to delete the ' + $sensor.attr('id') + ' - ' + $actuator.attr('id') + ' connection?';
             connection = jsPlumb.connect({
                 source: attrs.sensor,
                 target: attrs.actuator,
@@ -364,7 +363,8 @@ cat.app.factory('server', ['$q', '$rootScope', function($q, $rootScope) {
             });
         });
 
-        connections = [];
+        connections = [{source: 'A0', target: '1'},
+                       {source: 'A1', target: '1'}];
     }
 
     function write() {
