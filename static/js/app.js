@@ -12,6 +12,8 @@ jsPlumb.bind('ready', function() {
 
 var cat = {};
 
+cat.server_url = 'ws://10.12.10.58:8001';
+
 cat.app = angular.module('ConnectAnything', []);
 
 cat.app.filter('sensors', function() {
@@ -210,7 +212,7 @@ cat.app.factory('server', ['$q', '$rootScope', function($q, $rootScope) {
     var subscribers = [];
 
     // http://clintberry.com/2013/angular-js-websocket-service/
-    var ws = new WebSocket("ws://localhost:8001");
+    var ws = new WebSocket(cat.server_url);
     ws.onopen = function() {
         console.log('socket opened');
     };
