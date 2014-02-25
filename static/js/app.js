@@ -37,9 +37,11 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
 
     $scope.sync = function() {
         // TODO it might be better to modify $scope.pins and $scope.connections only in the ways they differ to avoid redrawing everything all the time... but we'll see if this works fine it'll be simpler
+        console.log('controller $scope.sync');
         $scope.pins = server.getPins();
         $scope.connections = server.getConnections();
     };
+
 
     function update_pin(name, attr, val) {
         $scope.pins[name][attr] = val;
@@ -216,10 +218,12 @@ cat.app.factory('server', ['$q', '$rootScope', function($q, $rootScope) {
         console.log('websocket message', message.data);
         var pin_states = message.data.split(',');
         for (var i = 0; i < pin_states.length; i++) {
-            pins[pin_order[i]].value = parseFloat(pin_states[i]);
+            pins[pin_order[i]].value = parseFloat(pin_states[i])*100;
         }
         _.each(subscribers, function(o) {
-            o.func.call(o.context);
+            $scope.$apply(function(){
+                o.func.call(o.context);
+            });
         });
     };
     function sendMessage() {

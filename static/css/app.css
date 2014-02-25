@@ -21,6 +21,32 @@
     background: rgb(107,48,0);
     width: 90%;
 }
+.pin-label {
+    position: absolute;
+    top: 5%;
+    left: 4px;
+    z-index: 5;
+}
+.pin-value-container {
+    height: 90%;
+    position: absolute;
+    top: 5%;
+    left: 2px;
+    z-index: 0;
+    width: 65%;
+    background-color: rgba(245, 245, 245, .2);
+}
+.pin-value {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    background: blueviolet;
+    transition: height 5s;
+    -webkit-transition: height 5s;
+    -moz-transition: height 5s;
+    -o-transition: height 5s;
+}
 .actuator .pin-box {
     float: right;
     text-align: right;
