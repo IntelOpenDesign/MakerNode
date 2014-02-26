@@ -1,5 +1,12 @@
+var cat = {};
+
+cat.jsplumb_ready = false;
+
 jsPlumb.bind('ready', function() {
     jsPlumb.Defaults.Container = $('#field');
+
+    cat.jsplumb_ready = true;
+    $(document).trigger('jsplumb-ready');
 
     /* some combination of this might work -- laggy/buggy though
      * ALSO: how to do it on mobile?
@@ -9,8 +16,6 @@ jsPlumb.bind('ready', function() {
     jsPlumb.draggable($('.actuator'), {containment: '#actuators'});
     */
 });
-
-var cat = {};
 
 cat.server_url = 'ws://10.12.10.58:8001';
 // use this one when you are on the Galileo
@@ -36,41 +41,56 @@ cat.app.filter('actuators', function() {
 
 cat.is_safe_to_render_connections = function() {
     // connections can only draw themselves AFTER their pins have drawn
+    // and AFTER jsPlumb has had a chance to initialize itself
     console.log('is_safe_to_render_connections constructor function');
+
+    // TODO I think I could use a promise here and it would be nicer.
 
     var $document = $(document);
     var visible_pins, rendered_pins;
     var all_pins_rendered = false;
 
-    function init(pins) {
+    function check() {
+        if (all_pins_rendered && cat.jsplumb_ready) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function maybe_trigger() {
+        if (check()) {
+            $('.connection').trigger('render-connection');
+        }
+    }
+
+    $document.on('reset-pins', function(e, pins) {
+        console.log('is_safe_to_render_connections caught reset-pins event with data', pins);
         console.log('is_safe_to_render_connections init with pins', pins);
         visible_pins = _.filter(pins, function(pin) {
             return pin.is_visible;
         });
         rendered_pins = {};
         all_pins_rendered = false;
-    }
-
-    $document.on('reset-pins', function(o) {
-        console.log('is_safe_to_render_connections caught reset-pins event with data', o);
-        init(o.pins);
     });
 
-    $document.on('rendered-pin', function(o) {
-        console.log('is_safe_to_render_connections caught rendered-pin event with data', o);
-        rendered_pins[o.pin] = true;
-        if (rendered_pins.keys().length === visible_pins.length) {
-            // all pins are rendered now, so it is safe to draw connections
+    $document.on('rendered-pin', function(e, pin) {
+        console.log('is_safe_to_render_connections caught rendered-pin event with data', pin);
+        if (pin === undefined) {
+            return;
+        }
+        rendered_pins[pin] = true;
+        if (_.keys(rendered_pins).length === visible_pins.length) {
             all_pins_rendered = true;
-            $('.connection').trigger('render-connection');
+            maybe_trigger();
         }
     });
 
-    return function() {
-        // TODO could I use a promise for this instead? I promise to get back to you when it's safe to render?
-        console.log('is_safe_to_render_connections() returning', all_pins_rendered);
-        return all_pins_rendered;
-    }
+    $document.on('jsplumb-ready', function(e) {
+        maybe_trigger();
+    });
+
+    return check;
 }();
 
 cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
@@ -83,7 +103,7 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
         // TODO maybe just update the changes rather than rewrite?
         $scope.pins = server.getPins();
         console.log('$document about to trigger reset-pins from within PinsCtrl');
-        $document.trigger('reset-pins', {pins: $scope.pins});
+        $document.trigger('reset-pins', $scope.pins);
     };
 
     sync();
@@ -170,7 +190,7 @@ cat.app.directive('sensor', function($document) {
             that.$endpoint.off(that.clickevent);
         });
 
-        $(document).trigger('rendered-pin', {pin: attrs.name});
+        $(document).trigger('rendered-pin', attrs.name);
     }
 
     // TODO is there an unlink function i should write so that i can remove listeners when this gets deleted?
@@ -200,12 +220,11 @@ cat.app.directive('actuator', function($document) {
             that.$endpoint.off(that.clickevent);
         });
 
-        $(document).trigger('rendered-pin', {pin: attrs.name});
+        $(document).trigger('rendered-pin', attrs.name);
     }
 
     return {
         link: link,
-        postLink: postLink,
     }
 });
 
@@ -216,8 +235,10 @@ cat.app.directive('connection', function($document) {
         $sensor = $actuator = connection = msg = null;
 
         function render() {
+            console.log('rendering connection ', attrs.sensor, '-', attrs.actuator);
             $sensor = $('#'+attrs.sensor);
             $actuator = $('#'+attrs.actuator);
+            console.log($sensor, $actuator);
             msg = 'Do you want to delete the ' + $sensor.attr('id') + ' - ' + $actuator.attr('id') + ' connection?';
             connection = jsPlumb.connect({
                 source: attrs.sensor,
