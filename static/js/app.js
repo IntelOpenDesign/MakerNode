@@ -39,37 +39,39 @@ cat.app.filter('actuators', function() {
     };
 });
 
-cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
+cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
 
     // TODO take this out when done debugging
     window.$scope = $scope;
+    var pin_order = ['0', '1', '2', '~3', '4', '~5', '~6', '7', '8', '~9', '~10', '~11', '12', '13', 'A0', 'A1', 'A2', 'A3', 'A4', 'A5'];
+    var start_data = cat.get_fake_initial_data();
+    $scope.pins = start_data.pins;
+    $scope.connections = start_data.connections;
 
-    $scope.sync = function() {
-        // TODO it might be better to modify $scope.pins and $scope.connections only in the ways they differ to avoid redrawing everything all the time... but we'll see if this works fine it'll be simpler
-        $scope.pins = server.getPins();
-        $scope.connections = server.getConnections();
+    // http://clintberry.com/2013/angular-js-websocket-service/
+    var ws = new WebSocket(cat.server_url);
+    // use this when on the Galileo
+    //var ws = new WebSocket(cat.server_url, 'hardware-state-protocol');
+    ws.onopen = function() {
+        console.log('socket opened');
+    };
+    var $debug_log = $('#debug-log');
+    ws.onmessage = function(message) {
+        console.log('websocket message', message.data);
+        //TODO remove when done debugging
+        $debug_log.html(message.data);
+        var pin_states = message.data.split(',');
+        for (var i = 0; i < pin_states.length; i++) {
+            var pin = $scope.pins[pin_order[i]];
+            // for the time being on the sensor pin values from the server are meaningful
+            if (pin.is_input) {
+                pin.value = parseFloat(pin_states[i])*100;
+            }
+        }
     };
 
-
-    function update_pin(name, attr, val) {
-        $scope.pins[name][attr] = val;
-        server.update();
-    }
-    $scope.addPin = function(name) {
-        update_pin(name, 'is_visible', true);
-    };
-    $scope.removePin = function(name) {
-        update_pin(name, 'is_visible', false);
-    };
-
-    $scope.sync();
-    server.addSubscriber(this, $scope.sync);
-
-    // TODO this should probably be in a ConnectionsCtrl
-    $scope.connect = function($sensor, $actuator) {
+    $scope.connect = function(sensor, actuator) {
         // TODO server
-        var sensor = $sensor.attr('id');
-        var actuator = $actuator.attr('id');
         $scope.connections.push({
             sensor: sensor,
             actuator: actuator,
@@ -147,7 +149,7 @@ cat.app.directive('actuator', function($document) {
                 $('#connect-' + sensor + '-' + attrs.name).trigger('mousedown');
             } else {
                 $scope.$apply(function() {
-                    $scope.connect($sensor, $el);
+                    $scope.connect(sensor, attrs.name);
                 });
             }
             $('.pin').removeClass('activated');
@@ -216,60 +218,7 @@ cat.app.directive('connection', function($document) {
     };
 });
 
-cat.app.factory('server', ['$q', '$rootScope', function($q, $rootScope) {
-    // TODO replace this with real server data
-    // TODO i think the inputs will be sensors and the outputs will be actuators - right?
-    // The server is just for communicating with the server
-    // The PinsCtrl maintains consistent state for the model of this app
-
-    var pins = {};
-    var pin_order = ['0', '1', '2', '~3', '4', '~5', '~6', '7', '8', '~9', '~10', '~11', '12', '13', 'A0', 'A1', 'A2', 'A3', 'A4', 'A5'];
-    var connections = [];
-    var subscribers = [];
-
-    // http://clintberry.com/2013/angular-js-websocket-service/
-    var ws = new WebSocket(cat.server_url);
-    // use this when on the Galileo
-    //var ws = new WebSocket(cat.server_url, 'hardware-state-protocol');
-    ws.onopen = function() {
-        console.log('socket opened');
-    };
-    var $debug_log = $('#debug-log');
-    ws.onmessage = function(message) {
-        console.log('websocket message', message.data);
-        //TODO remove when done debugging
-        $debug_log.html(message.data);
-        var pin_states = message.data.split(',');
-        for (var i = 0; i < pin_states.length; i++) {
-            var pin = pins[pin_order[i]];
-            // for the time being on the sensor pin values from the server are meaningful
-            if (pin.is_input) {
-                pin.value = parseFloat(pin_states[i])*100;
-            }
-        }
-        _.each(subscribers, function(o) {
-            $scope.$apply(function(){
-                o.func.call(o.context);
-            });
-        });
-    };
-    function sendMessage() {
-        ws.send('hello from browser land');
-    }
-    // TODO remove this when done testing
-    window.sendMessage = sendMessage;
-
-    function getPins() {
-        return pins;
-    }
-
-    function getConnections() {
-        return connections;
-    }
-
-    function addSubscriber(context, func) {
-        subscribers.push({context: context, func: func});
-    }
+cat.get_fake_initial_data = function() {
 
     var pin_defaults = {
         'input': {
@@ -293,52 +242,28 @@ cat.app.factory('server', ['$q', '$rootScope', function($q, $rootScope) {
         }
     }
 
-    function read() {
-        // TODO HTTP GET
-        pins = {};
-        _.each(pin_defaults, function(obj, IorO) { // input or output
-            _.each(obj, function(nums, AorD) { // analog or digital
-                _.each(nums, function(num) { // all pin numbers of this type
-                    var is_input = IorO === 'input';
-                    var is_analog = AorD === 'analog';
-                    var name = pin_name(num, is_analog, is_input);
-                    pins[name] = {
-                        'name': name,
-                        'label': 'Label for ' + name,
-                        'is_analog': is_analog,
-                        'is_input': is_input,
-                        'value': 0,
-                        'is_visible': true,
-                        'connected_to': [],
-                    };
-                });
+    pins = {};
+    _.each(pin_defaults, function(obj, IorO) { // input or output
+        _.each(obj, function(nums, AorD) { // analog or digital
+            _.each(nums, function(num) { // all pin numbers of this type
+                var is_input = IorO === 'input';
+                var is_analog = AorD === 'analog';
+                var name = pin_name(num, is_analog, is_input);
+                pins[name] = {
+                    'name': name,
+                    'label': 'Label for ' + name,
+                    'is_analog': is_analog,
+                    'is_input': is_input,
+                    'value': 0,
+                    'is_visible': true,
+                    'connected_to': [],
+                };
             });
         });
+    });
 
-        connections = [];
-    }
+    // TODO merge in sync-connections branch so that you can start with some connections
+    connections = [];
 
-    function write() {
-        // TODO format data from $scope.pins and $scope.connections
-        // TODO HTTP POST
-    }
-
-    function update() {
-        write();
-        read();
-        _.each(subscribers, function(o) {
-            o.func.call(o.context);
-        });
-    }
-
-    read();
-
-    return {
-        getPins: getPins,
-        getConnections: getConnections,
-        addSubscriber: addSubscriber,
-        update: update,
-        sendMessage: sendMessage,
-    };
-
-}]);
+    return {pins: pins, connections: connections};
+};
