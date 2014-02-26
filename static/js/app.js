@@ -1,3 +1,8 @@
+// TODO remove when done debugging
+function toggle_debug_log() {
+    $('#debug-log').toggleClass('hide');
+}
+
 jsPlumb.bind('ready', function() {
     jsPlumb.Defaults.Container = $('#field');
 
