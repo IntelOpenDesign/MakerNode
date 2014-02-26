@@ -8,7 +8,7 @@ function update_pin_states() {
     }
 }
 update_pin_states();
-setInterval(update_pin_states, 6000);
+setInterval(update_pin_states, 10000);
 
 var ws = require('nodejs-websocket');
 

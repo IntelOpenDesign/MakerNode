@@ -78,19 +78,20 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
         $scope.pins[actuator].connected_to.push(sensor);
     };
 
-    $scope.disconnect = function($sensor, $actuator) {
+    $scope.disconnect = function(sensor, actuator) {
         // TODO server
-        var sensor = $sensor.attr('id');
-        var actuator = $actuator.attr('id');
+        console.log('before disconnect we have', $scope.connections.length, 'connections');
         $scope.connections = _.filter($scope.connections, function(c) {
             return !(c.sensor === sensor && c.actuator === actuator);
         });
+        console.log('midway disconnect we have', $scope.connections.length, 'connections');
         $scope.pins[sensor].connected_to = _.filter($scope.pins[sensor].connected_to, function(pin) {
             return !(pin === actuator);
         });
         $scope.pins[actuator].connected_to = _.filter($scope.pins[actuator].connected_to, function(pin) {
             return !(pin === sensor);
         });
+        console.log('after disconnect we have', $scope.connections.length, 'connections');
     }
 
 }]);
@@ -196,9 +197,8 @@ cat.app.directive('connection', function($document) {
             if (confirm(msg)) {
                 connection.unbind('mousedown');
                 $scope.$apply(function() {
-                    $scope.disconnect($sensor, $actuator);
+                    $scope.disconnect(attrs.sensor, attrs.actuator);
                 });
-                jsPlumb.detach(connection);
             }
         }
 
@@ -207,6 +207,7 @@ cat.app.directive('connection', function($document) {
 
         $el.on('$destroy', function() {
             connection.unbind('mousedown');
+            jsPlumb.detach(connection);
         });
     }
 
