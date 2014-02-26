@@ -235,7 +235,11 @@ cat.app.factory('server', ['$q', '$rootScope', function($q, $rootScope) {
         $debug_log.html(message.data);
         var pin_states = message.data.split(',');
         for (var i = 0; i < pin_states.length; i++) {
-            pins[pin_order[i]].value = parseFloat(pin_states[i])*100;
+            var pin = pins[pin_order[i]];
+            // for the time being on the sensor pin values from the server are meaningful
+            if (pin.is_input) {
+                pin.value = parseFloat(pin_states[i])*100;
+            }
         }
         _.each(subscribers, function(o) {
             $scope.$apply(function(){
