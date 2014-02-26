@@ -15,8 +15,8 @@
     <link rel="stylesheet" href="static/css/app.css">
 </head>
 <body>
-    <div class="container" ng-controller="PinsCtrl">
-        <div id="field" class="ui-grid-a">
+    <div class="container">
+        <div id="field" class="ui-grid-a" ng-controller="PinsCtrl">
             <div id="sensors" class="ui-block-a">
                 <div id="{{pin.name}}" ng-repeat="pin in pins | sensors" ng-class="{'sensor':true, 'pin':true, 'connected':pin.connected_to.length > 0, 'analog': pin.is_analog, 'digital': !pin.is_analog}" data-name="{{pin.name}}" sensor>
                     <div class="pin-box">
@@ -47,8 +47,8 @@
                     </div>
                 </div>
             </div>
-            <div id="connections">
-                <div id="connect-{{c.sensor}}-{{c.actuator}}" ng-repeat="c in connections" class="connection" data-sensor="{{c.sensor}}" data-actuator="{{c.actuator}}" connection></div>
+            <div id="connections" ng-controller="ConnectionsCtrl">
+                <div id="connect-{{c.source}}-{{c.target}}" ng-repeat="c in connections" class="connection" data-sensor="{{c.source}}" data-actuator="{{c.target}}" connection></div>
             </div>
         </div>
         <div id="debug-log" class="ui-grid-a">

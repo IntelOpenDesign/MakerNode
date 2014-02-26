@@ -1,5 +1,12 @@
+var cat = {};
+
+cat.jsplumb_ready = false;
+
 jsPlumb.bind('ready', function() {
     jsPlumb.Defaults.Container = $('#field');
+
+    cat.jsplumb_ready = true;
+    $(document).trigger('jsplumb-ready');
 
     /* some combination of this might work -- laggy/buggy though
      * ALSO: how to do it on mobile?
@@ -10,9 +17,7 @@ jsPlumb.bind('ready', function() {
     */
 });
 
-var cat = {};
-
-cat.server_url = 'ws://192.168.0.192:8001';
+cat.server_url = 'ws://10.12.10.58:8001';
 // use this one when you are on the Galileo
 // cat.server_url = 'ws://cat/';
 
@@ -34,17 +39,75 @@ cat.app.filter('actuators', function() {
     };
 });
 
+cat.is_safe_to_render_connections = function() {
+    // connections can only draw themselves AFTER their pins have drawn
+    // and AFTER jsPlumb has had a chance to initialize itself
+    console.log('is_safe_to_render_connections constructor function');
+
+    // TODO I think I could use a promise here and it would be nicer.
+
+    var $document = $(document);
+    var visible_pins, rendered_pins;
+    var all_pins_rendered = false;
+
+    function check() {
+        if (all_pins_rendered && cat.jsplumb_ready) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function maybe_trigger() {
+        if (check()) {
+            $('.connection').trigger('render-connection');
+        }
+    }
+
+    $document.on('reset-pins', function(e, pins) {
+        console.log('is_safe_to_render_connections caught reset-pins event with data', pins);
+        console.log('is_safe_to_render_connections init with pins', pins);
+        visible_pins = _.filter(pins, function(pin) {
+            return pin.is_visible;
+        });
+        rendered_pins = {};
+        all_pins_rendered = false;
+    });
+
+    $document.on('rendered-pin', function(e, pin) {
+        console.log('is_safe_to_render_connections caught rendered-pin event with data', pin);
+        if (pin === undefined) {
+            return;
+        }
+        rendered_pins[pin] = true;
+        if (_.keys(rendered_pins).length === visible_pins.length) {
+            all_pins_rendered = true;
+            maybe_trigger();
+        }
+    });
+
+    $document.on('jsplumb-ready', function(e) {
+        maybe_trigger();
+    });
+
+    return check;
+}();
+
 cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
 
     // TODO take this out when done debugging
-    window.$scope = $scope;
+    window.$PinsCtrlScope = $scope;
 
-    $scope.sync = function() {
-        // TODO it might be better to modify $scope.pins and $scope.connections only in the ways they differ to avoid redrawing everything all the time... but we'll see if this works fine it'll be simpler
+    var $document = $(document);
+    var sync = function() {
+        // TODO maybe just update the changes rather than rewrite?
         $scope.pins = server.getPins();
-        $scope.connections = server.getConnections();
+        console.log('$document about to trigger reset-pins from within PinsCtrl');
+        $document.trigger('reset-pins', $scope.pins);
     };
 
+    sync();
+    server.addSubscriber(this, sync);
 
     function update_pin(name, attr, val) {
         $scope.pins[name][attr] = val;
@@ -56,9 +119,20 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
     $scope.removePin = function(name) {
         update_pin(name, 'is_visible', false);
     };
+}]);
 
-    $scope.sync();
-    server.addSubscriber(this, $scope.sync);
+cat.app.controller('ConnectionsCtrl', ['$scope', 'server', function($scope, server) {
+
+    // TODO debugging
+    window.$ConnectionsCtrlScope = $scope;
+
+    var sync = function() {
+        // TODO maybe just update how things differ rather than rewrite?
+        $scope.connections = server.getConnections();
+    };
+
+    sync();
+    server.addSubscriber(this, sync);
 
     // TODO this should probably be in a ConnectionsCtrl
     $scope.connect = function($sensor, $actuator) {
@@ -86,8 +160,7 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
         $scope.pins[actuator].connected_to = _.filter($scope.pins[actuator].connected_to, function(pin) {
             return !(pin === sensor);
         });
-    }
-
+    };
 }]);
 
 // shared between sensors and actuators
@@ -116,6 +189,8 @@ cat.app.directive('sensor', function($document) {
         $el.on('$destroy', function() {
             that.$endpoint.off(that.clickevent);
         });
+
+        $(document).trigger('rendered-pin', attrs.name);
     }
 
     // TODO is there an unlink function i should write so that i can remove listeners when this gets deleted?
@@ -150,6 +225,8 @@ cat.app.directive('actuator', function($document) {
         $el.on('$destroy', function() {
             that.$endpoint.off(that.clickevent);
         });
+
+        $(document).trigger('rendered-pin', attrs.name);
     }
 
     return {
@@ -160,48 +237,63 @@ cat.app.directive('actuator', function($document) {
 cat.app.directive('connection', function($document) {
     function link($scope, $el, attrs) {
 
-        var $sensor = $('#'+attrs.sensor);
-        var $actuator = $('#'+attrs.actuator);
+        var $sensor, $actuator, connection, msg;
+        $sensor = $actuator = connection = msg = null;
 
-        var connection = jsPlumb.connect({
-            source: attrs.sensor,
-            target: attrs.actuator,
-            connector: ['Bezier', {curviness: 70}],
-            cssClass: 'connection pins-'+attrs.sensor+'-'+attrs.actuator,
-            endpoint: 'Blank',
-            endpointClass: 'endpoint pins-'+attrs.sensor+'-'+attrs.actuator,
-            anchors: ['Right', 'Left'],
-            paintStyle: {
-                lineWidth: 15,
-                strokeStyle: 'rgb(232, 189, 0)',
-                outlineWidth: 2,
-                outlineColor: 'antiquewhite',
-            },
-            endpointStyle: {
-                fillStyle: '#a7b04b',
-            },
-            hoverPaintStyle: {
-                strokeStyle: 'rgb(250, 250, 60)',
-            },
-        });
+        function render() {
+            console.log('rendering connection ', attrs.sensor, '-', attrs.actuator);
+            $sensor = $('#'+attrs.sensor);
+            $actuator = $('#'+attrs.actuator);
+            console.log($sensor, $actuator);
+            msg = 'Do you want to delete the ' + $sensor.attr('id') + ' - ' + $actuator.attr('id') + ' connection?';
+            connection = jsPlumb.connect({
+                source: attrs.sensor,
+                target: attrs.actuator,
+                connector: ['Bezier', {curviness: 70}],
+                cssClass: 'connection pins-'+attrs.sensor+'-'+attrs.actuator,
+                endpoint: 'Blank',
+                endpointClass: 'endpoint pins-'+attrs.sensor+'-'+attrs.actuator,
+                anchors: ['Right', 'Left'],
+                paintStyle: {
+                    lineWidth: 15,
+                    strokeStyle: 'rgb(232, 189, 0)',
+                    outlineWidth: 2,
+                    outlineColor: 'antiquewhite',
+                },
+                endpointStyle: {
+                    fillStyle: '#a7b04b',
+                },
+                hoverPaintStyle: {
+                    strokeStyle: 'rgb(250, 250, 60)',
+                },
+            });
 
-        var msg = 'Do you want to delete the ' + $sensor.attr('id') + ' - ' + $actuator.attr('id') + ' connection?';
-
-        function remove_self(e) {
-            if (confirm(msg)) {
-                connection.unbind('mousedown');
-                $scope.$apply(function() {
-                    $scope.disconnect($sensor, $actuator);
-                });
-                jsPlumb.detach(connection);
+            function remove_self(e) {
+                if (confirm(msg)) {
+                    connection.unbind('mousedown');
+                    $scope.$apply(function() {
+                        $scope.disconnect($sensor, $actuator);
+                    });
+                    jsPlumb.detach(connection);
+                }
             }
+
+            connection.bind('mousedown', remove_self);
+            $el.on('mousedown', remove_self);
         }
 
-        connection.bind('mousedown', remove_self);
-        $el.on('mousedown', remove_self);
+        if (cat.is_safe_to_render_connections()) {
+            render();
+        } else {
+            $el.on('render-connection', function() {
+                render();
+            });
+        }
 
         $el.on('$destroy', function() {
-            connection.unbind('mousedown');
+            if (connection !== null) {
+                connection.unbind('mousedown');
+            }
         });
     }
 
@@ -309,7 +401,8 @@ cat.app.factory('server', ['$q', '$rootScope', function($q, $rootScope) {
             });
         });
 
-        connections = [];
+        connections = [{source: 'A0', target: '1'},
+                       {source: 'A1', target: '1'}];
     }
 
     function write() {
