@@ -47,7 +47,7 @@
                     </div>
                 </div>
             </div>
-            <div id="connections" ng-controller="ConnectionsCtrl">
+            <div id="connections">
                 <div id="connect-{{c.source}}-{{c.target}}" ng-repeat="c in connections" class="connection" data-sensor="{{c.source}}" data-actuator="{{c.target}}" connection></div>
             </div>
         </div>

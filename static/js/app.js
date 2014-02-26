@@ -102,6 +102,7 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
     var sync = function() {
         // TODO maybe just update the changes rather than rewrite?
         $scope.pins = server.getPins();
+        $scope.connections = server.getConnections();
         console.log('$document about to trigger reset-pins from within PinsCtrl');
         $document.trigger('reset-pins', $scope.pins);
     };
@@ -119,22 +120,7 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
     $scope.removePin = function(name) {
         update_pin(name, 'is_visible', false);
     };
-}]);
 
-cat.app.controller('ConnectionsCtrl', ['$scope', 'server', function($scope, server) {
-
-    // TODO debugging
-    window.$ConnectionsCtrlScope = $scope;
-
-    var sync = function() {
-        // TODO maybe just update how things differ rather than rewrite?
-        $scope.connections = server.getConnections();
-    };
-
-    sync();
-    server.addSubscriber(this, sync);
-
-    // TODO this should probably be in a ConnectionsCtrl
     $scope.connect = function($sensor, $actuator) {
         // TODO server
         var sensor = $sensor.attr('id');
@@ -403,6 +389,10 @@ cat.app.factory('server', ['$q', '$rootScope', function($q, $rootScope) {
 
         connections = [{source: 'A0', target: '1'},
                        {source: 'A1', target: '1'}];
+        _.each(connections, function(c) {
+            pins[c.source].connected_to.push(c.target);
+            pins[c.target].connected_to.push(c.source);
+        });
     }
 
     function write() {
