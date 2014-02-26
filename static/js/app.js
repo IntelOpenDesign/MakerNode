@@ -91,66 +91,50 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
 
 }]);
 
-// shared between sensors and actuators
-cat.pin_initializer = function($document, $scope, $el, attrs) {
-    var that = {};
-    that.$endpoint = $el.find('.endpoint');
-    that.clickevent = 'mousedown';
-    that.name = attrs.name;
-    return that;
+cat.pin_base = function($scope, $el, attrs, click_callback) {
+    return function($scope, $el, attrs) {
+        var $endpoint = $el.find('.endpoint');
+        var clickevent = 'mousedown';
+        var name = attrs.name;
+
+        $endpoint.on(clickevent, click_callback);
+
+        $el.on('$destroy', function() {
+            $endpoint.off(clickevent);
+        });
+    }
 };
 
 cat.app.directive('sensor', function($document) {
-    function link($scope, $el, attrs) {
 
-        var that = cat.pin_initializer($document, $scope, $el, attrs);
+    var my_callback = function(e) {
+        var already_activated = $el.hasClass('activated');
+        $('.pin').removeClass('activated');
+        if (!already_activated) {
+            $el.addClass('activated');
+            $('.actuator').addClass('activated');
+        }
+    };
 
-        that.$endpoint.on(that.clickevent, function(e) {
-            var already_activated = $el.hasClass('activated');
-            $('.pin').removeClass('activated');
-            if (!already_activated) {
-                $el.addClass('activated');
-                $('.actuator').addClass('activated');
-            }
-        });
-
-        $el.on('$destroy', function() {
-            that.$endpoint.off(that.clickevent);
-        });
-    }
-
-    // TODO is there an unlink function i should write so that i can remove listeners when this gets deleted?
-
-    return {
-        link: link,
-    }
+    return {link: cat.pin_base(my_callback)};
 });
 
 cat.app.directive('actuator', function($document) {
-    function link($scope, $el, attrs) {
 
-        var that = cat.pin_initializer($document, $scope, $el, attrs);
-
-        that.$endpoint.on(that.clickevent, function(e) {
-            if (!$el.hasClass('activated')) {
-                return;
-            }
-            var $sensor = $('.sensor.activated').first();
-            $scope.$apply(function() {
-                $scope.connect($sensor, $el);
-            });
-            $('.pin').removeClass('activated');
+    var my_callback = function(e) {
+        if (!$el.hasClass('activated')) {
+            return;
+        }
+        var $sensor = $('.sensor.activated').first();
+        $scope.$apply(function() {
+            $scope.connect($sensor, $el);
         });
+        $('.pin').removeClass('activated');
+    };
 
-        $el.on('$destroy', function() {
-            that.$endpoint.off(that.clickevent);
-        });
-    }
-
-    return {
-        link: link,
-    }
+    return {link: cat.pin_base(my_callback)};
 });
+
 
 cat.app.directive('connection', function($document) {
     function link($scope, $el, attrs) {
