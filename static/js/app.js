@@ -12,7 +12,7 @@ jsPlumb.bind('ready', function() {
 
 var cat = {};
 
-cat.server_url = 'ws://10.12.10.58:8001';
+cat.server_url = 'ws://192.168.0.192:8001';
 // use this one when you are on the Galileo
 // cat.server_url = 'ws://cat/';
 
@@ -41,7 +41,6 @@ cat.app.controller('PinsCtrl', ['$scope', 'server', function($scope, server) {
 
     $scope.sync = function() {
         // TODO it might be better to modify $scope.pins and $scope.connections only in the ways they differ to avoid redrawing everything all the time... but we'll see if this works fine it'll be simpler
-        console.log('controller $scope.sync');
         $scope.pins = server.getPins();
         $scope.connections = server.getConnections();
     };
@@ -136,9 +135,15 @@ cat.app.directive('actuator', function($document) {
                 return;
             }
             var $sensor = $('.sensor.activated').first();
-            $scope.$apply(function() {
-                $scope.connect($sensor, $el);
-            });
+            var sensor = $sensor.attr('id'); // pin name
+            if ($scope.pins[attrs.name].connected_to.indexOf(sensor) >= 0) {
+                // already connected, so ask if they want to delete the connection
+                $('#connect-' + sensor + '-' + attrs.name).trigger('mousedown');
+            } else {
+                $scope.$apply(function() {
+                    $scope.connect($sensor, $el);
+                });
+            }
             $('.pin').removeClass('activated');
         });
 
@@ -182,7 +187,7 @@ cat.app.directive('connection', function($document) {
 
         var msg = 'Do you want to delete the ' + $sensor.attr('id') + ' - ' + $actuator.attr('id') + ' connection?';
 
-        connection.bind('mousedown', function(e) {
+        function remove_self(e) {
             if (confirm(msg)) {
                 connection.unbind('mousedown');
                 $scope.$apply(function() {
@@ -190,7 +195,10 @@ cat.app.directive('connection', function($document) {
                 });
                 jsPlumb.detach(connection);
             }
-        });
+        }
+
+        connection.bind('mousedown', remove_self);
+        $el.on('mousedown', remove_self);
 
         $el.on('$destroy', function() {
             connection.unbind('mousedown');
