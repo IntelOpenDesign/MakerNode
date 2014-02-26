@@ -112,7 +112,8 @@
 .sensor.activated .endpoint {
     background: rgb(250, 250, 60);
 }
-.actuator.activated .endpoint {
+.actuator.activated .endpoint,
+.actuator.activated.connected .endpoint {
     background: rgb(250, 250, 60);
 }
 .actuator.connected .endpoint {
