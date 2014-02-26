@@ -8,9 +8,11 @@
     background: blanchedalmond;
     word-break: break-all;
 }
+
 #field {
     background: antiquewhite;
 }
+
 .pin {
     width: 85%;
     height: 100px;
@@ -26,41 +28,58 @@
     margin-left: 5%;
     margin-right: 10%;
 }
+
 .pin-box {
     height: 100%;
     background: rgb(107,48,0);
     width: 90%;
 }
+.actuator .pin-box {
+    float: right;
+    text-align: right;
+}
+
 .pin-label {
     position: absolute;
     top: 5%;
-    left: 4px;
     z-index: 5;
 }
+.sensor .pin-label {
+    left: 4px;
+}
+.actuator .pin-label {
+    right: 4px;
+}
+
 .pin-value-container {
     height: 90%;
     position: absolute;
     top: 5%;
-    left: 2px;
     z-index: 0;
     width: 65%;
     background-color: rgba(245, 245, 245, .2);
 }
+.sensor .pin-value-container {
+    left: 2px;
+}
+.actuator .pin-value-container {
+    right: 2px;
+}
+
 .pin-value {
     position: absolute;
     width: 100%;
     left: 0;
     bottom: 0;
     background: blueviolet;
+}
+.analog .pin-value {
     transition: height 5s;
     -webkit-transition: height 5s;
     -moz-transition: height 5s;
     -o-transition: height 5s;
 }
-.actuator .pin-box {
-    float: right;
-    text-align: right;
-}
+
 .pin-port {
     position: absolute;
     top: 0;
@@ -74,6 +93,7 @@
 .actuator .pin-port {
     .left: 0;
 }
+
 .endpoint {
     width: 80px;
     height: 80px;
