@@ -13,6 +13,8 @@ jsPlumb.bind('ready', function() {
 var cat = {};
 
 cat.server_url = 'ws://10.12.10.58:8001';
+// use this one when you are on the Galileo
+// cat.server_url = 'ws://cat/';
 
 cat.app = angular.module('ConnectAnything', []);
 
@@ -283,6 +285,8 @@ cat.app.factory('server', ['$q', '$rootScope', function($q, $rootScope) {
 
     // http://clintberry.com/2013/angular-js-websocket-service/
     var ws = new WebSocket(cat.server_url);
+    // use this when on the Galileo
+    //var ws = new WebSocket(cat.server_url, 'hardware-state-protocol');
     ws.onopen = function() {
         console.log('socket opened');
     };
