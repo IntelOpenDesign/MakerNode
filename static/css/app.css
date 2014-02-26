@@ -20,6 +20,7 @@
     border-width: 0;
     width: inherit;
     z-index: 10;
+    height: 60px;
 }
 
 #field {
