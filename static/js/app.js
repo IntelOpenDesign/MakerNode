@@ -43,7 +43,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
 
     // TODO take this out when done debugging
     window.$scope = $scope;
-    var pin_order = ['0', '1', '2', '~3', '4', '~5', '~6', '7', '8', '~9', '~10', '~11', '12', '13', 'A0', 'A1', 'A2', 'A3', 'A4', 'A5'];
+    var pin_order = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', 'A0', 'A1', 'A2', 'A3', 'A4', 'A5'];
     var start_data = cat.get_fake_initial_data();
     $scope.pins = start_data.pins;
     $scope.connections = start_data.connections;
@@ -73,6 +73,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     };
 
     $scope.connect = function(sensor, actuator) {
+        console.log('connect sensor', sensor, 'actuator', actuator);
         // TODO server
         $scope.connections.push({
             sensor: sensor,
@@ -105,7 +106,7 @@ cat.pin_initializer = function($document, $scope, $el, attrs) {
     var that = {};
     that.$endpoint = $el.find('.endpoint');
     that.clickevent = 'mousedown';
-    that.name = attrs.name;
+    that.id = attrs.id;
     return that;
 };
 
@@ -145,13 +146,13 @@ cat.app.directive('actuator', function($document) {
                 return;
             }
             var $sensor = $('.sensor.activated').first();
-            var sensor = $sensor.attr('id'); // pin name
-            if ($scope.pins[attrs.name].connected_to.indexOf(sensor) >= 0) {
+            var sensor = $sensor.attr('id'); // pin id
+            if ($scope.pins[attrs.id].connected_to.indexOf(sensor) >= 0) {
                 // already connected, so ask if they want to delete the connection
-                $('#connect-' + sensor + '-' + attrs.name).trigger('mousedown');
+                $('#connect-' + sensor + '-' + attrs.id).trigger('mousedown');
             } else {
                 $scope.$apply(function() {
-                    $scope.connect(sensor, attrs.name);
+                    $scope.connect(sensor, attrs.id);
                 });
             }
             $('.pin').removeClass('activated');
@@ -233,7 +234,7 @@ cat.get_fake_initial_data = function() {
     };
 
     function pin_name(number, is_analog, is_input) {
-        if (!is_analog) {
+        if (!is_analog) { // digital
             return number.toString();
         }
         // is_analog === true
@@ -244,14 +245,24 @@ cat.get_fake_initial_data = function() {
         }
     }
 
+    function pin_id(number, is_analog, is_input) {
+        if (is_input && is_analog) {
+            return 'A' + number;
+        } else {
+            return number.toString();
+        }
+    }
+
     pins = {};
     _.each(pin_defaults, function(obj, IorO) { // input or output
         _.each(obj, function(nums, AorD) { // analog or digital
             _.each(nums, function(num) { // all pin numbers of this type
                 var is_input = IorO === 'input';
                 var is_analog = AorD === 'analog';
+                var id = pin_id(num, is_analog, is_input);
                 var name = pin_name(num, is_analog, is_input);
-                pins[name] = {
+                pins[id] = {
+                    'id': id,
                     'name': name,
                     'label': 'Label for ' + name,
                     'is_analog': is_analog,
