@@ -61,13 +61,15 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         //TODO remove when done debugging
         $debug_log.html(message.data);
         var pin_states = message.data.split(',');
-        for (var i = 0; i < pin_states.length; i++) {
-            var pin = $scope.pins[pin_order[i]];
-            // for the time being on the sensor pin values from the server are meaningful
-            if (pin.is_input) {
-                pin.value = parseFloat(pin_states[i])*100;
+        $scope.$apply(function(){
+            for (var i = 0; i < pin_states.length; i++) {
+                var pin = $scope.pins[pin_order[i]];
+                // for the time being on the sensor pin values from the server are meaningful
+                if (pin.is_input) {
+                    pin.value = parseFloat(pin_states[i])*100;
+                }
             }
-        }
+        });
     };
 
     $scope.connect = function(sensor, actuator) {
