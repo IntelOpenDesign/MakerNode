@@ -17,9 +17,9 @@ jsPlumb.bind('ready', function() {
 
 var cat = {};
 
-//cat.server_url = 'ws://192.168.0.192:8001';
+cat.server_url = 'ws://192.168.0.192:8001';
 // use this one when you are on the Galileo
-cat.server_url = 'ws://cat/';
+// cat.server_url = 'ws://cat/';
 
 cat.app = angular.module('ConnectAnything', []);
 
@@ -49,9 +49,9 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     $scope.connections = start_data.connections;
 
     // http://clintberry.com/2013/angular-js-websocket-service/
-    //var ws = new WebSocket(cat.server_url);
+    var ws = new WebSocket(cat.server_url);
     // use this when on the Galileo
-    var ws = new WebSocket(cat.server_url, 'hardware-state-protocol');
+    //var ws = new WebSocket(cat.server_url, 'hardware-state-protocol');
     ws.onopen = function() {
         console.log('socket opened');
     };
