@@ -1,5 +1,7 @@
+// Contain everything within the cat object
 var cat = {};
 
+// the whole app needs to know when jsPlumb is ready because only then can we draw connections
 cat.jsplumb_ready = false;
 
 // TODO remove when done debugging
@@ -8,11 +10,13 @@ function toggle_debug_log() {
 }
 
 jsPlumb.bind('ready', function() {
+    // TODO can I change this to #container?
     jsPlumb.Defaults.Container = $('#field');
 
     cat.jsplumb_ready = true;
     $(document).trigger('jsplumb-ready');
 
+    // TODO this is for dragging/sorting possibility
     /* some combination of this might work -- laggy/buggy though
      * ALSO: how to do it on mobile?
     $('#sensors').sortable();
@@ -22,12 +26,15 @@ jsPlumb.bind('ready', function() {
     */
 });
 
+// websocket server
 cat.server_url = 'ws://localhost:8001';
-// use this one when you are on the Galileo
+// for Galileo
 // cat.server_url = 'ws://cat/';
 
+// cat.app is the angular app
 cat.app = angular.module('ConnectAnything', []);
 
+// used in index.html for ng-repeat to draw only the visible sensor pins
 cat.app.filter('sensors', function() {
     return function(pins) {
         return _.filter(pins, function(pin) {
@@ -36,6 +43,7 @@ cat.app.filter('sensors', function() {
     };
 });
 
+// used in index.html for ng-repeat to draw only the visible actuator pins
 cat.app.filter('actuators', function() {
     return function(pins) {
         return _.filter(pins, function(pin) {
@@ -44,12 +52,11 @@ cat.app.filter('actuators', function() {
     };
 });
 
+// Connections can only render AFTER BOTH jsPlumb is ready (because jsPlumb is
+// what draws the svg edges and endpoints) AND their pins have rendered (so
+// that the connection endpoints have real positions in the DOM). This function
+// tracks those things. Connections call it to see if it is safe to render.
 cat.is_safe_to_render_connections = function() {
-    // connections can only draw themselves AFTER their pins have drawn
-    // and AFTER jsPlumb has had a chance to initialize itself
-
-    // TODO I think I could use a promise here and it would be nicer.
-
     var $document = $(document);
     var visible_pins, rendered_pins;
     var all_pins_rendered = false;
@@ -97,30 +104,38 @@ cat.is_safe_to_render_connections = function() {
     return check;
 }();
 
+// The controller for the whole app. Also handles talking to the server.
+// Eventually probably want to refactor, but right now it's tight and simple.
 cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
 
     var $document = $(document);
 
     // TODO take this out when done debugging
     window.$scope = $scope;
+
+    // TODO initialize with real server data, once we get JSON data from server
     var pin_order = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', 'A0', 'A1', 'A2', 'A3', 'A4', 'A5'];
     var start_data = cat.get_fake_initial_data();
     $scope.pins = start_data.pins;
     $scope.connections = start_data.connections;
     $document.trigger('reset-pins', $scope.pins);
 
-    // http://clintberry.com/2013/angular-js-websocket-service/
+    // good resource: http://clintberry.com/2013/angular-js-websocket-service/
     var ws = new WebSocket(cat.server_url);
-    // use this when on the Galileo
+    // for Galileo
     //var ws = new WebSocket(cat.server_url, 'hardware-state-protocol');
     ws.onopen = function() {
         console.log('socket opened');
     };
+
+    //TODO remove when done debugging
     var $debug_log = $('#debug-log');
+
     ws.onmessage = function(message) {
         console.log('websocket message', message.data);
         //TODO remove when done debugging
         $debug_log.html(message.data);
+
         var pin_states = message.data.split(',');
         $scope.$apply(function(){
             for (var i = 0; i < pin_states.length; i++) {
@@ -131,7 +146,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
                 }
             }
         });
-        // you would need to trigger this IFF you were causing pins to be redrawn
+        // you need to trigger this IFF you are causing pins to be redrawn
         //$document.trigger('reset-pins', $scope.pins);
     };
 
@@ -142,6 +157,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
             sensor: sensor,
             actuator: actuator,
         });
+        // TODO maintaining redundant state is bad
         $scope.pins[sensor].connected_to.push(actuator);
         $scope.pins[actuator].connected_to.push(sensor);
     };
@@ -151,6 +167,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         $scope.connections = _.filter($scope.connections, function(c) {
             return !(c.sensor === sensor && c.actuator === actuator);
         });
+        // TODO maintaining redundant state is bad
         $scope.pins[sensor].connected_to = _.filter($scope.pins[sensor].connected_to, function(pin) {
             return !(pin === actuator);
         });
@@ -160,6 +177,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     };
 }]);
 
+// sensor and actuator directives both inherit from cat.pin_base
 cat.pin_base = function(click_callback_maker) {
 
     return function($scope, $el, attrs) {
@@ -259,10 +277,13 @@ cat.app.directive('connection', function($document) {
                 }
             }
 
+            // can remove connection by clicking connection
             connection.bind('mousedown', remove_self);
+            // can remove connection when actuator triggers mousedown on $el
             $el.on('mousedown', remove_self);
         }
 
+        // only render when it's safe
         if (cat.is_safe_to_render_connections()) {
             render();
         } else {
@@ -272,10 +293,12 @@ cat.app.directive('connection', function($document) {
         }
 
         $el.on('$destroy', function() {
+            // TODO I think I should call the destructor at the beginning of render, too, if connection !== null (in case render gets called multiple times)
             if (connection !== null) {
                 connection.unbind('mousedown');
                 jsPlumb.detach(connection);
             }
+            // TODO add $el.off('mousedown');
         });
     }
 
@@ -284,6 +307,7 @@ cat.app.directive('connection', function($document) {
     };
 });
 
+// TODO replace this with real data from the server
 cat.get_fake_initial_data = function() {
 
     var pin_defaults = {
@@ -338,7 +362,6 @@ cat.get_fake_initial_data = function() {
         });
     });
 
-    // TODO merge in sync-connections branch so that you can start with some connections
     connections = [{sensor: 'A1', actuator: '1'},
                    {sensor: 'A1', actuator: '3'}];
 
