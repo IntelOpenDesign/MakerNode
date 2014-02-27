@@ -10,7 +10,6 @@ function toggle_debug_log() {
 }
 
 jsPlumb.bind('ready', function() {
-    // TODO can I change this to #container?
     jsPlumb.Defaults.Container = $('#field');
 
     cat.jsplumb_ready = true;
