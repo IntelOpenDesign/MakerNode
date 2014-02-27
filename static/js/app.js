@@ -22,7 +22,7 @@ jsPlumb.bind('ready', function() {
     */
 });
 
-cat.server_url = 'ws://192.168.0.192:8001';
+cat.server_url = 'ws://localhost:8001';
 // use this one when you are on the Galileo
 // cat.server_url = 'ws://cat/';
 
