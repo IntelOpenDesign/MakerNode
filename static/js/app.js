@@ -84,7 +84,6 @@ cat.is_safe_to_render_connections = function() {
     });
 
     $document.on('rendered-pin', function(e, pin) {
-        // TODO why does this callback happen whenever a connection is rendered, with the ID of the connection?
         if (visible_pins.indexOf(pin) < 0) {
             console.log('this pin is weird:', pin);
             return;
