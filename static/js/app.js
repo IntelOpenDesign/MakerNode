@@ -160,48 +160,42 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     };
 }]);
 
-// shared between sensors and actuators
-cat.pin_initializer = function($document, $scope, $el, attrs) {
-    var that = {};
-    that.$endpoint = $el.find('.endpoint');
-    that.clickevent = 'mousedown';
-    that.id = attrs.id;
-    return that;
+cat.pin_base = function(click_callback_maker) {
+
+    return function($scope, $el, attrs) {
+        var $endpoint = $el.find('.endpoint');
+        var clickevent = 'mousedown';
+
+        $endpoint.on(clickevent, click_callback_maker($scope, $el, attrs));
+
+        $el.on('$destroy', function() {
+            $endpoint.off(clickevent);
+        });
+
+        $(document).trigger('rendered-pin', attrs.id);
+    }
 };
 
 cat.app.directive('sensor', function($document) {
-    function link($scope, $el, attrs) {
-        var that = cat.pin_initializer($document, $scope, $el, attrs);
 
-        that.$endpoint.on(that.clickevent, function(e) {
+    var sensor_callback_maker = function($scope, $el, attrs) {
+        return function(e) {
             var already_activated = $el.hasClass('activated');
             $('.pin').removeClass('activated');
             if (!already_activated) {
                 $el.addClass('activated');
                 $('.actuator').addClass('activated');
             }
-        });
+        }
+    };
 
-        $el.on('$destroy', function() {
-            that.$endpoint.off(that.clickevent);
-        });
-
-        $(document).trigger('rendered-pin', attrs.id);
-    }
-
-    // TODO is there an unlink function i should write so that i can remove listeners when this gets deleted?
-
-    return {
-        link: link,
-    }
+    return {link: cat.pin_base(sensor_callback_maker)};
 });
 
 cat.app.directive('actuator', function($document) {
-    function link($scope, $el, attrs) {
 
-        var that = cat.pin_initializer($document, $scope, $el, attrs);
-
-        that.$endpoint.on(that.clickevent, function(e) {
+    var actuator_callback_maker = function($scope, $el, attrs) {
+        return function(e) {
             if (!$el.hasClass('activated')) {
                 return;
             }
@@ -216,19 +210,12 @@ cat.app.directive('actuator', function($document) {
                 });
             }
             $('.pin').removeClass('activated');
-        });
+        }
+    };
 
-        $el.on('$destroy', function() {
-            that.$endpoint.off(that.clickevent);
-        });
-
-        $(document).trigger('rendered-pin', attrs.id);
-    }
-
-    return {
-        link: link,
-    }
+    return {link: cat.pin_base(actuator_callback_maker)};
 });
+
 
 cat.app.directive('connection', function($document) {
     function link($scope, $el, attrs) {
