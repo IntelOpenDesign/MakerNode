@@ -241,17 +241,17 @@ cat.app.directive('connection', function($document) {
         $sensor = $actuator = connection = msg = null;
 
         function render() {
-            $sensor = $('#'+attrs.sensor);
-            $actuator = $('#'+attrs.actuator);
-            console.log('rendering connection ', attrs.sensor, '-', attrs.actuator);
+            $sensor = $('#'+attrs.sensor_id);
+            $actuator = $('#'+attrs.actuator_id);
+            // TODO make this the names not ids
             msg = 'Do you want to delete the ' + $sensor.attr('id') + ' - ' + $actuator.attr('id') + ' connection?';
             connection = jsPlumb.connect({
-                source: attrs.sensor,
-                target: attrs.actuator,
+                source: attrs.sensorId,
+                target: attrs.actuatorId,
                 connector: ['Bezier', {curviness: 70}],
-                cssClass: 'connection pins-'+attrs.sensor+'-'+attrs.actuator,
+                cssClass: 'connection pins-'+attrs.sensorId+'-'+attrs.actuatorId,
                 endpoint: 'Blank',
-                endpointClass: 'endpoint pins-'+attrs.sensor+'-'+attrs.actuator,
+                endpointClass: 'endpoint pins-'+attrs.sensorId+'-'+attrs.actuatorId,
                 anchors: ['Right', 'Left'],
                 paintStyle: {
                     lineWidth: 15,
@@ -271,7 +271,7 @@ cat.app.directive('connection', function($document) {
                 if (confirm(msg)) {
                     connection.unbind('mousedown');
                     $scope.$apply(function() {
-                        $scope.disconnect(attrs.sensor, attrs.actuator);
+                        $scope.disconnect(attrs.sensorId, attrs.actuatorId);
                     });
                 }
             }
