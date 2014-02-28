@@ -33,22 +33,34 @@ cat.server_url = 'ws://localhost:8001';
 // cat.app is the angular app
 cat.app = angular.module('ConnectAnything', []);
 
-// used in index.html for ng-repeat to draw only the visible sensor pins
+// base filter for pins, used in ng-repeat to determine lists of sensors and
+// actuators to show.
+// pin_selector is the function that returns true for pins that should be included
+// connection_end is 'sensor' or 'actuator'
+// note that this can really only be used to filter for all sensors or all actuators the way it is written; it is not a general purpose helper function for filtering pins in other ways
+cat.pins_filter = function(pin_selector, connection_end) {
+    return function(o) {
+        var pins_list = _.filter(o.pins, pin_selector);
+        var pins_dict = _.object(_.map(pins_list, function(pin) {
+            return [pin.id, pin];
+        }));
+        _.each(o.connections, function(c) {
+            if (_.has(pins_dict, c[connection_end])) {
+                pins_dict[c[connection_end]].is_connected = true;
+            }
+        });
+        return _.values(pins_dict);
+    };
+};
 cat.app.filter('sensors', function() {
-    return function(pins) {
-        return _.filter(pins, function(pin) {
-            return pin.is_input && pin.is_visible;
-        });
-    };
+    return cat.pins_filter(function(pin) {
+        return pin.is_input && pin.is_visible;
+    }, 'sensor');
 });
-
-// used in index.html for ng-repeat to draw only the visible actuator pins
 cat.app.filter('actuators', function() {
-    return function(pins) {
-        return _.filter(pins, function(pin) {
-            return !pin.is_input && pin.is_visible;
-        });
-    };
+    return cat.pins_filter(function(pin) {
+        return !pin.is_input && pin.is_visible;
+    }, 'actuator');
 });
 
 // Connections can only render AFTER BOTH jsPlumb is ready (because jsPlumb is
@@ -155,22 +167,12 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
             sensor: sensor,
             actuator: actuator,
         });
-        // TODO maintaining redundant state is bad
-        $scope.pins[sensor].connected_to.push(actuator);
-        $scope.pins[actuator].connected_to.push(sensor);
     };
 
     $scope.disconnect = function(sensor, actuator) {
         // TODO server
         $scope.connections = _.filter($scope.connections, function(c) {
             return !(c.sensor === sensor && c.actuator === actuator);
-        });
-        // TODO maintaining redundant state is bad
-        $scope.pins[sensor].connected_to = _.filter($scope.pins[sensor].connected_to, function(pin) {
-            return !(pin === actuator);
-        });
-        $scope.pins[actuator].connected_to = _.filter($scope.pins[actuator].connected_to, function(pin) {
-            return !(pin === sensor);
         });
     };
 }]);
@@ -217,7 +219,7 @@ cat.app.directive('actuator', function($document) {
             }
             var $sensor = $('.sensor.activated').first();
             var sensor = $sensor.attr('id'); // pin id
-            if ($scope.pins[attrs.id].connected_to.indexOf(sensor) >= 0) {
+            if (_.filter($scope.connections, function(c) { return c.sensor === sensor && c.actuator === attrs.id}).length >= 0) {
                 // already connected, so ask if they want to delete the connection
                 $('#connect-' + sensor + '-' + attrs.id).trigger('mousedown');
             } else {
@@ -354,7 +356,6 @@ cat.get_fake_initial_data = function() {
                     'is_input': is_input,
                     'value': 0,
                     'is_visible': true,
-                    'connected_to': [],
                 };
             });
         });
@@ -362,12 +363,6 @@ cat.get_fake_initial_data = function() {
 
     connections = [{sensor: 'A1', actuator: '1'},
                    {sensor: 'A1', actuator: '3'}];
-
-    // TODO maintaining redundant state is bad
-    _.each(connections, function(c) {
-        pins[c.sensor].connected_to.push(c.actuator);
-        pins[c.actuator].connected_to.push(c.sensor);
-    });
 
     return {pins: pins, connections: connections};
 };
