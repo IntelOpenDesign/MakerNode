@@ -219,10 +219,11 @@ cat.app.directive('actuator', function($document) {
             }
             var $sensor = $('.sensor.activated').first();
             var sensor = $sensor.attr('id'); // pin id
-            if (_.filter($scope.connections, function(c) { return c.sensor === sensor && c.actuator === attrs.id}).length >= 0) {
+            if (_.filter($scope.connections, function(c) { return c.sensor === sensor && c.actuator === attrs.id}).length > 0) {
                 // already connected, so ask if they want to delete the connection
                 $('#connect-' + sensor + '-' + attrs.id).trigger('mousedown');
             } else {
+                console.log('about to call connect');
                 $scope.$apply(function() {
                     $scope.connect(sensor, attrs.id);
                 });
