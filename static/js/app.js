@@ -246,6 +246,7 @@ cat.app.directive('connection', function($document) {
             $sensor = $('#'+attrs.sensor_id);
             $actuator = $('#'+attrs.actuator_id);
             // TODO make this the names not ids
+            // TODO how to give a better title to the popup
             msg = 'Do you want to delete the ' + $sensor.attr('id') + ' - ' + $actuator.attr('id') + ' connection?';
             connection = jsPlumb.connect({
                 source: attrs.sensorId,
