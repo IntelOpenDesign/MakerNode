@@ -243,10 +243,13 @@ cat.app.directive('connection', function($document) {
         $sensor = $actuator = connection = msg = null;
 
         function render() {
+            if (connection !== null) {
+                connection.unbind('mousedown');
+                $el.off('mousedown');
+            }
             $sensor = $('#'+attrs.sensorId);
             $actuator = $('#'+attrs.actuatorId);
             // TODO how to give a better title to the popup
-            // TODO remove 'connected' class after deleting the connection
             msg = 'Do you want to delete the ' + $sensor.data('name') + ' - ' + $actuator.data('name') + ' connection?';
             connection = jsPlumb.connect({
                 source: attrs.sensorId,
@@ -272,6 +275,7 @@ cat.app.directive('connection', function($document) {
 
             function remove_self(e) {
                 if (confirm(msg)) {
+                    // TODO parameterize 'mousedown'
                     connection.unbind('mousedown');
                     $el.off('mousedown');
                     $scope.$apply(function() {
