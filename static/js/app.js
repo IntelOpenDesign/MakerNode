@@ -4,11 +4,6 @@ var cat = {};
 // the whole app needs to know when jsPlumb is ready because only then can we draw connections
 cat.jsplumb_ready = false;
 
-// TODO remove when done debugging
-function toggle_debug_log() {
-    $('#debug-log').toggleClass('hide');
-}
-
 jsPlumb.bind('ready', function() {
     jsPlumb.Defaults.Container = $('#field');
 
@@ -24,6 +19,11 @@ jsPlumb.bind('ready', function() {
     jsPlumb.draggable($('.actuator'), {containment: '#actuators'});
     */
 });
+
+// TODO remove when done debugging
+function toggle_debug_log() {
+    $('#debug-log').toggleClass('hide');
+}
 
 // websocket server
 cat.server_url = 'ws://localhost:8001';
