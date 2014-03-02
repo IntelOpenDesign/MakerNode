@@ -45,7 +45,7 @@ cat.pins_filter = function(pin_selector, connection_end) {
     return function(o) {
         var pins_list = _.filter(o.pins, pin_selector);
         var pins_dict = _.object(_.map(pins_list, function(pin) {
-            return [pin.id, pin];
+            return [pin.id, _.extend(pin, {is_connected: false})];
         }));
         _.each(o.connections, function(c) {
             if (_.has(pins_dict, c[connection_end])) {
@@ -93,7 +93,6 @@ cat.is_safe_to_render_connections = function() {
         visible_pins = _.pluck(_.filter(pins, function(pin) {
             return pin.is_visible;
         }), 'id');
-        console.log('visible pins', visible_pins);
         rendered_pins = {};
         all_pins_rendered = false;
     });
@@ -164,7 +163,6 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     };
 
     $scope.connect = function(sensor, actuator) {
-        console.log('connect sensor', sensor, 'actuator', actuator);
         // TODO server
         $scope.connections.push({
             sensor: sensor,
@@ -301,7 +299,6 @@ cat.app.directive('connection', function($document) {
         }
 
         $el.on('$destroy', function() {
-            // TODO I think I should call the destructor at the beginning of render, too, if connection !== null (in case render gets called multiple times)
             if (connection !== null) {
                 connection.unbind(cat.tap);
                 jsPlumb.detach(connection);
