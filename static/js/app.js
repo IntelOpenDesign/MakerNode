@@ -30,6 +30,9 @@ cat.server_url = 'ws://localhost:8001';
 // for Galileo
 // cat.server_url = 'ws://cat/';
 
+// parameterize events
+cat.tap = 'mousedown';
+
 // cat.app is the angular app
 cat.app = angular.module('ConnectAnything', []);
 
@@ -182,9 +185,8 @@ cat.pin_base = function(click_callback_maker) {
 
     return function($scope, $el, attrs) {
         var $endpoint = $el.find('.endpoint');
-        var clickevent = 'mousedown';
 
-        $endpoint.on(clickevent, click_callback_maker($scope, $el, attrs));
+        $endpoint.on(cat.tap, click_callback_maker($scope, $el, attrs));
 
         $el.on('$destroy', function() {
             $endpoint.off(clickevent);
@@ -221,7 +223,7 @@ cat.app.directive('actuator', function($document) {
             var sensor = $sensor.attr('id'); // pin id
             if (_.filter($scope.connections, function(c) { return c.sensor === sensor && c.actuator === attrs.id}).length > 0) {
                 // already connected, so ask if they want to delete the connection
-                $('#connect-' + sensor + '-' + attrs.id).trigger('mousedown');
+                $('#connect-' + sensor + '-' + attrs.id).trigger(cat.tap);
             } else {
                 console.log('about to call connect');
                 $scope.$apply(function() {
@@ -244,8 +246,8 @@ cat.app.directive('connection', function($document) {
 
         function render() {
             if (connection !== null) {
-                connection.unbind('mousedown');
-                $el.off('mousedown');
+                connection.unbind(cat.tap);
+                $el.off(cat.tap);
             }
             $sensor = $('#'+attrs.sensorId);
             $actuator = $('#'+attrs.actuatorId);
@@ -275,9 +277,8 @@ cat.app.directive('connection', function($document) {
 
             function remove_self(e) {
                 if (confirm(msg)) {
-                    // TODO parameterize 'mousedown'
-                    connection.unbind('mousedown');
-                    $el.off('mousedown');
+                    connection.unbind(cat.tap);
+                    $el.off(cat.tap);
                     $scope.$apply(function() {
                         $scope.disconnect(attrs.sensorId, attrs.actuatorId);
                     });
@@ -285,9 +286,9 @@ cat.app.directive('connection', function($document) {
             }
 
             // can remove connection by clicking connection
-            connection.bind('mousedown', remove_self);
-            // can remove connection when actuator triggers mousedown on $el
-            $el.on('mousedown', remove_self);
+            connection.bind(cat.tap, remove_self);
+            // can remove connection when actuator triggers cat.tap on $el
+            $el.on(cat.tap, remove_self);
         }
 
         // only render when it's safe
@@ -302,7 +303,7 @@ cat.app.directive('connection', function($document) {
         $el.on('$destroy', function() {
             // TODO I think I should call the destructor at the beginning of render, too, if connection !== null (in case render gets called multiple times)
             if (connection !== null) {
-                connection.unbind('mousedown');
+                connection.unbind(cat.tap);
                 jsPlumb.detach(connection);
             }
         });
