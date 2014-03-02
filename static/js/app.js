@@ -273,6 +273,7 @@ cat.app.directive('connection', function($document) {
             function remove_self(e) {
                 if (confirm(msg)) {
                     connection.unbind('mousedown');
+                    $el.off('mousedown');
                     $scope.$apply(function() {
                         $scope.disconnect(attrs.sensorId, attrs.actuatorId);
                     });
@@ -300,7 +301,6 @@ cat.app.directive('connection', function($document) {
                 connection.unbind('mousedown');
                 jsPlumb.detach(connection);
             }
-            // TODO add $el.off('mousedown');
         });
     }
 
