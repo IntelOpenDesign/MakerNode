@@ -223,7 +223,6 @@ cat.app.directive('actuator', function($document) {
                 // already connected, so ask if they want to delete the connection
                 $('#connect-' + sensor + '-' + attrs.id).trigger(cat.tap);
             } else {
-                console.log('about to call connect');
                 $scope.$apply(function() {
                     $scope.connect(sensor, attrs.id);
                 });
