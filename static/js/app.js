@@ -243,11 +243,11 @@ cat.app.directive('connection', function($document) {
         $sensor = $actuator = connection = msg = null;
 
         function render() {
-            $sensor = $('#'+attrs.sensor_id);
-            $actuator = $('#'+attrs.actuator_id);
-            // TODO make this the names not ids
+            $sensor = $('#'+attrs.sensorId);
+            $actuator = $('#'+attrs.actuatorId);
             // TODO how to give a better title to the popup
-            msg = 'Do you want to delete the ' + $sensor.attr('id') + ' - ' + $actuator.attr('id') + ' connection?';
+            // TODO remove 'connected' class after deleting the connection
+            msg = 'Do you want to delete the ' + $sensor.data('name') + ' - ' + $actuator.data('name') + ' connection?';
             connection = jsPlumb.connect({
                 source: attrs.sensorId,
                 target: attrs.actuatorId,
