@@ -125,9 +125,8 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     // TODO take this out when done debugging
     window.$scope = $scope;
 
-    $scope.pins = cat.initialize_pins();
-    $scope.connections = cat.initialize_connections();
-    $document.trigger('reset-pins', $scope.pins);
+    $scope.pins = {};
+    $scope.connections = [];
 
     // good resource: http://clintberry.com/2013/angular-js-websocket-service/
     var ws = new WebSocket(cat.server_url);
@@ -170,10 +169,13 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     };
 
     $scope.pin_name = function (pin) {
-        if (!pin.is_input && pin.is_analog) {
+        if (pin.is_analog && !pin.is_input) { // analog out
             return '~' + pin.id; // ex. '~3'
         }
-        return pin.id; // ex. 'A0' or '1'
+        if (pin.is_analog && pin.is_input) { // analog in
+            return 'A' + (parseInt(pin.id) - 14); // 14 = A0, 15 = A1, etc
+        }
+        return pin.id;
     };
 }]);
 
@@ -308,30 +310,4 @@ cat.app.directive('connection', function($document) {
         link: link,
     };
 });
-
-cat.pin_ids = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', 'A0', 'A1', 'A2', 'A3', 'A4', 'A5'];
-
-
-// initialize pins and connections
-// matches expected JSON format from server
-cat.initialize_pins = function() {
-    var pins = {};
-    _.each(cat.pin_ids, function(id) {
-        pins[id] = {
-            id: id, // TODO right now assuming client and server ids match
-            label: '',         // init from server
-            is_input: false,   // init from server
-            is_analog: false,  // init from server
-            is_visible: false, // init from server
-            value: 0,          // init from server
-        };
-    });
-    return pins;
-};
-
-cat.initialize_connections = function() {
-    return [];
-};
-
-
 
