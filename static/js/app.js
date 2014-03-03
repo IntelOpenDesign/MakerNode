@@ -125,11 +125,8 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     // TODO take this out when done debugging
     window.$scope = $scope;
 
-    // TODO initialize with real server data, once we get JSON data from server
-    var pin_order = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', 'A0', 'A1', 'A2', 'A3', 'A4', 'A5'];
-    var start_data = cat.get_fake_initial_data();
-    $scope.pins = start_data.pins;
-    $scope.connections = start_data.connections;
+    $scope.pins = cat.initialize_pins();
+    $scope.connections = cat.initialize_connections();
     $document.trigger('reset-pins', $scope.pins);
 
     // good resource: http://clintberry.com/2013/angular-js-websocket-service/
@@ -148,18 +145,12 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         //TODO remove when done debugging
         $debug_log.html(message.data);
 
-        var pin_states = message.data.split(',');
-        $scope.$apply(function(){
-            for (var i = 0; i < pin_states.length; i++) {
-                var pin = $scope.pins[pin_order[i]];
-                // for the time being only the sensor pin values from the server are meaningful
-                if (pin.is_input) {
-                    pin.value = parseFloat(pin_states[i])*100;
-                }
-            }
+        $scope.$apply(function() {
+            $scope.pins = message.data.pins;
+            $scope.connections = message.data.connections;
         });
         // you need to trigger this IFF you are causing pins to be redrawn
-        //$document.trigger('reset-pins', $scope.pins);
+        $document.trigger('reset-pins', $scope.pins);
     };
 
     $scope.connect = function(sensor, actuator) {
@@ -175,6 +166,13 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         $scope.connections = _.filter($scope.connections, function(c) {
             return !(c.sensor === sensor && c.actuator === actuator);
         });
+    };
+
+    $scope.pin_name = function (pin) {
+        if (!pin.is_input && pin.is_analog) {
+            return '~' + pin.id; // ex. '~3'
+        }
+        return pin.id; // ex. 'A0' or '1'
     };
 }]);
 
@@ -310,62 +308,29 @@ cat.app.directive('connection', function($document) {
     };
 });
 
-// TODO replace this with real data from the server
-cat.get_fake_initial_data = function() {
+cat.pin_ids = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', 'A0', 'A1', 'A2', 'A3', 'A4', 'A5'];
 
-    var pin_defaults = {
-        'input': {
-            'analog': [0, 1, 2, 3, 4, 5],
-        },
-        'output': {
-            'analog': [3, 5, 6, 9, 10, 11],
-            'digital': [0, 1, 2, 4, 7, 8, 12, 13],
-        },
-    };
 
-    function pin_name(number, is_analog, is_input) {
-        if (!is_analog) { // digital
-            return number.toString();
-        }
-        // is_analog === true
-        if (is_input) {
-            return 'A' + number;
-        } else {
-            return '~' + number;
-        }
-    }
-
-    function pin_id(number, is_analog, is_input) {
-        if (is_input && is_analog) {
-            return 'A' + number;
-        } else {
-            return number.toString();
-        }
-    }
-
-    pins = {};
-    _.each(pin_defaults, function(obj, IorO) { // input or output
-        _.each(obj, function(nums, AorD) { // analog or digital
-            _.each(nums, function(num) { // all pin numbers of this type
-                var is_input = IorO === 'input';
-                var is_analog = AorD === 'analog';
-                var id = pin_id(num, is_analog, is_input);
-                var name = pin_name(num, is_analog, is_input);
-                pins[id] = {
-                    'id': id,
-                    'name': name,
-                    'label': 'Label for ' + name,
-                    'is_analog': is_analog,
-                    'is_input': is_input,
-                    'value': 0,
-                    'is_visible': true,
-                };
-            });
-        });
+// initialize pins and connections
+// matches expected JSON format from server
+cat.initialize_pins = function() {
+    var pins = {};
+    _.each(cat.pin_ids, function(id) {
+        pins[id] = {
+            id: id, // TODO right now assuming client and server ids match
+            label: '',         // init from server
+            is_input: false,   // init from server
+            is_analog: false,  // init from server
+            is_visible: false, // init from server
+            value: 0,          // init from server
+        };
     });
-
-    connections = [{sensor: 'A1', actuator: '1'},
-                   {sensor: 'A1', actuator: '3'}];
-
-    return {pins: pins, connections: connections};
+    return pins;
 };
+
+cat.initialize_connections = function() {
+    return [];
+};
+
+
+
