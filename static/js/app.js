@@ -87,6 +87,7 @@ cat.is_safe_to_render_connections = function() {
 
     $document.on('rendered-pin', function(e, pin) {
         console.log('caught rendered pin event for', pin);
+        $('#'+pin).css({'border': '10px solid gray'});
         if (visible_pins.indexOf(pin) < 0) {
             console.log('this pin is weird:', pin);
             return;
@@ -197,6 +198,7 @@ cat.pin_base = function(click_callback_maker) {
             $endpoint.off(cat.tap);
         });
 
+        $('#'+attrs.id).css({'border': '10px solid red'});
         $(document).trigger('rendered-pin', attrs.id);
     }
 };
@@ -254,11 +256,13 @@ cat.app.directive('connection', function($document) {
                 connection.unbind(cat.tap);
                 $el.off(cat.tap);
             }
+
             $sensor = $('#'+attrs.sensorId);
             $actuator = $('#'+attrs.actuatorId);
-            console.log('$sensor', $sensor, '$actuator', $actuator);
+
             // TODO how to give a better title to the popup
             msg = 'Do you want to delete the ' + $sensor.data('name') + ' - ' + $actuator.data('name') + ' connection?';
+
             connection = jsPlumb.connect({
                 source: attrs.sensorId,
                 target: attrs.actuatorId,
