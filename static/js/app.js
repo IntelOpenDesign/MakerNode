@@ -86,6 +86,7 @@ cat.is_safe_to_render_connections = function() {
     });
 
     $document.on('rendered-pin', function(e, pin) {
+        console.log('caught rendered pin event for', pin);
         if (visible_pins.indexOf(pin) < 0) {
             console.log('this pin is weird:', pin);
             return;
@@ -147,15 +148,15 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
                 is_connected: false,
             }, pin);
             pins[id].value *= 100;
+        });
 
-            _.each(data.connections, function(c) {
-                pins[c.source].is_connected = true;
-                pins[c.target].is_connected = true;
-            });
+        _.each(data.connections, function(c) {
+            pins[c.source].is_connected = true;
+            pins[c.target].is_connected = true;
         });
 
         // you need to trigger this IFF you are causing pins to be redrawn
-        $document.trigger('reset-pins', data.pins);
+        $document.trigger('reset-pins', pins);
         $scope.$apply(function() {
             $scope.pins = pins;
             $scope.connections = data.connections;
@@ -163,11 +164,16 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     };
 
     $scope.connect = function(sensor, actuator) {
-        // TODO server
+        ws.send(JSON.stringify({
+            status: 'OK',
+            connections: [{source: sensor, target: actuator}],
+        }));
         $scope.connections.push({
             source: sensor,
             target: actuator,
         });
+        $scope.pins[sensor].is_connected = true;
+        $scope.pins[actuator].is_connected = true;
     };
 
     $scope.disconnect = function(sensor, actuator) {
@@ -243,12 +249,14 @@ cat.app.directive('connection', function($document) {
         $sensor = $actuator = connection = msg = null;
 
         function render() {
+            console.log('rendering connection', attrs.sensorId, '-', attrs.actuatorId);
             if (connection !== null) {
                 connection.unbind(cat.tap);
                 $el.off(cat.tap);
             }
             $sensor = $('#'+attrs.sensorId);
             $actuator = $('#'+attrs.actuatorId);
+            console.log('$sensor', $sensor, '$actuator', $actuator);
             // TODO how to give a better title to the popup
             msg = 'Do you want to delete the ' + $sensor.data('name') + ' - ' + $actuator.data('name') + ' connection?';
             connection = jsPlumb.connect({

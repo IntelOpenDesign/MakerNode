@@ -47,9 +47,26 @@ function update() {
 setInterval(update, 6000);
 
 var server = ws.createServer(function(conn){
-    console.log('new connection', conn);
+    console.log('new connection');
     conn.on('text', function(str) {
-        console.log('received ' + JSON.parse(str));
+        console.log('received ' + str);
+        var d = JSON.parse(str);
+        _und.each(d.connections, function(dc) {
+            var index = -1;
+            _und.each(msg.connections, function(mc, i) {
+                if (mc.source === dc.source && mc.target === dc.target) {
+                    index = i;
+                }
+            });
+            if (index >= 0) {
+                msg.connections.splice(index, 1);
+            } else {
+                msg.connections.push({
+                    source: dc.source,
+                    target: dc.target
+                });
+            }
+        });
     });
     setInterval(function() {
         conn.sendText(JSON.stringify(msg));
