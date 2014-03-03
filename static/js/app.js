@@ -43,6 +43,7 @@ cat.app = angular.module('ConnectAnything', []);
 // note that this can really only be used to filter for all sensors or all actuators the way it is written; it is not a general purpose helper function for filtering pins in other ways
 cat.pins_filter = function(pin_selector, connection_end) {
     return function(o) {
+        console.log('filtering for', connection_end);
         var pins_list = _.filter(o.pins, pin_selector);
         var pins_dict = _.object(_.map(pins_list, function(pin) {
             return [pin.id, _.extend({is_connected: false}, pin)];
@@ -90,9 +91,13 @@ cat.is_safe_to_render_connections = function() {
     }
 
     $document.on('reset-pins', function(e, pins) {
-        visible_pins = _.pluck(_.filter(pins, function(pin) {
-            return pin.is_visible;
-        }), 'id');
+        visible_pins = [];
+        _.each(pins, function(o, id) {
+            if (o.is_visible) {
+                visible_pins.push(id);
+            }
+        });
+        console.log('visible_pins', visible_pins);
         rendered_pins = {};
         all_pins_rendered = false;
     });
@@ -146,7 +151,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         console.log('websocket data', data);
 
         // you need to trigger this IFF you are causing pins to be redrawn
-        $document.trigger('reset-pins', $scope.pins);
+        $document.trigger('reset-pins', data.pins);
 
         $scope.$apply(function() {
             $scope.pins = data.pins;
