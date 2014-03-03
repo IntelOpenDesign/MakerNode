@@ -51,61 +51,6 @@ cat.app.filter('actuators', function() {
     }
 });
 
-// Connections can only render AFTER BOTH jsPlumb is ready (because jsPlumb is
-// what draws the svg edges and endpoints) AND their pins have rendered (so
-// that the connection endpoints have real positions in the DOM). This function
-// tracks those things. Connections call it to see if it is safe to render.
-cat.is_safe_to_render_connections = function() {
-    var $document = $(document);
-    var visible_pins, rendered_pins;
-    var all_pins_rendered = false;
-
-    function check() {
-        if (all_pins_rendered && cat.jsplumb_ready) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    function maybe_trigger() {
-        if (check()) {
-            $('.connection').trigger('render-connection');
-        }
-    }
-
-    $document.on('reset-pins', function(e, pins) {
-        visible_pins = [];
-        _.each(pins, function(o, id) {
-            if (o.is_visible) {
-                visible_pins.push(id);
-            }
-        });
-        rendered_pins = {};
-        all_pins_rendered = false;
-    });
-
-    $document.on('rendered-pin', function(e, pin) {
-        console.log('caught rendered pin event for', pin);
-        $('#'+pin).css({'border': '10px solid gray'});
-        if (visible_pins.indexOf(pin) < 0) {
-            console.log('this pin is weird:', pin);
-            return;
-        }
-        rendered_pins[pin] = true;
-        if (_.keys(rendered_pins).length === visible_pins.length) {
-            all_pins_rendered = true;
-            maybe_trigger();
-        }
-    });
-
-    $document.on('jsplumb-ready', function(e) {
-        maybe_trigger();
-    });
-
-    return check;
-}();
-
 // The controller for the whole app. Also handles talking to the server.
 // Eventually probably want to refactor, but right now it's tight and simple.
 cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
@@ -115,6 +60,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     // TODO take this out when done debugging
     window.$scope = $scope;
 
+    $scope.activated_sensor = null;
     $scope.pins = {};
     $scope.connections = [];
 
@@ -156,15 +102,14 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
             pins[c.target].is_connected = true;
         });
 
-        // you need to trigger this IFF you are causing pins to be redrawn
-        $document.trigger('reset-pins', pins);
+        cat.clear_all_connections();
         $scope.$apply(function() {
             $scope.pins = pins;
             $scope.connections = data.connections;
         });
     };
 
-    $scope.connect = function(sensor, actuator) {
+    var connect = function(sensor, actuator) {
         ws.send(JSON.stringify({
             status: 'OK',
             connections: [{source: sensor, target: actuator}],
@@ -177,13 +122,47 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         $scope.pins[actuator].is_connected = true;
     };
 
-    $scope.disconnect = function(sensor, actuator) {
-        // TODO server
+    var disconnect = function(sensor, actuator) {
+        ws.send(JSON.stringify({
+            status: 'OK',
+            connections: [{source: sensor, target: actuator}],
+        }));
         $scope.connections = _.filter($scope.connections, function(c) {
             return !(c.source === sensor && c.target === actuator);
         });
+        cat.clear_connection(sensor, actuator);
     };
 
+    $scope.toggle_activated = function(sensor) {
+        $scope.$apply(function() {
+            if ($scope.activated_sensor === sensor) {
+                $scope.activated_sensor = null;
+            } else {
+                $scope.activated_sensor = sensor;
+            }
+        });
+    };
+
+    $scope.connect_or_disconnect = function(actuator) {
+        $scope.$apply(function() {
+            if ($scope.activated_sensor === null) {
+                return;
+            }
+            var sensor = $scope.activated_sensor;
+            var existing_connection = _.filter($scope.connections, function(c) {
+                return c.source === sensor && c.target === actuator;
+            });
+            if (existing_connection.length === 0) {
+                connect(sensor, actuator);
+            } else {
+                var msg = 'Do you want to delete the ' + $scope.pins[sensor].name + ' - ' + $scope.pins[actuator].name + ' connection?';
+                if (confirm(msg)) {
+                    disconnect(sensor, actuator);
+                }
+            }
+            $scope.activated_sensor = null;
+        });
+    };
 }]);
 
 // sensor and actuator directives both inherit from cat.pin_base
@@ -199,7 +178,6 @@ cat.pin_base = function(click_callback_maker) {
         });
 
         $('#'+attrs.id).css({'border': '10px solid red'});
-        $(document).trigger('rendered-pin', attrs.id);
     }
 };
 
@@ -207,12 +185,7 @@ cat.app.directive('sensor', function($document) {
 
     var sensor_callback_maker = function($scope, $el, attrs) {
         return function(e) {
-            var already_activated = $el.hasClass('activated');
-            $('.pin').removeClass('activated');
-            if (!already_activated) {
-                $el.addClass('activated');
-                $('.actuator').addClass('activated');
-            }
+            $scope.toggle_activated(attrs.id);
         }
     };
 
@@ -223,26 +196,12 @@ cat.app.directive('actuator', function($document) {
 
     var actuator_callback_maker = function($scope, $el, attrs) {
         return function(e) {
-            if (!$el.hasClass('activated')) {
-                return;
-            }
-            var $sensor = $('.sensor.activated').first();
-            var sensor = $sensor.attr('id'); // pin id
-            if (_.filter($scope.connections, function(c) { return c.sensor === sensor && c.actuator === attrs.id}).length > 0) {
-                // already connected, so ask if they want to delete the connection
-                $('#connect-' + sensor + '-' + attrs.id).trigger(cat.tap);
-            } else {
-                $scope.$apply(function() {
-                    $scope.connect(sensor, attrs.id);
-                });
-            }
-            $('.pin').removeClass('activated');
+            $scope.connect_or_disconnect(attrs.id);
         }
     };
 
     return {link: cat.pin_base(actuator_callback_maker)};
 });
-
 
 cat.app.directive('connection', function($document) {
     function link($scope, $el, attrs) {
@@ -250,19 +209,17 @@ cat.app.directive('connection', function($document) {
         var $sensor, $actuator, connection, msg;
         $sensor = $actuator = connection = msg = null;
 
-        function render() {
-            console.log('rendering connection', attrs.sensorId, '-', attrs.actuatorId);
-            if (connection !== null) {
-                connection.unbind(cat.tap);
-                $el.off(cat.tap);
-            }
-
+        function find_my_pins() {
             $sensor = $('#'+attrs.sensorId);
             $actuator = $('#'+attrs.actuatorId);
+            if ($sensor.length === 0 || $actuator.length === 0) {
+                setTimeout(find_my_pins, 10);
+            } else {
+                render();
+            }
+        }
 
-            // TODO how to give a better title to the popup
-            msg = 'Do you want to delete the ' + $sensor.data('name') + ' - ' + $actuator.data('name') + ' connection?';
-
+        function render() {
             connection = jsPlumb.connect({
                 source: attrs.sensorId,
                 target: attrs.actuatorId,
@@ -284,42 +241,23 @@ cat.app.directive('connection', function($document) {
                     strokeStyle: 'rgb(250, 250, 60)',
                 },
             });
-
-            function remove_self(e) {
-                if (confirm(msg)) {
-                    connection.unbind(cat.tap);
-                    $el.off(cat.tap);
-                    $scope.$apply(function() {
-                        $scope.disconnect(attrs.sensorId, attrs.actuatorId);
-                    });
-                }
-            }
-
-            // can remove connection by clicking connection
-            connection.bind(cat.tap, remove_self);
-            // can remove connection when actuator triggers cat.tap on $el
-            $el.on(cat.tap, remove_self);
         }
 
-        // only render when it's safe
-        if (cat.is_safe_to_render_connections()) {
-            render();
-        } else {
-            $el.on('render-connection', function() {
-                render();
-            });
-        }
-
-        $el.on('$destroy', function() {
-            if (connection !== null) {
-                connection.unbind(cat.tap);
-                jsPlumb.detach(connection);
-            }
-        });
+        find_my_pins();
     }
 
     return {
         link: link,
     };
 });
+
+cat.clear_all_connections = function() {
+    $('._jsPlumb_endpoint').remove();
+    $('._jsPlumb_connector').remove();
+};
+
+cat.clear_connection = function(sensor, actuator) {
+    $('.connection.pins-'+sensor+'-'+actuator).remove();
+};
+
 

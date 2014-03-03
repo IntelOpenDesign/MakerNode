@@ -18,7 +18,7 @@
     <div class="container">
         <div id="field" class="ui-grid-a" ng-controller="PinsCtrl">
             <div id="sensors" class="ui-block-a">
-                <div id="{{pin.id}}" ng-repeat="pin in pins | sensors" ng-class="{'sensor':true, 'pin':true, 'connected':pin.is_connected, 'analog': pin.is_analog, 'digital': !pin.is_analog}" data-name="{{pin.name}}" sensor>
+                <div id="{{pin.id}}" ng-repeat="pin in pins | sensors" ng-class="{'sensor':true, 'pin':true, 'connected':pin.is_connected, 'analog': pin.is_analog, 'digital': !pin.is_analog, 'activated': activated_sensor === pin.id}" data-name="{{pin.name}}" sensor>
                     <div class="pin-box">
                         <div class="pin-label">
                             {{pin.name}}
@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div id="actuators" class="ui-block-b">
-                <div id="{{pin.id}}" ng-repeat="pin in pins | actuators" ng-class="{'actuator':true, 'pin':true, 'connected':pin.is_connected, 'analog': pin.is_analog, 'digital': !pin.is_analog}" data-name="{{pin.name}}" actuator>
+                <div id="{{pin.id}}" ng-repeat="pin in pins | actuators" ng-class="{'actuator':true, 'pin':true, 'connected':pin.is_connected, 'analog': pin.is_analog, 'digital': !pin.is_analog, 'activated': activated_sensor !== null}" data-name="{{pin.name}}" actuator>
                     <div class="pin-box">
                         <div class="pin-label">
                             {{pin.name}}
