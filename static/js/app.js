@@ -36,35 +36,19 @@ cat.tap = 'mousedown';
 // cat.app is the angular app
 cat.app = angular.module('ConnectAnything', []);
 
-// base filter for pins, used in ng-repeat to determine lists of sensors and
-// actuators to show.
-// pin_selector is the function that returns true for pins that should be included
-// connection_end is 'sensor' or 'actuator'
-// note that this can really only be used to filter for all sensors or all actuators the way it is written; it is not a general purpose helper function for filtering pins in other ways
-cat.pins_filter = function(pin_selector, connection_end) {
-    return function(o) {
-        console.log('filtering for', connection_end);
-        var pins_list = _.filter(o.pins, pin_selector);
-        var pins_dict = _.object(_.map(pins_list, function(pin) {
-            return [pin.id, _.extend({is_connected: false}, pin)];
-        }));
-        _.each(o.connections, function(c) {
-            if (_.has(pins_dict, c[connection_end])) {
-                pins_dict[c[connection_end]].is_connected = true;
-            }
-        });
-        return _.values(pins_dict);
-    };
-};
 cat.app.filter('sensors', function() {
-    return cat.pins_filter(function(pin) {
-        return pin.is_input && pin.is_visible;
-    }, 'sensor');
+    return function(pins) {
+        return _.filter(pins, function(pin) {
+            return pin.is_input && pin.is_visible;
+        });
+    }
 });
 cat.app.filter('actuators', function() {
-    return cat.pins_filter(function(pin) {
-        return !pin.is_input && pin.is_visible;
-    }, 'actuator');
+    return function(pins) {
+        return  _.filter(pins, function(pin) {
+            return !pin.is_input && pin.is_visible;
+        });
+    }
 });
 
 // Connections can only render AFTER BOTH jsPlumb is ready (because jsPlumb is
@@ -97,7 +81,6 @@ cat.is_safe_to_render_connections = function() {
                 visible_pins.push(id);
             }
         });
-        console.log('visible_pins', visible_pins);
         rendered_pins = {};
         all_pins_rendered = false;
     });
@@ -150,11 +133,30 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         var data = JSON.parse(msg.data);
         console.log('websocket data', data);
 
+        var pins = {};
+        _.each(data.pins, function(pin, id) {
+            var name = id;
+            if (pin.is_analog && !pin.is_input) // analog out
+                name = '~' + id; // ex. '~3'
+            if (pin.is_analog && pin.is_input) // analog in
+                name = 'A' + (parseInt(id) - 14); // 14 = A0, 15 = A1, etc
+
+            pins[id] = _.extend({
+                id: id,
+                name: name,
+                is_connected: false,
+            }, pin);
+
+            _.each(data.connections, function(c) {
+                pins[c.source].is_connected = true;
+                pins[c.target].is_connected = true;
+            });
+        });
+
         // you need to trigger this IFF you are causing pins to be redrawn
         $document.trigger('reset-pins', data.pins);
-
         $scope.$apply(function() {
-            $scope.pins = data.pins;
+            $scope.pins = pins;
             $scope.connections = data.connections;
         });
     };
@@ -174,15 +176,6 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         });
     };
 
-    $scope.pin_name = function (pin) {
-        if (pin.is_analog && !pin.is_input) { // analog out
-            return '~' + pin.id; // ex. '~3'
-        }
-        if (pin.is_analog && pin.is_input) { // analog in
-            return 'A' + (parseInt(pin.id) - 14); // 14 = A0, 15 = A1, etc
-        }
-        return pin.id;
-    };
 }]);
 
 // sensor and actuator directives both inherit from cat.pin_base
