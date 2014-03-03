@@ -146,6 +146,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
                 name: name,
                 is_connected: false,
             }, pin);
+            pins[id].value *= 100;
 
             _.each(data.connections, function(c) {
                 pins[c.source].is_connected = true;
