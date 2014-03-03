@@ -140,14 +140,15 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     //TODO remove when done debugging
     var $debug_log = $('#debug-log');
 
-    ws.onmessage = function(message) {
-        console.log('websocket message', message.data);
+    ws.onmessage = function(msg) {
         //TODO remove when done debugging
-        $debug_log.html(message.data);
+        $debug_log.html(msg.data);
+        var data = JSON.parse(msg.data);
+        console.log('websocket data', data);
 
         $scope.$apply(function() {
-            $scope.pins = message.data.pins;
-            $scope.connections = message.data.connections;
+            $scope.pins = data.pins;
+            $scope.connections = data.connections;
         });
         // you need to trigger this IFF you are causing pins to be redrawn
         $document.trigger('reset-pins', $scope.pins);
