@@ -45,7 +45,7 @@ cat.pins_filter = function(pin_selector, connection_end) {
     return function(o) {
         var pins_list = _.filter(o.pins, pin_selector);
         var pins_dict = _.object(_.map(pins_list, function(pin) {
-            return [pin.id, _.extend(pin, {is_connected: false})];
+            return [pin.id, _.extend({is_connected: false}, pin)];
         }));
         _.each(o.connections, function(c) {
             if (_.has(pins_dict, c[connection_end])) {
@@ -145,12 +145,13 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         var data = JSON.parse(msg.data);
         console.log('websocket data', data);
 
+        // you need to trigger this IFF you are causing pins to be redrawn
+        $document.trigger('reset-pins', $scope.pins);
+
         $scope.$apply(function() {
             $scope.pins = data.pins;
             $scope.connections = data.connections;
         });
-        // you need to trigger this IFF you are causing pins to be redrawn
-        $document.trigger('reset-pins', $scope.pins);
     };
 
     $scope.connect = function(sensor, actuator) {
