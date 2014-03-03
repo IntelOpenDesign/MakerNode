@@ -13,6 +13,7 @@ var all_pins = [].concat(digital_outs).concat(digital_ins).concat(analog_outs).c
 var msg = {
     status: 'OK', // TODO test client side with "error" status
     pins: {},
+    connections: [],
 };
 
 function pin_setter(is_analog, is_input) {
