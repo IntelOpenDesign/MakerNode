@@ -165,15 +165,15 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     $scope.connect = function(sensor, actuator) {
         // TODO server
         $scope.connections.push({
-            sensor: sensor,
-            actuator: actuator,
+            source: sensor,
+            target: actuator,
         });
     };
 
     $scope.disconnect = function(sensor, actuator) {
         // TODO server
         $scope.connections = _.filter($scope.connections, function(c) {
-            return !(c.sensor === sensor && c.actuator === actuator);
+            return !(c.source === sensor && c.target === actuator);
         });
     };
 
