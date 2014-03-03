@@ -186,7 +186,7 @@ cat.pin_base = function(click_callback_maker) {
         $endpoint.on(cat.tap, click_callback_maker($scope, $el, attrs));
 
         $el.on('$destroy', function() {
-            $endpoint.off(clickevent);
+            $endpoint.off(cat.tap);
         });
 
         $(document).trigger('rendered-pin', attrs.id);
