@@ -98,10 +98,10 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         });
     };
 
-    $scope.sync_pins = function() {
+    $scope.send_pin_update = function(pin_ids) {
         ws.send(JSON.stringify({
             status: 'OK',
-            pins: cat.server_pin_format($scope.pins),
+            pins: cat.server_pin_format($scope.pins, pin_ids),
         }));
     };
 
@@ -322,10 +322,11 @@ cat.my_pin_format = function(server_pins, server_connections) {
     return pins;
 };
 
-cat.server_pin_format = function(my_pins) {
+cat.server_pin_format = function(my_pins, my_pin_ids) {
     var pins = {};
 
-    _.each(my_pins, function(pin, id) {
+    _.each(my_pin_ids, function(id) {
+        var pin = my_pins[id];
         pins[id] = {
             label: pin.label,
             value: pin.value / 100,

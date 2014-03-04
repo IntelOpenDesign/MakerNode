@@ -56,7 +56,7 @@
                               ng-model="pin.label"
                               placeholder="Pin Label"
                               class="pin-label"
-                              ng-change="sync_pins()"
+                              ng-change="send_pin_update([pin.id])"
                               ng-focus="focus_label()"
                               ng-blur="unfocus_label()">
                             <div class="datum">
@@ -64,12 +64,12 @@
                                 <div class="inline">{{pin.value|number:0}}%</div>
                             </div>
                             <div class="datum">
-                                <input class="inline" type="checkbox" ng-model="pin.is_inverted" ng-change="sync_pins()">
+                                <input class="inline" type="checkbox" ng-model="pin.is_inverted" ng-change="send_pin_update([pin.id])">
                                 <label class="inline">invert</label>
                             </div>
                             <div class="datum">
                                 <label class="inline">Sensitivity</label>
-                                <input class="inline" type="range" ng-model="pin.sensitivity" min="0" max="1" step="0.1" value="{{pin.sensitivity}}" ng-change="sync_pins()">
+                                <input class="inline" type="range" ng-model="pin.sensitivity" min="0" max="1" step="0.1" value="{{pin.sensitivity}}" ng-change="send_pin_update([pin.id])">
                             </div>
                         </div>
                     </div>
@@ -115,7 +115,7 @@
                               ng-model="pin.label"
                               placeholder="Pin Label"
                               class="pin-label"
-                              ng-change="sync_pins()"
+                              ng-change="send_pin_update([pin.id])"
                               ng-focus="focus_label()"
                               ng-blur="unfocus_label()">
                             <div class="datum">
