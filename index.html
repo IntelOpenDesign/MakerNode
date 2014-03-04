@@ -21,7 +21,7 @@
                 <div id="{{pin.id}}" ng-repeat="pin in pins | sensors" ng-class="{'sensor':true, 'pin':true, 'connected':pin.is_connected, 'analog': pin.is_analog, 'digital': !pin.is_analog, 'activated': activated_sensor === pin.id}" data-name="{{pin.name}}" sensor>
                     <div class="pin-box">
                         <div class="pin-label">
-                            {{pin.name}}
+                            {{pin.label}}
                         </div>
                         <div class="pin-value-container">
                             <div class="pin-value" style="height:{{pin.value}}%;"></div>
@@ -36,7 +36,7 @@
                 <div id="{{pin.id}}" ng-repeat="pin in pins | actuators" ng-class="{'actuator':true, 'pin':true, 'connected':pin.is_connected, 'analog': pin.is_analog, 'digital': !pin.is_analog, 'activated': activated_sensor !== null}" data-name="{{pin.name}}" actuator>
                     <div class="pin-box">
                         <div class="pin-label">
-                            {{pin.name}}
+                            {{pin.label}}
                         </div>
                         <div class="pin-value-container" ng-click="pin.value = (pin.value === 100) ? 0 : 100">
                             <div class="pin-value" style="height:{{pin.value}}%;"></div>

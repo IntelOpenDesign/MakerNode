@@ -57,6 +57,8 @@
     position: absolute;
     top: 5%;
     z-index: 5;
+    color: black;
+    text-shadow: none;
 }
 .sensor .pin-label {
     left: 4px;
