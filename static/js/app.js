@@ -62,6 +62,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
 
     $scope.activated_sensor = null;
     $scope.settings_pin = null;
+    $scope.settings_pin_label_focus = false;
     $scope.pins = {};
     $scope.connections = [];
 

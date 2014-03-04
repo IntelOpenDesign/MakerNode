@@ -17,8 +17,20 @@
 <body>
     <div class="container" ng-controller="PinsCtrl">
         <div id="field" class="ui-grid-a">
+
             <div id="sensors" class="ui-block-a">
-                <div id="{{pin.id}}" ng-repeat="pin in pins | sensors" ng-class="{'sensor':true, 'pin':true, 'connected':pin.is_connected, 'analog': pin.is_analog, 'digital': !pin.is_analog, 'activated': activated_sensor === pin.id}" data-name="{{pin.name}}" sensor>
+
+                <div id="{{pin.id}}"
+                  ng-repeat="pin in pins | sensors"
+                  ng-class="{
+                      'sensor':true,
+                      'pin':true,
+                      'connected':pin.is_connected,
+                      'analog': pin.is_analog,
+                      'digital': !pin.is_analog,
+                      'activated': activated_sensor === pin.id}"
+                  data-name="{{pin.name}}"
+                  sensor>
                     <div class="pin-box">
                         <div class="pin-label">
                             {{pin.label}}
@@ -30,11 +42,21 @@
                     <div class="pin-port">
                         <div class="endpoint" id="{{pin.id}}-endpoint"></div>
                     </div>
-                    <div ng-class="{'settings': true, 'hide': !(settings_pin === pin.id)}">
+                    <div ng-class="{'settings': true,
+                                    'hide': !(settings_pin === pin.id)}">
                         <div class="settings-inner">
-                            <div class="exit" ng-click="close_settings()">&times;</div>
-                            <div class="pin-name">{{pin.name}}</div>
-                            <input type="text" ng-model="pin.label" placeholder="Pin Label" class="pin-label" ng-change="sync_pins()">
+                            <div class="exit"
+                              ng-click="close_settings()">
+                                  &times;
+                            </div>
+                            <div class="pin-name">
+                                {{pin.name}}
+                            </div>
+                            <input type="text"
+                              ng-model="pin.label"
+                              placeholder="Pin Label"
+                              class="pin-label"
+                              ng-change="sync_pins()">
                             <div class="datum">
                                 <label class="inline">Current Reading</label>
                                 <div class="inline">{{pin.value|number:0}}%</div>
@@ -48,12 +70,24 @@
                                 <input class="inline" type="range" ng-model="pin.sensitivity" min="0" max="1" step="0.1" value="{{pin.sensitivity}}" ng-change="sync_pins()">
                             </div>
                         </div>
-
                     </div>
                 </div>
+
             </div>
+
             <div id="actuators" class="ui-block-b">
-                <div id="{{pin.id}}" ng-repeat="pin in pins | actuators" ng-class="{'actuator':true, 'pin':true, 'connected':pin.is_connected, 'analog': pin.is_analog, 'digital': !pin.is_analog, 'activated': activated_sensor !== null}" data-name="{{pin.name}}" actuator>
+
+                <div id="{{pin.id}}"
+                  ng-repeat="pin in pins | actuators"
+                  ng-class="{
+                      'actuator':true,
+                      'pin':true,
+                      'connected':pin.is_connected,
+                      'analog': pin.is_analog,
+                      'digital': !pin.is_analog,
+                      'activated': activated_sensor !== null}"
+                  data-name="{{pin.name}}"
+                  actuator>
                     <div class="pin-box">
                         <div class="pin-label">
                             {{pin.label}}
@@ -66,10 +100,21 @@
                         <div class="endpoint" id="{{pin.id}}-endpoint"></div>
                     </div>
                 </div>
+
             </div>
+
             <div id="connections">
-                <div id="connect-{{c.source}}-{{c.target}}" ng-repeat="c in connections" class="connection" data-sensor_id="{{c.source}}" data-actuator_id="{{c.target}}" connection></div>
+
+                <div id="connect-{{c.source}}-{{c.target}}"
+                  ng-repeat="c in connections"
+                  class="connection"
+                  data-sensor_id="{{c.source}}"
+                  data-actuator_id="{{c.target}}"
+                  connection>
+                </div>
+
             </div>
+
         </div>
 
         <!-- TODO remove when done debugging -->
