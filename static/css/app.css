@@ -154,6 +154,7 @@
     float: right;
     font-size: 200%;
     padding: 1em;
+    cursor: default;
 }
 .settings .pin-name {
     padding: 1em;
