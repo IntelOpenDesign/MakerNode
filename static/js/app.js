@@ -155,6 +155,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
 
     $scope.show_settings_for = function(pin) {
         $scope.$apply(function() {
+            $scope.activated_pin = null;
             $scope.settings_pin = pin;
         });
     };
