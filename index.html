@@ -101,6 +101,29 @@
                     <div class="pin-port">
                         <div class="endpoint" id="{{pin.id}}-endpoint"></div>
                     </div>
+                    <div ng-class="{'settings': true,
+                                    'hide': !(settings_pin === pin.id)}">
+                        <div class="settings-inner">
+                            <div class="exit"
+                              ng-click="close_settings()">
+                                  &times;
+                            </div>
+                            <div class="pin-name">
+                                {{pin.name}}
+                            </div>
+                            <input type="text"
+                              ng-model="pin.label"
+                              placeholder="Pin Label"
+                              class="pin-label"
+                              ng-change="sync_pins()"
+                              ng-focus="focus_label()"
+                              ng-blur="unfocus_label()">
+                            <div class="datum">
+                                <label class="inline">Current Reading</label>
+                                <div class="inline">{{pin.value|number:0}}%</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
