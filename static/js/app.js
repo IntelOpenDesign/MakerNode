@@ -184,7 +184,6 @@ cat.pin_base = function(click_callback_maker) {
             $box.off(cat.tap);
         });
 
-        $('#'+attrs.id).css({'border': '10px solid red'});
     }
 };
 
