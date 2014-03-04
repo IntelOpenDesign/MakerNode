@@ -24,6 +24,8 @@ function pin_setter(is_analog, is_input) {
             is_visible: true,
             is_analog: is_analog,
             is_input: is_input,
+            sensitivity: 0.5,
+            is_inverted: false,
         };
     }
 }
@@ -66,6 +68,14 @@ var server = ws.createServer(function(conn){
                     target: dc.target
                 });
             }
+        });
+        _und.each(d.pins, function(pin, id) {
+            msg.pins[id].label = pin.label;
+            msg.pins[id].is_visible = pin.is_visible;
+            msg.pins[id].is_analog = pin.is_analog;
+            msg.pins[id].is_input = pin.is_input;
+            msg.pins[id].sensitivity = pin.sensitivy;
+            msg.pins[id].is_inverted = pin.is_inverted;
         });
     });
     setInterval(function() {

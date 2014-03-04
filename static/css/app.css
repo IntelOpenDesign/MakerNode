@@ -8,6 +8,7 @@
     background: blanchedalmond;
     word-break: break-all;
 }
+
 .hide {
     display: none;
 }
@@ -134,4 +135,51 @@
 }
 .actuator.connected .endpoint {
     background: rgb(232, 189, 0);
+}
+
+
+.settings {
+    position: fixed;
+    width: 90%;
+    height: 94%;
+    top: 3%;
+    z-index: 10;
+    background: rgb(224, 153, 87);
+}
+.settings-inner {
+    position: relative;
+}
+.settings .exit {
+    display: inline-block;
+    float: right;
+    font-size: 200%;
+    padding: 1em;
+}
+.settings .pin-name {
+    padding: 1em;
+    padding-left: 0;
+    margin-left: 5%;
+    font-size: 200%;
+    color: rgb(231, 193, 193);
+    text-shadow: none;
+}
+.settings .pin-label {
+    position: relative;
+    padding: .3em;
+    font-size: 150%;
+    margin-left: 4%;
+    margin-bottom: 1em;
+    display: block;
+}
+.settings .datum {
+    display: inline-block;
+    float: left;
+    clear: both;
+    margin-left: 5%;
+}
+.settings .inline {
+    display: inline-block;
+    float: left;
+    margin-bottom: 1em;
+    margin-right: 1em;
 }

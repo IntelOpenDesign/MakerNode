@@ -61,6 +61,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     window.$scope = $scope;
 
     $scope.activated_sensor = null;
+    $scope.settings_pin = null;
     $scope.pins = {};
     $scope.connections = [];
 
@@ -81,32 +82,20 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         var data = JSON.parse(msg.data);
         console.log('websocket data', data);
 
-        var pins = {};
-        _.each(data.pins, function(pin, id) {
-            var name = id;
-            if (pin.is_analog && !pin.is_input) // analog out
-                name = '~' + id; // ex. '~3'
-            if (pin.is_analog && pin.is_input) // analog in
-                name = 'A' + (parseInt(id) - 14); // 14 = A0, 15 = A1, etc
-
-            pins[id] = _.extend({
-                id: id,
-                name: name,
-                is_connected: false,
-            }, pin);
-            pins[id].value *= 100;
-        });
-
-        _.each(data.connections, function(c) {
-            pins[c.source].is_connected = true;
-            pins[c.target].is_connected = true;
-        });
+        var new_pins = cat.my_pin_format(data.pins, data.connections);
 
         cat.clear_all_connections();
         $scope.$apply(function() {
-            $scope.pins = pins;
+            $scope.pins = new_pins;
             $scope.connections = data.connections;
         });
+    };
+
+    $scope.sync_pins = function() {
+        ws.send(JSON.stringify({
+            status: 'OK',
+            pins: cat.server_pin_format($scope.pins),
+        }));
     };
 
     var connect = function(sensor, actuator) {
@@ -163,6 +152,18 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
             $scope.activated_sensor = null;
         });
     };
+
+    $scope.show_settings_for = function(pin) {
+        $scope.$apply(function() {
+            $scope.settings_pin = pin;
+        });
+    };
+
+    $scope.close_settings = function() {
+        $scope.$apply(function() {
+            $scope.settings_pin = null;
+        });
+    };
 }]);
 
 // sensor and actuator directives both inherit from cat.pin_base
@@ -170,11 +171,17 @@ cat.pin_base = function(click_callback_maker) {
 
     return function($scope, $el, attrs) {
         var $endpoint = $el.find('.endpoint');
+        var $box = $el.find('.pin-box');
 
         $endpoint.on(cat.tap, click_callback_maker($scope, $el, attrs));
+        $box.on(cat.tap, function(e) {
+            $scope.show_settings_for(attrs.id);
+
+        });
 
         $el.on('$destroy', function() {
             $endpoint.off(cat.tap);
+            $box.off(cat.tap);
         });
 
         $('#'+attrs.id).css({'border': '10px solid red'});
@@ -182,7 +189,7 @@ cat.pin_base = function(click_callback_maker) {
 };
 
 cat.app.directive('sensor', function($document) {
-
+// TODO can I just do this with ng-click?
     var sensor_callback_maker = function($scope, $el, attrs) {
         return function(e) {
             $scope.toggle_activated(attrs.id);
@@ -260,4 +267,47 @@ cat.clear_connection = function(sensor, actuator) {
     $('.connection.pins-'+sensor+'-'+actuator).remove();
 };
 
+// translate between client side and server side format for pins
+cat.my_pin_format = function(server_pins, server_connections) {
+    var pins = {};
 
+    _.each(server_pins, function(pin, id) {
+        var name = id;
+        if (pin.is_analog && !pin.is_input)   // analog out:
+            name = '~' + id;                  // ex. '~3'
+        if (pin.is_analog && pin.is_input)    // analog in:
+            name = 'A' + (parseInt(id) - 14); // 14 = A0, 15 = A1, etc
+
+        pins[id] = _.extend({
+            id: id,
+            name: name,
+            is_connected: false,
+        }, pin);
+        pins[id].value *= 100;
+    });
+
+    _.each(server_connections, function(c) {
+        pins[c.source].is_connected = true;
+        pins[c.target].is_connected = true;
+    });
+
+    return pins;
+};
+
+cat.server_pin_format = function(my_pins) {
+    var pins = {};
+
+    _.each(my_pins, function(pin, id) {
+        pins[id] = {
+            label: pin.label,
+            value: pin.value / 100,
+            is_visible: pin.is_visible,
+            is_analog: pin.is_analog,
+            is_input: pin.is_input,
+            sensitivity: pin.sensitivity,
+            is_inverted: pin.is_inverted,
+        };
+    });
+
+    return pins;
+};
