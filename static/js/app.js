@@ -52,7 +52,7 @@ cat.app.filter('actuators', function() {
 });
 
 // The controller for the whole app. Also handles talking to the server.
-// Eventually probably want to refactor, but right now it's tight and simple.
+// Eventually probably want to refactor
 cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
 
     var $document = $(document);
