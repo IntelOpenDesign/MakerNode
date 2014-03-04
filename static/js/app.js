@@ -292,12 +292,17 @@ cat.my_pin_format = function(server_pins, server_connections) {
         if (pin.is_analog && pin.is_input)    // analog in:
             name = 'A' + (parseInt(id) - 14); // 14 = A0, 15 = A1, etc
 
-        pins[id] = _.extend({
+        pins[id] = {
             id: id,
             name: name,
-            is_connected: false,
-        }, pin);
-        pins[id].value *= 100;
+            label: pin.label,
+            value: pin.value * 100,
+            is_visible: pin.is_visible,
+            is_analog: pin.is_analog,
+            is_input: pin.is_input,
+            sensitivity: pin.sensitivity.toString(),
+            is_inverted: pin.is_inverted,
+        };
     });
 
     _.each(server_connections, function(c) {
@@ -318,7 +323,7 @@ cat.server_pin_format = function(my_pins) {
             is_visible: pin.is_visible,
             is_analog: pin.is_analog,
             is_input: pin.is_input,
-            sensitivity: pin.sensitivity,
+            sensitivity: parseFloat(pin.sensitivity),
             is_inverted: pin.is_inverted,
         };
     });
