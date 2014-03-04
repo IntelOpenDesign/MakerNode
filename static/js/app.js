@@ -168,9 +168,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     };
 
     $scope.close_settings = function() {
-        $scope.$apply(function() {
-            $scope.settings_pin = null;
-        });
+        $scope.settings_pin = null;
     };
 }]);
 
