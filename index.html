@@ -56,7 +56,9 @@
                               ng-model="pin.label"
                               placeholder="Pin Label"
                               class="pin-label"
-                              ng-change="sync_pins()">
+                              ng-change="sync_pins()"
+                              ng-focus="focus_label()"
+                              ng-blur="unfocus_label()">
                             <div class="datum">
                                 <label class="inline">Current Reading</label>
                                 <div class="inline">{{pin.value|number:0}}%</div>
