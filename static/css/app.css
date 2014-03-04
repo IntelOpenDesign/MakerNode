@@ -172,6 +172,8 @@
     margin-left: 4%;
     margin-bottom: 1em;
     display: block;
+    line-height: 1.5;
+    width: 89%;
 }
 .settings .datum {
     display: inline-block;

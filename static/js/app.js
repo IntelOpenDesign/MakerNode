@@ -26,7 +26,7 @@ function toggle_debug_log() {
 }
 
 // websocket server
-cat.server_url = 'ws://localhost:8001';
+cat.server_url = 'ws://192.168.0.198:8001';
 // for Galileo
 // cat.server_url = 'ws://cat/';
 
