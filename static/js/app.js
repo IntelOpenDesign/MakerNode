@@ -119,14 +119,22 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     };
 
     var disconnect = function(sensor, actuator) {
+        cat.clear_connection(sensor, actuator);
+        $scope.connections = _.filter($scope.connections, function(c) {
+            return !(c.source === sensor && c.target === actuator);
+        });
+        _.each([{pin: sensor, end: 'source'}, {pin: actuator, end: 'target'}], function(o) {
+            var remaining_connections = _.filter($scope.connections, function(c) {
+                return c[o.end] === o.pin;
+            });
+            if (remaining_connections.length === 0) {
+                $scope.pins[o.pin].is_connected = false;
+            }
+        });
         ws.send(JSON.stringify({
             status: 'OK',
             connections: [{source: sensor, target: actuator}],
         }));
-        $scope.connections = _.filter($scope.connections, function(c) {
-            return !(c.source === sensor && c.target === actuator);
-        });
-        cat.clear_connection(sensor, actuator);
     };
 
     $scope.toggle_activated = function(sensor) {
@@ -278,6 +286,7 @@ cat.clear_all_connections = function() {
 };
 
 cat.clear_connection = function(sensor, actuator) {
+    console.log('clear connection', sensor, actuator);
     $('.connection.pins-'+sensor+'-'+actuator).remove();
 };
 
