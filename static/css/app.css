@@ -1,8 +1,8 @@
-/* TODO remove when done debugging*/
 body {
     font-size: 24px;
 }
 
+/* TODO remove when done debugging*/
 #debug-log {
     position: absolute;
     top: 0;
@@ -13,9 +13,6 @@ body {
     word-break: break-all;
 }
 
-.hide {
-    display: none;
-}
 #toggle-debug-log {
     position: absolute;
     top: 0;
@@ -28,6 +25,9 @@ body {
     height: 60px;
 }
 
+.hide {
+    display: none;
+}
 #field {
     background: antiquewhite;
 }
