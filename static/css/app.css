@@ -251,3 +251,13 @@ body {
     top: 220px;
     left: 70%;
 }
+
+#loading {
+    background: rgb(255, 255, 255) url('../img/loading.gif') center center no-repeat;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}

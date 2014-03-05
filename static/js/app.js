@@ -60,6 +60,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     // TODO take this out when done debugging
     window.$scope = $scope;
 
+    $scope.got_data = false;
     $scope.activated_sensor = null;
     $scope.settings_pin = null;
     $scope.settings_pin_label_focus = false;
@@ -93,6 +94,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
 
         cat.clear_all_connections();
         $scope.$apply(function() {
+            $scope.got_data = true;
             $scope.pins = new_pins;
             $scope.connections = data.connections;
         });
