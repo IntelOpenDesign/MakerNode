@@ -106,16 +106,16 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     };
 
     var connect = function(sensor, actuator) {
-        ws.send(JSON.stringify({
-            status: 'OK',
-            connections: [{source: sensor, target: actuator}],
-        }));
         $scope.connections.push({
             source: sensor,
             target: actuator,
         });
         $scope.pins[sensor].is_connected = true;
         $scope.pins[actuator].is_connected = true;
+        ws.send(JSON.stringify({
+            status: 'OK',
+            connections: [{source: sensor, target: actuator}],
+        }));
     };
 
     var disconnect = function(sensor, actuator) {
