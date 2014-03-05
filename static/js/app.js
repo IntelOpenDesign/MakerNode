@@ -85,10 +85,11 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     var $debug_log = $('#debug-log');
 
     ws.onmessage = function(msg) {
+        console.log('websocket message', msg);
         //TODO remove when done debugging
         $debug_log.html(msg.data);
         var data = JSON.parse(msg.data);
-        console.log('websocket data', data);
+        console.log('websocket data parsed into JSON', data);
 
         var new_pins = cat.my_pin_format(data.pins, data.connections);
 
