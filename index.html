@@ -47,7 +47,7 @@
                         <div class="settings-inner">
                             <div class="exit"
                               ng-click="close_settings()">
-                                  &times;
+                                  &#x2713;
                             </div>
                             <div class="pin-name">
                                 {{pin.name}}
@@ -59,18 +59,30 @@
                               ng-change="send_pin_update([pin.id])"
                               ng-focus="focus_label()"
                               ng-blur="unfocus_label()">
-                            <div class="datum">
-                                <label class="inline">Current Reading</label>
-                                <div class="inline">{{pin.value|number:0}}%</div>
+                            <div class="value-label">
+                                Reading
                             </div>
-                            <div class="datum">
-                                <input class="inline" type="checkbox" ng-model="pin.is_inverted" ng-change="send_pin_update([pin.id])">
-                                <label class="inline">invert</label>
+                            <div class="pin-value-container">
+                                <div class="pin-value" style="height:{{pin.value}}%;"></div>
                             </div>
-                            <div class="datum">
-                                <label class="inline">Sensitivity</label>
-                                <input class="inline" type="range" ng-model="pin.sensitivity" min="0" max="1" step="0.1" value="{{pin.sensitivity}}" ng-change="send_pin_update([pin.id])">
+                            <input type="checkbox"
+                              class="invert"
+                              ng-model="pin.is_inverted"
+                              ng-change="send_pin_update([pin.id])">
+                            <div class="invert-label">
+                                invert
                             </div>
+                            <div class="sensitivity-label">
+                                Sensitivity
+                            </div>
+                            <input type="range"
+                              class="sensitivity"
+                              ng-model="pin.sensitivity"
+                              min="0"
+                              max="1"
+                              step="0.1"
+                              value="{{pin.sensitivity}}"
+                              ng-change="send_pin_update([pin.id])">
                         </div>
                     </div>
                 </div>
@@ -106,7 +118,7 @@
                         <div class="settings-inner">
                             <div class="exit"
                               ng-click="close_settings()">
-                                  &times;
+                                  &#x2713;
                             </div>
                             <div class="pin-name">
                                 {{pin.name}}
@@ -118,9 +130,11 @@
                               ng-change="send_pin_update([pin.id])"
                               ng-focus="focus_label()"
                               ng-blur="unfocus_label()">
-                            <div class="datum">
-                                <label class="inline">Current Reading</label>
-                                <div class="inline">{{pin.value|number:0}}%</div>
+                            <div class="value-label">
+                                Reading
+                            </div>
+                            <div class="pin-value-container">
+                                <div class="pin-value" style="height:{{pin.value}}%;"></div>
                             </div>
                         </div>
                     </div>
