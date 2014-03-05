@@ -93,7 +93,6 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
 
         var new_pins = cat.my_pin_format(data.pins, data.connections);
 
-        cat.clear_all_connections();
         $scope.$apply(function() {
             $scope.got_data = true;
             $scope.pins = new_pins;
@@ -108,20 +107,30 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         }));
     };
 
-    var connect = function(sensor, actuator) {
-        $scope.connections.push({
-            source: sensor,
-            target: actuator,
-        });
-        $scope.pins[sensor].is_connected = true;
-        $scope.pins[actuator].is_connected = true;
+    var send_connect_to_server = function(sensor, actuator) {
         ws.send(JSON.stringify({
             status: 'OK',
             connections: [{source: sensor, target: actuator}],
         }));
     };
 
-    var disconnect = function(sensor, actuator) {
+    var send_disconnect_to_server = function(sensor, actuator) {
+        ws.send(JSON.stringify({
+            status: 'OK',
+            connections: [{source: sensor, target: actuator}],
+        }));
+    };
+
+    var connect_on_client = function(sensor, actuator) {
+        $scope.connections.push({
+            source: sensor,
+            target: actuator,
+        });
+        $scope.pins[sensor].is_connected = true;
+        $scope.pins[actuator].is_connected = true;
+    };
+
+    var disconnect_on_client = function(sensor, actuator) {
         cat.clear_connection(sensor, actuator);
         $scope.connections = _.filter($scope.connections, function(c) {
             return !(c.source === sensor && c.target === actuator);
@@ -134,10 +143,6 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
                 $scope.pins[o.pin].is_connected = false;
             }
         });
-        ws.send(JSON.stringify({
-            status: 'OK',
-            connections: [{source: sensor, target: actuator}],
-        }));
     };
 
     $scope.toggle_activated = function(sensor) {
@@ -160,11 +165,13 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
                 return c.source === sensor && c.target === actuator;
             });
             if (existing_connection.length === 0) {
-                connect(sensor, actuator);
+                connect_on_client(sensor, actuator);
+                send_connect_to_server(sensor, actuator);
             } else {
                 var msg = 'Do you want to delete the ' + $scope.pins[sensor].name + ' - ' + $scope.pins[actuator].name + ' connection?';
                 if (confirm(msg)) {
-                    disconnect(sensor, actuator);
+                    disconnect_on_client(sensor, actuator);
+                    send_disconnect_to_server(sensor, actuator);
                 }
             }
             $scope.activated_sensor = null;
