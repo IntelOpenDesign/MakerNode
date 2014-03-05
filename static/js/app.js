@@ -214,6 +214,7 @@ cat.app.directive('sensor', function($document) {
 // TODO can I just do this with ng-click?
     var sensor_callback_maker = function($scope, $el, attrs) {
         return function(e) {
+            e.stopPropagation();
             $scope.toggle_activated(attrs.id);
         }
     };
@@ -225,6 +226,7 @@ cat.app.directive('actuator', function($document) {
 
     var actuator_callback_maker = function($scope, $el, attrs) {
         return function(e) {
+            e.stopPropagation();
             $scope.connect_or_disconnect(attrs.id);
         }
     };
