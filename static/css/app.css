@@ -28,6 +28,14 @@ body {
 .hide {
     display: none;
 }
+
+
+@-webkit-keyframes pulseGlow {
+    from { background-color: rgb(250, 250, 60); -webkit-box-shadow: 0 0 20px rgb(250, 250, 60); }
+    50%  { background-color: rgb(255, 255, 0); -webkit-box-shadow: 0 0 60px rgb(255, 255, 0); }
+    to   { background-color: rgb(250, 250, 60); -webkit-box-shadow: 0 0 20px rgb(250, 250, 60); }
+}
+
 #field {
     background: antiquewhite;
 }
@@ -138,6 +146,9 @@ body {
 .actuator.activated .endpoint,
 .actuator.activated.connected .endpoint {
     background: rgb(250, 250, 60);
+    -webkit-animation-name: pulseGlow;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
 }
 .actuator.connected .endpoint {
     background: rgb(232, 189, 0);
