@@ -38,9 +38,9 @@
                         <div class="pin-value-container">
                             <div class="pin-value" style="height:{{pin.value}}%;"></div>
                         </div>
-                    </div>
-                    <div class="pin-port">
-                        <div class="endpoint" id="{{pin.id}}-endpoint"></div>
+                        <div class="pin-port">
+                            <div class="endpoint" id="{{pin.id}}-endpoint"></div>
+                        </div>
                     </div>
                     <div ng-class="{'settings': true,
                                     'hide': !(settings_pin === pin.id)}">
@@ -109,9 +109,9 @@
                         <div class="pin-value-container" ng-click="pin.value = (pin.value === 100) ? 0 : 100">
                             <div class="pin-value" style="height:{{pin.value}}%;"></div>
                         </div>
-                    </div>
-                    <div class="pin-port">
-                        <div class="endpoint" id="{{pin.id}}-endpoint"></div>
+                        <div class="pin-port">
+                            <div class="endpoint" id="{{pin.id}}-endpoint"></div>
+                        </div>
                     </div>
                     <div ng-class="{'settings': true,
                                     'hide': !(settings_pin === pin.id)}">

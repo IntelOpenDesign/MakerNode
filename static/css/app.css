@@ -33,22 +33,23 @@ body {
 }
 
 .pin {
-    width: 85%;
-    height: 100px;
-    margin-top: 25px;
-    margin-bottom: 25px;
-    position: relative;
+    width: 70%;
+    height: 150px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin: 50px inherit;
 }
 .pin.sensor {
-    margin-left: 10%;
-    margin-right: 5%;
+    margin-left: 5%;
+    margin-right: 25%;
 }
 .pin.actuator {
-    margin-left: 5%;
-    margin-right: 10%;
+    margin-left: 25%;
+    margin-right: 5%;
 }
 
 .pin-box {
+    position: relative;
     height: 100%;
     background: rgb(107,48,0);
     width: 90%;
@@ -103,24 +104,25 @@ body {
 
 .pin-port {
     position: absolute;
-    top: 0;
-    height: 120px;
-    width: 120px;
-    margin-top: -10px; /* (.pin height - .pin-port height)/2 */
+    top: 50%;
+    height: 140px;
+    width: 140px;
+    margin-top: -70px;
+    z-index: 5;
 }
 .sensor .pin-port {
-    right: 0;
+    right: -70px;
 }
 .actuator .pin-port {
-    .left: 0;
+    left: -70px;
 }
 
 .endpoint {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     border-width: 20px;
     border-style: solid;
-    border-radius: 60px;
+    border-radius: 70px;
 }
 .sensor .endpoint {
     border-color: rgb(0, 102, 24);
