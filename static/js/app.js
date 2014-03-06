@@ -202,71 +202,70 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     };
 }]);
 
-// sensor and actuator directives both inherit from cat.pin_base
-cat.pin_base = function(click_callback_maker) {
+cat.pin_base = function($scope, $el, attrs) {
+    var that = {};
+    that.$endpoint = $el.find('.endpoint');
+    that.$box = $el.find('.pin-box');
+    that.$settings_label = $el.find('input.pin-label');
 
-    return function($scope, $el, attrs) {
-        var $endpoint = $el.find('.endpoint');
-        var $box = $el.find('.pin-box');
-        var $settings_label = $el.find('input.pin-label');
+    // TODO do with ng-click?
+    that.$box.on(cat.tap, function(e) {
+        $scope.show_settings_for(attrs.id);
+    });
 
-        $endpoint.on(cat.tap, click_callback_maker($scope, $el, attrs));
-        $box.on(cat.tap, function(e) {
-            $scope.show_settings_for(attrs.id);
+    $scope.update_pin_label = function() {
+        $scope.pins[attrs.id].label = that.$settings_label.val();
+        $scope.send_pin_update([attrs.id]);
+    };
 
-        });
+    $scope.type = function() {
+        var res = '';
+        if ($scope.pins[attrs.id].is_analog) {
+            res += 'Analog';
+        } else {
+            res += 'Digital';
+        }
+        return res;
+    };
 
-        $scope.update_pin_label = function() {
-            $scope.pins[attrs.id].label = $settings_label.val();
-            $scope.send_pin_update([attrs.id]);
-        };
+    $el.on('$destroy', function() {
+        that.$endpoint.off(cat.tap);
+        that.$box.off(cat.tap);
+    });
 
-        $el.on('$destroy', function() {
-            $endpoint.off(cat.tap);
-            $box.off(cat.tap);
-        });
-
-        // TODO move this to actuators-only
-        $scope.already_connected_to_activated_sensor = function() {
-            return _.filter($scope.connections, function(c) {
-                return c.source === $scope.activated_sensor && c.target === attrs.id; }).length > 0;
-        };
-
-        $scope.type = function() {
-            var res = '';
-            if ($scope.pins[attrs.id].is_analog) {
-                res += 'Analog';
-            } else {
-                res += 'Digital';
-            }
-            return res;
-        };
-
-    }
+    return that;
 };
 
 cat.app.directive('sensor', function($document) {
-// TODO can I just do this with ng-click?
-    var sensor_callback_maker = function($scope, $el, attrs) {
-        return function(e) {
+    function link($scope, $el, attrs) {
+        var that = cat.pin_base($scope, $el, attrs);
+
+        that.$endpoint.on(cat.tap, function(e) {
             e.stopPropagation();
             $scope.toggle_activated(attrs.id);
-        }
-    };
+        });
+    }
 
-    return {link: cat.pin_base(sensor_callback_maker)};
+    return { link: link };
 });
 
 cat.app.directive('actuator', function($document) {
+    function link($scope, $el, attrs) {
+        var that = cat.pin_base($scope, $el, attrs);
 
-    var actuator_callback_maker = function($scope, $el, attrs) {
-        return function(e) {
+        that.$endpoint.on(cat.tap, function(e) {
             e.stopPropagation();
             $scope.connect_or_disconnect(attrs.id);
-        }
-    };
+        });
 
-    return {link: cat.pin_base(actuator_callback_maker)};
+        $scope.already_connected_to_activated_sensor = function() {
+            return _.filter($scope.connections, function(c) {
+                return c.source === $scope.activated_sensor && c.target === attrs.id;
+            }).length > 0;
+        };
+    }
+
+    return { link: link };
 });
 
 cat.app.directive('connection', function($document) {
