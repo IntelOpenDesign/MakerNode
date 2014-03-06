@@ -64,6 +64,11 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         console.log('socket opened');
     };
 
+    window.onbeforeunload = function() {
+        ws.onclose = function() {};
+        ws.close();
+    };
+
     //TODO remove when done debugging
     var $debug_log = $('#debug-log');
 
