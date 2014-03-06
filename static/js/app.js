@@ -54,6 +54,8 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     $scope.pins = {};
     $scope.connections = [];
 
+    var show_server_lag = null; // timeout ID of the function that will run if the server does not give us updates for a while
+
     // good resource: http://clintberry.com/2013/angular-js-websocket-service/
     var ws = new WebSocket(cat.server_url);
     // for Galileo
@@ -65,7 +67,10 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     //TODO remove when done debugging
     var $debug_log = $('#debug-log');
 
+    // TODO this websockets code is getting too messy to be in the controller -- refactor
     ws.onmessage = function(msg) {
+        clearTimeout(show_server_lag);
+
         console.log('websocket message', msg);
         //TODO remove when done debugging
         $debug_log.html(msg.data);
@@ -98,6 +103,12 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
                 });
             });
         }
+
+        show_server_lag = setTimeout(function() {
+            $scope.$apply(function() {
+                $scope.got_data = false;
+            });
+        }, 5000);
     };
 
     $scope.send_pin_update = function(pin_ids) {

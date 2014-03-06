@@ -80,7 +80,7 @@ var server = ws.createServer(function(conn){
     });
     setInterval(function() {
         conn.sendText(JSON.stringify(msg));
-    }, 5000);
+    }, 3000);
     conn.on('close', function(code, reason) {
         console.log('connection', conn,'closed with code', code, 'for reason', reason);
     });
