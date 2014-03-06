@@ -104,10 +104,10 @@ body {
     background: blueviolet;
 }
 .analog .pin-value {
-    transition: height 5s;
-    -webkit-transition: height 5s;
-    -moz-transition: height 5s;
-    -o-transition: height 5s;
+    transition: height 1s;
+    -webkit-transition: height 1s;
+    -moz-transition: height 1s;
+    -o-transition: height 1s;
 }
 
 .pin-port {
