@@ -8,6 +8,7 @@ How to get up and running with this code
 
 ### Requirements
 node (I am on 0.10.5), nodejs-websocket
+
 Python (I am on 2.7.2)
 
 ### Server setup
