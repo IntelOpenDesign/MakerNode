@@ -167,11 +167,8 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
             connect_on_client(sensor, actuator);
             send_connect_to_server(sensor, actuator);
         } else {
-            var msg = 'Do you want to delete the ' + $scope.pins[sensor].name + ' - ' + $scope.pins[actuator].name + ' connection?';
-            if (confirm(msg)) {
-                disconnect_on_client(sensor, actuator);
-                send_disconnect_to_server(sensor, actuator);
-            }
+            disconnect_on_client(sensor, actuator);
+            send_disconnect_to_server(sensor, actuator);
         }
         $scope.activated_sensor = null;
     };
