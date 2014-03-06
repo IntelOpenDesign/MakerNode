@@ -131,6 +131,7 @@ body {
     border-width: 20px;
     border-style: solid;
     border-radius: 70px;
+    position: relative;
 }
 .sensor .endpoint {
     border-color: rgb(0, 102, 24);
@@ -152,6 +153,30 @@ body {
 }
 .actuator.connected .endpoint {
     background: rgb(232, 189, 0);
+}
+
+.x-1, .x-2 {
+    position: absolute;
+    top: 40px;
+    left: 10px;
+    width: 80px;
+    height: 20px;
+    background: rgb(50, 50, 50);
+    display: none;
+}
+.x-1 {
+    -webkit-transform: rotate(45deg);
+}
+.x-2 {
+    -webkit-transform: rotate(-45deg);
+}
+.pin.actuator.activated.already-connected-to-activated-sensor .endpoint {
+    -webkit-animation: none;
+    background: rgb(212, 203, 89);
+}
+.pin.actuator.activated.already-connected-to-activated-sensor .x-1,
+.pin.actuator.activated.already-connected-to-activated-sensor .x-2 {
+    display: block;
 }
 
 

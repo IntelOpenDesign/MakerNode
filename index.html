@@ -97,7 +97,8 @@
                       'connected':pin.is_connected,
                       'analog': pin.is_analog,
                       'digital': !pin.is_analog,
-                      'activated': activated_sensor !== null}"
+                      'activated': activated_sensor !== null,
+                      'already-connected-to-activated-sensor': already_connected_to_activated_sensor()}"
                   data-name="{{pin.name}}"
                   actuator>
                     <div class="pin-box">
@@ -108,7 +109,10 @@
                             <div class="pin-value" style="height:{{pin.value}}%;"></div>
                         </div>
                         <div class="pin-port">
-                            <div class="endpoint" id="{{pin.id}}-endpoint"></div>
+                            <div class="endpoint" id="{{pin.id}}-endpoint">
+                                <div class="x-1"></div>
+                                <div class="x-2"></div>
+                            </div>
                         </div>
                     </div>
                     <div ng-class="{'settings': true,

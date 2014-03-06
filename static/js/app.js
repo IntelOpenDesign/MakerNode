@@ -226,6 +226,12 @@ cat.pin_base = function(click_callback_maker) {
             $box.off(cat.tap);
         });
 
+        // TODO move this to actuators-only
+        $scope.already_connected_to_activated_sensor = function() {
+            return _.filter($scope.connections, function(c) {
+                return c.source === $scope.activated_sensor && c.target === attrs.id; }).length > 0;
+        };
+
     }
 };
 
