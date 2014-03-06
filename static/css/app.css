@@ -31,9 +31,9 @@ body {
 
 
 @-webkit-keyframes pulseGlow {
-    from { background-color: rgb(250, 250, 60); -webkit-box-shadow: 0 0 20px rgb(250, 250, 60); }
-    50%  { background-color: rgb(255, 255, 0); -webkit-box-shadow: 0 0 60px rgb(255, 255, 0); }
-    to   { background-color: rgb(250, 250, 60); -webkit-box-shadow: 0 0 20px rgb(250, 250, 60); }
+    from { background-color: rgb(250, 250, 100); -webkit-box-shadow: 0 0 20px rgb(250, 250, 60); }
+    50%  { background-color: rgb(255, 255, 0); -webkit-box-shadow: 0 0 100px rgb(255, 255, 0); }
+    to   { background-color: rgb(250, 250, 100); -webkit-box-shadow: 0 0 20px rgb(250, 250, 60); }
 }
 
 #field {
