@@ -209,13 +209,10 @@ body {
 .settings-inner .pin-name {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 10%;
+    left: 2%;
     height: 30px;
     padding-top: 15px;
-    padding-bottom: 15px
-    line-height: 1em;
-    text-align: center;
+    padding-bottom: 15px;
     line-height: 1em;
     color: rgb(240, 218, 191);
 }

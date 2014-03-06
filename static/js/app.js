@@ -232,6 +232,16 @@ cat.pin_base = function(click_callback_maker) {
                 return c.source === $scope.activated_sensor && c.target === attrs.id; }).length > 0;
         };
 
+        $scope.type = function() {
+            var res = '';
+            if ($scope.pins[attrs.id].is_analog) {
+                res += 'Analog';
+            } else {
+                res += 'Digital';
+            }
+            return res;
+        };
+
     }
 };
 
