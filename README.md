@@ -24,9 +24,11 @@ In static/js/app.js, there are a few different values for cat.server_url that yo
 Note that the first two options both use port 8001 because test-server.js listens on port 8001.
 
 ### Running it
-In this directory, on two command lines, get both going at the same time:
-node test-server.js
-python -m SimpleHTTPServer
+* To run with test-server.js, in this directory, on two command lines, get both going at the same time:
+    - node test-server.js
+    - python -m SimpleHTTPServer
+* To run on the hardware, you need to change two lines static/js/app.js. Seach for "Galileo" in that file and the two place where you need to comment out one line and uncomment the other line will come up, as indicated by those comments. Also, you need to get this code onto the hardware, and make sure that any files you are using are in the list of assets (for example if you add an image file you need to add that file path to the list), and then running the back-end server code will also host this web page on its own wifi network that it is broadcasting. This is really Carlos' area of expertise, not mine.
+
 
 ### Viewing it
 In Chrome, navigate to http://localhost:8000 on your local machine or your http://192.168.<x>.<y>:8000 on another device. (It's on port 8000 because python's Simple HTTP Server will automatically host it on port 8000, though there is an option to change this if needed.)

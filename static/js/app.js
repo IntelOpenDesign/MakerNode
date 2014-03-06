@@ -9,15 +9,6 @@ jsPlumb.bind('ready', function() {
 
     cat.jsplumb_ready = true;
     $(document).trigger('jsplumb-ready');
-
-    // TODO this is for dragging/sorting possibility
-    /* some combination of this might work -- laggy/buggy though
-     * ALSO: how to do it on mobile?
-    $('#sensors').sortable();
-    $('#actuators').sortable();
-    jsPlumb.draggable($('.sensor'), {containment: '#sensors'});
-    jsPlumb.draggable($('.actuator'), {containment: '#actuators'});
-    */
 });
 
 // TODO remove when done debugging
