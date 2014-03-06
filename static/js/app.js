@@ -277,8 +277,8 @@ cat.app.directive('connection', function($document) {
 
         function render() {
             connection = jsPlumb.connect({
-                source: attrs.sensorId,
-                target: attrs.actuatorId,
+                source: attrs.sensorId+'-endpoint',
+                target: attrs.actuatorId+'-endpoint',
                 connector: ['Bezier', {curviness: 70}],
                 cssClass: 'connection pins-'+attrs.sensorId+'-'+attrs.actuatorId,
                 endpoint: 'Blank',
