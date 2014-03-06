@@ -53,12 +53,10 @@
                                 {{pin.name}}
                             </div>
                             <input type="text"
-                              ng-model="pin.label"
                               placeholder="Pin Label"
                               class="pin-label"
-                              ng-change="send_pin_update([pin.id])"
-                              ng-focus="focus_label()"
-                              ng-blur="unfocus_label()">
+                              value="{{pin.label}}"
+                              ng-blur="update_pin_label()">
                             <div class="value-label">
                                 Reading
                             </div>
@@ -124,12 +122,10 @@
                                 {{pin.name}}
                             </div>
                             <input type="text"
-                              ng-model="pin.label"
                               placeholder="Pin Label"
                               class="pin-label"
-                              ng-change="send_pin_update([pin.id])"
-                              ng-focus="focus_label()"
-                              ng-blur="unfocus_label()">
+                              value="{{pin.label}}"
+                              ng-blur="update_pin_label()">
                             <div class="value-label">
                                 Reading
                             </div>

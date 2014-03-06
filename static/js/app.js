@@ -63,13 +63,6 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     $scope.got_data = false;
     $scope.activated_sensor = null;
     $scope.settings_pin = null;
-    $scope.settings_pin_label_focus = false;
-    $scope.focus_label = function() {
-        $scope.settings_pin_label_focus = true;
-    };
-    $scope.unfocus_label = function() {
-        $scope.settings_pin_label_focus = false;
-    };
     $scope.pins = {};
     $scope.connections = [];
 
@@ -217,19 +210,16 @@ cat.pin_base = function(click_callback_maker) {
         var $box = $el.find('.pin-box');
         var $settings_label = $el.find('input.pin-label');
 
-        // TODO preserve the cursor position within the input somehow?
-        if ($scope.settings_pin_label_focus &&
-            $scope.settings_pin === attrs.id) {
-            setTimeout(function() {
-                $settings_label.focus();
-            }, 0);
-        }
-
         $endpoint.on(cat.tap, click_callback_maker($scope, $el, attrs));
         $box.on(cat.tap, function(e) {
             $scope.show_settings_for(attrs.id);
 
         });
+
+        $scope.update_pin_label = function() {
+            $scope.pins[attrs.id].label = $settings_label.val();
+            $scope.send_pin_update([attrs.id]);
+        };
 
         $el.on('$destroy', function() {
             $endpoint.off(cat.tap);
