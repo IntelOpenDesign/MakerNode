@@ -93,11 +93,30 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
 
         var new_pins = cat.my_pin_format(data.pins, data.connections);
 
-        $scope.$apply(function() {
-            $scope.got_data = true;
-            $scope.pins = new_pins;
-            $scope.connections = data.connections;
-        });
+        if (!$scope.got_data) { // first time initialization
+            $scope.$apply(function() {
+                $scope.got_data = true;
+                $scope.pins = new_pins;
+                $scope.connections = data.connections;
+            });
+        } else { // after that just update the changes
+            $scope.$apply(function() {
+                $scope.got_data = true;
+                _.each(new_pins, function(pin, id) {
+                    _.each(pin, function(val, attr) {
+                        $scope.pins[id][attr] = val;
+                    });
+                });
+                var connections_to_remove = _.difference($scope.connections, data.connections);
+                var connections_to_add = _.difference(data.connections, $scope.connections);
+                _.each(connections_to_remove, function(c) {
+                    disconnect_on_client(c.source, c.target);
+                });
+                _.each(connections_to_add, function(c) {
+                    connect_on_client(c.source, c.target);
+                });
+            });
+        }
     };
 
     $scope.send_pin_update = function(pin_ids) {
