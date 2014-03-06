@@ -294,3 +294,13 @@ body {
     height: 100%;
     z-index: 10;
 }
+#loading-msg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    margin-left: -150px;
+    text-align: center;
+    color: rgb(228, 228, 25);
+    padding-top: 70px;
+}
