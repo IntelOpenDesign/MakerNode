@@ -26,12 +26,9 @@ function toggle_debug_log() {
 }
 
 // websocket server
-cat.server_url = 'ws://localhost:8001';
+cat.server_url = 'ws://192.168.15.120:8001';
 // for Galileo
 // cat.server_url = 'ws://cat/';
-
-// parameterize events
-cat.tap = 'mousedown';
 
 // cat.app is the angular app
 cat.app = angular.module('ConnectAnything', []);
@@ -157,44 +154,40 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         });
     };
 
-    $scope.toggle_activated = function(sensor) {
-        $scope.$apply(function() {
-            if ($scope.activated_sensor === sensor) {
-                $scope.activated_sensor = null;
-            } else {
-                $scope.activated_sensor = sensor;
-            }
-        });
+    $scope.toggle_activated = function($event, sensor) {
+        $event.stopPropagation();
+        if ($scope.activated_sensor === sensor) {
+            $scope.activated_sensor = null;
+        } else {
+            $scope.activated_sensor = sensor;
+        }
     };
 
-    $scope.connect_or_disconnect = function(actuator) {
-        $scope.$apply(function() {
-            if ($scope.activated_sensor === null) {
-                return;
-            }
-            var sensor = $scope.activated_sensor;
-            var existing_connection = _.filter($scope.connections, function(c) {
-                return c.source === sensor && c.target === actuator;
-            });
-            if (existing_connection.length === 0) {
-                connect_on_client(sensor, actuator);
-                send_connect_to_server(sensor, actuator);
-            } else {
-                var msg = 'Do you want to delete the ' + $scope.pins[sensor].name + ' - ' + $scope.pins[actuator].name + ' connection?';
-                if (confirm(msg)) {
-                    disconnect_on_client(sensor, actuator);
-                    send_disconnect_to_server(sensor, actuator);
-                }
-            }
-            $scope.activated_sensor = null;
+    $scope.connect_or_disconnect = function($event, actuator) {
+        $event.stopPropagation();
+        if ($scope.activated_sensor === null) {
+            return;
+        }
+        var sensor = $scope.activated_sensor;
+        var existing_connection = _.filter($scope.connections, function(c) {
+            return c.source === sensor && c.target === actuator;
         });
+        if (existing_connection.length === 0) {
+            connect_on_client(sensor, actuator);
+            send_connect_to_server(sensor, actuator);
+        } else {
+            var msg = 'Do you want to delete the ' + $scope.pins[sensor].name + ' - ' + $scope.pins[actuator].name + ' connection?';
+            if (confirm(msg)) {
+                disconnect_on_client(sensor, actuator);
+                send_disconnect_to_server(sensor, actuator);
+            }
+        }
+        $scope.activated_sensor = null;
     };
 
     $scope.show_settings_for = function(pin) {
-        $scope.$apply(function() {
-            $scope.activated_pin = null;
-            $scope.settings_pin = pin;
-        });
+        $scope.activated_pin = null;
+        $scope.settings_pin = pin;
     };
 
     $scope.close_settings = function() {
@@ -204,14 +197,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
 
 cat.pin_base = function($scope, $el, attrs) {
     var that = {};
-    that.$endpoint = $el.find('.endpoint');
-    that.$box = $el.find('.pin-box');
     that.$settings_label = $el.find('input.pin-label');
-
-    // TODO do with ng-click?
-    that.$box.on(cat.tap, function(e) {
-        $scope.show_settings_for(attrs.id);
-    });
 
     $scope.update_pin_label = function() {
         $scope.pins[attrs.id].label = that.$settings_label.val();
@@ -228,22 +214,12 @@ cat.pin_base = function($scope, $el, attrs) {
         return res;
     };
 
-    $el.on('$destroy', function() {
-        that.$endpoint.off(cat.tap);
-        that.$box.off(cat.tap);
-    });
-
     return that;
 };
 
 cat.app.directive('sensor', function($document) {
     function link($scope, $el, attrs) {
         var that = cat.pin_base($scope, $el, attrs);
-
-        that.$endpoint.on(cat.tap, function(e) {
-            e.stopPropagation();
-            $scope.toggle_activated(attrs.id);
-        });
     }
 
     return { link: link };
@@ -252,11 +228,6 @@ cat.app.directive('sensor', function($document) {
 cat.app.directive('actuator', function($document) {
     function link($scope, $el, attrs) {
         var that = cat.pin_base($scope, $el, attrs);
-
-        that.$endpoint.on(cat.tap, function(e) {
-            e.stopPropagation();
-            $scope.connect_or_disconnect(attrs.id);
-        });
 
         $scope.already_connected_to_activated_sensor = function() {
             return _.filter($scope.connections, function(c) {

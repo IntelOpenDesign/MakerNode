@@ -31,7 +31,7 @@
                       'activated': activated_sensor === pin.id}"
                   data-name="{{pin.name}}"
                   sensor>
-                    <div class="pin-box">
+                    <div class="pin-box" ng-click="show_settings_for(pin.id)">
                         <div class="pin-label">
                             {{pin.label}}
                         </div>
@@ -39,7 +39,10 @@
                             <div class="pin-value" style="height:{{pin.value}}%;"></div>
                         </div>
                         <div class="pin-port">
-                            <div class="endpoint" id="{{pin.id}}-endpoint"></div>
+                            <div id="{{pin.id}}-endpoint"
+                              class="endpoint"
+                              ng-click="toggle_activated($event, pin.id)">
+                            </div>
                         </div>
                     </div>
                     <div ng-class="{'settings': true,
@@ -101,7 +104,7 @@
                       'already-connected-to-activated-sensor': already_connected_to_activated_sensor()}"
                   data-name="{{pin.name}}"
                   actuator>
-                    <div class="pin-box">
+                    <div class="pin-box" ng-click="show_settings_for(pin.id)">
                         <div class="pin-label">
                             {{pin.label}}
                         </div>
@@ -109,7 +112,9 @@
                             <div class="pin-value" style="height:{{pin.value}}%;"></div>
                         </div>
                         <div class="pin-port">
-                            <div class="endpoint" id="{{pin.id}}-endpoint">
+                            <div id="{{pin.id}}-endpoint"
+                              class="endpoint"
+                              ng-click="connect_or_disconnect($event, pin.id)">
                                 <div class="x-1"></div>
                                 <div class="x-2"></div>
                             </div>
