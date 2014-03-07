@@ -98,18 +98,16 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
                     var pins = s.split('-');
                     return {source: pins[0], target: pins[1]};
                 }
-                var my_connections = _.map($scope.connections, tokenize_connection);
-                var new_connections = _.map(data.connections, tokenize_connection);
-                var connections_to_remove = _.difference(my_connections, new_connections);
-                var connections_to_add = _.difference(new_connections, my_connections);
-                _.each(connections_to_remove, function(s) {
-                    var c = detokenize_connection(s);
+                var my_tokens = _.map($scope.connections, tokenize_connection);
+                var new_tokens = _.map(data.connections, tokenize_connection);
+                var tokens_to_remove = _.difference(my_tokens, new_tokens);
+                var tokens_to_add = _.difference(new_tokens, my_tokens);
+                var connections_to_remove = _.map(tokens_to_remove, detokenize_connection);
+                var connections_to_add = _.map(tokens_to_add, detokenize_connection);
+                _.each(connections_to_remove, function(c) {
                     disconnect_on_client(c.source, c.target);
                 });
-                _.each(connections_to_add, function(s) {
-                    var c = detokenize_connection(s);
-                    connect_on_client(c.source, c.target);
-                });
+                connect_on_client(connections_to_add);
             });
         }
     };
@@ -135,14 +133,12 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         }));
     };
 
-    // make this take a list of connection objects
-    var connect_on_client = function(sensor, actuator) {
-        $scope.connections.push({
-            source: sensor,
-            target: actuator,
+    var connect_on_client = function(connections) {
+        $scope.connections.push.apply($scope.connections, connections);
+        _.each(connections, function(c) {
+            $scope.pins[c.source].is_connected = true;
+            $scope.pins[c.target].is_connected = true;
         });
-        $scope.pins[sensor].is_connected = true;
-        $scope.pins[actuator].is_connected = true;
     };
 
     // make this take a list of connection objects
@@ -180,7 +176,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
             return c.source === sensor && c.target === actuator;
         });
         if (existing_connection.length === 0) {
-            connect_on_client(sensor, actuator);
+            connect_on_client([{source:sensor, target:actuator}]);
             send_connect_to_server(sensor, actuator);
         } else {
             disconnect_on_client(sensor, actuator);
@@ -245,6 +241,8 @@ cat.app.directive('actuator', function($document) {
 
 cat.app.directive('connection', function($document) {
     function link($scope, $el, attrs) {
+
+        console.log('connection link', attrs.sensorId, '-', attrs.actuatorId);
 
         var $sensor, $actuator, connection, msg;
         $sensor = $actuator = connection = msg = null;
