@@ -1,6 +1,12 @@
 // Contain everything within the cat object
 var cat = {};
 
+// server connection settings
+cat.on_hardware = false; // to switch to Galileo, just change this to true
+cat.test_server_url = 'ws://192.168.0.199:8001';
+cat.hardware_server_url = 'ws://cat/';
+cat.hardware_server_protocol = 'hardware-state-protocol';
+
 // connections can only draw themselves once jsPlumb is ready
 cat.jsplumb_ready = false;
 
@@ -15,12 +21,6 @@ jsPlumb.bind('ready', function() {
 function toggle_debug_log() {
     $('#debug-log').toggleClass('hide');
 }
-
-// TODO make it so switching to Galileo requires changing only one line of code
-// websocket server
-cat.server_url = 'ws://192.168.0.199:8001';
-// for Galileo
-// cat.server_url = 'ws://cat/';
 
 // cat.app is the angular app
 cat.app = angular.module('ConnectAnything', []);
@@ -60,9 +60,13 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     $scope.pins = {};
     $scope.connections = [];
 
-    var ws = new WebSocket(cat.server_url);
-    // for Galileo
-    //var ws = new WebSocket(cat.server_url, 'hardware-state-protocol');
+    var ws;
+    if (cat.on_hardware) {
+        ws = new WebSocket(cat.hardware_server_url, cat.hardware_server_protocol);
+    } else {
+        ws = new WebSocket(cat.test_server_url);
+    }
+
     ws.onopen = function() {
         console.log('socket opened');
     };

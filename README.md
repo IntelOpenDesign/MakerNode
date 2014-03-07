@@ -11,25 +11,18 @@ How to get up and running with this code
 * Python (I am on 2.7.2)
 
 ### Server setup
-In static/js/app.js, there are a few different values for cat.server_url that you should use in different cases:
-* cat.server_url = 'ws://localhost:8001';
-    - for when you just want to test on your local machine
-    - no internet connection needed
-* cat.server_url = 'ws://192.168.<x>.<y>:8001';
-    - for when you want to test on other devices too
-    - type ifconfig to find your computer's local IP address for <x> and <y>
-* cat.server_url = 'ws://cat/';
-    - for when you are hosting this code on the hardware
-
-Note that the first two options both use port 8001 because test-server.js listens on port 8001.
+Change the server settings near the top of static/js/app.js depending on your use case.
+* If you are testing on the hardware, just change cat.on_hardware to true and you should be good to go.
+* If you are hosting test-server.js on your local machine, then cat.on_hardware should be false. To test only on your local machine, and no other devices, no internet connection is required and you can set cat.test_server_url = 'ws://localhost:8001'. If you want to use other devices too, you need internet, and change the <localhost> part to be your local machine's internet IP address, which you can find with the ifconfig command.
 
 ### Running it
 * To run with test-server.js, in this directory, on two command lines, get both going at the same time:
     - node test-server.js
     - python -m SimpleHTTPServer
-* To run on the hardware, you need to change two lines static/js/app.js. Seach for "Galileo" in that file and the two place where you need to comment out one line and uncomment the other line will come up, as indicated by those comments. Also, you need to get this code onto the hardware, and make sure that any files you are using are in the list of assets (for example if you add an image file you need to add that file path to the list), and then running the back-end server code will also host this web page on its own wifi network that it is broadcasting. This is really Carlos' area of expertise, not mine.
+* to run it on the hardware, you have to get these files on the board. The board broadcasts its own local wifi network, which hosts the server and this website. You have to list your static files in the server's code to get them hosted. Ask Carlos about this deployment process.
 
 
 ### Viewing it
-In Chrome, navigate to http://localhost:8000 on your local machine or your http://192.168.<x>.<y>:8000 on another device. (It's on port 8000 because python's Simple HTTP Server will automatically host it on port 8000, though there is an option to change this if needed.)
-
+Supporting Chrome only
+* If you're using test-server.js, navigate to http://localhost:8000 on your local machine or your http://<local IP address>:800. (It's on port 8000 because python's Simple HTTP Server will automatically host it on port 8000, though there is an option to change this if needed.)
+* If you're using the hardware, connect to the Connect Anything network broadcast by the board, then then going to any URL should redirect you to it.
