@@ -98,19 +98,12 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
                 });
 
                 // update connections
-                function tokenize_connection(c) { // translate connections into strings so we can check equality
-                    return c.source + '-' + c.target;
-                }
-                function detokenize_connection(s) { // translate back
-                    var pins = s.split('-');
-                    return {source: pins[0], target: pins[1]};
-                }
-                var my_tokens = _.map($scope.connections, tokenize_connection);
-                var new_tokens = _.map(data.connections, tokenize_connection);
+                var my_tokens = _.map($scope.connections, cat.tokenize_connection);
+                var new_tokens = _.map(data.connections, cat.tokenize_connection);
                 var tokens_to_remove = _.difference(my_tokens, new_tokens);
                 var tokens_to_add = _.difference(new_tokens, my_tokens);
-                var connections_to_remove = _.map(tokens_to_remove, detokenize_connection);
-                var connections_to_add = _.map(tokens_to_add, detokenize_connection);
+                var connections_to_remove = _.map(tokens_to_remove, cat.detokenize_connection);
+                var connections_to_add = _.map(tokens_to_add, cat.detokenize_connection);
                 disconnect_on_client(connections_to_remove);
                 connect_on_client(connections_to_add);
             });
@@ -409,6 +402,16 @@ cat.connections_dict = function(connections_list) {
     });
     return d;
 };
+
+// represent connections as strings so they can easily be compared for equality
+cat.tokenize_connection = function(c) {
+    return c.source + '-' + c.target;
+}
+// translate back from string to connection object
+cat.detokenize_connection = function(s) {
+    var pins = s.split('-');
+    return {source: pins[0], target: pins[1]};
+}
 
 // OTHER NOTES
 // good resource: http://clintberry.com/2013/angular-js-websocket-service/
