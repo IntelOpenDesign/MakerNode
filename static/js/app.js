@@ -1,13 +1,13 @@
 // Contain everything within the cat object
 var cat = {};
 
-// the whole app needs to know when jsPlumb is ready because only then can we draw connections
+// connections can only draw themselves once jsPlumb is ready
 cat.jsplumb_ready = false;
 
 jsPlumb.bind('ready', function() {
     jsPlumb.Defaults.Container = $('#field');
-
     cat.jsplumb_ready = true;
+    // TODO I think nobody listens to this event anymore so remove it
     $(document).trigger('jsplumb-ready');
 });
 
@@ -16,6 +16,7 @@ function toggle_debug_log() {
     $('#debug-log').toggleClass('hide');
 }
 
+// TODO make it so switching to Galileo requires changing only one line of code
 // websocket server
 cat.server_url = 'ws://192.168.0.199:8001';
 // for Galileo
@@ -24,6 +25,7 @@ cat.server_url = 'ws://192.168.0.199:8001';
 // cat.app is the angular app
 cat.app = angular.module('ConnectAnything', []);
 
+// used by ng-repeat to draw only the visible sensors
 cat.app.filter('sensors', function() {
     return function(pins) {
         return _.filter(pins, function(pin) {
@@ -31,6 +33,7 @@ cat.app.filter('sensors', function() {
         });
     }
 });
+// used by ng-repeat to draw only the visible actuators
 cat.app.filter('actuators', function() {
     return function(pins) {
         return  _.filter(pins, function(pin) {
@@ -40,7 +43,7 @@ cat.app.filter('actuators', function() {
 });
 
 // The controller for the whole app. Also handles talking to the server.
-// Eventually probably want to refactor
+// TODO refactor and make server code separated and more robust
 cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
 
     var $document = $(document);
@@ -48,9 +51,12 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     // TODO take this out when done debugging
     window.$scope = $scope;
 
+    // whether we have yet received any data from the server
     $scope.got_data = false;
-    $scope.activated_sensor = null;
-    $scope.settings_pin = null;
+
+    // pins and connections are the primary state of the app. it determines the
+    // hardware's behavior. we sync this with the server because other users
+    // are updating this on their screens too.
     $scope.pins = {};
     $scope.connections = [];
 
@@ -63,6 +69,8 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
 
     //TODO remove when done debugging
     var $debug_log = $('#debug-log');
+
+    // RECEIVING MESSAGES FROM THE SERVER
 
     ws.onmessage = function(msg) {
         console.log('websocket message', msg);
@@ -109,6 +117,8 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         }
     };
 
+    // SENDING MESSAGES TO SERVER
+
     $scope.send_pin_update = function(pin_ids) {
         ws.send(JSON.stringify({
             status: 'OK',
@@ -130,6 +140,9 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         }));
     };
 
+    // HOW THE APP ADDS/REMOVES CONNECTIONS
+    // updating $scope.connections and $scope.pins[<id>].is_connected
+
     var connect_on_client = function(connections) {
         $scope.connections.push.apply($scope.connections, connections);
         _.each(connections, function(c) {
@@ -138,22 +151,8 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         });
     };
 
-    var connections_dict = function(connections_list) {
-        // each connection is recorded as d[source][target] = true and d[target][source] = true
-        var d = {};
-        _.each(connections_list, function(c) {
-            _.each([[c.source, c.target], [c.target, c.source]], function(o) {
-                if (d[o[0]] === undefined) {
-                    d[o[0]] = {};
-                }
-                d[o[0]][o[1]] = true;
-            });
-        });
-        return d;
-    };
-
     var disconnect_on_client = function(connections) {
-        var delc = connections_dict(connections); // connections to delete
+        var delc = cat.connections_dict(connections); // connections to delete
         var indices = [];
         _.each($scope.connections, function(c, i) {
             if (delc[c.source] && delc[c.source][c.target]) {
@@ -161,12 +160,12 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
                 indices.push(i);
             }
         });
-        indices.sort(function(x, y) { return y - x; }); // sort in descending order
+        indices.sort(function(x, y) { return y - x; }); // descending order
         _.each(indices, function(index) {
             $scope.connections.splice(index, 1);
         });
 
-        var allc = connections_dict($scope.connections); // all remaining connections
+        var allc = cat.connections_dict($scope.connections); // remaining conns
         _.each($scope.pins, function(pin, id) {
             if (allc[id] === undefined) {
                 $scope.pins[id].is_connected = false;
@@ -174,6 +173,18 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         });
     };
 
+    // HOW THE USER ADDS/REMOVES CONNECTIONS
+    // When the user taps a sensor's endpoint, we activate that sensor,
+    // deactivate all other sensors, and activate all actuators. Then if the
+    // user taps an actuator's endpoint, we either form a new connection
+    // between the activated sensor and the tapped actuator, or delete that
+    // connection if it already existed. If the user taps the endpoint of the
+    // sensor that was already activated, then we deactivate that sensor and go
+    // back to having no activated pins.
+
+    $scope.activated_sensor = null;
+
+    // triggered when the user taps a sensor
     $scope.toggle_activated = function($event, sensor) {
         $event.stopPropagation();
         if ($scope.activated_sensor === sensor) {
@@ -183,6 +194,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         }
     };
 
+    // triggered when the user taps an actuator
     $scope.connect_or_disconnect = function($event, actuator) {
         $event.stopPropagation();
         if ($scope.activated_sensor === null) {
@@ -202,6 +214,11 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         $scope.activated_sensor = null;
     };
 
+    // HOW THE USER ADJUSTS PIN SETTINGS
+    // When the user taps a pin's box, we deactivate all pins and show the
+    // settings for that pin.
+
+    $scope.settings_pin = null;
     $scope.show_settings_for = function(pin) {
         $scope.activated_pin = null;
         $scope.settings_pin = pin;
@@ -211,6 +228,8 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         $scope.settings_pin = null;
     };
 }]);
+
+// DRAWING CONNECTIONS
 
 cat.pin_base = function($scope, $el, attrs) {
     var that = {};
@@ -256,6 +275,7 @@ cat.app.directive('actuator', function($document) {
     return { link: link };
 });
 
+// DRAWING CONNECTIONS
 cat.app.directive('connection', function($document) {
     function link($scope, $el, attrs) {
 
@@ -264,6 +284,9 @@ cat.app.directive('connection', function($document) {
         var $sensor, $actuator, connection, msg;
         $sensor = $actuator = connection = msg = null;
 
+        // a connection can only draw itself after jsPlumb is ready and its
+        // endpoints are drawn on the DOM. so, a connection keeps checking to
+        // see if these things are ready, and once they are it renders itself
         function find_my_pins() {
             $sensor = $('#'+attrs.sensorId);
             $actuator = $('#'+attrs.actuatorId);
@@ -301,9 +324,7 @@ cat.app.directive('connection', function($document) {
         find_my_pins();
     }
 
-    return {
-        link: link,
-    };
+    return { link: link };
 });
 
 cat.clear_all_connections = function() {
@@ -316,7 +337,9 @@ cat.clear_connection = function(sensor, actuator) {
     $('.connection.pins-'+sensor+'-'+actuator).remove();
 };
 
-// translate between client side and server side format for pins
+// UTILITY FUNCTIONS
+
+// translate the server's pin format into my pin format
 cat.my_pin_format = function(server_pins, server_connections) {
     var pins = {};
 
@@ -348,6 +371,7 @@ cat.my_pin_format = function(server_pins, server_connections) {
     return pins;
 };
 
+// translate my pin format into the server's format
 cat.server_pin_format = function(my_pins, my_pin_ids) {
     var pins = {};
 
@@ -367,5 +391,24 @@ cat.server_pin_format = function(my_pins, my_pin_ids) {
     return pins;
 };
 
+// a dictionary representation of connections that makes it easy to check if a
+// connection exists. for each connection in connections_list, the resulting
+// dict will have
+// d[source][target] = true
+// and
+// d[target][source] = true
+cat.connections_dict = function(connections_list) {
+    var d = {};
+    _.each(connections_list, function(c) {
+        _.each([[c.source, c.target], [c.target, c.source]], function(o) {
+            if (d[o[0]] === undefined) {
+                d[o[0]] = {};
+            }
+            d[o[0]][o[1]] = true;
+        });
+    });
+    return d;
+};
 
-// NOTE good resource: http://clintberry.com/2013/angular-js-websocket-service/
+// OTHER NOTES
+// good resource: http://clintberry.com/2013/angular-js-websocket-service/
