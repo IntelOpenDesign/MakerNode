@@ -17,7 +17,7 @@ function toggle_debug_log() {
 }
 
 // websocket server
-cat.server_url = 'ws://192.168.15.120:8001';
+cat.server_url = 'ws://192.168.0.199:8001';
 // for Galileo
 // cat.server_url = 'ws://cat/';
 
@@ -82,18 +82,32 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
             });
         } else { // after that just update the changes
             $scope.$apply(function() {
+                // update pins
                 $scope.got_data = true;
                 _.each(new_pins, function(pin, id) {
                     _.each(pin, function(val, attr) {
                         $scope.pins[id][attr] = val;
                     });
                 });
-                var connections_to_remove = _.difference($scope.connections, data.connections);
-                var connections_to_add = _.difference(data.connections, $scope.connections);
-                _.each(connections_to_remove, function(c) {
+
+                // update connections
+                function tokenize_connection(c) { // translate connections into strings so we can check equality
+                    return c.source + '-' + c.target;
+                }
+                function detokenize_connection(s) { // translate back
+                    var pins = s.split('-');
+                    return {source: pins[0], target: pins[1]};
+                }
+                var my_connections = _.map($scope.connections, tokenize_connection);
+                var new_connections = _.map(data.connections, tokenize_connection);
+                var connections_to_remove = _.difference(my_connections, new_connections);
+                var connections_to_add = _.difference(new_connections, my_connections);
+                _.each(connections_to_remove, function(s) {
+                    var c = detokenize_connection(s);
                     disconnect_on_client(c.source, c.target);
                 });
-                _.each(connections_to_add, function(c) {
+                _.each(connections_to_add, function(s) {
+                    var c = detokenize_connection(s);
                     connect_on_client(c.source, c.target);
                 });
             });
@@ -121,6 +135,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         }));
     };
 
+    // make this take a list of connection objects
     var connect_on_client = function(sensor, actuator) {
         $scope.connections.push({
             source: sensor,
@@ -130,6 +145,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         $scope.pins[actuator].is_connected = true;
     };
 
+    // make this take a list of connection objects
     var disconnect_on_client = function(sensor, actuator) {
         cat.clear_connection(sensor, actuator);
         $scope.connections = _.filter($scope.connections, function(c) {
