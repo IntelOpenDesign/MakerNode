@@ -104,9 +104,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
                 var tokens_to_add = _.difference(new_tokens, my_tokens);
                 var connections_to_remove = _.map(tokens_to_remove, detokenize_connection);
                 var connections_to_add = _.map(tokens_to_add, detokenize_connection);
-                _.each(connections_to_remove, function(c) {
-                    disconnect_on_client(c.source, c.target);
-                });
+                disconnect_on_client(connections_to_remove);
                 connect_on_client(connections_to_add);
             });
         }
@@ -141,18 +139,38 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
         });
     };
 
-    // make this take a list of connection objects
-    var disconnect_on_client = function(sensor, actuator) {
-        cat.clear_connection(sensor, actuator);
-        $scope.connections = _.filter($scope.connections, function(c) {
-            return !(c.source === sensor && c.target === actuator);
-        });
-        _.each([{pin: sensor, end: 'source'}, {pin: actuator, end: 'target'}], function(o) {
-            var remaining_connections = _.filter($scope.connections, function(c) {
-                return c[o.end] === o.pin;
+    var connections_dict = function(connections_list) {
+        // each connection is recorded as d[source][target] = true and d[target][source] = true
+        var d = {};
+        _.each(connections_list, function(c) {
+            _.each([[c.source, c.target], [c.target, c.source]], function(o) {
+                if (d[o[0]] === undefined) {
+                    d[o[0]] = {};
+                }
+                d[o[0]][o[1]] = true;
             });
-            if (remaining_connections.length === 0) {
-                $scope.pins[o.pin].is_connected = false;
+        });
+        return d;
+    };
+
+    var disconnect_on_client = function(connections) {
+        var delc = connections_dict(connections); // connections to delete
+        var indices = [];
+        _.each($scope.connections, function(c, i) {
+            if (delc[c.source] && delc[c.source][c.target]) {
+                cat.clear_connection(c.source, c.target);
+                indices.push(i);
+            }
+        });
+        indices.sort(function(x, y) { return y - x; }); // sort in descending order
+        _.each(indices, function(index) {
+            $scope.connections.splice(index, 1);
+        });
+
+        var allc = connections_dict($scope.connections); // all remaining connections
+        _.each($scope.pins, function(pin, id) {
+            if (allc[id] === undefined) {
+                $scope.pins[id].is_connected = false;
             }
         });
     };
@@ -179,7 +197,7 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
             connect_on_client([{source:sensor, target:actuator}]);
             send_connect_to_server(sensor, actuator);
         } else {
-            disconnect_on_client(sensor, actuator);
+            disconnect_on_client([{source:sensor, target:actuator}]);
             send_disconnect_to_server(sensor, actuator);
         }
         $scope.activated_sensor = null;
