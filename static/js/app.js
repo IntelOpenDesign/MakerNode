@@ -54,7 +54,6 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     $scope.pins = {};
     $scope.connections = [];
 
-    // good resource: http://clintberry.com/2013/angular-js-websocket-service/
     var ws = new WebSocket(cat.server_url);
     // for Galileo
     //var ws = new WebSocket(cat.server_url, 'hardware-state-protocol');
@@ -367,3 +366,6 @@ cat.server_pin_format = function(my_pins, my_pin_ids) {
 
     return pins;
 };
+
+
+// NOTE good resource: http://clintberry.com/2013/angular-js-websocket-service/
