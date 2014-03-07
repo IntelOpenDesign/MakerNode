@@ -267,7 +267,7 @@ cat.app.directive('connection', function($document) {
         function find_my_pins() {
             $sensor = $('#'+attrs.sensorId);
             $actuator = $('#'+attrs.actuatorId);
-            if ($sensor.length === 0 || $actuator.length === 0) {
+            if (!cat.jsplumb_ready || $sensor.length === 0 || $actuator.length === 0) {
                 setTimeout(find_my_pins, 10);
             } else {
                 render();
