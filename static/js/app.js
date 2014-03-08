@@ -93,14 +93,6 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
         Galileo.update_pins($scope.pins, pin_ids);
     };
 
-    var send_connect_to_server = function(sensor, actuator) {
-        Galileo.add_connections([{source:sensor, target:actuator}]);
-    };
-
-    var send_disconnect_to_server = function(sensor, actuator) {
-        Galileo.remove_connections([{source:sensor, target:actuator}]);
-    };
-
     Galileo.connect(cat.test_server_url);
 
     // HOW THE APP ADDS/REMOVES CONNECTIONS
@@ -167,12 +159,13 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
         var existing_connection = _.filter($scope.connections, function(c) {
             return c.source === sensor && c.target === actuator;
         });
+        var connections = [{source: sensor, target: actuator}];
         if (existing_connection.length === 0) {
-            connect_on_client([{source:sensor, target:actuator}]);
-            send_connect_to_server(sensor, actuator);
+            connect_on_client(connections);
+            Galileo.add_connections(connections);
         } else {
-            disconnect_on_client([{source:sensor, target:actuator}]);
-            send_disconnect_to_server(sensor, actuator);
+            disconnect_on_client(connections);
+            Galileo.remove_connections(connections);
         }
         $scope.activated_sensor = null;
     };
