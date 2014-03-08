@@ -358,6 +358,9 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     };
 
     var onclose = function() {
+        // NOTE that if a "new WebSocket" call has valid parameters, but the
+        // server is not running, that will trigger onclose and will not throw
+        // an error
         console.log(name, 'websocket closed, trying to reconnect in', wait, 'ms...');
         $rootScope.$apply(function() {
             callbacks['websocket-closed']();
