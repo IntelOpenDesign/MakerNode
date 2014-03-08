@@ -79,6 +79,7 @@ var server = ws.createServer(function(conn){
         });
     });
     setInterval(function() {
+        console.log('broadcasting state');
         conn.sendText(JSON.stringify(msg));
     }, 3000);
     conn.on('close', function(code, reason) {

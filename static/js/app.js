@@ -44,7 +44,7 @@ cat.app.filter('actuators', function() {
 
 // The controller for the whole app. Also handles talking to the server.
 // TODO refactor and make server code separated and more robust
-cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
+cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
 
     var $document = $(document);
 
@@ -60,96 +60,48 @@ cat.app.controller('PinsCtrl', ['$scope', function($scope, server) {
     $scope.pins = {};
     $scope.connections = [];
 
-    var ws;
-    if (cat.on_hardware) {
-        ws = new WebSocket(cat.hardware_server_url, cat.hardware_server_protocol);
-    } else {
-        ws = new WebSocket(cat.test_server_url);
-    }
+    // TALKING WITH GALILEO
 
-    ws.onopen = function() {
-        console.log('socket opened');
-    };
-
-    window.onbeforeunload = function() {
-        ws.onclose = function() {};
-        ws.close();
-    };
-
-    //TODO remove when done debugging
-    var $debug_log = $('#debug-log');
-
-    // TODO this websockets code is getting too messy to be in the controller -- refactor
-    // RECEIVING MESSAGES FROM THE SERVER
-
-    ws.onmessage = function(msg) {
-        clearTimeout(show_server_lag);
-
-        console.log('websocket message', msg);
-        //TODO remove when done debugging
-        $debug_log.html(msg.data);
-        var data = JSON.parse(msg.data);
-        console.log('websocket data parsed into JSON', data);
-
-        var new_pins = cat.my_pin_format(data.pins, data.connections);
-
+    Galileo.on('update', function(d) {
         if (!$scope.got_data) { // first time initialization
-            $scope.$apply(function() {
-                $scope.got_data = true;
-                $scope.pins = new_pins;
-                $scope.connections = data.connections;
-            });
-        } else { // after that just update the changes
-            $scope.$apply(function() {
-                // update pins
-                $scope.got_data = true;
-                _.each(new_pins, function(pin, id) {
-                    _.each(pin, function(val, attr) {
-                        $scope.pins[id][attr] = val;
-                    });
+            $scope.got_data = true;
+            $scope.pins = d.pins;
+            $scope.connections = d.connections;
+         } else { // after that just update changes
+            $scope.got_data = true; // TODO why is this here too?
+
+            // update pins
+            _.each(d.pins, function(pin, id) {
+                _.each(pin, function(val, attr) {
+                    $scope.pins[id][attr] = val;
                 });
-
-                // update connections
-                var my_tokens = _.map($scope.connections, cat.tokenize_connection);
-                var new_tokens = _.map(data.connections, cat.tokenize_connection);
-                var tokens_to_remove = _.difference(my_tokens, new_tokens);
-                var tokens_to_add = _.difference(new_tokens, my_tokens);
-                var connections_to_remove = _.map(tokens_to_remove, cat.detokenize_connection);
-                var connections_to_add = _.map(tokens_to_add, cat.detokenize_connection);
-                disconnect_on_client(connections_to_remove);
-                connect_on_client(connections_to_add);
             });
-        }
 
-        show_server_lag = setTimeout(function() {
-            $scope.$apply(function() {
-                $scope.got_data = false;
-            });
-        }, 5000);
-    };
-
-    // SENDING MESSAGES TO SERVER
+            // update connections
+            var my_tokens = _.map($scope.connections, cat.tokenize_connection);
+            var new_tokens = _.map(d.connections, cat.tokenize_connection);
+            var tokens_to_remove = _.difference(my_tokens, new_tokens);
+            var tokens_to_add = _.difference(new_tokens, my_tokens);
+            var connections_to_remove = _.map(tokens_to_remove, cat.detokenize_connection);
+            var connections_to_add = _.map(tokens_to_add, cat.detokenize_connection);
+            disconnect_on_client(connections_to_remove);
+            connect_on_client(connections_to_add);
+         }
+    });
 
     $scope.send_pin_update = function(pin_ids) {
-        ws.send(JSON.stringify({
-            status: 'OK',
-            pins: cat.server_pin_format($scope.pins, pin_ids),
-        }));
+        Galileo.update_pins($scope.pins, pin_ids);
     };
 
     var send_connect_to_server = function(sensor, actuator) {
-        ws.send(JSON.stringify({
-            status: 'OK',
-            connections: [{source: sensor, target: actuator}],
-        }));
+        Galileo.add_connections([{source:sensor, target:actuator}]);
     };
 
     var send_disconnect_to_server = function(sensor, actuator) {
-        ws.send(JSON.stringify({
-            status: 'OK',
-            connections: [{source: sensor, target: actuator}],
-        }));
+        Galileo.remove_connections([{source:sensor, target:actuator}]);
     };
+
+    Galileo.connect(cat.test_server_url);
 
     // HOW THE APP ADDS/REMOVES CONNECTIONS
     // updating $scope.connections and $scope.pins[<id>].is_connected
@@ -347,6 +299,110 @@ cat.clear_connection = function(sensor, actuator) {
     console.log('clear connection', sensor, actuator);
     $('.connection.pins-'+sensor+'-'+actuator).remove();
 };
+
+// SERVER COMMUNICATION
+
+cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
+
+    var name = 'Galileo'; // to match the module name, for logging purposes
+    var ws; // websocket
+
+    //TODO remove when done debugging
+    var $debug_log = $('#debug-log');
+
+    // you only get to assign one callback function for each event
+    var callbacks = {
+        'websocket-opened': function() {},
+        'update': function() {},
+        'slowness': function() {},
+        'websocket-closed': function() {},
+    };
+
+    var on = function(e, f) {
+        if (!_.has(callbacks, e)) {
+            throw name + ".on: " + e + " is not a valid callback type. You can assign exactly one callback for each of the types in " + JSON.stringify(_.keys(callbacks));
+        } else {
+            callbacks[e] = f;
+        }
+    };
+
+    var connect = function(url, protocol) {
+        try {
+            if (!protocol) {
+                ws = new WebSocket(url);
+            } else {
+                ws = new WebSocket(url, protocol);
+            }
+            ws.onopen = function() {
+                console.log(name, 'websocket opened');
+                $rootScope.$apply(function() {
+                    callbacks['websocket-opened']();
+                });
+            };
+            ws.onmessage = onmessage;
+            // TODO see if this is working
+            window.onbeforeunload = function() {
+                ws.onclose = function() {};
+                ws.close();
+            };
+
+        } catch(err) {
+            // TODO try again if it fails
+            console.log(name + ".connect failed with error", err);
+        }
+    };
+
+    var onmessage = function(msg) {
+        console.log('websocket message', msg);
+        var data = JSON.parse(msg.data);
+        console.log('websocket data', data);
+
+        //TODO remove when done debugging
+        $debug_log.html(msg.data);
+
+        var d = {
+            pins: cat.my_pin_format(data.pins, data.connections),
+            connections: data.connections,
+        };
+
+        $rootScope.$apply(function() {
+            callbacks['update'](d);
+        });
+    };
+
+    // TODO make a helper function for the ws.send part
+
+    // TODO it's a little weird that we pass in ALL pins and WHICH pins to actually use
+    var update_pins = function(pins, pin_ids) {
+        ws.send(JSON.stringify({
+            status: 'OK',
+            pins: cat.server_pin_format(pins, pin_ids),
+        }));
+    };
+
+    var add_connections = function(connections) {
+        ws.send(JSON.stringify({
+            status: 'OK',
+            connections: connections,
+        }));
+    };
+
+    var remove_connections = function(connections) {
+        ws.send(JSON.stringify({
+            status: 'OK',
+            connections: connections,
+        }));
+    };
+
+    return {
+        on: on,
+        connect: connect,
+        update_pins: update_pins,
+        add_connections: add_connections,
+        remove_connections: remove_connections,
+    };
+
+}]);
 
 // UTILITY FUNCTIONS
 
