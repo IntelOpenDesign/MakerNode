@@ -321,10 +321,10 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     // are not real events; the strings just describe the situation in which
     // that callback function will be done
     var callbacks = {
-        'websocket-opened': function() {},
-        'update': function() {},
-        'slowness': function() {},
-        'websocket-closed': function() {},
+        'websocket-opened': function() {}, // no args
+        'update': function() {}, // gets one arg, the update data
+        'slowness': function() {}, // no args
+        'websocket-closed': function() {}, // no args
     };
 
     // assign callback functions
@@ -334,6 +334,12 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         } else {
             callbacks[e] = f;
         }
+    };
+
+    var do_callback = function(e, arg) {
+        $rootScope.$apply(function() {
+            callbacks[e](arg); // TODO how to handle multiple args
+         });
     };
 
     var connect = function(_url, _protocol) {
@@ -357,12 +363,9 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         }
     };
 
-    // TODO make a wrapper function for the $rootScope.$apply callback stuff, it's repeated a lot
     var onopen = function() {
         console.log(name, 'websocket opened');
-        $rootScope.$apply(function() {
-            callbacks['websocket-opened']();
-        });
+        do_callback('websocket-opened');
     };
 
     var onclose = function() {
@@ -371,9 +374,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         // an error
         stop_waiting();
         console.log(name, 'websocket closed, trying to reconnect in', wait, 'ms...');
-        $rootScope.$apply(function() {
-            callbacks['websocket-closed']();
-        });
+        do_callback('websocket-closed');
         setTimeout(function() {
             connect(url, protocol);
         }, wait);
@@ -394,9 +395,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
             connections: data.connections,
         };
 
-        $rootScope.$apply(function() {
-            callbacks['update'](d);
-        });
+        do_callback('update', d);
 
         start_waiting();
     };
@@ -422,9 +421,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     var start_waiting = function() {
         slowness_timeout_id = setTimeout(function() {
             console.log(name, 'is being too slow');
-            $rootScope.$apply(function() {
-                callbacks['slowness']();
-            });
+            do_callback('slowness');
         }, slowness_time);
     };
     var stop_waiting = function() {
