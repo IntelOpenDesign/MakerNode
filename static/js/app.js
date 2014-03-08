@@ -66,6 +66,7 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
         if (!$scope.got_data) { // first time initialization
             $scope.got_data = true;
             $scope.pins = d.pins;
+            cat.clear_all_connections();
             $scope.connections = d.connections;
          } else { // after that just update changes
             $scope.got_data = true;
