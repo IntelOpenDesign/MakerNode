@@ -370,28 +370,20 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         });
     };
 
-    // TODO make a helper function for the ws.send part
+    var send = function(data) {
+        ws.send(JSON.stringify(_.extend({status: 'OK'}, data)));
+    };
 
-    // TODO it's a little weird that we pass in ALL pins and WHICH pins to actually use
     var update_pins = function(pins, pin_ids) {
-        ws.send(JSON.stringify({
-            status: 'OK',
-            pins: cat.server_pin_format(pins, pin_ids),
-        }));
+        send({pins: cat.server_pin_format(pins, pin_ids)});
     };
 
     var add_connections = function(connections) {
-        ws.send(JSON.stringify({
-            status: 'OK',
-            connections: connections,
-        }));
+        send({connections: connections});
     };
 
     var remove_connections = function(connections) {
-        ws.send(JSON.stringify({
-            status: 'OK',
-            connections: connections,
-        }));
+        send({connections: connections});
     };
 
     return {
