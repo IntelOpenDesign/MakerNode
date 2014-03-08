@@ -306,7 +306,10 @@ cat.clear_connection = function(sensor, actuator) {
 cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
 
     var name = 'Galileo'; // to match the module name, for logging purposes
-    var ws; // websocket
+    var ws;               // websocket
+    var url, protocol;
+    var slowness_time = 10000; // max acceptable wait time between updates from server
+    var wait = 500; // wait this long between attempts to connect
 
     //TODO remove when done debugging
     var $debug_log = $('#debug-log');
@@ -327,30 +330,41 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         }
     };
 
-    var connect = function(url, protocol) {
+    var connect = function(_url, _protocol) {
+        url = _url;
+        protocol = _protocol;
         try {
             if (!protocol) {
                 ws = new WebSocket(url);
             } else {
                 ws = new WebSocket(url, protocol);
             }
-            ws.onopen = function() {
-                console.log(name, 'websocket opened');
-                $rootScope.$apply(function() {
-                    callbacks['websocket-opened']();
-                });
-            };
+            ws.onopen = onopen;
             ws.onmessage = onmessage;
-            // TODO see if this is working
-            window.onbeforeunload = function() {
-                ws.onclose = function() {};
-                ws.close();
-            };
-
+            ws.onclose = onclose;
         } catch(err) {
-            // TODO try again if it fails
-            console.log(name + ".connect failed with error", err);
+            console.log(name + ".connect failed with error", err, "Trying again in", wait, " ms...");
+            setTimeout(function() {
+                connect(url, protocol);
+            }, wait);
         }
+    };
+
+    var onopen = function() {
+        console.log(name, 'websocket opened');
+        $rootScope.$apply(function() {
+            callbacks['websocket-opened']();
+        });
+    };
+
+    var onclose = function() {
+        console.log(name, 'websocket closed, trying to reconnect in', wait, 'ms...');
+        $rootScope.$apply(function() {
+            callbacks['websocket-closed']();
+        });
+        setTimeout(function() {
+            connect(url, protocol);
+        }, wait);
     };
 
     var onmessage = function(msg) {
