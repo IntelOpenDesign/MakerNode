@@ -308,8 +308,9 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     var name = 'Galileo'; // to match the module name, for logging purposes
     var ws;               // websocket
     var url, protocol;
-    var slowness_time = 10000; // max acceptable wait time between updates from server
     var wait = 500; // wait this long between attempts to connect
+    var slowness_time = 15000; // max acceptable wait time between server
+                               // messages, in milliseconds.
 
     //TODO remove when done debugging
     var $debug_log = $('#debug-log');
@@ -342,6 +343,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
             ws.onopen = onopen;
             ws.onmessage = onmessage;
             ws.onclose = onclose;
+            start_waiting();
         } catch(err) {
             console.log(name + ".connect failed with error", err, "Trying again in", wait, " ms...");
             setTimeout(function() {
@@ -361,6 +363,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         // NOTE that if a "new WebSocket" call has valid parameters, but the
         // server is not running, that will trigger onclose and will not throw
         // an error
+        stop_waiting();
         console.log(name, 'websocket closed, trying to reconnect in', wait, 'ms...');
         $rootScope.$apply(function() {
             callbacks['websocket-closed']();
@@ -371,6 +374,8 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     };
 
     var onmessage = function(msg) {
+        stop_waiting();
+
         console.log('websocket message', msg);
         var data = JSON.parse(msg.data);
         console.log('websocket data', data);
@@ -386,6 +391,8 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         $rootScope.$apply(function() {
             callbacks['update'](d);
         });
+
+        start_waiting();
     };
 
     var send = function(data) {
@@ -402,6 +409,22 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
 
     var remove_connections = function(connections) {
         send({connections: connections});
+    };
+
+    var slowness_timeout_id = null;
+    var start_waiting = function() {
+        slowness_timeout_id = setTimeout(function() {
+            console.log(name, 'is being too slow');
+            $rootScope.$apply(function() {
+                callbacks['slowness']();
+            });
+        }, slowness_time);
+    };
+    var stop_waiting = function() {
+        if(slowness_timeout_id !== null) {
+            clearTimeout(slowness_timeout_id);
+            slowness_timeout_id = null;
+        }
     };
 
     return {
