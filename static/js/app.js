@@ -308,6 +308,8 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     var name = 'Galileo'; // to match the module name, for logging purposes
     var ws;               // websocket
     var url, protocol;
+
+    // TODO it's confusing that this one is called wait but start_waiting() and stop_waiting() use slowness_time
     var wait = 500; // wait this long between attempts to connect
     var slowness_time = 15000; // max acceptable wait time between server
                                // messages, in milliseconds.
@@ -315,7 +317,9 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     //TODO remove when done debugging
     var $debug_log = $('#debug-log');
 
-    // you only get to assign one callback function for each event
+    // for certain "events" you can assign exactly one callback function. they
+    // are not real events; the strings just describe the situation in which
+    // that callback function will be done
     var callbacks = {
         'websocket-opened': function() {},
         'update': function() {},
@@ -323,6 +327,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         'websocket-closed': function() {},
     };
 
+    // assign callback functions
     var on = function(e, f) {
         if (!_.has(callbacks, e)) {
             throw name + ".on: " + e + " is not a valid callback type. You can assign exactly one callback for each of the types in " + JSON.stringify(_.keys(callbacks));
@@ -352,6 +357,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         }
     };
 
+    // TODO make a wrapper function for the $rootScope.$apply callback stuff, it's repeated a lot
     var onopen = function() {
         console.log(name, 'websocket opened');
         $rootScope.$apply(function() {
@@ -395,22 +401,23 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         start_waiting();
     };
 
+    // sending websocket messages
     var send = function(data) {
         ws.send(JSON.stringify(_.extend({status: 'OK'}, data)));
     };
-
     var update_pins = function(pins, pin_ids) {
         send({pins: cat.server_pin_format(pins, pin_ids)});
     };
-
     var add_connections = function(connections) {
         send({connections: connections});
     };
-
     var remove_connections = function(connections) {
         send({connections: connections});
     };
 
+    // if there is a big lag time (>= slowness_time) between messages from the
+    // server, we start to get suspicious that the server is malfunctioning,
+    // and so we do the slowness callback
     var slowness_timeout_id = null;
     var start_waiting = function() {
         slowness_timeout_id = setTimeout(function() {
