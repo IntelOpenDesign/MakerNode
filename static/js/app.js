@@ -68,7 +68,7 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
             $scope.pins = d.pins;
             $scope.connections = d.connections;
          } else { // after that just update changes
-            $scope.got_data = true; // TODO why is this here too?
+            $scope.got_data = true;
 
             // update pins
             _.each(d.pins, function(pin, id) {
@@ -87,6 +87,14 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
             disconnect_on_client(connections_to_remove);
             connect_on_client(connections_to_add);
          }
+    });
+
+    Galileo.on('slowness', function() {
+        $scope.got_data = false;
+    });
+
+    Galileo.on('websocket-closed', function() {
+        $scope.got_data = false;
     });
 
     $scope.send_pin_update = function(pin_ids) {
