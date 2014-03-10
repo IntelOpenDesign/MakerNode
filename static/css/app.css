@@ -2,6 +2,10 @@ body {
     font-size: 24px;
 }
 
+#field {
+    background: antiquewhite;
+}
+
 /* TODO remove when done debugging*/
 #debug-log {
     position: absolute;
@@ -29,15 +33,12 @@ body {
     display: none;
 }
 
+/* PINS */
 
 @-webkit-keyframes pulseGlow {
     from { background-color: rgb(250, 250, 100); -webkit-box-shadow: 0 0 20px rgb(250, 250, 60); }
     50%  { background-color: rgb(255, 255, 0); -webkit-box-shadow: 0 0 100px rgb(255, 255, 0); }
     to   { background-color: rgb(250, 250, 100); -webkit-box-shadow: 0 0 20px rgb(250, 250, 60); }
-}
-
-#field {
-    background: antiquewhite;
 }
 
 .pin {
@@ -273,6 +274,7 @@ body {
     background-color: rgb(50, 50, 50);
 }
 
+/* LOADING PAGE */
 #loading {
     background: rgb(255, 255, 255) url('../img/loading.gif') center center no-repeat;
     position: fixed;
