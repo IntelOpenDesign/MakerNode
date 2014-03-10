@@ -48,42 +48,73 @@
                     <div ng-class="{'settings': true,
                                     'hide': !(settings_pin === pin.id)}">
                         <div class="settings-inner">
-                            <div class="exit"
-                              ng-click="close_settings()">
-                                  &#x2713;
+
+                            <div class="settings-row title">
+                                <div class="fraction two-thirds">
+                                    <div class="pin-name">
+                                        {{pin.name}}&nbsp;{{type()}}
+                                    </div>
+                                    <input type="text"
+                                      placeholder="Pin Label"
+                                      class="pin-label"
+                                      value="{{pin.label}}"
+                                      ng-blur="update_pin_label()">
+                                </div>
+                                <div class="fraction one-third exit" ng-click="close_settings()">
+                                      &#x2713;
+                                </div>
                             </div>
-                            <div class="pin-name">
-                                {{pin.name}}&nbsp;{{type()}}
+
+                            <div class="settings-row text">
+                                <!--TODO tooltips -->
+                                <div class="fraction one-fifth">
+                                    Reading
+                                </div>
+                                <div class="fraction one-fifth">
+                                    Baseline
+                                </div>
+                                <div class="fraction one-fifth">
+                                    Scale
+                                </div>
+                                <div class="fraction one-fifth">
+                                    Smooth
+                                </div>
+                                <div class="fraction one-fifth">
+                                    Invert
+                                </div>
                             </div>
-                            <input type="text"
-                              placeholder="Pin Label"
-                              class="pin-label"
-                              value="{{pin.label}}"
-                              ng-blur="update_pin_label()">
-                            <div class="value-label">
-                                Reading
+
+                            <div class="settings-row controls">
+                                <div class="fraction one-fifth">
+                                    <div class="pin-value-container">
+                                        <div class="pin-value" style="height:{{pin.value}}%;"></div>
+                                    </div>
+                                </div>
+                                <div class="fraction one-fifth">
+                                    Coming next week: baseline setting
+                                </div>
+                                <div class="fraction one-fifth customized-range-container">
+                                    <!-- TODO make sliders a template -->
+                                    <input type="range"
+                                      class="sensitivity"
+                                      ng-model="pin.sensitivity"
+                                      min="0"
+                                      max="1"
+                                      step="0.1"
+                                      value="{{pin.sensitivity}}"
+                                      ng-change="send_pin_update([pin.id])">
+                                </div>
+                                <div class="fraction one-fifth">
+                                    Coming next week: smooth setting
+                                </div>
+                                <div class="fraction one-fifth">
+                                    <input type="checkbox"
+                                      class="invert"
+                                      ng-model="pin.is_inverted"
+                                      ng-change="send_pin_update([pin.id])">
+                                </div>
+
                             </div>
-                            <div class="pin-value-container">
-                                <div class="pin-value" style="height:{{pin.value}}%;"></div>
-                            </div>
-                            <input type="checkbox"
-                              class="invert"
-                              ng-model="pin.is_inverted"
-                              ng-change="send_pin_update([pin.id])">
-                            <div class="invert-label">
-                                invert
-                            </div>
-                            <div class="sensitivity-label">
-                                Sensitivity
-                            </div>
-                            <input type="range"
-                              class="sensitivity"
-                              ng-model="pin.sensitivity"
-                              min="0"
-                              max="1"
-                              step="0.1"
-                              value="{{pin.sensitivity}}"
-                              ng-change="send_pin_update([pin.id])">
                         </div>
                     </div>
                 </div>

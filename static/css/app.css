@@ -179,12 +179,12 @@ body {
     display: block;
 }
 
-
+/* SETTINGS WINDOW */
 .settings {
     position: fixed;
     width: 90%;
-    height: 94%;
-    top: 3%;
+    height: 500px;
+    top: 50px;
     left: 5%;
     z-index: 10;
     background: rgb(224, 153, 87);
@@ -194,41 +194,53 @@ body {
     width: 100%;
     height: 100%;
 }
+.settings-row {
+    width: 90%;
+    padding: 1em 5%; 
+}
+.settings-row.title {
+    height: 150px;
+}
+.settings-row.text {
+    height: 1.5em;
+}
+.settings-row.controls {
+    height: 300px;
+}
+
+.settings-inner .pin-name {
+    padding: 1em 0;
+    color: rgb(240, 218, 191);
+}
 .settings-inner .pin-label {
-    position: absolute;
-    top: 56px;
-    left: 0;
-    width: 60%;
     height: 30px;
     line-height: 1em;
-    padding: .3em 1%;
-    margin-left: 2%;
+    padding: 1em 0;
     border-width: 0;
     background: rgb(245, 191, 141);
 }
-.settings-inner .pin-name {
-    position: absolute;
-    top: 0;
-    left: 2%;
-    height: 30px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    line-height: 1em;
-    color: rgb(240, 218, 191);
-}
 .settings-inner .exit {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 33.3%;
-    height: 30px;
+    height: 50%; /* TODO center text vertically */
     text-align: center;
     line-height: 1em;
     color: green;
-    padding: 35px 0;
+    padding: 25% 0;
     background: rgb(86, 199, 86);
 }
+
+
+.settings-inner .pin-value-container {
+    height: 200px;
+    top: 170px;
+    left: 2%;
+    width: 31%;
+}
+
 /* TODO use javascript to make this look ok */
+.customized-range-container {
+    position: relative;
+    height: 100%;
+}
 .settings-inner .sensitivity {
     -webkit-appearance: none;
     position: absolute;
@@ -249,40 +261,16 @@ body {
     border-radius: 13px;
     background: rgb(50, 50, 50);
 }
-.settings-inner .sensitivity-label {
-    position: absolute;
-    left: 36%;
-    top: 130px;
-}
-.settings-inner .pin-value-container {
-    height: 200px;
-    top: 170px;
-    left: 2%;
-    width: 31%;
-}
-.settings-inner .value-label {
-    position: absolute;
-    top: 130px;
-    left: 2%;
-}
 .settings-inner .invert {
-    position: absolute;
-    top: 250px;
-    left: 70%;
-    border: 5px solid rgb(245, 191, 141);
+    -webkit-appearance: none;
     width: 50px;
     height: 50px;
-    background-color: rgb(245, 191, 141);
-    -webkit-appearance: none;
+    border: 5px solid rgb(245, 191, 141);
     border-radius: 25px;
+    background-color: rgb(245, 191, 141);
 }
 .settings-inner .invert:checked {
     background-color: rgb(50, 50, 50);
-}
-.settings-inner .invert-label {
-    position: absolute;
-    top: 220px;
-    left: 70%;
 }
 
 #loading {
@@ -303,4 +291,30 @@ body {
     text-align: center;
     color: rgb(228, 228, 25);
     padding-top: 70px;
+}
+
+/* FRACTIONS */
+.fraction {
+    float: left;
+}
+.one-third {
+    width: 30%;
+    margin-left: 5%;
+}
+.one-third:first-child {
+    margin-left: 0;
+}
+.two-thirds {
+    width: 65%;
+    margin-left: 5%;
+}
+.two-thirds:first-child {
+    margin-left: 0;
+}
+.one-fifth {
+    width: 18%;
+    margin-left: 2.5%;
+}
+.one-fifth:first-child {
+    margin-left: 0;
 }
