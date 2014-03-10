@@ -207,6 +207,7 @@ body {
 }
 .settings-row.controls {
     height: 300px;
+    padding-top: 0;
 }
 
 .settings-inner .pin-name {
@@ -219,22 +220,22 @@ body {
     padding: 1em 0;
     border-width: 0;
     background: rgb(245, 191, 141);
+    position: inherit;
+    width: 100%;
 }
 .settings-inner .exit {
-    height: 50%; /* TODO center text vertically */
+    height: 100%;
     text-align: center;
-    line-height: 1em;
+    line-height: 150px;
     color: green;
-    padding: 25% 0;
     background: rgb(86, 199, 86);
 }
 
 
 .settings-inner .pin-value-container {
     height: 200px;
-    top: 170px;
-    left: 2%;
-    width: 31%;
+    width: 100%;
+    position: relative;
 }
 
 /* TODO use javascript to make this look ok */
@@ -245,8 +246,8 @@ body {
 .settings-inner .sensitivity {
     -webkit-appearance: none;
     position: absolute;
-    left: 35%;
-    top: 255px;
+    left: -70px;
+    top: 85px;
     width: 200px;
     height: 30px;
     -webkit-transform: rotate(270deg);
