@@ -1,36 +1,25 @@
-body {
-    font-size: 24px;
-}
-
-#field {
-    background: antiquewhite;
-}
-
-/* TODO remove when done debugging*/
-#debug-log {
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: .7;
-    width: 100%;
-    background: blanchedalmond;
-    word-break: break-all;
-}
-
-#toggle-debug-log {
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 0;
+html, body {
+    height: 100%;
     margin: 0;
-    border-width: 0;
-    width: inherit;
-    z-index: 10;
-    height: 60px;
+    padding: 0;
+    font-size: 24px;
+    font-family: sans-serif;
 }
 
 .hide {
     display: none;
+}
+
+.empty-column-label {
+    text-align: center;
+    padding: 1em 0;
+    font-size: 200%;
+}
+#sensors .empty-column-label {
+    color: rgb(147, 106, 24);
+}
+#actuators .empty-column-label {
+    color: rgb(45, 104, 84);
 }
 
 /* PINS */
@@ -300,6 +289,10 @@ body {
 .fraction {
     float: left;
 }
+.one-half {
+    width: 50%;
+    margin: 0;
+}
 .one-third {
     width: 30%;
     margin-left: 5%;
@@ -321,3 +314,30 @@ body {
 .one-fifth:first-child {
     margin-left: 0;
 }
+
+
+
+
+/* TODO remove when done debugging*/
+#debug-log {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: .7;
+    width: 100%;
+    background: blanchedalmond;
+    word-break: break-all;
+}
+
+#toggle-debug-log {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0;
+    margin: 0;
+    border-width: 0;
+    width: inherit;
+    z-index: 10;
+    height: 60px;
+}
+

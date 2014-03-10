@@ -3,7 +3,7 @@ var cat = {};
 
 // server connection settings
 cat.on_hardware = false; // to switch to Galileo, just change this to true
-cat.test_server_url = 'ws://localhost:8001';
+cat.test_server_url = 'ws://192.168.15.120:8001';
 cat.hardware_server_url = 'ws://cat/';
 cat.hardware_server_protocol = 'hardware-state-protocol';
 
@@ -11,7 +11,7 @@ cat.hardware_server_protocol = 'hardware-state-protocol';
 cat.jsplumb_ready = false;
 
 jsPlumb.bind('ready', function() {
-    jsPlumb.Defaults.Container = $('#field');
+    jsPlumb.Defaults.Container = $('body');
     cat.jsplumb_ready = true;
     // TODO I think nobody listens to this event anymore so remove it
     $(document).trigger('jsplumb-ready');
