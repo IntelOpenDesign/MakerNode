@@ -183,7 +183,7 @@ body {
 .settings {
     position: fixed;
     width: 90%;
-    height: 94%;
+    height: 400px;
     top: 3%;
     left: 5%;
     z-index: 10;
