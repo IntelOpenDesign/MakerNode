@@ -157,24 +157,28 @@ html, body {
     z-index: 0;
     width: 100%;
 }
-.sensor .pin-value-container {
-}
-.actuator .pin-value-container {
-    right: 2px;
-}
-
 .pin-value {
     position: absolute;
-    width: 100%;
     left: 0;
     bottom: 0;
+}
+.sensor .pin-value {
     background: rgb(230, 222, 177);
+}
+.actuator .pin-value {
+    background: rgb(180, 206, 184);
 }
 .analog .pin-value {
     transition: height 1s;
     -webkit-transition: height 1s;
+    width: 100%;
     -moz-transition: height 1s;
     -o-transition: height 1s;
+}
+.digital .pin-value {
+    margin: 10px 5%;
+    height: 80px;
+    width: 90%;
 }
 
 .pin-port {

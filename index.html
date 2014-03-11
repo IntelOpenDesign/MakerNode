@@ -170,7 +170,10 @@
                     {{pin.name}}
                 </div>
                 <div class="pin-value-container">
-                    <div class="pin-value" style="height:{{pin.value}}%;"></div>
+                    <div
+                      ng-class="{
+                          'pin-value': true,
+                          'hide': pin.value < 0.5}"></div>
                 </div>
                 <div class="pin-port">
                     <div id="{{pin.id}}-endpoint"
