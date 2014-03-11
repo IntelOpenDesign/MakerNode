@@ -17,7 +17,7 @@
 </head>
 <body ng-controller="PinsCtrl">
 
-<div id="pins-container">
+<div id="pins-container" class="container-fluid">
 
     <div id="settings-button" class="black">
         <span class="glyphicon glyphicon-cog"></span>
@@ -25,190 +25,183 @@
 
     <div id="column-divider" class="gray-border"></div>
 
-    <!-- TODO make sensors and actuators share a single 'template' -->
-    <div id="sensors" class="fraction one-half">
+    <div class="row">
+        <!-- TODO make sensors and actuators share a single 'template' -->
+        <div id="sensors" class="col-xs-6">
 
-        <div
-          ng-class="{
-              'empty-column-label': true,
-              'hide': (pins | sensors).length > 0}">
-            sensors
-        </div>
-
-        <div id="{{pin.id}}"
-          ng-repeat="pin in pins | sensors"
-          ng-class="{
-              'sensor':true,
-              'pin':true,
-              'yellow-border': true,
-              'connected':pin.is_connected,
-              'analog': pin.is_analog,
-              'digital': !pin.is_analog,
-              'activated': activated_sensor === pin.id}"
-          data-name="{{pin.name}}"
-          sensor>
-            <div class="pin-box" ng-click="show_settings_for(pin.id)">
-                <div class="pin-label">
-                    {{pin.label}}
-                </div>
-                <div class="pin-name">
-                    {{pin.name}}
-                </div>
-                <div class="pin-value-container">
-                    <div class="pin-value" style="height:{{pin.value}}%;"></div>
-                </div>
-                <div class="endpoint-container"
-                  ng-click="toggle_activated($event, pin.id)">
-                    <div id="{{pin.id}}-endpoint"
-                      class="endpoint yellow-bg">
-                    </div>
-                </div>
+            <div
+              ng-class="{
+                  'empty-column-label': true,
+                  'hide': (pins | sensors).length > 0}">
+                sensors
             </div>
-            <div ng-class="{'settings': true,
-                            'hide': !(settings_pin === pin.id)}">
-                <div class="settings-inner">
 
-                    <div class="settings-row title">
-                        <div class="fraction two-thirds">
-                            <div class="pin-name">
-                                {{pin.name}}&nbsp;{{type()}}
-                            </div>
-                            <input type="text"
-                              placeholder="Pin Label"
-                              class="pin-label"
-                              value="{{pin.label}}"
-                              ng-blur="update_pin_label()">
-                        </div>
-                        <div class="fraction one-third exit" ng-click="close_settings()">
-                              &#x2713;
-                        </div>
-                    </div>
-
-                    <div class="settings-row text">
-                        <!--TODO tooltips -->
-                        <div class="fraction one-fifth">
-                            Reading
-                        </div>
-                        <div class="fraction one-fifth">
-                            Baseline
-                        </div>
-                        <div class="fraction one-fifth">
-                            Scale
-                        </div>
-                        <div class="fraction one-fifth">
-                            Smooth
-                        </div>
-                        <div class="fraction one-fifth">
-                            Invert
-                        </div>
-                    </div>
-
-                    <div class="settings-row controls">
-                        <div class="fraction one-fifth">
-                            <div class="pin-value-container">
-                                <div class="pin-value" style="height:{{pin.value}}%;"></div>
-                            </div>
-                        </div>
-                        <div class="fraction one-fifth">
-                            Coming next week: baseline setting
-                        </div>
-                        <div class="fraction one-fifth customized-range-container">
-                            <!-- TODO make sliders a template -->
-                            <input type="range"
-                              class="sensitivity"
-                              ng-model="pin.sensitivity"
-                              min="0"
-                              max="1"
-                              step="0.1"
-                              value="{{pin.sensitivity}}"
-                              ng-change="send_pin_update([pin.id])">
-                        </div>
-                        <div class="fraction one-fifth">
-                            Coming next week: smooth setting
-                        </div>
-                        <div class="fraction one-fifth">
-                            <input type="checkbox"
-                              class="invert"
-                              ng-model="pin.is_inverted"
-                              ng-change="send_pin_update([pin.id])">
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div id="actuators" class="fraction one-half">
-
-        <div
-          ng-class="{
-              'empty-column-label': true,
-              'hide': (pins | actuators).length > 0}">
-            actuators
-        </div>
-
-        <div id="{{pin.id}}"
-          ng-repeat="pin in pins | actuators"
-          ng-class="{
-              'actuator':true,
-              'pin':true,
-              'green-border': true,
-              'connected':pin.is_connected,
-              'analog': pin.is_analog,
-              'digital': !pin.is_analog,
-              'activated': activated_sensor !== null,
-              'already-connected-to-activated-sensor': already_connected_to_activated_sensor()}"
-          data-name="{{pin.name}}"
-          actuator>
-            <div class="pin-box" ng-click="show_settings_for(pin.id)">
-                <div class="pin-label">
-                    {{pin.label}}
-                </div>
-                <div class="pin-name green-text">
-                    {{pin.name}}
-                </div>
-                <div class="pin-value-container">
-                    <div
-                      ng-class="{
-                          'pin-value': true,
-                          'hide': pin.value < 0.5}"></div>
-                </div>
-                <div class="endpoint-container"
-                  ng-click="connect_or_disconnect($event, pin.id)">
-                    <div id="{{pin.id}}-endpoint"
-                      class="endpoint green-bg">
-                        <div class="endpoint-inner"></div>
-                        <div class="slash"></div>
-                    </div>
-                </div>
-            </div>
-            <div ng-class="{'settings': true,
-                            'hide': !(settings_pin === pin.id)}">
-                <div class="settings-inner">
-                    <div class="exit"
-                      ng-click="close_settings()">
-                          &#x2713;
+            <div id="{{pin.id}}"
+              ng-repeat="pin in pins | sensors"
+              ng-class="{
+                  'sensor':true,
+                  'pin':true,
+                  'yellow-border': true,
+                  'connected':pin.is_connected,
+                  'analog': pin.is_analog,
+                  'digital': !pin.is_analog,
+                  'activated': activated_sensor === pin.id}"
+              data-name="{{pin.name}}"
+              sensor>
+                <div class="pin-box" ng-click="show_settings_for(pin.id)">
+                    <div class="pin-label">
+                        {{pin.label}}
                     </div>
                     <div class="pin-name">
-                        {{pin.name}}&nbsp;{{type()}}
-                    </div>
-                    <input type="text"
-                      placeholder="Pin Label"
-                      class="pin-label"
-                      value="{{pin.label}}"
-                      ng-blur="update_pin_label()">
-                    <div class="value-label">
-                        Reading
+                        {{pin.name}}
                     </div>
                     <div class="pin-value-container">
                         <div class="pin-value" style="height:{{pin.value}}%;"></div>
                     </div>
+                    <div class="endpoint-container"
+                      ng-click="toggle_activated($event, pin.id)">
+                        <div id="{{pin.id}}-endpoint"
+                          class="endpoint yellow-bg">
+                        </div>
+                    </div>
+                </div>
+                <div ng-class="{'settings': true,
+                                'hide': settings_pin !== pin.id}">
+
+                    <div class="settings-inner">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xs-12 pin-name">
+                                    {{pin.name}}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    Name
+                                </div>
+                                <div class="col-xs-8">
+                                    <input type="text"
+                                      placeholder="Pin Label"
+                                      class="pin-label"
+                                      value="{{pin.label}}"
+                                      ng-blur="update_pin_label()">
+                                </div>
+                                <!-- TODO cap the label to 20 chars -->
+                                <div class="col-xs-2">
+                                    <span class="extra-small">(20 char max)</span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    Type
+                                </div>
+                                <div class="col-xs-10">
+                                    {{type()}}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-6">
+
+                                </div>
+                                <div class="col-xs-3">
+                                    Coming next week: Damping. This here is the outdate sensitivity slider.
+                                    <input type="range"
+                                      class="sensitivity"
+                                      ng-model="pin.sensitivity"
+                                      min="0"
+                                      max="1"
+                                      step="0.1"
+                                      value="{{pin.sensitivity}}"
+                                      ng-change="send_pin_update([pin.id])">
+                                </div>
+                                <div class="col-xs-3">
+                                    Invert
+                                    <input type="checkbox"
+                                      class="invert"
+                                      ng-model="pin.is_inverted"
+                                      ng-change="send_pin_update([pin.id])">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
 
+        <div id="actuators" class="col-xs-6">
+
+            <div
+              ng-class="{
+                  'empty-column-label': true,
+                  'hide': (pins | actuators).length > 0}">
+                actuators
+            </div>
+
+            <div id="{{pin.id}}"
+              ng-repeat="pin in pins | actuators"
+              ng-class="{
+                  'actuator':true,
+                  'pin':true,
+                  'green-border': true,
+                  'connected':pin.is_connected,
+                  'analog': pin.is_analog,
+                  'digital': !pin.is_analog,
+                  'activated': activated_sensor !== null,
+                  'already-connected-to-activated-sensor': already_connected_to_activated_sensor()}"
+              data-name="{{pin.name}}"
+              actuator>
+                <div class="pin-box" ng-click="show_settings_for(pin.id)">
+                    <div class="pin-label">
+                        {{pin.label}}
+                    </div>
+                    <div class="pin-name">
+                        {{pin.name}}
+                    </div>
+                    <div class="pin-value-container">
+                        <div
+                          ng-class="{
+                              'pin-value': true,
+                              'hide': pin.value < 0.5}"></div>
+                    </div>
+                    <div class="endpoint-container"
+                      ng-click="connect_or_disconnect($event, pin.id)">
+                        <div id="{{pin.id}}-endpoint"
+                          class="endpoint green-bg">
+                            <div class="endpoint-inner"></div>
+                            <div class="slash"></div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-class="{'settings': true,
+                                'hide': !(settings_pin === pin.id)}">
+                    <div class="settings-inner">
+                        <div class="exit"
+                          ng-click="close_settings()">
+                              &#x2713;
+                        </div>
+                        <div class="pin-name">
+                            {{pin.name}}&nbsp;{{type()}}
+                        </div>
+                        <input type="text"
+                          placeholder="Pin Label"
+                          class="pin-label"
+                          value="{{pin.label}}"
+                          ng-blur="update_pin_label()">
+                        <div class="value-label">
+                            Reading
+                        </div>
+                        <div class="pin-value-container">
+                            <div class="pin-value" style="height:{{pin.value}}%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
 </div>
@@ -225,19 +218,20 @@
 
 </div>
 
-<div id="footer">
-    <div class="fraction one-third">
-        <div id="add-sensors-button" class="button square yellow-bg">+</div>
-    </div>
-
-    <div class="fraction one-third">
-        <div id="play-button" class="button wide black-bg">
-            <span class="glyphicon glyphicon-play"></span>
-            Play
+<div id="footer" class="container-fluid">
+    <div class="row">
+        <div class="col-xs-2">
+            <div id="add-sensors-button" class="button square yellow-bg">+</div>
         </div>
-    </div>
-    <div class="fraction one-third">
-        <div id="add-actuators-button" class="button square green-bg">+</div>
+        <div class="col-xs-8">
+            <div id="play-button" class="button wide black-bg">
+                <span class="glyphicon glyphicon-play"></span>
+                Play
+            </div>
+        </div>
+        <div class="col-xs-2">
+            <div id="add-actuators-button" class="button square green-bg">+</div>
+        </div>
     </div>
 </div>
 

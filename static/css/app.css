@@ -127,13 +127,13 @@ html, body {
     text-align: right;
 }
 
-.pin-label {
+.pin-box > .pin-label {
     position: absolute;
-    top: -50px;
     left: -15px;
+    top: -50px;
 }
 
-.pin-name {
+.pin-box > .pin-name {
     font-size: 250%;
     text-align: center;
     width: 100%;
@@ -145,8 +145,13 @@ html, body {
     top: 0;
     left: 0;
 }
+
+/* TODO SASS variables for colors would be so good */
 .sensor .pin-name {
     color: rgb(108, 79, 18);
+}
+.actuator .pin-name {
+    color: rgb(45, 104, 84);
 }
 
 .pin-value-container {
@@ -241,6 +246,7 @@ html, body {
     
     
 }
+/* TODO I think I can delete this empty css rule */
 
 .slash {
     position: absolute;
@@ -264,62 +270,34 @@ html, body {
 }
 
 /* SETTINGS WINDOW */
+
 .settings {
     position: fixed;
-    width: 90%;
-    height: 500px;
-    top: 50px;
-    left: 5%;
-    z-index: 10;
-    background: rgb(224, 153, 87);
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 20;
+    background: white;
 }
 .settings-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
+    margin: 15px 2%;
+    width: 96%;
+    border-width: 15px;
+    border-style: solid;
+    border-color: gray;
 }
-.settings-row {
-    width: 90%;
-    padding: 1em 5%; 
-}
-.settings-row.title {
-    height: 150px;
-}
-.settings-row.text {
-    height: 1.5em;
-}
-.settings-row.controls {
-    height: 300px;
-    padding-top: 0;
-}
-
-.settings-inner .pin-name {
-    padding: 1em 0;
-    color: rgb(240, 218, 191);
-}
-.settings-inner .pin-label {
-    height: 30px;
-    line-height: 1em;
-    padding: 1em 0;
-    border-width: 0;
-    background: rgb(245, 191, 141);
-    position: inherit;
-    width: 100%;
-}
-.settings-inner .exit {
-    height: 100%;
+.settings .pin-name {
+    font-size: 200%;
     text-align: center;
-    line-height: 150px;
-    color: green;
-    background: rgb(86, 199, 86);
 }
-
-
-.settings-inner .pin-value-container {
-    height: 200px;
+.settings .pin-label {
     width: 100%;
-    position: relative;
 }
+.extra-small {
+    font-size: 75%;
+}
+/* TODO make settings theme yellow for sensors and green for actuators */
+
 
 /* TODO use javascript to make this look ok */
 .customized-range-container {
@@ -328,23 +306,24 @@ html, body {
 }
 .settings-inner .sensitivity {
     -webkit-appearance: none;
-    position: absolute;
-    left: -70px;
-    top: 85px;
+    position: relative;
+    left: -50px;
+    top: 100px;
     width: 200px;
-    height: 30px;
+    height: 15px;
     -webkit-transform: rotate(270deg);
-    background: rgb(245, 191, 141);
     margin: 0;
     padding: 0;
+    background: gray;
 }
 .settings-inner .sensitivity::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 30px;
-    height: 45px;
-    -webkit-border-radius: 13px;
-    border-radius: 13px;
+    width: 45px;
+    height: 60px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
     background: rgb(50, 50, 50);
+    border: 5px solid white;
 }
 .settings-inner .invert {
     -webkit-appearance: none;
@@ -379,39 +358,6 @@ html, body {
     padding-top: 70px;
 }
 
-/* FRACTIONS */
-.fraction {
-    float: left;
-}
-.one-half {
-    width: 50%;
-    margin: 0;
-}
-.one-third {
-    width: 30%;
-    margin-left: 5%;
-}
-.one-third:first-child {
-    margin-left: 0;
-}
-.two-thirds {
-    width: 65%;
-    margin-left: 5%;
-}
-.two-thirds:first-child {
-    margin-left: 0;
-}
-.one-fifth {
-    width: 18%;
-    margin-left: 2.5%;
-}
-.one-fifth:first-child {
-    margin-left: 0;
-}
-
-
-
-
 /* TODO remove when done debugging*/
 #debug-log {
     position: absolute;
@@ -443,19 +389,23 @@ html, body {
     background: linear-gradient(rgba(255, 255, 255, .7), rgba(255, 255, 255, 1));
     z-index: 10;
 }
-#footer .button {
+
+/* BUTTONS */
+
+.button {
     height: 60px;
     margin: 20px;
     padding: 0;
     color: white;
     text-align: center;
 }
-#footer .button.square {
+.button.square {
     width: 60px;
 }
-#footer .button.wide {
+.button.wide {
     width: 250px;
 }
+
 #play-button {
     margin-left: -125px !important;
     line-height: 55px;
