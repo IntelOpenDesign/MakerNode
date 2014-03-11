@@ -143,7 +143,7 @@ html, body {
     width: 100%;
     left: 0;
     bottom: 0;
-    background: blueviolet;
+    background: rgb(230, 222, 177);
 }
 .analog .pin-value {
     transition: height 1s;
