@@ -26,7 +26,7 @@ html, body {
 
 /* COLORS */
 .yellow-bg {
-    background-color: rgb(247, 193, 40);
+    background-color: rgb(247, 193, 40) !important;
 }
 .yellow-border {
     border-color: rgb(247, 193, 40);
@@ -213,7 +213,7 @@ html, body {
     left: 50%;
     margin-top: -20px;
     margin-left: -20px;
-    background: white;
+    background-color: white;
     border-radius: 20px;
 }
 .sensor.activated .endpoint {
@@ -225,9 +225,6 @@ html, body {
     -webkit-animation-name: pulseGlow;
     -webkit-animation-duration: 2s;
     -webkit-animation-iteration-count: infinite;
-}
-.actuator.connected .endpoint {
-    background: rgb(232, 189, 0);
 }
 
 .x-1, .x-2 {
