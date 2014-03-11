@@ -127,10 +127,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </div> <!-- end sensor settings -->
+            </div> <!-- end sensor pin -->
 
-        </div>
+        </div> <!-- end sensors -->
 
         <div id="actuators" class="col-xs-6">
 
@@ -198,16 +198,15 @@
                             <div class="pin-value" style="height:{{pin.value}}%;"></div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </div> <!-- end actuator settings -->
+            </div> <!-- end actuator pin -->
 
-        </div>
+        </div> <!-- end actuators -->
     </div>
 
 </div>
 
 <div id="connections-container">
-
     <div id="connect-{{c.source}}-{{c.target}}"
       ng-repeat="c in connections"
       class="connection"
@@ -215,7 +214,6 @@
       data-actuator_id="{{c.target}}"
       connection>
     </div>
-
 </div>
 
 <div id="footer" class="container-fluid">
@@ -240,12 +238,6 @@
         waiting for server
     </div>
 </div>
-
-<!-- TODO remove when done debugging -->
-<!--
-<div id="debug-log" class="ui-grid-a hide"></div>
-<button id="toggle-debug-log hide" onclick="toggle_debug_log()">TOGGLE DEBUG LOG</button>
--->
 
 </body>
 </html>
