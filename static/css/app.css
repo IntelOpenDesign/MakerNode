@@ -1,9 +1,16 @@
+@font-face {
+    font-family: 'Neo Sans Intel';
+    font-weight: normal;
+    font-style: normal;
+    src: url('../fonts/NeoSansIntel/NeoSansIntel.ttf');
+}
+
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
     font-size: 24px;
-    font-family: sans-serif;
+    font-family: 'Neo Sans Intel';
 }
 
 .hide {
