@@ -66,15 +66,17 @@ html, body {
 }
 
 .pin {
-    width: 70%;
+    width: 50%;
     height: 150px;
     margin-top: 50px;
     margin-bottom: 50px;
     margin: 50px inherit;
+    box-sizing: content-box;
+    border: 15px solid gray;
 }
 .pin.sensor {
-    margin-left: 5%;
-    margin-right: 25%;
+    margin-left: 15%;
+    margin-right: 20%;
 }
 .pin.actuator {
     margin-left: 25%;
@@ -84,8 +86,7 @@ html, body {
 .pin-box {
     position: relative;
     height: 100%;
-    background: rgb(107,48,0);
-    width: 90%;
+    width: 100%;
 }
 .actuator .pin-box {
     float: right;
@@ -107,15 +108,14 @@ html, body {
 }
 
 .pin-value-container {
-    height: 90%;
+    height: 100%;
     position: absolute;
-    top: 5%;
+    top: 0;
+    left: 0;
     z-index: 0;
-    width: 65%;
-    background-color: rgba(245, 245, 245, .2);
+    width: 100%;
 }
 .sensor .pin-value-container {
-    left: 2px;
 }
 .actuator .pin-value-container {
     right: 2px;
