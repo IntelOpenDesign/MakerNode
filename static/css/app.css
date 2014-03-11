@@ -457,10 +457,11 @@ html, body {
     width: 250px;
 }
 #play-button {
-    margin-left: auto !important;
-    margin-right: auto !important;
-    line-height: 60px;
+    margin-left: -125px !important;
+    line-height: 55px;
     font-size: 125%;
+    position: relative;
+    left: 50%;
 }
 #play-button .glyphicon-play {
     font-size: 80%;
