@@ -19,10 +19,11 @@
 
 <div id="pins-container">
 
-    <!-- TODO use a gear icon -->
     <div id="settings-button" class="black">
         <span class="glyphicon glyphicon-cog"></span>
     </div>
+
+    <div id="column-divider" class="gray-border"></div>
 
     <!-- TODO make sensors and actuators share a single 'template' -->
     <div id="sensors" class="fraction one-half">
@@ -39,6 +40,7 @@
           ng-class="{
               'sensor':true,
               'pin':true,
+              'yellow-border': true,
               'connected':pin.is_connected,
               'analog': pin.is_analog,
               'digital': !pin.is_analog,
@@ -149,6 +151,7 @@
           ng-class="{
               'actuator':true,
               'pin':true,
+              'green-border': true,
               'connected':pin.is_connected,
               'analog': pin.is_analog,
               'digital': !pin.is_analog,
@@ -215,18 +218,17 @@
 
 <div id="footer">
     <div class="fraction one-third">
-        <div id="add-sensors-button" class="button square yellow">+</div>
+        <div id="add-sensors-button" class="button square yellow-bg">+</div>
     </div>
 
-    <!-- TODO use a play icon -->
     <div class="fraction one-third">
-        <div id="play-button" class="button wide black">
+        <div id="play-button" class="button wide black-bg">
             <span class="glyphicon glyphicon-play"></span>
             Play
         </div>
     </div>
     <div class="fraction one-third">
-        <div id="add-actuators-button" class="button square green">+</div>
+        <div id="add-actuators-button" class="button square green-bg">+</div>
     </div>
 </div>
 

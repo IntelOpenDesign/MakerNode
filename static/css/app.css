@@ -11,14 +11,23 @@ html, body {
 }
 
 /* COLORS */
-.yellow {
+.yellow-bg {
     background-color: rgb(247, 193, 40);
 }
-.green {
+.yellow-border {
+    border-color: rgb(247, 193, 40);
+}
+.green-bg {
     background-color: rgb(45, 104, 84);
 }
-.black {
+.green-border {
+    border-color: rgb(45, 104, 84);
+}
+.black-bg {
     background-color: rgb(44, 38, 33);
+}
+.gray-border {
+    border-color: rgb(183, 169, 152);
 }
 
 #settings-button {
@@ -31,18 +40,25 @@ html, body {
     text-align: center;
     background: white;
     padding-top: 10px;
-    padding-left: 1px;
     line-height: 1em;
     padding-bottom: 5px;
+}
+
+#column-divider {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    height: 100%;
+    width: 0;
+    margin-left: -1px;
+    border-width: 1px;
+    z-index: -1;
+    border-style: dashed;
 }
 
 #pins-container {
     min-height: 100%;
     padding-top: 50px;
-}
-#actuators {
-    width: 49%;
-    border-left: 2px dashed rgb(183, 169, 152);
 }
 
 .empty-column-label {
@@ -67,12 +83,13 @@ html, body {
 
 .pin {
     width: 50%;
-    height: 150px;
+    height: 100px;
     margin-top: 50px;
     margin-bottom: 50px;
     margin: 50px inherit;
     box-sizing: content-box;
-    border: 15px solid gray;
+    border-width: 15px;
+    border-style: solid;
 }
 .pin.sensor {
     margin-left: 15%;
@@ -138,9 +155,9 @@ html, body {
 .pin-port {
     position: absolute;
     top: 50%;
-    height: 140px;
-    width: 140px;
-    margin-top: -70px;
+    height: 100px;
+    width: 100px;
+    margin-top: -50px;
     z-index: 5;
 }
 .sensor .pin-port {
@@ -153,18 +170,17 @@ html, body {
 .endpoint {
     width: 100px;
     height: 100px;
-    border-width: 20px;
+    border-width: 15px;
     border-style: solid;
-    border-radius: 70px;
+    border-radius: 50px;
     position: relative;
+    border-color: white;
 }
 .sensor .endpoint {
-    border-color: rgb(0, 102, 24);
-    background: rgb(232, 189, 0);
+    background: rgb(247, 193, 40);
 }
 .actuator .endpoint {
-    border-color: rgb(232, 52, 8);
-    background: antiquewhite;
+    background: rgb(45, 104, 84);
 }
 .sensor.activated .endpoint {
     background: rgb(250, 250, 60);
