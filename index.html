@@ -179,11 +179,8 @@
                     <div id="{{pin.id}}-endpoint"
                       class="endpoint green-bg"
                       ng-click="connect_or_disconnect($event, pin.id)">
-                        <div ng-class="{
-                            'endpoint-inner': true,
-                            'yellow-bg': pin.is_connected}"></div>
-                        <div class="x-1"></div>
-                        <div class="x-2"></div>
+                        <div class="endpoint-inner"></div>
+                        <div class="slash"></div>
                     </div>
                 </div>
             </div>

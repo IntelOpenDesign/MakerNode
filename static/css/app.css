@@ -26,7 +26,7 @@ html, body {
 
 /* COLORS */
 .yellow-bg {
-    background-color: rgb(247, 193, 40) !important;
+    background-color: rgb(247, 193, 40);
 }
 .yellow-border {
     border-color: rgb(247, 193, 40);
@@ -93,9 +93,9 @@ html, body {
 /* PINS */
 
 @-webkit-keyframes pulseGlow {
-    from { background-color: rgb(250, 250, 100); -webkit-box-shadow: 0 0 20px rgb(250, 250, 60); }
-    50%  { background-color: rgb(255, 255, 0); -webkit-box-shadow: 0 0 100px rgb(255, 255, 0); }
-    to   { background-color: rgb(250, 250, 100); -webkit-box-shadow: 0 0 20px rgb(250, 250, 60); }
+    from { background-color: rgb(247, 193, 40); -webkit-box-shadow: 0 0 200px rgb(250, 250, 60); }
+    50%  { background-color: rgb(255, 255, 100); -webkit-box-shadow: 0 0 20px rgb(255, 255, 0); }
+    to   { background-color: rgb(247, 193, 40); -webkit-box-shadow: 0 0 200px rgb(250, 250, 60); }
 }
 
 .pin {
@@ -216,38 +216,37 @@ html, body {
     background-color: white;
     border-radius: 20px;
 }
+.actuator.connected .endpoint-inner {
+    background-color: rgb(247, 193, 40);
+}
 .sensor.activated .endpoint {
-    background: rgb(250, 250, 60);
+    background: rgb(231, 98, 40);
 }
 .actuator.activated .endpoint,
 .actuator.activated.connected .endpoint {
-    background: rgb(250, 250, 60);
-    -webkit-animation-name: pulseGlow;
+    background: rgb(231, 98, 40);
     -webkit-animation-duration: 2s;
     -webkit-animation-iteration-count: infinite;
 }
 
-.x-1, .x-2 {
+.slash {
     position: absolute;
-    top: 40px;
-    left: 10px;
-    width: 80px;
-    height: 20px;
-    background: rgb(50, 50, 50);
+    top: 50%;
+    margin-top: -7.5px;
+    left: 5px;
+    width: 60px;
+    height: 15px;
+    background: rgb(231, 98, 40);
     display: none;
+    -webkit-transform: rotate(-45deg);
 }
 .x-1 {
     -webkit-transform: rotate(45deg);
 }
-.x-2 {
-    -webkit-transform: rotate(-45deg);
-}
 .pin.actuator.activated.already-connected-to-activated-sensor .endpoint {
     -webkit-animation: none;
-    background: rgb(212, 203, 89);
 }
-.pin.actuator.activated.already-connected-to-activated-sensor .x-1,
-.pin.actuator.activated.already-connected-to-activated-sensor .x-2 {
+.pin.actuator.activated.already-connected-to-activated-sensor .slash {
     display: block;
 }
 
