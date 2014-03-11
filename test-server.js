@@ -83,7 +83,25 @@ var server = ws.createServer(function(conn){
         conn.sendText(JSON.stringify(msg));
     }, 3000);
     conn.on('close', function(code, reason) {
-        console.log('connection', conn,'closed with code', code, 'for reason', reason);
+        try {
+            console.log('close - try');
+        } catch(e) {
+            console.log('close - catch');
+        } finally {
+            console.log('close - finally');
+        }
+    });
+    conn.on('end', function() {
+        try {
+            console.log('end - try');
+        } catch(e) {
+            console.log('end - catch');
+        } finally {
+            console.log('end - finally');
+        }
+    });
+    conn.on('error', function() {
+        console.log('error');
     });
 }).listen(8001);
 
