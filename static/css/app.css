@@ -25,13 +25,20 @@ html, body {
     position: fixed;
     top: 0;
     left: 50%;
-    height: 50px;
     width: 50px;
     margin-left: -25px;
+    font-size: 150%;
+    text-align: center;
+    background: white;
+    padding-top: 10px;
+    padding-left: 1px;
+    line-height: 1em;
+    padding-bottom: 5px;
 }
 
 #pins-container {
     min-height: 100%;
+    padding-top: 50px;
 }
 #actuators {
     width: 49%;
