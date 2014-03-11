@@ -37,6 +37,9 @@ html, body {
 .green-border {
     border-color: rgb(45, 104, 84);
 }
+.green-text {
+    color: rgb(45, 104, 84);
+}
 .black-bg {
     background-color: rgb(44, 38, 33);
 }
@@ -136,12 +139,14 @@ html, body {
     width: 100%;
     height: 100px;
     font-weight: 600;
-    color: rgb(108, 79, 18);
     line-height: 100px;
     z-index: 1;
     position: absolute;
     top: 0;
     left: 0;
+}
+.sensor .pin-name {
+    color: rgb(108, 79, 18);
 }
 
 .pin-value-container {
