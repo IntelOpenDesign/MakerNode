@@ -131,6 +131,20 @@ html, body {
     right: 4px;
 }
 
+.pin-name {
+    font-size: 250%;
+    text-align: center;
+    width: 100%;
+    height: 100px;
+    font-weight: 600;
+    color: rgb(108, 79, 18);
+    line-height: 100px;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 .pin-value-container {
     height: 100%;
     position: absolute;
