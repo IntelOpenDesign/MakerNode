@@ -10,6 +10,20 @@ html, body {
     display: none;
 }
 
+.yellow {
+    background-color: rgb(247, 193, 40);
+}
+.green {
+    background-color: rgb(45, 104, 84);
+}
+.black {
+    background-color: rgb(44, 38, 33);
+}
+
+#pins-container {
+    min-height: 100%;
+}
+
 .empty-column-label {
     text-align: center;
     padding: 1em 0;
@@ -341,3 +355,36 @@ html, body {
     height: 60px;
 }
 
+#footer {
+    height: 100px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    background: white;
+    z-index: 10;
+}
+#footer .button {
+    height: 80px;
+    margin: 5px;
+    padding: 5px;
+    color: white;
+    font-size: 300%;
+    text-align: center;
+    line-height: 1em;
+}
+#footer .button.square {
+    width: 80px;
+}
+#footer .button.wide {
+    width: 150px;
+}
+#play-button {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+#add-sensors-button {
+    float: left;
+}
+#add-actuators-button {
+    float: right;
+}
