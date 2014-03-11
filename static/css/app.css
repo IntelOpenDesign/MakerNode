@@ -93,9 +93,9 @@ html, body {
 /* PINS */
 
 @-webkit-keyframes pulseGlow {
-    from { background-color: rgb(247, 193, 40); -webkit-box-shadow: 0 0 200px rgb(250, 250, 60); }
-    50%  { background-color: rgb(255, 255, 100); -webkit-box-shadow: 0 0 20px rgb(255, 255, 0); }
-    to   { background-color: rgb(247, 193, 40); -webkit-box-shadow: 0 0 200px rgb(250, 250, 60); }
+    from { -webkit-box-shadow: 0 0 0 rgb(247, 193, 40); }
+    50%  { -webkit-box-shadow: 0 0 30px rgb(231, 98, 40); }
+    to   { -webkit-box-shadow: 0 0 0 rgb(247, 193, 40); }
 }
 
 .pin {
@@ -181,29 +181,33 @@ html, body {
     width: 90%;
 }
 
-.pin-port {
+.endpoint-container {
     position: absolute;
     top: 50%;
     height: 100px;
     width: 100px;
     margin-top: -50px;
     z-index: 5;
+    background: white;
+    border-radius: 50px;
 }
-.sensor .pin-port {
+.sensor .endpoint-container {
     right: -70px;
 }
-.actuator .pin-port {
+.actuator .endpoint-container {
     left: -70px;
 }
 
 .endpoint {
-    width: 100px;
-    height: 100px;
-    border-width: 15px;
-    border-style: solid;
-    border-radius: 50px;
+    width: 70px;
+    height: 70px;
+    border-radius: 35px;
     position: relative;
-    border-color: white;
+    box-sizing: content-box;
+    top: 50%;
+    left: 50%;
+    margin-top: -35px;
+    margin-left: -35px;
 }
 .actuator .endpoint-inner {
     position: absolute;
@@ -221,12 +225,21 @@ html, body {
 }
 .sensor.activated .endpoint {
     background: rgb(231, 98, 40);
+    width: 84px;
+    height: 84px;
+    border-radius: 42px;
+    margin-top: -42px;
+    margin-left: -42px;
 }
-.actuator.activated .endpoint,
-.actuator.activated.connected .endpoint {
+.actuator.activated .endpoint, .actuator.activated.connected .endpoint {
     background: rgb(231, 98, 40);
     -webkit-animation-duration: 2s;
     -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: pulseGlow;
+}
+.actuator.activated .endpoint-inner, .actuator.activated.connected .endpoint-inner {
+    
+    
 }
 
 .slash {

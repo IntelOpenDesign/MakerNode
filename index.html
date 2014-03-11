@@ -57,10 +57,10 @@
                 <div class="pin-value-container">
                     <div class="pin-value" style="height:{{pin.value}}%;"></div>
                 </div>
-                <div class="pin-port">
+                <div class="endpoint-container"
+                  ng-click="toggle_activated($event, pin.id)">
                     <div id="{{pin.id}}-endpoint"
-                      class="endpoint yellow-bg"
-                      ng-click="toggle_activated($event, pin.id)">
+                      class="endpoint yellow-bg">
                     </div>
                 </div>
             </div>
@@ -175,10 +175,10 @@
                           'pin-value': true,
                           'hide': pin.value < 0.5}"></div>
                 </div>
-                <div class="pin-port">
+                <div class="endpoint-container"
+                  ng-click="connect_or_disconnect($event, pin.id)">
                     <div id="{{pin.id}}-endpoint"
-                      class="endpoint green-bg"
-                      ng-click="connect_or_disconnect($event, pin.id)">
+                      class="endpoint green-bg">
                         <div class="endpoint-inner"></div>
                         <div class="slash"></div>
                     </div>
