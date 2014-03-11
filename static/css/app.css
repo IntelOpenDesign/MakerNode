@@ -36,7 +36,7 @@ html, body {
 #actuators {
     width: 49%;
     border-left: 2px dashed rgb(183, 169, 152);
-}
+} /* TODO more control of dashed border will require image */
 
 .empty-column-label {
     text-align: center;
@@ -374,7 +374,8 @@ html, body {
     width: 100%;
     position: fixed;
     bottom: 0;
-    background: white;
+    background: linear-gradient(rgba(255, 255, 255, .7), rgba(255, 255, 255, 1));
+    background: -webkit-linear-gradient(rgba(255, 255, 255, .7), rgba(255, 255, 255, 1));
     z-index: 10;
 }
 #footer .button {
