@@ -268,23 +268,23 @@ cat.app.directive('connection', function($document) {
             connection = jsPlumb.connect({
                 source: attrs.sensorId+'-endpoint',
                 target: attrs.actuatorId+'-endpoint',
-                connector: ['Bezier', {curviness: 70}],
+                connector: 'Straight',
                 cssClass: 'connection pins-'+attrs.sensorId+'-'+attrs.actuatorId,
                 endpoint: 'Blank',
                 endpointClass: 'endpoint pins-'+attrs.sensorId+'-'+attrs.actuatorId,
-                anchors: ['Right', 'Left'],
+                anchors: ['Center', 'Center'],
                 paintStyle: {
                     lineWidth: 15,
-                    strokeStyle: 'rgb(232, 189, 0)',
+                    strokeStyle: 'rgb(44, 38, 33)',
                     outlineWidth: 2,
-                    outlineColor: 'antiquewhite',
+                    outlineColor: 'white',
                 },
                 endpointStyle: {
                     fillStyle: '#a7b04b',
                 },
-                hoverPaintStyle: {
-                    strokeStyle: 'rgb(250, 250, 60)',
-                },
+                //hoverPaintStyle: {
+                 //   strokeStyle: 'rgb(250, 250, 60)',
+                //},
             });
         }
 
