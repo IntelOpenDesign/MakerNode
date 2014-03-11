@@ -5,6 +5,13 @@
     src: url('../fonts/NeoSansIntel/NeoSansIntel.ttf');
 }
 
+@font-face {
+    font-family: 'Droid Sans';
+    font-weight: normal;
+    font-style: normal;
+    src: url('../fonts/droid-sans/DroidSans.ttf');
+}
+
 html, body {
     height: 100%;
     margin: 0;
