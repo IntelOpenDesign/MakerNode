@@ -368,9 +368,7 @@ html, body {
     margin: 5px;
     padding: 5px;
     color: white;
-    font-size: 300%;
     text-align: center;
-    line-height: 1em;
 }
 #footer .button.square {
     width: 80px;
@@ -381,6 +379,13 @@ html, body {
 #play-button {
     margin-left: auto !important;
     margin-right: auto !important;
+    font-size: 200%;
+    line-height: 80px;
+}
+#add-sensors-button,
+#add-actuators-button {
+    font-size: 300%;
+    line-height: 1em;
 }
 #add-sensors-button {
     float: left;
