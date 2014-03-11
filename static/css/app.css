@@ -126,16 +126,8 @@ html, body {
 
 .pin-label {
     position: absolute;
-    top: 5%;
-    z-index: 5;
-    color: black;
-    text-shadow: none;
-}
-.sensor .pin-label {
-    left: 4px;
-}
-.actuator .pin-label {
-    right: 4px;
+    top: -50px;
+    left: -15px;
 }
 
 .pin-name {
