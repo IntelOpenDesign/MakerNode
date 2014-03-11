@@ -20,8 +20,22 @@ html, body {
     background-color: rgb(44, 38, 33);
 }
 
+#settings-button {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    height: 50px;
+    width: 50px;
+    margin-left: -25px;
+    color: white;
+}
+
 #pins-container {
     min-height: 100%;
+}
+#actuators {
+    width: 49%;
+    border-left: 2px dashed rgb(183, 169, 152);
 }
 
 .empty-column-label {
