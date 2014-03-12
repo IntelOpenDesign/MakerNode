@@ -100,8 +100,10 @@ var server = ws.createServer(function(conn){
             msg.pins[id].is_visible = pin.is_visible;
             msg.pins[id].is_analog = pin.is_analog;
             msg.pins[id].is_input = pin.is_input;
-            msg.pins[id].sensitivity = pin.sensitivity;
             msg.pins[id].is_inverted = pin.is_inverted;
+            msg.pins[id].window_min = pin.window_min;
+            msg.pins[id].window_max = pin.window_max;
+            msg.pins[id].damping = pin.damping;
         });
     });
     setInterval(function() {

@@ -240,9 +240,21 @@ cat.app.directive('sensorSettings', function($document) {
     function link($scope, $el, attrs) {
         var that = cat.pin_settings_base($scope, $el, attrs);
 
+        var $min = $('.vertical-slider.min');
+        var $max = $('.vertical-slider.max');
+
         $scope.average_min_max = function() {
             return (parseFloat($scope.pin.window_min) + parseFloat($scope.pin.window_max))/2;
         };
+
+        $scope.sync_min_max = function() {
+            var min = parseFloat($min.val());
+            var max = parseFloat($max.val());
+            $scope.pin.window_max = Math.max(min, max);
+            $scope.pin.window_min = Math.min(min, max);
+            $scope.send_pin_update([$scope.pin.id]);
+        };
+
     }
     return { link: link };
 });
@@ -479,9 +491,9 @@ cat.my_pin_format = function(server_pins, server_connections) {
             is_visible: pin.is_visible,
             is_analog: pin.is_analog,
             is_input: pin.is_input,
-            window_min: pin.window_min.toString(),
-            window_max: pin.window_max.toString(),
-            damping: pin.damping.toString(),
+            window_min: pin.window_min,
+            window_max: pin.window_max,
+            damping: pin.damping,
             is_inverted: pin.is_inverted,
         };
     });
@@ -506,9 +518,9 @@ cat.server_pin_format = function(my_pins, my_pin_ids) {
             is_visible: pin.is_visible,
             is_analog: pin.is_analog,
             is_input: pin.is_input,
-            window_min: parseFloat(pin.window_min),
-            window_max: parseFloat(pin.window_max),
-            damping: parseInt(pin.damping),
+            window_min: pin.window_min,
+            window_max: pin.window_max,
+            damping: pin.damping,
             is_inverted: pin.is_inverted,
         };
     });
