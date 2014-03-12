@@ -196,27 +196,10 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     };
 }]);
 
-// DRAWING CONNECTIONS
+// DRAWING PINS
 
 cat.pin_base = function($scope, $el, attrs) {
     var that = {};
-    that.$settings_label = $el.find('input.pin-label');
-
-    $scope.update_pin_label = function() {
-        $scope.pins[attrs.id].label = that.$settings_label.val();
-        $scope.send_pin_update([attrs.id]);
-    };
-
-    $scope.type = function() {
-        var res = '';
-        if ($scope.pins[attrs.id].is_analog) {
-            res += 'Analog';
-        } else {
-            res += 'Digital';
-        }
-        return res;
-    };
-
     return that;
 };
 
@@ -224,7 +207,6 @@ cat.app.directive('sensor', function($document) {
     function link($scope, $el, attrs) {
         var that = cat.pin_base($scope, $el, attrs);
     }
-
     return { link: link };
 });
 
@@ -238,9 +220,40 @@ cat.app.directive('actuator', function($document) {
             }).length > 0;
         };
     }
-
     return { link: link };
 });
+
+// PIN SETTINGS
+cat.pin_settings_base = function($scope, $el, attrs) {
+    var that = {};
+    that.$settings_label = $el.find('input.pin-label');
+
+    $scope.update_pin_label = function() {
+        $scope.pins[attrs.id].label = that.$settings_label.val();
+        $scope.send_pin_update([attrs.id]);
+    };
+
+    $scope.type = function() {
+        console.log('type function has $scope.pin', $scope.pin);
+        var res = '';
+        if ($scope.pin.is_analog) {
+            res += 'Analog';
+        } else {
+            res += 'Digital';
+        }
+        return res;
+    };
+
+    return that;
+};
+
+cat.app.directive('sensorSettings', function($document) {
+    function link($scope, $el, attrs) {
+        var that = cat.pin_settings_base($scope, $el, attrs);
+    }
+    return { link: link };
+});
+// TODO actuator settings
 
 // DRAWING CONNECTIONS
 cat.app.directive('connection', function($document) {
