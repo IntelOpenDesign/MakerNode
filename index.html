@@ -17,128 +17,132 @@
 </head>
 <body ng-controller="PinsCtrl">
 
-<div id="settings-button" class="black">
-    <span class="glyphicon glyphicon-cog"></span>
-</div>
+<div id="hide-this-stuff-when-settings-are-shown"
+  ng-class="{'hide': settings_pin !== null}">
 
-<div id="column-divider" class="gray-border"></div>
+    <div id="settings-button" class="black">
+        <span class="glyphicon glyphicon-cog"></span>
+    </div>
 
-<div id="pins-container" class="container-fluid">
-    <div class="row">
-        <!-- TODO make sensors and actuators share a single 'template' -->
-        <div id="sensors" class="col-xs-6">
+    <div id="column-divider" class="gray-border"></div>
 
-            <div
-              ng-class="{
-                  'empty-column-label': true,
-                  'hide': (pins | sensors).length > 0}">
-                sensors
-            </div>
+    <div id="pins-container" class="container-fluid">
+        <div class="row">
+            <!-- TODO make sensors and actuators share a single 'template' -->
+            <div id="sensors" class="col-xs-6">
 
-            <div id="{{pin.id}}"
-              ng-repeat="pin in pins | sensors"
-              ng-class="{
-                  'sensor':true,
-                  'pin':true,
-                  'yellow-border': true,
-                  'connected':pin.is_connected,
-                  'analog': pin.is_analog,
-                  'digital': !pin.is_analog,
-                  'activated': activated_sensor === pin.id}"
-              data-name="{{pin.name}}"
-              sensor>
-                <div class="pin-box" ng-click="show_settings_for(pin.id)">
-                    <div class="pin-label">
-                        {{pin.label}}
-                    </div>
-                    <div class="pin-name">
-                        {{pin.name}}
-                    </div>
-                    <div class="pin-value-container">
-                        <div class="pin-value" style="height:{{pin.value}}%;"></div>
-                    </div>
-                    <div class="endpoint-container"
-                      ng-click="toggle_activated($event, pin.id)">
-                        <div id="{{pin.id}}-endpoint"
-                          class="endpoint yellow-bg">
+                <div
+                  ng-class="{
+                      'empty-column-label': true,
+                      'hide': (pins | sensors).length > 0}">
+                    sensors
+                </div>
+
+                <div id="{{pin.id}}"
+                  ng-repeat="pin in pins | sensors"
+                  ng-class="{
+                      'sensor':true,
+                      'pin':true,
+                      'yellow-border': true,
+                      'connected':pin.is_connected,
+                      'analog': pin.is_analog,
+                      'digital': !pin.is_analog,
+                      'activated': activated_sensor === pin.id}"
+                  data-name="{{pin.name}}"
+                  sensor>
+                    <div class="pin-box" ng-click="show_settings_for(pin.id)">
+                        <div class="pin-label">
+                            {{pin.label}}
+                        </div>
+                        <div class="pin-name">
+                            {{pin.name}}
+                        </div>
+                        <div class="pin-value-container">
+                            <div class="pin-value" style="height:{{pin.value}}%;"></div>
+                        </div>
+                        <div class="endpoint-container"
+                          ng-click="toggle_activated($event, pin.id)">
+                            <div id="{{pin.id}}-endpoint"
+                              class="endpoint yellow-bg">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div> <!-- end sensors column -->
+            </div> <!-- end sensors column -->
 
-        <div id="actuators" class="col-xs-6">
+            <div id="actuators" class="col-xs-6">
 
-            <div
-              ng-class="{
-                  'empty-column-label': true,
-                  'hide': (pins | actuators).length > 0}">
-                actuators
-            </div>
+                <div
+                  ng-class="{
+                      'empty-column-label': true,
+                      'hide': (pins | actuators).length > 0}">
+                    actuators
+                </div>
 
-            <div id="{{pin.id}}"
-              ng-repeat="pin in pins | actuators"
-              ng-class="{
-                  'actuator':true,
-                  'pin':true,
-                  'green-border': true,
-                  'connected':pin.is_connected,
-                  'analog': pin.is_analog,
-                  'digital': !pin.is_analog,
-                  'activated': activated_sensor !== null,
-                  'already-connected-to-activated-sensor': already_connected_to_activated_sensor()}"
-              data-name="{{pin.name}}"
-              actuator>
-                <div class="pin-box" ng-click="show_settings_for(pin.id)">
-                    <div class="pin-label">
-                        {{pin.label}}
-                    </div>
-                    <div class="pin-name">
-                        {{pin.name}}
-                    </div>
-                    <div class="pin-value-container">
-                        <div
-                          ng-class="{
-                              'pin-value': true,
-                              'hide': pin.value < 0.5}"></div>
-                    </div>
-                    <div class="endpoint-container"
-                      ng-click="connect_or_disconnect($event, pin.id)">
-                        <div id="{{pin.id}}-endpoint"
-                          class="endpoint green-bg">
-                            <div class="endpoint-inner"></div>
-                            <div class="slash"></div>
+                <div id="{{pin.id}}"
+                  ng-repeat="pin in pins | actuators"
+                  ng-class="{
+                      'actuator':true,
+                      'pin':true,
+                      'green-border': true,
+                      'connected':pin.is_connected,
+                      'analog': pin.is_analog,
+                      'digital': !pin.is_analog,
+                      'activated': activated_sensor !== null,
+                      'already-connected-to-activated-sensor': already_connected_to_activated_sensor()}"
+                  data-name="{{pin.name}}"
+                  actuator>
+                    <div class="pin-box" ng-click="show_settings_for(pin.id)">
+                        <div class="pin-label">
+                            {{pin.label}}
+                        </div>
+                        <div class="pin-name">
+                            {{pin.name}}
+                        </div>
+                        <div class="pin-value-container">
+                            <div
+                              ng-class="{
+                                  'pin-value': true,
+                                  'hide': pin.value < 0.5}"></div>
+                        </div>
+                        <div class="endpoint-container"
+                          ng-click="connect_or_disconnect($event, pin.id)">
+                            <div id="{{pin.id}}-endpoint"
+                              class="endpoint green-bg">
+                                <div class="endpoint-inner"></div>
+                                <div class="slash"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div> <!-- end actuators column -->
-    </div>
-</div> <!-- end pins-container -->
-
-<div id="connections-container">
-    <div id="connect-{{c.source}}-{{c.target}}"
-      ng-repeat="c in connections"
-      class="connection"
-      data-sensor_id="{{c.source}}"
-      data-actuator_id="{{c.target}}"
-      connection>
-    </div>
-</div>
-
-<div id="footer" class="container-fluid">
-    <div class="row">
-        <div class="col-xs-2">
-            <div id="add-sensors-button" class="button square yellow-bg">+</div>
+            </div> <!-- end actuators column -->
         </div>
-        <div class="col-xs-8">
-            <div id="play-button" class="button wide black-bg">
-                <span class="glyphicon glyphicon-play"></span>
-                Play
-            </div>
+    </div> <!-- end pins-container -->
+
+    <div id="connections-container">
+        <div id="connect-{{c.source}}-{{c.target}}"
+          ng-repeat="c in connections"
+          class="connection"
+          data-sensor_id="{{c.source}}"
+          data-actuator_id="{{c.target}}"
+          connection>
         </div>
-        <div class="col-xs-2">
-            <div id="add-actuators-button" class="button square green-bg">+</div>
+    </div>
+
+    <div id="footer" class="container-fluid">
+        <div class="row">
+            <div class="col-xs-2">
+                <div id="add-sensors-button" class="button square yellow-bg">+</div>
+            </div>
+            <div class="col-xs-8">
+                <div id="play-button" class="button wide black-bg">
+                    <span class="glyphicon glyphicon-play"></span>
+                    Play
+                </div>
+            </div>
+            <div class="col-xs-2">
+                <div id="add-actuators-button" class="button square green-bg">+</div>
+            </div>
         </div>
     </div>
 </div>
