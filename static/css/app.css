@@ -298,31 +298,30 @@ html, body {
 }
 /* TODO make settings theme yellow for sensors and green for actuators */
 
-
-/* TODO use javascript to make this look ok */
-.customized-range-container {
-    position: relative;
-    height: 100%;
+/* VERTICAL SLIDER */
+.vertical-slider-container {
+    height: 220px;
 }
-.settings-inner .sensitivity {
+input[type=range].vertical-slider {
     -webkit-appearance: none;
     position: relative;
     left: -50px;
     top: 100px;
-    width: 200px;
+    width: 200px !important;
     height: 15px;
     -webkit-transform: rotate(270deg);
     margin: 0;
     padding: 0;
     background: gray;
+    display: block;
+    box-sizing: content-box;
 }
-.settings-inner .sensitivity::-webkit-slider-thumb {
+.vertical-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 45px;
     height: 60px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
     background: rgb(50, 50, 50);
+    border-radius: 10px;
     border: 5px solid white;
 }
 .settings-inner .invert {
