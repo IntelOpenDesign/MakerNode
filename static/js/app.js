@@ -233,17 +233,6 @@ cat.pin_settings_base = function($scope, $el, attrs) {
         $scope.send_pin_update([attrs.id]);
     };
 
-    $scope.type = function() {
-        console.log('type function has $scope.pin', $scope.pin);
-        var res = '';
-        if ($scope.pin.is_analog) {
-            res += 'Analog';
-        } else {
-            res += 'Digital';
-        }
-        return res;
-    };
-
     return that;
 };
 
@@ -470,9 +459,17 @@ cat.my_pin_format = function(server_pins, server_connections) {
         if (pin.is_analog && pin.is_input)    // analog in:
             name = 'A' + (parseInt(id) - 14); // 14 = A0, 15 = A1, etc
 
+        var type = '';
+        if (pin.is_analog) {
+            type = 'Analog';
+        } else {
+            type = 'Digital';
+        }
+
         pins[id] = {
             id: id,
             name: name,
+            type: type,
             label: pin.label,
             value: pin.value * 100,
             is_visible: pin.is_visible,
