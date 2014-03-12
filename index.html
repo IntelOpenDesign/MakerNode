@@ -273,6 +273,97 @@
         </div> <!-- end settings-inner -->
     </div> <!-- end settings for sensors -->
 
+    <div ng-repeat="pin in pins | actuators"
+      ng-class="{
+          'settings': true,
+          'hide': settings_pin !== pin.id,
+          'digital': !pin.is_analog,
+          'actuator': !pin.is_input}"
+      actuator-settings>
+        <div class="settings-inner">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-xs-12 pin-name">
+                        {{pin.name}}
+                    </div>
+                </div>
+
+                <div class="row padded">
+                    <div class="col-xs-2">
+                        Name
+                    </div>
+                    <div class="col-xs-8">
+                        <input type="text"
+                          placeholder="Pin Label"
+                          class="pin-label"
+                          value="{{pin.label}}"
+                          ng-blur="update_pin_label()">
+                    </div>
+                    <!-- TODO cap the label to 20 chars -->
+                    <div class="col-xs-2">
+                        <span class="extra-small">(20 char max)</span>
+                    </div>
+                </div>
+
+                <div class="row padded">
+                    <div class="col-xs-2">
+                        Type
+                    </div>
+                    <div class="col-xs-10">
+                        {{pin.type}}
+                    </div>
+                </div>
+
+                <div class="row padded">
+                    <div class="col-xs-6 text-center">
+                        Value
+                    </div>
+                    <div class="col-xs-6">
+                        Limit/Hold
+                    </div>
+                </div>
+
+                <div class="row padded">
+                    <div class="col-xs-6">
+                        <div class="actuator-value-display">
+                            <div class="pin-value-container">
+                                <div ng-class="{
+                                    'pin-value': true,
+                                    'hide': pin.value < 0.5}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="checkbox"
+                          ng-model="pin.is_limited"
+                          ng-change="send_pin_update([pin.id])">
+                        <label for="checkbox">Stay on for</label>
+                        <input type="number"
+                          ng-model="pin.limited_to"
+                          ng-change="send_pin_update([pin.id])">
+                        <label for="number">seconds</label>
+                    </div>
+                </div>
+
+                <!-- TODO start using bootstrap buttons -->
+                <div class="row padded">
+                    <div class="col-xs-6">
+                        <div class="button black-bg">
+                            Remove
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="button black-bg" ng-click="close_settings()">
+                            OK
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- end container-fluid -->
+        </div> <!-- end settings-inner -->
+    </div> <!-- end settings for sensors -->
     <!-- TODO settings for actuators -->
     <div ng-repeat="pin in pins | actuators"></div>
 </div>

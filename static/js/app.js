@@ -496,6 +496,8 @@ cat.my_pin_format = function(server_pins, server_connections) {
             window_max: pin.window_max,
             damping: pin.damping,
             is_inverted: pin.is_inverted,
+            is_limited: pin.is_limited,
+            limited_to: pin.limited_to,
         };
     });
 
@@ -523,6 +525,8 @@ cat.server_pin_format = function(my_pins, my_pin_ids) {
             window_max: pin.window_max,
             damping: pin.damping,
             is_inverted: pin.is_inverted,
+            is_limited: pin.is_limited,
+            limited_to: pin.limited_to,
         };
     });
 

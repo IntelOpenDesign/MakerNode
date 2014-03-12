@@ -28,6 +28,8 @@ function pin_setter(is_analog, is_input) {
             window_max: 1.0,
             damping: 0,
             is_inverted: false,
+            is_limited: false,
+            limited_to: 0,
         };
     }
 }

@@ -190,9 +190,11 @@ html, body {
     -o-transition: height 1s;
 }
 .digital .pin-value {
-    margin: 10px 5%;
-    height: 80px;
-    width: 90%;
+    width: 100%;
+    border: 5px solid white;
+    box-sizing: border-box;
+    margin: 0;
+    height: 100%;
 }
 
 .endpoint-container {
@@ -343,15 +345,15 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
 }
 
 /* ADJUST SENSOR SETTINGS */
-.sensor-value-settings {
+.sensor-value-settings,
+.actuator-value-display {
     position: relative;
     height: 400px;
     width: 300px;
-    margin: 50px inherit;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 50px auto;
 }
-.sensor-value-settings .pin-value-container {
+.sensor-value-settings .pin-value-container,
+.actuator-value-display .pin-value-container {
     position: absolute;
     top: 0;
     left: 20%;
@@ -412,6 +414,38 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
     margin-top: 40px;
 }
 
+/* ACTUATOR SETTINGS ARE A LITTLE DIFFERENT */
+.actuator-value-display {
+    margin: 0 auto;
+}
+.actuator-value-display .pin-value-container {
+    border-color: rgb(124, 156, 130);
+}
+.actuator-value-display .pin-value-container:before,
+.actuator-value-display .pin-value:before {
+    font-size: 45px;
+    color: rgb(45, 104, 84);
+    font-weight: 800;
+    position: absolute;
+    height: 66px;
+    top: 50%;
+    margin-top: -33px;
+    line-height: 52px;
+    width: 100%;
+    text-align: center;
+    background: rgb(232, 240, 232);
+    box-sizing: border-box;
+    border-width: 5px;
+    border-style: solid;
+}
+.actuator-value-display .pin-value-container:before {
+    content: "OFF";
+    border-color: white;
+}
+.actuator-value-display .pin-value:before {
+    content: "ON";
+    border-color: rgb(180, 206, 184);
+}
 
 /* CHECKBOX */
 input[type=checkbox] {
