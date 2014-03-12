@@ -295,7 +295,7 @@ html, body {
     width: 96%;
     border-width: 15px;
     border-style: solid;
-    border-color: gray;
+    border-color: rgb(247, 193, 40);
 }
 .settings .pin-name {
     font-size: 200%;
@@ -415,6 +415,12 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
 }
 
 /* ACTUATOR SETTINGS ARE A LITTLE DIFFERENT */
+.settings.actuator .settings-inner {
+    border-color: rgb(45, 104, 84);
+}
+input[type=number] {
+    width: 100px; 
+}
 .actuator-value-display {
     margin: 0 auto;
 }
@@ -445,6 +451,13 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
 .actuator-value-display .pin-value:before {
     content: "ON";
     border-color: rgb(180, 206, 184);
+}
+.settings.actuator input[type=checkbox] {
+    background-color: white;
+    border-color: rgb(93, 130, 99);
+}
+.settings.actuator input[type=checkbox]:checked:before {
+    color: rgb(42, 96, 78);
 }
 
 /* CHECKBOX */
