@@ -422,6 +422,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     };
 
     // sending websocket messages
+    // TODO for slider inputs and stuff like that, we need to throttle how often we send stuff to the server.
     var send = function(data) {
         ws.send(JSON.stringify(_.extend({status: 'OK'}, data)));
     };
