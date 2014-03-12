@@ -48,6 +48,9 @@ html, body {
 .black-bg {
     background-color: rgb(44, 38, 33);
 }
+.gray-bg {
+    background-color: rgb(135, 135, 135);
+}
 .gray-border {
     border-color: rgb(183, 169, 152);
 }
@@ -310,6 +313,10 @@ html, body {
 .settings .vertical-slider-container.damping {
     margin-top: 45px;
     margin-left: -5px;
+}
+.settings .button {
+    margin: 0;
+    
 }
 /* TODO make settings theme yellow for sensors and green for actuators */
 
