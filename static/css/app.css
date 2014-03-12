@@ -359,10 +359,10 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
     width: 90%;
     position: absolute;
     left: 5%;
-    height: 0;
-    box-sizing: content-box;
     border-top: 4px dashed rgb(183,169,152);
     z-index: 1;
+    padding: 0;
+    box-sizing: content-box;
     margin-bottom: -2px;
 }
 .sensor-value-settings .vertical-slider-container.triangle-point-left,
