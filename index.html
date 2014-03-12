@@ -152,7 +152,9 @@
     <div ng-repeat="pin in pins | sensors"
       ng-class="{
           'settings': true,
-          'hide': settings_pin !== pin.id}"
+          'hide': settings_pin !== pin.id,
+          'analog': pin.is_analog,
+          'sensor': pin.is_input}"
       sensor-settings>
         <div class="settings-inner">
             <div class="container-fluid">
@@ -214,7 +216,8 @@
                             <div class="pin-value-container">
                                 <div class="threshold"
                                   style="bottom: {{100*average_min_max()}}%;"></div>
-                                <div class="pin-value"></div>
+                                <div class="pin-value"
+                                  style="height:{{pin.value}}%;"></div>
                             </div>
                             <div class="vertical-slider-container triangle-point-left">
                                 <input type="range"
