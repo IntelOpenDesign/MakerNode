@@ -338,7 +338,7 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
     position: relative;
     height: 400px;
     width: 300px;
-    margin: 20px inherit;
+    margin: 50px inherit;
     margin-left: auto;
     margin-right: auto;
 }
