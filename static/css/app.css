@@ -328,14 +328,18 @@ input[type=range].vertical-slider {
     border-radius: 10px;
     border: 5px solid white;
 }
-.settings-inner .invert {
+
+/* CHECKBOX */
+input[type=checkbox] {
     -webkit-appearance: none;
     width: 55px;
     height: 55px;
     border: 10px solid rgb(194, 165, 46);
     background-color: rgb(235, 227, 181);
+    margin: 5px;
+    padding: 0;
 }
-.settings-inner .invert:checked {
+input[type=checkbox]:checked {
     position: relative;
     display: inline-block;
     font-family: 'Glyphicons Halflings';
@@ -345,7 +349,7 @@ input[type=range].vertical-slider {
     -webkit-font-smoothing: antialiased;
     font-size: 45px;
 }
-.settings-inner .invert:checked:before {
+input[type=checkbox]:checked:before {
     content: "\e013";
     padding:0;
     color: rgb(147, 106, 24);
@@ -354,9 +358,18 @@ input[type=range].vertical-slider {
     top: -8px;
     left: -5px;
 }
-.settings-inner .invert:focus {
+input[type=checkbox]:focus {
     box-shadow: 0 0 0 rgba(0,0,0,0);
     outline: 0 none;
+}
+label[for=checkbox] {
+    position: relative;
+    
+    top: -25px;
+    line-height: 55px;
+    margin: 0;
+    padding: 0;
+    height: 55px;
 }
 
 /* LOADING PAGE */
