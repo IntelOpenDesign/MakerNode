@@ -300,19 +300,23 @@ html, body {
 .extra-small {
     font-size: 75%;
 }
+.settings .vertical-slider-container.damping {
+    margin-top: 45px;
+    margin-left: -5px;
+}
 /* TODO make settings theme yellow for sensors and green for actuators */
 
 /* VERTICAL SLIDER */
 .vertical-slider-container {
-    height: 220px;
+    height: 400px;
 }
 input[type=range].vertical-slider {
     -webkit-appearance: none;
     position: relative;
-    left: -50px;
-    top: 100px;
-    width: 200px !important;
-    height: 15px;
+    left: -150px;
+    top: 200px;
+    width: 400px !important;
+    height: 10px;
     -webkit-transform: rotate(270deg);
     margin: 0;
     padding: 0;
@@ -326,8 +330,8 @@ input[type=range].vertical-slider:focus {
 }
 input[type=range].vertical-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 45px;
-    height: 60px;
+    width: 60px;
+    height: 90px;
     background: rgb(50, 50, 50);
     border-radius: 10px;
     border: 5px solid white;

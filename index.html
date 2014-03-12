@@ -230,14 +230,14 @@
                     </div>
                     <div class="col-xs-6">
                         <!-- TODO template for this would be nice, will ng-change still work? -->
-                        <div class="vertical-slider-container">
+                        <div class="vertical-slider-container damping">
                             <input type="range"
-                              class="vertical-slider sensitivity"
-                              ng-model="pin.sensitivity"
+                              class="vertical-slider"
+                              ng-model="pin.damping"
                               min="0"
                               max="1"
-                              step="0.1"
-                              value="{{pin.sensitivity}}"
+                              step="0.01"
+                              value="{{pin.damping}}"
                               ng-change="send_pin_update([pin.id])">
                         </div>
                     </div>
