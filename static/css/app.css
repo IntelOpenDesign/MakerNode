@@ -380,10 +380,10 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
 }
 .sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
 .sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider{
-    width: 400px !important;
+    width: 480px !important;
     height: 0;
     top: 200px;
-    left: -170px;
+    left: -210px;
 }
 .sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
 .sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {

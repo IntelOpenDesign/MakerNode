@@ -13,7 +13,7 @@ var all_pins = [].concat(digital_outs).concat(digital_ins).concat(analog_outs).c
 var msg = {
     status: 'OK', // TODO test client side with "error" status
     pins: {},
-    connections: [{source: '14', target: '1'}],
+    connections: [],
 };
 
 function pin_setter(is_analog, is_input) {
@@ -24,7 +24,9 @@ function pin_setter(is_analog, is_input) {
             is_visible: Math.random() > 0.5 ? true : false,
             is_analog: is_analog,
             is_input: is_input,
-            sensitivity: 0.5,
+            window_min: 0.0,
+            window_max: 1.0,
+            damping: 0,
             is_inverted: false,
         };
     }
@@ -34,6 +36,30 @@ _und.each(digital_outs, pin_setter(false, false));
 _und.each(digital_ins,  pin_setter(false, true));
 _und.each(analog_outs,  pin_setter(true, false));
 _und.each(analog_ins,   pin_setter(true, true));
+
+// initialize a few random connections between visible pins
+function get_pin_ids_if(f) {
+    var oids = _und.map(msg.pins, function(pin, id) {
+        return _und.extend({id: id}, pin);
+    });
+    var pins = _und.filter(oids, function(pin) {
+        return f(pin);
+    });
+    return _und.pluck(pins, 'id');
+}
+var visible_sensors = get_pin_ids_if(function(pin) {
+    return pin.is_input && pin.is_visible;
+});
+var visible_actuators = get_pin_ids_if(function(pin) {
+    return !pin.is_input && pin.is_visible;
+});
+visible_actuators = _und.shuffle(visible_actuators);
+var n_connections = 3;
+n_connections = Math.min(n_connections, visible_sensors.length);
+n_connections = Math.min(n_connections, visible_actuators.length);
+for (var i = 0; i < n_connections; i++) {
+    msg.connections.push({source: visible_sensors[i], target: visible_actuators[i]});
+}
 
 // change state randomly to simulate other users and hardware
 function update() {

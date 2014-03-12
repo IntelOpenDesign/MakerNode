@@ -475,7 +475,9 @@ cat.my_pin_format = function(server_pins, server_connections) {
             is_visible: pin.is_visible,
             is_analog: pin.is_analog,
             is_input: pin.is_input,
-            sensitivity: pin.sensitivity.toString(),
+            window_min: pin.window_min.toString(),
+            window_max: pin.window_max.toString(),
+            damping: pin.damping.toString(),
             is_inverted: pin.is_inverted,
         };
     });
@@ -500,7 +502,9 @@ cat.server_pin_format = function(my_pins, my_pin_ids) {
             is_visible: pin.is_visible,
             is_analog: pin.is_analog,
             is_input: pin.is_input,
-            sensitivity: parseFloat(pin.sensitivity),
+            window_min: parseFloat(pin.window_min),
+            window_max: parseFloat(pin.window_max),
+            damping: parseInt(pin.damping), 
             is_inverted: pin.is_inverted,
         };
     });

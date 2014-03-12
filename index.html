@@ -195,11 +195,11 @@
                         <div class="sensor-value-settings">
                             <div class="vertical-slider-container triangle-point-right">
                                 <input type="range"
-                                  class="vertical-slider"
+                                  class="vertical-slider min"
                                   min="0"
                                   max="1"
                                   step="0.01"
-                                  value="0.2">
+                                  value="{{pin.window_min}}">
                             </div>
                             <div class="pin-value-container">
                                 <div class="threshold"></div>
@@ -207,11 +207,11 @@
                             </div>
                             <div class="vertical-slider-container triangle-point-left">
                                 <input type="range"
-                                  class="vertical-slider"
+                                  class="vertical-slider max"
                                   min="0"
                                   max="1"
                                   step="0.01"
-                                  value="0.6">
+                                  value="{{pin.window_max}}">
                             </div>
                         </div>
                     </div>
