@@ -190,8 +190,31 @@
                 </div>
 
                 <div class="row">
+                    <!--TODO template for this directive -->
                     <div class="col-xs-9">
-
+                        <div class="sensor-value-settings"
+                          sensor-value-settings>
+                            <div class="vertical-slider-container triangle-point-right">
+                                <input type="range"
+                                  class="vertical-slider"
+                                  min="0"
+                                  max="1"
+                                  step="0.01"
+                                  value="0.2">
+                            </div>
+                            <div class="pin-value-container">
+                                <div class="threshold"></div>
+                                <div class="pin-value"></div>
+                            </div>
+                            <div class="vertical-slider-container triangle-point-left">
+                                <input type="range"
+                                  class="vertical-slider"
+                                  min="0"
+                                  max="1"
+                                  step="0.01"
+                                  value="0.6">
+                            </div>
+                        </div>
                     </div>
                     <div class="col-xs-3">
                         <span class="extra-small">Coming next week: Damping. This here is the outdated sensitivity slider.</span>

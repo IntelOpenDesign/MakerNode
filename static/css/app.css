@@ -320,6 +320,10 @@ input[type=range].vertical-slider {
     display: block;
     box-sizing: content-box;
 }
+input[type=range].vertical-slider:focus {
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+    outline: 0 none;
+}
 input[type=range].vertical-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 45px;
@@ -328,6 +332,81 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
     border-radius: 10px;
     border: 5px solid white;
 }
+
+/* ADJUST SENSOR SETTINGS */
+.sensor-value-settings {
+    position: relative;
+    height: 400px;
+    width: 300px;
+    margin: 20px inherit;
+    margin-left: auto;
+    margin-right: auto;
+}
+.sensor-value-settings .pin-value-container {
+    position: absolute;
+    top: 0;
+    left: 20%;
+    width: 60%;
+    height: 100%;
+    background: white;
+    border: 1px solid rgb(159,122,35);
+}
+.sensor-value-settings .pin-value {
+    width: 100%;
+    background: rgb(235, 227, 181);
+}
+.sensor-value-settings .threshold {
+    width: 90%;
+    position: absolute;
+    left: 5%;
+    height: 0;
+    box-sizing: content-box;
+    border-top: 4px dashed rgb(183,169,152);
+    z-index: 1;
+    margin-bottom: -2px;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-left,
+.sensor-value-settings .vertical-slider-container.triangle-point-right {
+    width: 20%;
+    position: absolute;
+    height: 100%;
+    z-index: 2;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-left {
+    right: 0;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-right {
+    left: 0;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
+.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider{
+    width: 400px !important;
+    height: 0;
+    top: 200px;
+    left: -170px;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
+.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
+    width: 0;
+    height: 0;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    background: transparent;
+    padding:0;
+    margin: 0;
+    border-top-width:0;
+    border-bottom-width:0;
+    border-radius:0;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
+    border-bottom: 60px solid rgb(194, 165, 46);
+    margin-top: -40px;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
+    border-top: 60px solid rgb(194, 165, 46);
+    margin-top: 40px;
+}
+
 
 /* CHECKBOX */
 input[type=checkbox] {
