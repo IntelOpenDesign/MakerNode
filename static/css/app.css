@@ -320,7 +320,7 @@ input[type=range].vertical-slider {
     display: block;
     box-sizing: content-box;
 }
-.vertical-slider::-webkit-slider-thumb {
+input[type=range].vertical-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 45px;
     height: 60px;
