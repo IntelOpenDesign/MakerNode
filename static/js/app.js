@@ -229,8 +229,8 @@ cat.pin_settings_base = function($scope, $el, attrs) {
     that.$settings_label = $el.find('input.pin-label');
 
     $scope.update_pin_label = function() {
-        $scope.pins[attrs.id].label = that.$settings_label.val();
-        $scope.send_pin_update([attrs.id]);
+        $scope.pin.label = that.$settings_label.val();
+        $scope.send_pin_update([$scope.pin.id]);
     };
 
     return that;
@@ -258,7 +258,13 @@ cat.app.directive('sensorSettings', function($document) {
     }
     return { link: link };
 });
-// TODO actuator settings
+
+cat.app.directive('actuatorSettings', function($document) {
+    function link($scope, $el, attrs) {
+        var that = cat.pin_settings_base($scope, $el, attrs);
+    }
+    return { link: link };
+});
 
 // DRAWING CONNECTIONS
 cat.app.directive('connection', function($document) {

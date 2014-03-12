@@ -327,7 +327,7 @@ input[type=range].vertical-slider {
     -webkit-transform: rotate(270deg);
     margin: 0;
     padding: 0;
-    background: gray;
+    background: rgb(194, 165, 46);
     display: block;
     box-sizing: content-box;
 }
@@ -339,7 +339,7 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 60px;
     height: 90px;
-    background: rgb(50, 50, 50);
+    background: rgb(247, 193, 40);
     border-radius: 10px;
     border: 5px solid white;
 }

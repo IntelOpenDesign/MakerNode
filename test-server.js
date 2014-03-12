@@ -106,6 +106,8 @@ var server = ws.createServer(function(conn){
             msg.pins[id].window_min = pin.window_min;
             msg.pins[id].window_max = pin.window_max;
             msg.pins[id].damping = pin.damping;
+            msg.pins[id].is_limited = pin.is_limited;
+            msg.pins[id].limited_to = pin.limited_to;
         });
     });
     setInterval(function() {
