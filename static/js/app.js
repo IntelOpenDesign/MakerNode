@@ -239,6 +239,10 @@ cat.pin_settings_base = function($scope, $el, attrs) {
 cat.app.directive('sensorSettings', function($document) {
     function link($scope, $el, attrs) {
         var that = cat.pin_settings_base($scope, $el, attrs);
+
+        $scope.average_min_max = function() {
+            return (parseFloat($scope.pin.window_min) + parseFloat($scope.pin.window_max))/2;
+        };
     }
     return { link: link };
 });
@@ -504,7 +508,7 @@ cat.server_pin_format = function(my_pins, my_pin_ids) {
             is_input: pin.is_input,
             window_min: parseFloat(pin.window_min),
             window_max: parseFloat(pin.window_max),
-            damping: parseInt(pin.damping), 
+            damping: parseInt(pin.damping),
             is_inverted: pin.is_inverted,
         };
     });
