@@ -3,8 +3,8 @@ var _und = require('./static/js/underscore-min.js');
 var ws = require('nodejs-websocket');
 
 // initialize msg with pin defaults
-var digital_outs = ['0', '1', '2', '3', '4', '7', '8', '12', '13'];
-var digital_ins = [];
+var digital_outs = ['1', '2', '3', '4', '7', '8', '12', '13'];
+var digital_ins = ['0'];
 var analog_outs = ['3', '5', '6', '9', '10', '11'];
 var analog_ins = ['14', '15', '16', '17', '18', '19']; // A0 - A5
 
@@ -21,7 +21,8 @@ function pin_setter(is_analog, is_input) {
         msg.pins[id] = {
             label: 'Pin ' + id,
             value: 0,
-            is_visible: Math.random() > 0.5 ? true : false,
+            //is_visible: Math.random() > 0.5 ? true : false,
+            is_visible: true,
             is_analog: is_analog,
             is_input: is_input,
             window_min: 0.0,

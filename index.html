@@ -41,8 +41,8 @@
                 <div id="{{pin.id}}"
                   ng-repeat="pin in pins | sensors"
                   ng-class="{
-                      'sensor':true,
                       'pin':true,
+                      'sensor':true,
                       'yellow-border': true,
                       'connected':pin.is_connected,
                       'analog': pin.is_analog,
@@ -58,7 +58,11 @@
                             {{pin.name}}
                         </div>
                         <div class="pin-value-container">
-                            <div class="pin-value" style="height:{{pin.value}}%;"></div>
+                            <div ng-class="{
+                                'hide': pin.value === 0,
+                                'pin-value': true }"
+                              style="height:{{pin.value}}%;">
+                            </div>
                         </div>
                         <div class="endpoint-container"
                           ng-click="toggle_activated($event, pin.id)">
@@ -100,10 +104,11 @@
                             {{pin.name}}
                         </div>
                         <div class="pin-value-container">
-                            <div
-                              ng-class="{
-                                  'pin-value': true,
-                                  'hide': pin.value < 0.5}"></div>
+                            <div ng-class="{
+                                'hide': pin.value === 0,
+                                'pin-value': true }"
+                              style="height:{{pin.value}}%;">
+                            </div>
                         </div>
                         <div class="endpoint-container"
                           ng-click="connect_or_disconnect($event, pin.id)">
@@ -151,10 +156,11 @@
 
     <div ng-repeat="pin in pins | sensors"
       ng-class="{
-          'settings': true,
-          'hide': settings_pin !== pin.id,
+          'sensor':true,
           'analog': pin.is_analog,
-          'sensor': pin.is_input}"
+          'digital': !pin.is_analog,
+          'settings': true,
+          'hide': settings_pin !== pin.id}"
       sensor-settings>
         <div class="settings-inner">
             <div class="container-fluid">
@@ -205,7 +211,10 @@
                         <div class="sensor-value-settings">
                             <div class="vertical-slider-container triangle-point-right">
                                 <input type="range"
-                                  class="vertical-slider min"
+                                  ng-class="{
+                                      'vertical-slider': true,
+                                      'min': true,
+                                      'hide': !pin.is_analog}"
                                   min="0"
                                   max="1"
                                   step="0.01"
@@ -214,14 +223,20 @@
                                   ng-change="sync_min_max()">
                             </div>
                             <div class="pin-value-container">
-                                <div class="threshold"
+                                <div
+                                  ng-class="{
+                                      'threshold': true,
+                                      'hide': !pin.is_analog}"
                                   style="bottom: {{100*average_min_max()}}%;"></div>
                                 <div class="pin-value"
                                   style="height:{{pin.value}}%;"></div>
                             </div>
                             <div class="vertical-slider-container triangle-point-left">
                                 <input type="range"
-                                  class="vertical-slider max"
+                                  ng-class="{
+                                      'vertical-slider': true,
+                                      'max': true,
+                                      'hide': !pin.is_analog}"
                                   min="0"
                                   max="1"
                                   step="0.01"
@@ -275,10 +290,11 @@
 
     <div ng-repeat="pin in pins | actuators"
       ng-class="{
-          'settings': true,
-          'hide': settings_pin !== pin.id,
+          'actuator':true,
+          'analog': pin.is_analog,
           'digital': !pin.is_analog,
-          'actuator': !pin.is_input}"
+          'settings': true,
+          'hide': settings_pin !== pin.id}"
       actuator-settings>
         <div class="settings-inner">
             <div class="container-fluid">
@@ -329,8 +345,9 @@
                         <div class="actuator-value-display">
                             <div class="pin-value-container">
                                 <div ng-class="{
-                                    'pin-value': true,
-                                    'hide': pin.value < 0.5}">
+                                    'hide': pin.value === 0,
+                                    'pin-value': true }"
+                                  style="height:{{pin.value}}%;">
                                 </div>
                             </div>
                         </div>
