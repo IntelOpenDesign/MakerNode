@@ -28,6 +28,7 @@ cat.app = angular.module('ConnectAnything', []);
 // used by ng-repeat to draw only the visible sensors
 cat.app.filter('sensors', function() {
     return function(pins) {
+        // TODO this gets called really often, maybe we should save it on the scope
         console.log('filtering for sensors');
         return _.filter(pins, function(pin) {
             return pin.is_input && pin.is_visible;
@@ -238,6 +239,7 @@ cat.app.directive('sensorSettings', function($document) {
     function link($scope, $el, attrs) {
         var that = cat.pin_settings_base($scope, $el, attrs);
 
+        // FIXME sometimes these get stuck in the middle
         var $min = $('.vertical-slider.min');
         var $max = $('.vertical-slider.max');
 
