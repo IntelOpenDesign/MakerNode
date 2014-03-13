@@ -1,0 +1,45 @@
+<div
+  ng-class="{
+      'pin': true,
+      'sensor': pin.is_input,
+      'actuator': !pin.is_input,
+      'yellow-border': pin.is_input,
+      'green-border': !pin.is_input,
+      'connected': pin.is_connected,
+      'analog': pin.is_analog,
+      'digital': !pin.is_analog,
+      'activated': pin.is_input ? 
+            activated_sensor === pin.id 
+          : activated_sensor !== null,
+      'already-connected-to-activated-sensor': pin.is_input ? 
+            false 
+          : already_connected_to_activated_sensor() }">
+    <div class="pin-box" ng-click="show_settings_for(pin.id)">
+        <div class="pin-label">
+            {{pin.label}}
+        </div>
+        <div class="pin-name">
+            {{pin.name}}
+        </div>
+        <div class="pin-value-container">
+            <div ng-class="{
+                'hide': pin.value === 0,
+                'pin-value': true }"
+              style="height:{{pin.value}}%;">
+            </div>
+        </div>
+        <div class="endpoint-container"
+          ng-click="pin.is_input ? 
+                toggle_activated($event, pin.id) 
+              : connect_or_disconnect($event, pin.id)">
+            <div id="{{pin.id}}-endpoint"
+              ng-class="{
+                  'endpoint': true,
+                  'yellow-bg': pin.is_input,
+                  'green-bg': !pin.is_input}">
+                  <div class="endpoint-inner"></div>
+                  <div class="slash"></div>
+            </div>
+        </div>
+    </div>
+</div>

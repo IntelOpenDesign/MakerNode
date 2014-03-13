@@ -256,13 +256,8 @@ html, body {
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-name: pulseGlow;
 }
-.actuator.activated .endpoint-inner, .actuator.activated.connected .endpoint-inner {
-    
-    
-}
-/* TODO I think I can delete this empty css rule */
 
-.slash {
+.actuator .slash {
     position: absolute;
     top: 50%;
     margin-top: -7.5px;

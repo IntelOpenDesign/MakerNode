@@ -28,6 +28,7 @@ cat.app = angular.module('ConnectAnything', []);
 // used by ng-repeat to draw only the visible sensors
 cat.app.filter('sensors', function() {
     return function(pins) {
+        console.log('filtering for sensors');
         return _.filter(pins, function(pin) {
             return pin.is_input && pin.is_visible;
         });
@@ -198,21 +199,18 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
 
 // DRAWING PINS
 
-cat.pin_base = function($scope, $el, attrs) {
-    var that = {};
-    return that;
-};
+cat.pin_template = 'templates/pin.html';
 
 cat.app.directive('sensor', function($document) {
     function link($scope, $el, attrs) {
-        var that = cat.pin_base($scope, $el, attrs);
+        console.log('sensor link', attrs.id);
     }
-    return { link: link };
+    return { templateUrl: cat.pin_template, link: link };
 });
 
 cat.app.directive('actuator', function($document) {
     function link($scope, $el, attrs) {
-        var that = cat.pin_base($scope, $el, attrs);
+        console.log('actuator link', attrs.id);
 
         $scope.already_connected_to_activated_sensor = function() {
             return _.filter($scope.connections, function(c) {
@@ -220,7 +218,7 @@ cat.app.directive('actuator', function($document) {
             }).length > 0;
         };
     }
-    return { link: link };
+    return { templateUrl: cat.pin_template, link: link };
 });
 
 // PIN SETTINGS
