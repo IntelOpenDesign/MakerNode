@@ -29,7 +29,6 @@ cat.app = angular.module('ConnectAnything', []);
 cat.app.filter('sensors', function() {
     return function(pins) {
         // TODO this gets called really often, maybe we should save it on the scope
-        console.log('filtering for sensors');
         return _.filter(pins, function(pin) {
             return pin.is_input && pin.is_visible;
         });
@@ -227,8 +226,17 @@ cat.app.directive('pinSettings', function($document) {
     function link($scope, $el, attrs) {
 
         var $pin_label = $el.find('input.pin-label');
+        $scope.label_limit_length = 20;
+        $scope.pin_label = $scope.pin.label.substring();
+        $scope.truncate_label = function() {
+            if ($scope.pin_label.length > $scope.label_limit_length) {
+                $scope.pin_label = $scope.pin_label.substring(0, $scope.label_limit_length);
+            }
+        };
         $scope.update_pin_label = function() {
-            $scope.pin.label = $pin_label.val();
+            console.log('update pin label!!!!!!!!!!!!!!!!!!');
+            $scope.truncate_label();
+            $scope.pin.label = $scope.pin_label.substring();
             $scope.send_pin_update([$scope.pin.id]);
         };
 

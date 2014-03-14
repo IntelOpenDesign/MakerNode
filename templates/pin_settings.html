@@ -23,12 +23,15 @@
                     <input type="text"
                       placeholder="Pin Label"
                       class="pin-label"
-                      value="{{pin.label}}"
+                      value="{{pin_label}}"
+                      ng-model="pin_label"
+                      ng-change="truncate_label()"
                       ng-blur="update_pin_label()">
                 </div>
-                <!-- TODO cap the label to 20 chars -->
                 <div class="col-xs-3">
-                    <span class="extra-small">(20 char max)</span>
+                    <span class="extra-small">
+                        ({{label_limit_length}} char max)
+                    </span>
                 </div>
             </div>
 
