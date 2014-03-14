@@ -410,9 +410,13 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
 .sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
 .sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider{
     width: 500px !important;
-    height: 0;
-    top: 200px;
-    left: -220px;
+    height: 120px;
+    top: 140px;
+    left: -235px;
+    background-color: rgba(0, 0, 0, 0);
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
+    left: -205px;
 }
 .sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
 .sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
@@ -429,11 +433,9 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
 }
 .sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
     border-bottom: 100px solid rgb(247, 193, 40);
-    margin-top: -40px;
 }
 .sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
     border-top: 100px solid rgb(247, 193, 40);
-    margin-top: 40px;
 }
 
 /* ACTUATOR SETTINGS ARE A LITTLE DIFFERENT */
