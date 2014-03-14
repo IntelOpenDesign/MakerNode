@@ -25,8 +25,8 @@ function pin_setter(is_analog, is_input) {
             is_visible: true,
             is_analog: is_analog,
             is_input: is_input,
-            window_min: 0.0,
-            window_max: 1.0,
+            input_min: 0.0,
+            input_max: 1.0,
             damping: 0,
             is_inverted: false,
             is_limited: false,
@@ -104,8 +104,8 @@ var server = ws.createServer(function(conn){
             msg.pins[id].is_analog = pin.is_analog;
             msg.pins[id].is_input = pin.is_input;
             msg.pins[id].is_inverted = pin.is_inverted;
-            msg.pins[id].window_min = pin.window_min;
-            msg.pins[id].window_max = pin.window_max;
+            msg.pins[id].input_min = pin.input_min;
+            msg.pins[id].input_max = pin.input_max;
             msg.pins[id].damping = pin.damping;
             msg.pins[id].is_limited = pin.is_limited;
             msg.pins[id].limited_to = pin.limited_to;

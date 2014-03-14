@@ -235,13 +235,13 @@ cat.app.directive('pinSettings', function($document) {
         var $min = $('.vertical-slider.min');
         var $max = $('.vertical-slider.max');
         $scope.average_min_max = function() {
-            return (parseFloat($scope.pin.window_min) + parseFloat($scope.pin.window_max))/2;
+            return (parseFloat($scope.pin.input_min) + parseFloat($scope.pin.input_max))/2;
         };
         $scope.sync_min_max = function() {
-            var min = $scope.pin.window_min;
-            var max = $scope.pin.window_max;
-            $scope.pin.window_max = Math.max(min, max);
-            $scope.pin.window_min = Math.min(min, max);
+            var min = $scope.pin.input_min;
+            var max = $scope.pin.input_max;
+            $scope.pin.input_max = Math.max(min, max);
+            $scope.pin.input_min = Math.min(min, max);
             // TODO throttle this
             $scope.send_pin_update([$scope.pin.id]);
         };
@@ -481,8 +481,8 @@ cat.my_pin_format = function(server_pins, server_connections) {
             is_visible: pin.is_visible,
             is_analog: pin.is_analog,
             is_input: pin.is_input,
-            window_min: Math.round(pin.window_min * 100),
-            window_max: Math.round(pin.window_max * 100),
+            input_min: Math.round(pin.input_min * 100),
+            input_max: Math.round(pin.input_max * 100),
             damping: pin.damping,
             is_inverted: pin.is_inverted,
             is_limited: pin.is_limited,
@@ -510,8 +510,8 @@ cat.server_pin_format = function(my_pins, my_pin_ids) {
             is_visible: pin.is_visible,
             is_analog: pin.is_analog,
             is_input: pin.is_input,
-            window_min: pin.window_min / 100,
-            window_max: pin.window_max / 100,
+            input_min: pin.input_min / 100,
+            input_max: pin.input_max / 100,
             damping: pin.damping,
             is_inverted: pin.is_inverted,
             is_limited: pin.is_limited,
