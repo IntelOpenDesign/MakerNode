@@ -171,16 +171,25 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
 
     // HOW THE USER ADJUSTS PIN SETTINGS
     // When the user taps a pin's box, we deactivate all pins and show the
-    // settings for that pin.
+    // settings for that pin. Hitting the OK button in the settings window or
+    // hitting the back button in the browser will exit out of pin settings.
 
     $scope.settings_pin = null;
     $scope.show_settings_for = function(pin) {
         $scope.activated_pin = null;
         $scope.settings_pin = pin;
+        window.history.pushState();
+        window.onpopstate = function() {
+            $scope.close_settings(true);
+        };
     };
 
-    $scope.close_settings = function() {
+    $scope.close_settings = function(history_state_already_popped) {
+        // TODO make sure this does not accumulate history states so that the user would have to hit back many times to exit the whole CAT website
         $scope.settings_pin = null;
+        if (!history_state_already_popped) {
+            window.history.back();
+        }
     };
 }]);
 
