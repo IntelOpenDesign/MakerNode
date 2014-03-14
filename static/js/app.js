@@ -24,7 +24,6 @@ function toggle_debug_log() {
 cat.app = angular.module('ConnectAnything', []);
 
 // The controller for the whole app. Also handles talking to the server.
-// TODO refactor and make server code separated and more robust
 cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
 
     var $document = $(document);
