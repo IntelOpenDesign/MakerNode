@@ -397,6 +397,7 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
     position: absolute;
     height: 100%;
     z-index: 2;
+    box-sizing: content-box;
 }
 .sensor-value-settings .vertical-slider-container.triangle-point-left {
     right: 0;
@@ -406,17 +407,17 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
 }
 .sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
 .sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider{
-    width: 480px !important;
+    width: 500px !important;
     height: 0;
     top: 200px;
-    left: -210px;
+    left: -220px;
 }
 .sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
 .sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
     width: 0;
     height: 0;
-    border-left: 40px solid transparent;
-    border-right: 40px solid transparent;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
     background: transparent;
     padding:0;
     margin: 0;
@@ -425,11 +426,11 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
     border-radius:0;
 }
 .sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
-    border-bottom: 60px solid rgb(247, 193, 40);
+    border-bottom: 100px solid rgb(247, 193, 40);
     margin-top: -40px;
 }
 .sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
-    border-top: 60px solid rgb(247, 193, 40);
+    border-top: 100px solid rgb(247, 193, 40);
     margin-top: 40px;
 }
 
