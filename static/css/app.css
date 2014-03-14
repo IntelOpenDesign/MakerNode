@@ -334,12 +334,12 @@ html, body {
 
 /* VERTICAL SLIDER */
 .vertical-slider-container {
-    height: 400px;
+    height: 410px;
 }
 input[type=range].vertical-slider {
     -webkit-appearance: none;
     position: relative;
-    left: -150px;
+    left: -140px;
     top: 200px;
     width: 400px !important;
     height: 10px;
