@@ -33,20 +33,20 @@
                 <div
                   ng-class="{
                       'empty-column-label': true,
-                      'hide': (pins | sensors).length > 0}">
+                      'hide': visible_sensors.length > 0}">
                     sensors
                 </div>
-                <div id="{{pin.id}}" ng-repeat="pin in pins | sensors" sensor></div>
+                <div id="{{pin.id}}" ng-repeat="pin in visible_sensors" sensor></div>
             </div>
 
             <div id="actuators" class="col-xs-6">
                 <div
                   ng-class="{
                       'empty-column-label': true,
-                      'hide': (pins | actuators).length > 0}">
+                      'hide': visible_actuators.length > 0}">
                     actuators
                 </div>
-                <div id="{{pin.id}}" ng-repeat="pin in pins | actuators" actuator></div>
+                <div id="{{pin.id}}" ng-repeat="pin in visible_actuators" actuator></div>
             </div>
 
         </div>

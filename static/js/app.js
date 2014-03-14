@@ -23,24 +23,6 @@ function toggle_debug_log() {
 // cat.app is the angular app
 cat.app = angular.module('ConnectAnything', []);
 
-// used by ng-repeat to draw only the visible sensors
-cat.app.filter('sensors', function() {
-    return function(pins) {
-        // TODO this gets called really often, maybe we should save it on the scope
-        return _.filter(pins, function(pin) {
-            return pin.is_input && pin.is_visible;
-        });
-    }
-});
-// used by ng-repeat to draw only the visible actuators
-cat.app.filter('actuators', function() {
-    return function(pins) {
-        return  _.filter(pins, function(pin) {
-            return !pin.is_input && pin.is_visible;
-        });
-    }
-});
-
 // The controller for the whole app. Also handles talking to the server.
 // TODO refactor and make server code separated and more robust
 cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
@@ -58,6 +40,10 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     // are updating this on their screens too.
     $scope.pins = {};
     $scope.connections = [];
+
+    // save lists of sensors and actuators for efficiency in directives
+    $scope.visible_sensors = [];
+    $scope.visible_actuators = [];
 
     // TALKING WITH GALILEO
 
@@ -87,6 +73,12 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
             disconnect_on_client(connections_to_remove);
             connect_on_client(connections_to_add);
          }
+        $scope.visible_sensors = _.filter($scope.pins, function(pin) {
+            return pin.is_visible && pin.is_input;
+        });
+        $scope.visible_actuators = _.filter($scope.pins, function(pin) {
+            return pin.is_visible && !pin.is_input;
+        });
     });
 
     Galileo.on('slowness', function() {
