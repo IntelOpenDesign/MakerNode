@@ -184,8 +184,6 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     // When the user taps a pin's box, we deactivate all pins and show the
     // settings for that pin.
 
-    // TODO if you are in settings and you click outside of settings, it should close settings
-
     $scope.settings_pin = null;
     $scope.show_settings_for = function(pin) {
         $scope.activated_pin = null;
