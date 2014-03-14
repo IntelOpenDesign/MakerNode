@@ -425,11 +425,11 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
     border-radius:0;
 }
 .sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
-    border-bottom: 60px solid rgb(194, 165, 46);
+    border-bottom: 60px solid rgb(247, 193, 40);
     margin-top: -40px;
 }
 .sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
-    border-top: 60px solid rgb(194, 165, 46);
+    border-top: 60px solid rgb(247, 193, 40);
     margin-top: 40px;
 }
 
