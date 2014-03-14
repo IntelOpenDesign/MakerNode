@@ -469,7 +469,7 @@ input[type=number] {
 .settings.digital.sensor .pin-value-container:before,
 .settings.digital.sensor .pin-value:before {
     color: rgb(147, 106, 24);
-    background: rgb(235, 227, 181);
+    background: rgb(243, 235, 191);
 }
 .settings.digital .pin-value-container:before {
     content: "OFF";
@@ -482,7 +482,7 @@ input[type=number] {
     border-color: rgb(180, 206, 184);
 }
 .settings.digital.sensor .pin-value:before {
-    border-color: rgb(214, 205, 150);
+    border-color: rgb(230, 222, 177);
 }
 
 
