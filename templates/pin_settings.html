@@ -1,0 +1,148 @@
+<div
+  ng-class="{
+      'settings': true,
+      'sensor': pin.is_input,
+      'actuator': !pin.is_input,
+      'analog': pin.is_analog,
+      'digital': !pin.is_analog,
+      'hide': settings_pin !== pin.id}">
+    <div class="settings-inner">
+        <div class="container-fluid">
+
+            <div class="row padded">
+                <div class="col-xs-12 pin-name">
+                    {{pin.name}}
+                </div>
+            </div>
+
+            <div class="row padded">
+                <div class="col-xs-2">
+                    Name
+                </div>
+                <div class="col-xs-7">
+                    <input type="text"
+                      placeholder="Pin Label"
+                      class="pin-label"
+                      value="{{pin.label}}"
+                      ng-blur="update_pin_label()">
+                </div>
+                <!-- TODO cap the label to 20 chars -->
+                <div class="col-xs-3">
+                    <span class="extra-small">(20 char max)</span>
+                </div>
+            </div>
+
+            <div class="row padded">
+                <div class="col-xs-2">
+                    Type
+                </div>
+                <div class="col-xs-10">
+                    {{pin.type}}
+                </div>
+            </div>
+
+            <div class="row padded">
+                <!-- NOTE text is set in app.css using :before -->
+                <div class="col-xs-6 text-center pin-value-label">
+                    &nbsp;
+                </div>
+                <div class="col-xs-6 pin-extra-setting-label">
+                    &nbsp;
+                </div>
+            </div>
+
+            <div class="row padded">
+                <div class="col-xs-6">
+                    <div ng-class="{
+                      'sensor-value-settings': pin.is_input,
+                      'actuator-value-display': !pin.is_input}">
+                        <div ng-class="{
+                          'vertical-slider-container': true,
+                          'triangle-point-right': true,
+                          'hide': !(pin.is_analog && pin.is_input)}">
+                            <input type="range"
+                              class="vertical-slider min"
+                              min="0"
+                              max="100"
+                              step="1"
+                              ng-model="pin.input_min"
+                              value="{{pin.input_min}}"
+                              ng-change="sync_min_max()">
+                        </div>
+                        <div class="pin-value-container">
+                            <div ng-class="{
+                              'threshold': true,
+                              'hide': !pin.is_analog}"
+                              style="bottom: {{average_min_max()}}%;">
+                            </div>
+                            <div ng-class="{
+                              'pin-value': true,
+                              'hide': pin.value === 0}"
+                              style="height:{{pin.value}}%;">
+                            </div>
+                        </div>
+                        <div ng-class="{
+                          'vertical-slider-container': true,
+                          'triangle-point-left': true,
+                          'hide': !(pin.is_analog && pin.is_input)}">
+                            <input type="range"
+                              class="vertical-slider max"
+                              min="0"
+                              max="100"
+                              step="1"
+                              ng-model="pin.input_max"
+                              value="{{pin.input_max}}"
+                              ng-change="sync_min_max()">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6" ng-switch="pin.is_input">
+                    <div class="vertical-slider-container damping" ng-switch-when="true">
+                        <input type="range"
+                          class="vertical-slider"
+                          ng-model="pin.damping"
+                          min="0"
+                          max="1"
+                          step="0.01"
+                          value="{{pin.damping}}"
+                          ng-change="send_pin_update([pin.id])">
+                    </div>
+                    <div ng-switch-when="false">
+                        <input type="checkbox"
+                          ng-model="pin.is_limited"
+                          ng-change="send_pin_update([pin.id])">
+                        <label for="checkbox">Stay on for</label>
+                        <br/>
+                        <input type="number"
+                          ng-model="pin.limited_to"
+                          ng-change="send_pin_update([pin.id])">
+                        <label for="number">seconds</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row padded" ng-switch="pin.is_input">
+                <div class="col-xs-12" ng-switch-when="true">
+                    <input type="checkbox"
+                      ng-model="pin.is_inverted"
+                      ng-change="send_pin_update([pin.id])">
+                    <label for="checkbox">Invert</label>
+                </div>
+            </div>
+
+            <div class="row padded">
+                <div class="col-xs-6">
+                    <div class="button gray-bg">
+                        Remove
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="button black-bg" ng-click="close_settings()">
+                        OK
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- end container-fluid -->
+    </div> <!-- end settings-inner -->
+</div>
