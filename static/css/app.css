@@ -280,6 +280,23 @@ html, body {
 
 /* SETTINGS WINDOW */
 
+.settings.digital .pin-value-label:before {
+    content: 'On/Off';
+}
+.settings.analog.sensor .pin-value-label:before {
+    content: 'Calibrate';
+}
+.settings.analog.actuator .pin-value-label:before {
+    content: 'Value';
+}
+
+.settings.actuator .pin-extra-setting-label:before {
+    content: 'Limit/Hold';
+}
+.settings.sensor .pin-extra-setting-label:before {
+    content: 'Damping';
+}
+
 .settings {
     position: absolute;
     top: 0;
@@ -429,10 +446,9 @@ input[type=number] {
 .actuator-value-display .pin-value-container {
     border-color: rgb(124, 156, 130);
 }
-.digital .actuator-value-display .pin-value-container:before,
-.digital .actuator-value-display .pin-value:before {
+.settings.digital .pin-value-container:before,
+.settings.digital .pin-value:before {
     font-size: 45px;
-    color: rgb(45, 104, 84);
     font-weight: 800;
     position: absolute;
     height: 66px;
@@ -441,19 +457,35 @@ input[type=number] {
     line-height: 52px;
     width: 100%;
     text-align: center;
-    background: rgb(232, 240, 232);
     box-sizing: border-box;
     border-width: 5px;
     border-style: solid;
 }
-.digital .actuator-value-display .pin-value-container:before {
+.settings.digital.actuator .pin-value-container:before,
+.settings.digital.actuator .pin-value:before {
+    color: rgb(45, 104, 84);
+    background: rgb(232, 240, 232);
+}
+.settings.digital.sensor .pin-value-container:before,
+.settings.digital.sensor .pin-value:before {
+    color: rgb(147, 106, 24);
+    background: rgb(235, 227, 181);
+}
+.settings.digital .pin-value-container:before {
     content: "OFF";
     border-color: white;
 }
-.digital .actuator-value-display .pin-value:before {
+.settings.digital .pin-value:before {
     content: "ON";
+}
+.settings.digital.actuator .pin-value:before {
     border-color: rgb(180, 206, 184);
 }
+.settings.digital.sensor .pin-value:before {
+    border-color: rgb(214, 205, 150);
+}
+
+
 .settings.actuator input[type=checkbox] {
     background-color: white;
     border-color: rgb(93, 130, 99);

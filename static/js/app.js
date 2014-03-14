@@ -223,47 +223,30 @@ cat.app.directive('actuator', function($document) {
 });
 
 // PIN SETTINGS
-cat.pin_settings_base = function($scope, $el, attrs) {
-    var that = {};
-    that.$settings_label = $el.find('input.pin-label');
-
-    $scope.update_pin_label = function() {
-        $scope.pin.label = that.$settings_label.val();
-        $scope.send_pin_update([$scope.pin.id]);
-    };
-
-    return that;
-};
-
-cat.app.directive('sensorSettings', function($document) {
+cat.app.directive('pinSettings', function($document) {
     function link($scope, $el, attrs) {
-        var that = cat.pin_settings_base($scope, $el, attrs);
 
-        // FIXME sometimes these get stuck in the middle
-        var $min = $('.vertical-slider.min');
-        var $max = $('.vertical-slider.max');
-
-        $scope.average_min_max = function() {
-            return (parseFloat($scope.pin.window_min) + parseFloat($scope.pin.window_max))/2;
-        };
-
-        $scope.sync_min_max = function() {
-            var min = parseFloat($min.val());
-            var max = parseFloat($max.val());
-            $scope.pin.window_max = Math.max(min, max);
-            $scope.pin.window_min = Math.min(min, max);
+        var $pin_label = $el.find('input.pin-label');
+        $scope.update_pin_label = function() {
+            $scope.pin.label = $pin_label.val();
             $scope.send_pin_update([$scope.pin.id]);
         };
 
+        var $min = $('.vertical-slider.min');
+        var $max = $('.vertical-slider.max');
+        $scope.average_min_max = function() {
+            return (parseFloat($scope.pin.window_min) + parseFloat($scope.pin.window_max))/2;
+        };
+        $scope.sync_min_max = function() {
+            var min = $scope.pin.window_min;
+            var max = $scope.pin.window_max;
+            $scope.pin.window_max = Math.max(min, max);
+            $scope.pin.window_min = Math.min(min, max);
+            // TODO throttle this
+            $scope.send_pin_update([$scope.pin.id]);
+        };
     }
-    return { link: link };
-});
-
-cat.app.directive('actuatorSettings', function($document) {
-    function link($scope, $el, attrs) {
-        var that = cat.pin_settings_base($scope, $el, attrs);
-    }
-    return { link: link };
+    return { templateUrl: 'templates/pin_settings.html', link: link };
 });
 
 // DRAWING CONNECTIONS
@@ -498,8 +481,8 @@ cat.my_pin_format = function(server_pins, server_connections) {
             is_visible: pin.is_visible,
             is_analog: pin.is_analog,
             is_input: pin.is_input,
-            window_min: pin.window_min,
-            window_max: pin.window_max,
+            window_min: Math.round(pin.window_min * 100),
+            window_max: Math.round(pin.window_max * 100),
             damping: pin.damping,
             is_inverted: pin.is_inverted,
             is_limited: pin.is_limited,
@@ -527,8 +510,8 @@ cat.server_pin_format = function(my_pins, my_pin_ids) {
             is_visible: pin.is_visible,
             is_analog: pin.is_analog,
             is_input: pin.is_input,
-            window_min: pin.window_min,
-            window_max: pin.window_max,
+            window_min: pin.window_min / 100,
+            window_max: pin.window_max / 100,
             damping: pin.damping,
             is_inverted: pin.is_inverted,
             is_limited: pin.is_limited,
