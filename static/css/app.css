@@ -356,8 +356,8 @@ input[type=range].vertical-slider:focus {
 }
 input[type=range].vertical-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 60px;
-    height: 90px;
+    width: 80px;
+    height: 120px;
     background: rgb(247, 193, 40);
     border-radius: 10px;
     border: 5px solid white;
