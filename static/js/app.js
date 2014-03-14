@@ -13,8 +13,6 @@ cat.jsplumb_ready = false;
 jsPlumb.bind('ready', function() {
     jsPlumb.Defaults.Container = $('#connections-container');
     cat.jsplumb_ready = true;
-    // TODO I think nobody listens to this event anymore so remove it
-    $(document).trigger('jsplumb-ready');
 });
 
 // TODO remove when done debugging
