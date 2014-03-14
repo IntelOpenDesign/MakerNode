@@ -381,7 +381,7 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
     background: white;
     border: 1px solid rgb(159,122,35);
 }
-.sensor-value-settings .threshold {
+.settings .threshold {
     width: 90%;
     position: absolute;
     left: 5%;
