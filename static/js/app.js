@@ -2,7 +2,7 @@
 var cat = {};
 
 // server connection settings
-cat.on_hardware = false; // to switch to Galileo, just change this to true
+cat.on_hardware = true; // to switch to Galileo, just change this to true
 cat.test_server_url = 'ws://localhost:8001';
 cat.hardware_server_url = 'ws://cat/';
 cat.hardware_server_protocol = 'hardware-state-protocol';
