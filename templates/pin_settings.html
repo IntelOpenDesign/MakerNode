@@ -135,12 +135,14 @@
 
             <div class="row padded">
                 <div class="col-xs-6">
-                    <div class="button gray-bg" ng-click="hide_pin(pin.id)">
+                    <div class="button gray-bg"
+                      ng-click="show_remove_confirmation = true;">
                         Remove
                     </div>
                 </div>
                 <div class="col-xs-6">
-                    <div class="button black-bg" ng-click="close_settings()">
+                    <div class="button black-bg"
+                      ng-click="close_settings()">
                         OK
                     </div>
                 </div>
@@ -148,4 +150,33 @@
 
         </div> <!-- end container-fluid -->
     </div> <!-- end settings-inner -->
+
+    <div ng-class="{
+        'confirm-remove-container': true,
+        'container-fluid': true,
+        'hide': !show_remove_confirmation}">
+        <div class="row confirm-remove-row">
+            <div class="confirm-remove col-xs-8 col-xs-offset-2">
+                <div class="row padded">
+                    <div class="col-xs-12">
+                        Are you sure you want to remove this pin and all its connections?
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="button gray-bg"
+                          ng-click="show_remove_confirmation = false;">
+                            No
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="button black-bg"
+                          ng-click="hide_pin(pin.id); close_settings();">
+                            Yes
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

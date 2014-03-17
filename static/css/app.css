@@ -337,6 +337,21 @@ html, body {
     margin: 0;
     
 }
+.confirm-remove-container {
+    position: fixed;
+    z-index: 3;
+    top: 0;
+    background: rgba(255, 255, 255, .95);
+    height: 100%;
+}
+.confirm-remove-row {
+    margin-top: 30%;
+}
+.confirm-remove {
+    padding: 30px 50px;
+    background: rgb(198, 188, 175);
+}
+
 /* TODO make settings theme yellow for sensors and green for actuators */
 
 /* VERTICAL SLIDER */

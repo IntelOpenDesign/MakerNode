@@ -217,6 +217,7 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     // pin.
 
     $scope.adding_pins = null;
+    $scope.show_remove_confirmation = false;
     $scope.toggle_add_pins_menu_for = function(type) {
         if ($scope.adding_pins === type) {
             $scope.adding_pins = null;
