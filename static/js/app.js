@@ -215,6 +215,7 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     // menu of pins that can be added. Tapping one of those pins adds it.
     // When the user taps "Remove" in a pin's settings window, it removes that
     // pin.
+    // TODO it's confusing to just tap a pin to add it and have it disappear.
 
     $scope.adding_pins = null;
     $scope.show_remove_confirmation = false;
