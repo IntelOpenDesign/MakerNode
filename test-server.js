@@ -21,8 +21,8 @@ function pin_setter(is_analog, is_input) {
         msg.pins[id] = {
             label: 'Pin ' + id,
             value: 0,
-            //is_visible: Math.random() > 0.5 ? true : false,
-            is_visible: true,
+            is_visible: Math.random() > 0.5 ? true : false,
+            //is_visible: true,
             is_analog: is_analog,
             is_input: is_input,
             input_min: 0.0,

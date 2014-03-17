@@ -86,15 +86,19 @@ html, body {
     padding-top: 50px;
 }
 
-.empty-column-label {
+.column-title {
     text-align: center;
     padding: 1em 0;
     font-size: 200%;
 }
-#sensors .empty-column-label {
+#add-pins-menu .column-title {
+    padding: 0 0 0 .5em;
+    text-align: left;
+}
+.sensors.column-title {
     color: rgb(147, 106, 24);
 }
-#actuators .empty-column-label {
+.actuators.column-title {
     color: rgb(45, 104, 84);
 }
 
@@ -129,6 +133,7 @@ html, body {
     position: relative;
     height: 100%;
     width: 100%;
+    background: white;
 }
 .actuator .pin-box {
     float: right;
@@ -490,13 +495,44 @@ input[type=number] {
     border-color: rgb(230, 222, 177);
 }
 
-
 .settings.actuator input[type=checkbox] {
     background-color: white;
     border-color: rgb(93, 130, 99);
 }
 .settings.actuator input[type=checkbox]:checked:before {
     color: rgb(42, 96, 78);
+}
+
+/* ADD PINS MENU */
+#add-pins-menu {
+    height: 100%;
+    box-sizing: border-box;
+    border-bottom: 100px solid transparent;
+    position: relative;
+}
+#add-pins-menu-bg {
+    background: rgb(198, 188, 175);
+    border-bottom: 20px solid white;
+    box-sizing: border-box;
+    margin: 15px;
+    height: 100%;
+}
+#add-pins-menu-bg-footer {
+    width: 0;
+    height: 0;
+    background: transparent;
+    position: absolute;
+    bottom: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-top: 30px solid rgb(198, 188, 175);
+    z-index: 20;
+}
+#add-pins-menu-bg-footer.sensors {
+    left: 40px;
+}
+#add-pins-menu-bg-footer.actuators {
+    right: 40px;
 }
 
 /* CHECKBOX */

@@ -41,8 +41,25 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     $scope.connections = [];
 
     // save lists of sensors and actuators for efficiency in directives
+    // TODO dicts would be nice for this if angular ng-repeat can handle that
     $scope.visible_sensors = [];
     $scope.visible_actuators = [];
+    $scope.hidden_sensors = [];
+    $scope.hidden_actuators = [];
+    var update_pin_lists = function() {
+        $scope.visible_sensors = _.filter($scope.pins, function(pin) {
+            return pin.is_visible && pin.is_input;
+        });
+        $scope.visible_actuators = _.filter($scope.pins, function(pin) {
+            return pin.is_visible && !pin.is_input;
+        });
+        $scope.hidden_sensors = _.filter($scope.pins, function(pin) {
+            return !pin.is_visible && pin.is_input;
+        });
+        $scope.hidden_actuators = _.filter($scope.pins, function(pin) {
+            return !pin.is_visible && !pin.is_input;
+        });
+    };
 
     // TALKING WITH GALILEO
 
@@ -71,13 +88,10 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
             var connections_to_add = _.map(tokens_to_add, cat.detokenize_connection);
             disconnect_on_client(connections_to_remove);
             connect_on_client(connections_to_add);
-         }
-        $scope.visible_sensors = _.filter($scope.pins, function(pin) {
-            return pin.is_visible && pin.is_input;
-        });
-        $scope.visible_actuators = _.filter($scope.pins, function(pin) {
-            return pin.is_visible && !pin.is_input;
-        });
+
+            // update special lists of pins
+            update_pin_lists();
+        }
     });
 
     Galileo.on('slowness', function() {
@@ -197,8 +211,31 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     };
 
     // HOW THE USER SHOWS/HIDES PINS
-    $scope.show_add_pins_menu = function(type) {
-        console.log('got show add pins menu for type', type);
+    // When the user taps a "+" button at the bottom of the screen, it opens a
+    // menu of pins that can be added. Tapping one of those pins adds it.
+    // When the user taps "Remove" in a pin's settings window, it removes that
+    // pin.
+
+    $scope.adding_pins = null;
+    $scope.toggle_add_pins_menu_for = function(type) {
+        if ($scope.adding_pins === type) {
+            $scope.adding_pins = null;
+        } else {
+            $scope.adding_pins = type;
+        }
+    };
+    $scope.show_pin = function(id) {
+        // TODO sync connections for affected pins
+        // TODO sync with server
+        console.log('show_pin', id);
+        $scope.pins[id].is_visible = true;
+        update_pin_lists();
+    };
+    $scope.hide_pin = function(id) {
+        // TODO sync connections for affected pins
+        // TODO sync with server
+        $scope.pins[id].is_visible = false;
+        update_pin_lists();
     };
 }]);
 
@@ -224,6 +261,10 @@ cat.app.directive('actuator', function($document) {
         };
     }
     return { templateUrl: cat.pin_template, link: link };
+});
+
+cat.app.directive('pinStub', function($document) {
+    return { templateUrl: 'templates/pin_stub.html' };
 });
 
 // PIN SETTINGS
