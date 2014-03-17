@@ -226,16 +226,16 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     };
     $scope.show_pin = function(id) {
         // TODO sync connections for affected pins
-        // TODO sync with server
         console.log('show_pin', id);
         $scope.pins[id].is_visible = true;
         update_pin_lists();
+        $scope.send_pin_update([id]);
     };
     $scope.hide_pin = function(id) {
         // TODO sync connections for affected pins
-        // TODO sync with server
         $scope.pins[id].is_visible = false;
         update_pin_lists();
+        $scope.send_pin_update([id]);
     };
 }]);
 
