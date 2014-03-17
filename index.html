@@ -5,9 +5,9 @@
     <link rel="shortcut icon" href="favicon.ico"/>
     <script src="static/js/jquery.min.js"></script>
     <script src="static/js/jquery-ui.min.js"></script>
-    <script src="static/js/angular.min.js"></script>
     <script src="static/js/jquery.jsPlumb-1.4.1-all.js"></script>
     <script src="static/js/underscore-min.js"></script>
+    <script src="static/js/angular.min.js"></script>
     <script src="static/js/app.js"></script>
 
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
@@ -39,10 +39,10 @@
               ng-class="{
                   'sensors': true,
                   'column-title': true,
-                  'hide': visible_sensors.length > 0}">
+                  'hide': are_there('visible', 'sensors')}">
                 sensors
             </div>
-            <div id="{{pin.id}}" ng-repeat="pin in visible_sensors" sensor></div>
+            <div id="{{pin.id}}" ng-repeat="(id, pin) in visible_sensors" sensor></div>
         </div>
 
         <div id="actuators" class="col-xs-6">
@@ -50,10 +50,10 @@
               ng-class="{
                   'actuators': true,
                   'column-title': true,
-                  'hide': visible_actuators.length > 0}">
+                  'hide': are_there('visible', 'actuators')}">
                 actuators
             </div>
-            <div id="{{pin.id}}" ng-repeat="pin in visible_actuators" actuator></div>
+            <div id="{{pin.id}}" ng-repeat="(id, pin) in visible_actuators" actuator></div>
         </div>
 
     </div>
@@ -89,7 +89,7 @@
             </div>
 
             <div class="row">
-                <div class="col-xs-4" ng-repeat="pin in hidden_sensors" pin-stub></div>
+                <div class="col-xs-4" ng-repeat="(id, pin) in hidden_sensors" pin-stub></div>
             </div>
         </div>
 
@@ -104,7 +104,7 @@
             </div>
 
             <div class="row">
-                <div class="col-xs-4" ng-repeat="pin in hidden_actuators" pin-stub></div>
+                <div class="col-xs-4" ng-repeat="(id, pin) in hidden_actuators" pin-stub></div>
             </div>
         </div>
 

@@ -42,23 +42,29 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
 
     // save lists of sensors and actuators for efficiency in directives
     // TODO dicts would be nice for this if angular ng-repeat can handle that
-    $scope.visible_sensors = [];
-    $scope.visible_actuators = [];
-    $scope.hidden_sensors = [];
-    $scope.hidden_actuators = [];
+    $scope.visible_sensors = {};
+    $scope.visible_actuators = {};
+    $scope.hidden_sensors = {};
+    $scope.hidden_actuators = {};
     var update_pin_lists = function() {
-        $scope.visible_sensors = _.filter($scope.pins, function(pin) {
-            return pin.is_visible && pin.is_input;
+        var vissen = {}, visact = {}, hidsen = {}, hidact = {};
+        _.each($scope.pins, function(pin, id) {
+            if (pin.is_visible) {
+                if (pin.is_input) vissen[id] = pin;
+                else              visact[id] = pin;
+            } else {
+                if (pin.is_input) hidsen[id] = pin;
+                else              hidact[id] = pin;
+            }
         });
-        $scope.visible_actuators = _.filter($scope.pins, function(pin) {
-            return pin.is_visible && !pin.is_input;
-        });
-        $scope.hidden_sensors = _.filter($scope.pins, function(pin) {
-            return !pin.is_visible && pin.is_input;
-        });
-        $scope.hidden_actuators = _.filter($scope.pins, function(pin) {
-            return !pin.is_visible && !pin.is_input;
-        });
+        $scope.visible_sensors = vissen;
+        $scope.visible_actuators = visact;
+        $scope.hidden_sensors = hidsen;
+        $scope.hidden_actuators = hidact;
+    };
+    $scope.are_there = function(visible_or_hidden, sensors_or_actuators) {
+        var pins_dict = $scope[visible_or_hidden + '_' + sensors_or_actuators];
+        return _.keys(pins_dict).length > 0;
     };
 
     // TALKING WITH GALILEO
