@@ -38,10 +38,11 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     // hardware's behavior. we sync this with the server because other users
     // are updating this on their screens too.
     $scope.pins = {};
-    $scope.connections = [];
+    $scope.connections = []; // TODO I think connections should be a dict
 
     // save lists of sensors and actuators for efficiency in directives
-    // TODO dicts would be nice for this if angular ng-repeat can handle that
+    // TODO how will dicts work with ordering? darn, might need to go back to arrays
+    // TODO pins are getting so complicated as a data structure that maybe I should refactor them out into their own Pins object
     $scope.visible_sensors = {};
     $scope.visible_actuators = {};
     $scope.hidden_sensors = {};
