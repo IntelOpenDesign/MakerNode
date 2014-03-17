@@ -63,7 +63,11 @@
     <div id="footer" class="container-fluid">
         <div class="row">
             <div class="col-xs-2">
-                <div id="add-sensors-button" class="button square yellow-bg">+</div>
+                <div id="add-sensors-button"
+                  class="button square yellow-bg"
+                  ng-click="show_add_pins_menu('sensors')">
+                    +
+                </div>
             </div>
             <div class="col-xs-8">
                 <div id="play-button" class="button wide black-bg">
@@ -72,7 +76,11 @@
                 </div>
             </div>
             <div class="col-xs-2">
-                <div id="add-actuators-button" class="button square green-bg">+</div>
+                <div id="add-actuators-button"
+                  class="button square green-bg"
+                  ng-click="show_add_pins_menu('actuators')">
+                    +
+                </div>
             </div>
         </div>
     </div>

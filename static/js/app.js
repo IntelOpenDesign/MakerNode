@@ -195,6 +195,11 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
             window.history.back();
         }
     };
+
+    // HOW THE USER SHOWS/HIDES PINS
+    $scope.show_add_pins_menu = function(type) {
+        console.log('got show add pins menu for type', type);
+    };
 }]);
 
 // DRAWING PINS
