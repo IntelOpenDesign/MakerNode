@@ -492,8 +492,8 @@ cat.my_pin_format = function(server_pins, server_connections) {
             input_max: Math.round(pin.input_max * 100),
             damping: pin.damping,
             is_inverted: pin.is_inverted,
-            is_limited: pin.is_limited,
-            limited_to: pin.limited_to,
+            is_timer_on: pin.is_timer_on,
+            timer_value: pin.timer_value,
         };
     });
 
@@ -521,8 +521,8 @@ cat.server_pin_format = function(my_pins, my_pin_ids) {
             input_max: pin.input_max / 100,
             damping: pin.damping,
             is_inverted: pin.is_inverted,
-            is_limited: pin.is_limited,
-            limited_to: pin.limited_to,
+            is_timer_on: pin.is_timer_on,
+            timer_value: pin.timer_value,
         };
     });
 

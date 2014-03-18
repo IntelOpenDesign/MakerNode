@@ -112,12 +112,12 @@
                     </div>
                     <div ng-switch-when="false">
                         <input type="checkbox"
-                          ng-model="pin.is_limited"
+                          ng-model="pin.is_timer_on"
                           ng-change="send_pin_update([pin.id])">
                         <label for="checkbox">Stay on for</label>
                         <br/>
                         <input type="number"
-                          ng-model="pin.limited_to"
+                          ng-model="pin.timer_value"
                           ng-change="send_pin_update([pin.id])">
                         <label for="number">seconds</label>
                     </div>
