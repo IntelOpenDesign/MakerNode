@@ -76,9 +76,13 @@ html, body {
     height: 100%;
     width: 0;
     margin-left: -1px;
-    border-width: 1px;
-    z-index: -1;
+    border-left-width: 2px;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
     border-style: dashed;
+    box-sizing: content-box;
+    z-index: -1;
 }
 
 #pins-container {
