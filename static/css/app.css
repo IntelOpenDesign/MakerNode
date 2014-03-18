@@ -84,6 +84,7 @@ html, body {
 #pins-container {
     min-height: 100%;
     padding-top: 50px;
+    padding-bottom: 50px;
 }
 
 .empty-column-label {
