@@ -234,7 +234,6 @@ cat.app.directive('pinSettings', function($document) {
             }
         };
         $scope.update_pin_label = function() {
-            console.log('update pin label!!!!!!!!!!!!!!!!!!');
             $scope.truncate_label();
             $scope.pin.label = $scope.pin_label.substring();
             $scope.send_pin_update([$scope.pin.id]);
