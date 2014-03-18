@@ -73,10 +73,18 @@ cat.d = function() {
         var tokens_to_remove = _.difference(current_tokens, correct_tokens);
         var tokens_to_add = _.difference(correct_tokens, current_tokens);
 
-        var tokens_to_remove_dict = _.map(tokens_to_remove, function
+        var tokens_to_remove_dict = _.object(tokens_to_remove, function(token) {
+            return [token, true];
+        });
+        console.log('tokens_to_remove_dict', tokens_to_remove_dict);
 
         var indices = [];
-        _.each(that.connections, function(c) {
+        _.each(that.connections, function(c, i) {
+            var token = tokenize_connection_object(c);
+            if (tokens_to_remove_dict[token]) {
+                indices.push(i);
+            }
+        });
     };
 
     var sync_pin_connectedness = function() {
