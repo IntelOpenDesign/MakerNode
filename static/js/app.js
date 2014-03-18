@@ -519,12 +519,14 @@ cat.server_pin_format = function(my_pins, my_pin_ids) {
             is_input: pin.is_input,
             input_min: pin.input_min / 100,
             input_max: pin.input_max / 100,
-            damping: pin.damping,
+            damping: parseInt(pin.damping),
             is_inverted: pin.is_inverted,
             is_timer_on: pin.is_timer_on,
             timer_value: pin.timer_value,
         };
     });
+
+    console.log('client is sending damping values', _.pluck(_.values(pins), 'damping'), 'to server');
 
     return pins;
 };
