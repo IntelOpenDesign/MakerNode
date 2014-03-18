@@ -25,7 +25,15 @@ cat.d = function() {
     var that = {};
     // pins and conns are the primary data structure for pins and connections
     that.pins = {};
-    that.conns = {};
+    that.conns = {}; // ex. {
+                     //       "0": {"1": true, "3": true},
+                     //       "1": {"0": true},
+                     //       "3": {"0": true},
+                     //     }
+                     // represents connections [
+                     //    {source: "0", target: "1"},
+                     //    {source: "0", target: "3"},
+                     // ]
     // these lists are convenient for angular templates, and are kept in sync
     // with pins and conns
     that.connections = [];
@@ -52,19 +60,31 @@ cat.d = function() {
     };
 
     var sync_connections = function() {
-        var newcons = _.keys(that.conns);
-        var oldcons = _.map(that.connections, tokenize_connection_object);
-        var to_remove = _.difference(oldcons, newcons);
-        var to_add = _.difference(newcons, oldconds);
+        var correct_tokens = [];
+        _.each(that.conns, function(ids, id) {
+            if (that.pins[id].is_input) {
+                _.each(that.ids, function(truth, other_id) {
+                    correct_tokens.push(tokenize_connection_pins(id, other_id));
+                });
+            }
+        });
+        console.log('correct_tokens', correct_tokens);
+        var current_tokens = _.map(that.connections, tokenize_connection_object);
+        var tokens_to_remove = _.difference(current_tokens, correct_tokens);
+        var tokens_to_add = _.difference(correct_tokens, current_tokens);
+
+        var tokens_to_remove_dict = _.map(tokens_to_remove, function
+
+        var indices = [];
+        _.each(that.connections, function(c) {
     };
 
     var sync_pin_connectedness = function() {
         _.each(that.pins, function(pin) {
             pin.is_connected = false;
         });
-        _.each(that.conns, function(c) {
-            that.pins[c.source].is_connected = true;
-            that.pins[c.target].is_connected = true;
+        _.each(that.conns, function(pins, pin) {
+            that.pins[pin].is_connected = true;
         });
     };
 
@@ -83,8 +103,12 @@ cat.d = function() {
         that.pins = data.pins;
 
         that.conns = {};
+        _.each(that.pins, function(pin, id) {
+            that.conns[id] = {};
+        });
         _.each(data.connections, function(c) {
-            that.conns[tokenize_connection_object(c)] = c;
+            that.conns[c.source][c.target] = true;
+            that.conns[c.target][c.source] = true;
         });
 
         sync_pin_lists();
@@ -102,44 +126,41 @@ cat.d = function() {
         var new_tokens = _.map(data.connections, tokenize_connection_object);
         var tokens_to_remove = _.difference(my_tokens, new_tokens);
         var tokens_to_add = _.difference(new_tokens, my_tokens);
-        disconnect_tokens(tokens_to_remove);
-        connect_tokens(tokens_to_add);
+        var conns_to_remove = _.map(tokens_to_remove, detokenize_connection);
+        var conns_to_add = _.mape(tokens_to_add, detokenize_connection);
+
+        that.disconnect(conns_to_remove, true);
+        that.connect(conns_to_add, true);
 
         sync_pin_lists();
         sync_connections();
-    };
-
-    var disconnect_tokens = function(connection_tokens) {
-        _.each(connection_tokens, function(token) {
-            delete that.conns[token];
-        });
         sync_pin_connectedness();
-        sync_connections();
     };
 
-    var connect_tokens = function(connection_tokens) {
-        _.each(connection_tokens, function(token) {
-            var c = detokenize_connection(token);
-            that.connect(c.source, c.target);
+    that.disconnect = function(connections, no_need_to_sync) {
+        _.each(connections, function(c) {
+            delete that.conns[c.source][c.target];
+            delete that.conns[c.target][c.source];
         });
+        if (!no_need_to_sync) {
+            sync_connections();
+            sync_pin_connectedness();
+        }
     };
 
-    that.disconnect = function(sensor, actuator) {
-        var tokens = [tokenize_connection_pins(sensor, actuator)];
-        disconnect_tokens(tokens);
-    };
-
-    that.connect = function(sensor, actuator) {
-        // TODO this does not use tokenize
-        var c = {source: sensor, target: actuator};
-        that.conns[tokenize_connection_pins(sensor, actuator)] = c;
-        that.connections.push(c);
-        that.pins[sensor].is_connected = true;
-        that.pins[actuator].is_connected = true;
+    that.connect = function(connections, no_need_to_sync) {
+        _.each(connections, function(c) {
+            that.conns[c.source][c.target] = true;
+            that.conns[c.target][c.source] = true;
+        });
+        if (!no_need_to_sync) {
+            sync_connections();
+            sync_pin_connectedness();
+        }
     };
 
     that.are_connected = function(sensor, actuator) {
-        return _.has(that.conns, tokenize_connection_pins(sensor, actuator));
+        return that.conns[sensor][actuator];
     };
 
     that.show_pin = function(id) {
@@ -150,19 +171,12 @@ cat.d = function() {
     that.hide_pin = function(id) {
         that.pins[id].is_visible = false;
         sync_pin_lists();
-        // delete this pin's connections
-        var its_conns;
-        if (that.pins[id].is_input) {
-            its_conns = _.filter(that.connections, function(c) {
-                return that.are_connected(id, c.target);
-            });
-        } else {
-            its_conns = _.filter(that.connections, function(c) {
-                return that.are_connected(c.source, id);
-            });
-        }
-        var its_conn_tokens = _.map(its_conns, tokenize_connection_object);
-        disconnect_tokens(its_conn_tokens);
+        _.each(that.conns[id], function(truth, other_id) {
+            delete that.conns[other_id][id];
+        });
+        that.conns[id] = {};
+        sync_connections();
+        sync_pin_connectedness();
     };
 
     return that;
@@ -391,6 +405,7 @@ cat.app.directive('connection', function($document) {
         }
 
         function render() {
+            console.log('connection render');
             cat.clear_connection(attrs.sensorId, attrs.actuatorId);
             connection = jsPlumb.connect({
                 source: attrs.sensorId+'-endpoint',
