@@ -20,6 +20,154 @@ function toggle_debug_log() {
     $('#debug-log').toggleClass('hide');
 }
 
+// PINS AND CONNECTIONS DATA STRUCTURE
+cat.d = function() {
+    var that = {};
+    // pins and conns are the primary data structure for pins and connections
+    that.pins = {};
+    that.conns = {};
+    // these lists are convenient for angular templates, and are kept in sync
+    // with pins and conns
+    that.connections = [];
+    that.visible_sensors = [];
+    that.visible_actuators = [];
+    that.hidden_sensors = [];
+    that.hidden_actuators = [];
+
+    var sync_pin_lists = function() {
+        var vissen = [], visact = [], hidsen = [], hidact = [];
+        _.each(that.pins, function(pin, id) {
+            if (pin.is_visible) {
+                if (pin.is_input) vissen.push(pin);
+                else              visact.push(pin);
+            } else {
+                if (pin.is_input) hidsen.push(pin);
+                else              hidact.push(pin);
+            }
+        });
+        that.visible_sensors = vissen;
+        that.visible_actuators = visact;
+        that.hidden_sensors = hidsen;
+        that.hidden_actuators = hidact;
+    };
+
+    var sync_connections = function() {
+        var newcons = _.keys(that.conns);
+        var oldcons = _.map(that.connections, tokenize_connection_object);
+        var to_remove = _.difference(oldcons, newcons);
+        var to_add = _.difference(newcons, oldconds);
+    };
+
+    var sync_pin_connectedness = function() {
+        _.each(that.pins, function(pin) {
+            pin.is_connected = false;
+        });
+        _.each(that.conns, function(c) {
+            that.pins[c.source].is_connected = true;
+            that.pins[c.target].is_connected = true;
+        });
+    };
+
+    var tokenize_connection_pins = function(sensor, actuator) {
+        return sensor + '-' + actuator;
+    }
+    var tokenize_connection_object = function(c) {
+        return tokenize_connection_pins(c.source, c.target);
+    }
+    var detokenize_connection = function(s) {
+        var pins = s.split('-');
+        return {source: pins[0], target: pins[1]};
+    }
+
+    that.reset = function(data) {
+        that.pins = data.pins;
+
+        that.conns = {};
+        _.each(data.connections, function(c) {
+            that.conns[tokenize_connection_object(c)] = c;
+        });
+
+        sync_pin_lists();
+        sync_connections();
+    };
+
+    that.update = function(data) {
+        _.each(data.pins, function(pin, id) {
+            _.each(pin, function(val, attr) {
+                that.pins[id][attr] = val;
+            });
+        });
+
+        var my_tokens = _.keys(that.connections);
+        var new_tokens = _.map(data.connections, tokenize_connection_object);
+        var tokens_to_remove = _.difference(my_tokens, new_tokens);
+        var tokens_to_add = _.difference(new_tokens, my_tokens);
+        disconnect_tokens(tokens_to_remove);
+        connect_tokens(tokens_to_add);
+
+        sync_pin_lists();
+        sync_connections();
+    };
+
+    var disconnect_tokens = function(connection_tokens) {
+        _.each(connection_tokens, function(token) {
+            delete that.conns[token];
+        });
+        sync_pin_connectedness();
+        sync_connections();
+    };
+
+    var connect_tokens = function(connection_tokens) {
+        _.each(connection_tokens, function(token) {
+            var c = detokenize_connection(token);
+            that.connect(c.source, c.target);
+        });
+    };
+
+    that.disconnect = function(sensor, actuator) {
+        var tokens = [tokenize_connection_pins(sensor, actuator)];
+        disconnect_tokens(tokens);
+    };
+
+    that.connect = function(sensor, actuator) {
+        // TODO this does not use tokenize
+        var c = {source: sensor, target: actuator};
+        that.conns[tokenize_connection_pins(sensor, actuator)] = c;
+        that.connections.push(c);
+        that.pins[sensor].is_connected = true;
+        that.pins[actuator].is_connected = true;
+    };
+
+    that.are_connected = function(sensor, actuator) {
+        return _.has(that.conns, tokenize_connection_pins(sensor, actuator));
+    };
+
+    that.show_pin = function(id) {
+        that.pins[id].is_visible = true;
+        sync_pin_lists();
+    };
+
+    that.hide_pin = function(id) {
+        that.pins[id].is_visible = false;
+        sync_pin_lists();
+        // delete this pin's connections
+        var its_conns;
+        if (that.pins[id].is_input) {
+            its_conns = _.filter(that.connections, function(c) {
+                return that.are_connected(id, c.target);
+            });
+        } else {
+            its_conns = _.filter(that.connections, function(c) {
+                return that.are_connected(c.source, id);
+            });
+        }
+        var its_conn_tokens = _.map(its_conns, tokenize_connection_object);
+        disconnect_tokens(its_conn_tokens);
+    };
+
+    return that;
+};
+
 // cat.app is the angular app
 cat.app = angular.module('ConnectAnything', []);
 
@@ -34,70 +182,19 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     // whether we have yet received any data from the server
     $scope.got_data = false;
 
-    // pins and connections are the primary state of the app. it determines the
-    // hardware's behavior. we sync this with the server because other users
-    // are updating this on their screens too.
-    $scope.pins = {};
-    $scope.connections = []; // TODO I think connections should be a dict
-
-    // save lists of sensors and actuators for efficiency in directives
-    // TODO how will dicts work with ordering? darn, might need to go back to arrays
-    // TODO pins are getting so complicated as a data structure that maybe I should refactor them out into their own Pins object
-    $scope.visible_sensors = {};
-    $scope.visible_actuators = {};
-    $scope.hidden_sensors = {};
-    $scope.hidden_actuators = {};
-    var update_pin_lists = function() {
-        var vissen = {}, visact = {}, hidsen = {}, hidact = {};
-        _.each($scope.pins, function(pin, id) {
-            if (pin.is_visible) {
-                if (pin.is_input) vissen[id] = pin;
-                else              visact[id] = pin;
-            } else {
-                if (pin.is_input) hidsen[id] = pin;
-                else              hidact[id] = pin;
-            }
-        });
-        $scope.visible_sensors = vissen;
-        $scope.visible_actuators = visact;
-        $scope.hidden_sensors = hidsen;
-        $scope.hidden_actuators = hidact;
-    };
-    $scope.are_there = function(visible_or_hidden, sensors_or_actuators) {
-        var pins_dict = $scope[visible_or_hidden + '_' + sensors_or_actuators];
-        return _.keys(pins_dict).length > 0;
-    };
+    // pins and connections
+    $scope.d = cat.d();
 
     // TALKING WITH GALILEO
 
-    Galileo.on('update', function(d) {
+    Galileo.on('update', function(data) {
         if (!$scope.got_data) { // first time initialization
             $scope.got_data = true;
-            $scope.pins = d.pins;
             cat.clear_all_connections();
-            $scope.connections = d.connections;
+            $scope.d.reset(data);
          } else { // after that just update changes
             $scope.got_data = true;
-
-            // update pins
-            _.each(d.pins, function(pin, id) {
-                _.each(pin, function(val, attr) {
-                    $scope.pins[id][attr] = val;
-                });
-            });
-
-            // update connections
-            var my_tokens = _.map($scope.connections, cat.tokenize_connection);
-            var new_tokens = _.map(d.connections, cat.tokenize_connection);
-            var tokens_to_remove = _.difference(my_tokens, new_tokens);
-            var tokens_to_add = _.difference(new_tokens, my_tokens);
-            var connections_to_remove = _.map(tokens_to_remove, cat.detokenize_connection);
-            var connections_to_add = _.map(tokens_to_add, cat.detokenize_connection);
-            disconnect_on_client(connections_to_remove);
-            connect_on_client(connections_to_add);
-
-            // update special lists of pins
-            update_pin_lists();
+            $scope.d.update(data);
         }
     });
 
@@ -110,7 +207,7 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     });
 
     $scope.send_pin_update = function(pin_ids) {
-        Galileo.update_pins($scope.pins, pin_ids);
+        Galileo.update_pins($scope.d.pins, pin_ids);
     };
 
     if (cat.on_hardware) {
@@ -118,39 +215,6 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     } else {
         Galileo.connect(cat.test_server_url);
     }
-
-    // HOW THE APP ADDS/REMOVES CONNECTIONS
-    // updating $scope.connections and $scope.pins[<id>].is_connected
-
-    var connect_on_client = function(connections) {
-        $scope.connections.push.apply($scope.connections, connections);
-        _.each(connections, function(c) {
-            $scope.pins[c.source].is_connected = true;
-            $scope.pins[c.target].is_connected = true;
-        });
-    };
-
-    var disconnect_on_client = function(connections) {
-        var delc = cat.connections_dict(connections); // connections to delete
-        var indices = [];
-        _.each($scope.connections, function(c, i) {
-            if (delc[c.source] && delc[c.source][c.target]) {
-                cat.clear_connection(c.source, c.target);
-                indices.push(i);
-            }
-        });
-        indices.sort(function(x, y) { return y - x; }); // descending order
-        _.each(indices, function(index) {
-            $scope.connections.splice(index, 1);
-        });
-
-        var allc = cat.connections_dict($scope.connections); // remaining conns
-        _.each($scope.pins, function(pin, id) {
-            if (allc[id] === undefined) {
-                $scope.pins[id].is_connected = false;
-            }
-        });
-    };
 
     // HOW THE USER ADDS/REMOVES CONNECTIONS
     // When the user taps a sensor's endpoint, we activate that sensor,
@@ -180,16 +244,13 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
             return;
         }
         var sensor = $scope.activated_sensor;
-        var existing_connection = _.filter($scope.connections, function(c) {
-            return c.source === sensor && c.target === actuator;
-        });
-        var connections = [{source: sensor, target: actuator}];
-        if (existing_connection.length === 0) {
-            connect_on_client(connections);
-            Galileo.add_connections(connections);
+        if ($scope.d.are_connected(sensor, actuator)) {
+            $scope.d.disconnect(sensor, actuator);
+            Galileo.remove_connections([{source: sensor, target: actuator}]);
+            cat.clear_connection(sensor, actuator);
         } else {
-            disconnect_on_client(connections);
-            Galileo.remove_connections(connections);
+            $scope.d.connect(sensor, actuator);
+            Galileo.add_connections([{source: sensor, target: actuator}]);
         }
         $scope.activated_sensor = null;
     };
@@ -234,16 +295,11 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
         }
     };
     $scope.show_pin = function(id) {
-        // TODO sync connections for affected pins
-        console.log('show_pin', id);
-        $scope.pins[id].is_visible = true;
-        update_pin_lists();
+        $scope.d.show_pin(id);
         $scope.send_pin_update([id]);
     };
     $scope.hide_pin = function(id) {
-        // TODO sync connections for affected pins
-        $scope.pins[id].is_visible = false;
-        update_pin_lists();
+        $scope.d.hide_pin(id);
         $scope.send_pin_update([id]);
     };
 }]);
@@ -254,19 +310,17 @@ cat.pin_template = 'templates/pin.html';
 
 cat.app.directive('sensor', function($document) {
     function link($scope, $el, attrs) {
-        console.log('sensor link', attrs.id);
+        console.log('sensor link', $scope.pin.id);
     }
     return { templateUrl: cat.pin_template, link: link };
 });
 
 cat.app.directive('actuator', function($document) {
     function link($scope, $el, attrs) {
-        console.log('actuator link', attrs.id);
+        console.log('actuator link', $scope.pin.id);
 
         $scope.already_connected_to_activated_sensor = function() {
-            return _.filter($scope.connections, function(c) {
-                return c.source === $scope.activated_sensor && c.target === attrs.id;
-            }).length > 0;
+            return $scope.d.are_connected($scope.activated_sensor, $scope.pin.id);
         };
     }
     return { templateUrl: cat.pin_template, link: link };
@@ -280,6 +334,7 @@ cat.app.directive('pinStub', function($document) {
 cat.app.directive('pinSettings', function($document) {
     function link($scope, $el, attrs) {
 
+        console.log('link pin settings');
         var $pin_label = $el.find('input.pin-label');
         $scope.label_limit_length = 20;
         $scope.pin_label = $scope.pin.label.substring();
@@ -316,6 +371,7 @@ cat.app.directive('pinSettings', function($document) {
 cat.app.directive('connection', function($document) {
     function link($scope, $el, attrs) {
 
+        // why are connections getting linked all the time?
         console.log('connection link', attrs.sensorId, '-', attrs.actuatorId);
 
         var $sensor, $actuator, connection, msg;
@@ -335,6 +391,7 @@ cat.app.directive('connection', function($document) {
         }
 
         function render() {
+            cat.clear_connection(attrs.sensorId, attrs.actuatorId);
             connection = jsPlumb.connect({
                 source: attrs.sensorId+'-endpoint',
                 target: attrs.actuatorId+'-endpoint',
@@ -356,6 +413,11 @@ cat.app.directive('connection', function($document) {
                  //   strokeStyle: 'rgb(250, 250, 60)',
                 //},
             });
+            $el.on('destroy', function() {
+                // TODO why does this not get called?
+                console.log('destroy connection');
+                jsPlumb.detach(connection);
+            });
         }
 
         find_my_pins();
@@ -370,6 +432,7 @@ cat.clear_all_connections = function() {
 };
 
 cat.clear_connection = function(sensor, actuator) {
+    // TODO make sure we are clearing connections
     console.log('clear connection', sensor, actuator);
     $('.connection.pins-'+sensor+'-'+actuator).remove();
 };
@@ -584,35 +647,6 @@ cat.server_pin_format = function(my_pins, my_pin_ids) {
 
     return pins;
 };
-
-// a dictionary representation of connections that makes it easy to check if a
-// connection exists. for each connection in connections_list, the resulting
-// dict will have
-// d[source][target] = true
-// and
-// d[target][source] = true
-cat.connections_dict = function(connections_list) {
-    var d = {};
-    _.each(connections_list, function(c) {
-        _.each([[c.source, c.target], [c.target, c.source]], function(o) {
-            if (d[o[0]] === undefined) {
-                d[o[0]] = {};
-            }
-            d[o[0]][o[1]] = true;
-        });
-    });
-    return d;
-};
-
-// represent connections as strings so they can easily be compared for equality
-cat.tokenize_connection = function(c) {
-    return c.source + '-' + c.target;
-}
-// translate back from string to connection object
-cat.detokenize_connection = function(s) {
-    var pins = s.split('-');
-    return {source: pins[0], target: pins[1]};
-}
 
 // OTHER NOTES
 // good resource: http://clintberry.com/2013/angular-js-websocket-service/

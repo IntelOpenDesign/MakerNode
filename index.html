@@ -39,10 +39,10 @@
               ng-class="{
                   'sensors': true,
                   'column-title': true,
-                  'hide': are_there('visible', 'sensors')}">
+                  'hide': d.visible_sensors.length > 0}">
                 sensors
             </div>
-            <div id="{{pin.id}}" ng-repeat="(id, pin) in visible_sensors" sensor></div>
+            <div id="{{pin.id}}" ng-repeat="(id, pin) in d.visible_sensors" sensor></div>
         </div>
 
         <div id="actuators" class="col-xs-6">
@@ -50,10 +50,10 @@
               ng-class="{
                   'actuators': true,
                   'column-title': true,
-                  'hide': are_there('visible', 'actuators')}">
+                  'hide': d.visible_actuators.length > 0}">
                 actuators
             </div>
-            <div id="{{pin.id}}" ng-repeat="(id, pin) in visible_actuators" actuator></div>
+            <div id="{{pin.id}}" ng-repeat="(id, pin) in d.visible_actuators" actuator></div>
         </div>
 
     </div>
@@ -63,7 +63,7 @@
   ng-class="{
       'hide': settings_pin !== null || adding_pins !== null}">
     <div id="connect-{{c.source}}-{{c.target}}"
-      ng-repeat="c in connections"
+      ng-repeat="c in d.connections"
       class="connection"
       data-sensor_id="{{c.source}}"
       data-actuator_id="{{c.target}}"
@@ -89,7 +89,7 @@
             </div>
 
             <div class="row">
-                <div class="col-xs-4" ng-repeat="(id, pin) in hidden_sensors" pin-stub></div>
+                <div class="col-xs-4" ng-repeat="(id, pin) in d.hidden_sensors" pin-stub></div>
             </div>
         </div>
 
@@ -104,7 +104,7 @@
             </div>
 
             <div class="row">
-                <div class="col-xs-4" ng-repeat="(id, pin) in hidden_actuators" pin-stub></div>
+                <div class="col-xs-4" ng-repeat="(id, pin) in d.hidden_actuators" pin-stub></div>
             </div>
         </div>
 
@@ -144,7 +144,7 @@
 </div>
 
 <div id="settings-container">
-    <div ng-repeat="pin in pins" pin-settings></div>
+    <div ng-repeat="pin in d.pins" pin-settings></div>
 </div>
 
 <div id="loading" ng-class="{'hide': got_data}">
