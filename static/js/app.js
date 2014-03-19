@@ -108,7 +108,6 @@ cat.d = function() {
         var indices = [];
         _.each(that.connections, function(c, i) {
             if (conns_dict[c.source] && conns_dict[c.source][c.target]) {
-                // TODO do i need this here: cat.clear_connection(c.source, c.target);
                 indices.push(i);
             }
         });
@@ -120,17 +119,18 @@ cat.d = function() {
     };
 
     that.connect = function(connections) {
-        _.each(connections, function(c) {
-            that.conns[c.source][c.target] = true;
-            that.conns[c.target][c.source] = true;
-            that.pins[c.source].is_connected = true;
-            that.pins[c.target].is_connected = true;
-        });
+        that.connections.push.apply(that.connections, connections);
+        sync_pin_connectedness();
     };
 
     that.are_connected = function(sensor, actuator) {
-        console.log('are_connected?', sensor, actuator);
-        return that.conns[sensor][actuator] !== undefined;
+        for (var i = 0; i < that.connections.length; i++) {
+            var c = that.connections[i];
+            if (c.source === sensor && c.target === actuator) {
+                return true;
+            }
+        }
+        return false;
     };
 
     that.show_pin = function(id) {
@@ -141,12 +141,11 @@ cat.d = function() {
     that.hide_pin = function(id) {
         that.pins[id].is_visible = false;
         sync_pin_lists();
-        _.each(that.conns[id], function(truth, other_id) {
-            delete that.conns[other_id][id];
+        var end = that.pins[id].is_input ? 'source' : 'target';
+        var connections = _.filter(that.connections, function(c) {
+            return c[end] === id;
         });
-        that.conns[id] = {};
-        sync_connections();
-        sync_pin_connectedness();
+        that.disconnect(connections);
     };
 
     return that;
@@ -232,6 +231,7 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
         if ($scope.d.are_connected(sensor, actuator)) {
             $scope.d.disconnect(connections);
             Galileo.remove_connections(connections);
+            // TODO do we need to call clear_connection?
             cat.clear_connection(sensor, actuator);
         } else {
             $scope.d.connect(connections);
@@ -357,7 +357,7 @@ cat.app.directive('pinSettings', function($document) {
 cat.app.directive('connection', function($document) {
     function link($scope, $el, attrs) {
 
-        // why are connections getting linked all the time?
+        // TODO why are connections getting linked all the time?
         console.log('connection link', attrs.sensorId, '-', attrs.actuatorId);
 
         var $sensor, $actuator, connection, msg;
@@ -377,7 +377,7 @@ cat.app.directive('connection', function($document) {
         }
 
         function render() {
-            console.log('connection render');
+            console.log('render connection', attrs.sensorId, '-', attrs.actuatorId);
             cat.clear_connection(attrs.sensorId, attrs.actuatorId);
             connection = jsPlumb.connect({
                 source: attrs.sensorId+'-endpoint',
@@ -396,13 +396,8 @@ cat.app.directive('connection', function($document) {
                 endpointStyle: {
                     fillStyle: '#a7b04b',
                 },
-                //hoverPaintStyle: {
-                 //   strokeStyle: 'rgb(250, 250, 60)',
-                //},
             });
-            $el.on('destroy', function() {
-                // TODO why does this not get called?
-                console.log('destroy connection');
+            $el.on('$destroy', function() {
                 jsPlumb.detach(connection);
             });
         }
@@ -419,7 +414,7 @@ cat.clear_all_connections = function() {
 };
 
 cat.clear_connection = function(sensor, actuator) {
-    // TODO make sure we are clearing connections
+    // TODO find a way to clear connection endpoints too
     console.log('clear connection', sensor, actuator);
     $('.connection.pins-'+sensor+'-'+actuator).remove();
 };
