@@ -89,13 +89,15 @@ var server = ws.createServer(function(conn){
                     index = i;
                 }
             });
-            if (index >= 0) {
-                msg.connections.splice(index, 1);
-            } else {
+            // if client wants to add connection && we don't already have it
+            if (dc.connect && index < 0) {
                 msg.connections.push({
                     source: dc.source,
                     target: dc.target
                 });
+            // if client wants to remove connection && we have it
+            } else if (!dc.connect && index >= 0) {
+                msg.connections.splice(index, 1);
             }
         });
         _und.each(d.pins, function(pin, id) {

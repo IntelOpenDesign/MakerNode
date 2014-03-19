@@ -3,7 +3,7 @@ var cat = {};
 
 // server connection settings
 cat.on_hardware = false; // to switch to Galileo, just change this to true
-cat.test_server_url = 'ws://localhost:8001';
+cat.test_server_url = 'ws://192.168.15.122:8001';
 cat.hardware_server_url = 'ws://cat/';
 cat.hardware_server_protocol = 'hardware-state-protocol';
 
@@ -426,10 +426,26 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         send({pins: cat.server_pin_format(pins, pin_ids)});
     };
     var add_connections = function(connections) {
-        send({connections: connections});
+        var msg = { connections: [] };
+        _.each(connections, function(c) {
+            msg.connections.push({
+                source: c.source,
+                target: c.target,
+                connect: true,
+            });
+        });
+        send(msg);
     };
     var remove_connections = function(connections) {
-        send({connections: connections});
+        var msg = { connections: [] };
+        _.each(connections, function(c) {
+            msg.connections.push({
+                source: c.source,
+                target: c.target,
+                connect: false,
+            });
+        });
+        send(msg);
     };
 
     // if there is a big lag time (>= slowness_time) between messages from the
