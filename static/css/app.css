@@ -91,15 +91,19 @@ html, body {
     padding-bottom: 50px;
 }
 
-.empty-column-label {
+.column-title {
     text-align: center;
     padding: 1em 0;
     font-size: 200%;
 }
-#sensors .empty-column-label {
+#add-pins-menu .column-title {
+    text-align: left;
+    padding: .3em 0 .3em .5em;
+}
+.sensors.column-title {
     color: rgb(147, 106, 24);
 }
-#actuators .empty-column-label {
+.actuators.column-title {
     color: rgb(45, 104, 84);
 }
 
@@ -134,6 +138,7 @@ html, body {
     position: relative;
     height: 100%;
     width: 100%;
+    background: white;
 }
 .actuator .pin-box {
     float: right;
@@ -637,4 +642,62 @@ label[for=checkbox] {
 }
 #add-actuators-button {
     float: right;
+}
+
+/* ADDING AND REMOVING PINS */
+.confirm-remove-container {
+    position: fixed;
+    z-index: 3;
+    top: 0;
+    background: rgba(255, 255, 255, .95);
+    height: 100%;
+}
+.confirm-remove-row {
+    margin-top: 30%;
+}
+.confirm-remove {
+    padding: 30px 50px;
+    background: rgb(198, 188, 175);
+}
+
+#add-pins-menu {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 10px 15px 110px;
+    position: relative;
+}
+#add-pins-menu-bg {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    z-index: -1;
+}
+#add-pins-menu-bg,
+#add-pins-menu-pins-container {
+    background: rgb(198, 188, 175);
+}
+#add-pins-menu-pins-container {
+    margin-bottom: 110px;
+}
+#add-pins-menu-bg-footer {
+    width: 0;
+    height: 0;
+    background: transparent;
+    position: fixed;
+    bottom: 85px;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-top: 30px solid rgb(198, 188, 175);
+    z-index: 20;
+}
+#add-pins-menu-bg-footer.sensors {
+    left: 40px;
+}
+#add-pins-menu-bg-footer.actuators {
+    right: 40px;
 }

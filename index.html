@@ -76,7 +76,7 @@
   ng-switch="adding_pins"
   ng-class="{
       'hide': settings_pin !== null || adding_pins === null}">
-    <div id="add-pins-menu-bg">
+    <div id="add-pins-menu-pins-container">
 
         <div id="add-sensors"
           class="container-fluid sensors"
@@ -113,6 +113,7 @@
       ng-class="{
           'sensors': adding_pins === 'sensors',
           'actuators': adding_pins === 'actuators'}"></div>
+    <div id="add-pins-menu-bg"></div>
 </div>
 
 <div id="footer"
