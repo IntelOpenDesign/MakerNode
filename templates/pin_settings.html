@@ -105,19 +105,19 @@
                           class="vertical-slider"
                           ng-model="pin.damping"
                           min="0"
-                          max="1"
-                          step="0.01"
+                          max="9"
+                          step="1"
                           value="{{pin.damping}}"
                           ng-change="send_pin_update([pin.id])">
                     </div>
                     <div ng-switch-when="false">
                         <input type="checkbox"
-                          ng-model="pin.is_limited"
+                          ng-model="pin.is_timer_on"
                           ng-change="send_pin_update([pin.id])">
                         <label for="checkbox">Stay on for</label>
                         <br/>
                         <input type="number"
-                          ng-model="pin.limited_to"
+                          ng-model="pin.timer_value"
                           ng-change="send_pin_update([pin.id])">
                         <label for="number">seconds</label>
                     </div>

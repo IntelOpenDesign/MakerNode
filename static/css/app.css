@@ -76,29 +76,30 @@ html, body {
     height: 100%;
     width: 0;
     margin-left: -1px;
-    border-width: 1px;
-    z-index: -1;
+    border-left-width: 2px;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
     border-style: dashed;
+    box-sizing: content-box;
+    z-index: -1;
 }
 
 #pins-container {
     min-height: 100%;
     padding-top: 50px;
+    padding-bottom: 50px;
 }
 
-.column-title {
+.empty-column-label {
     text-align: center;
     padding: 1em 0;
     font-size: 200%;
 }
-#add-pins-menu .column-title {
-    padding: 0 0 0 .5em;
-    text-align: left;
-}
-.sensors.column-title {
+#sensors .empty-column-label {
     color: rgb(147, 106, 24);
 }
-.actuators.column-title {
+#actuators .empty-column-label {
     color: rgb(45, 104, 84);
 }
 
@@ -112,28 +113,27 @@ html, body {
 
 .pin {
     width: 50%;
-    height: 100px;
+    height: 130px;
     margin-top: 50px;
     margin-bottom: 50px;
     margin: 50px inherit;
-    box-sizing: content-box;
+    box-sizing: border-box;
     border-width: 15px;
     border-style: solid;
 }
 .pin.sensor {
-    margin-left: 15%;
-    margin-right: 20%;
+    margin-left: 20%;
+    margin-right: 30%;
 }
 .pin.actuator {
-    margin-left: 25%;
-    margin-right: 5%;
+    margin-left: 30%;
+    margin-right: 20%;
 }
 
 .pin-box {
     position: relative;
     height: 100%;
     width: 100%;
-    background: white;
 }
 .actuator .pin-box {
     float: right;
@@ -337,21 +337,6 @@ html, body {
     margin: 0;
     
 }
-.confirm-remove-container {
-    position: fixed;
-    z-index: 3;
-    top: 0;
-    background: rgba(255, 255, 255, .95);
-    height: 100%;
-}
-.confirm-remove-row {
-    margin-top: 30%;
-}
-.confirm-remove {
-    padding: 30px 50px;
-    background: rgb(198, 188, 175);
-}
-
 /* TODO make settings theme yellow for sensors and green for actuators */
 
 /* VERTICAL SLIDER */
@@ -510,44 +495,13 @@ input[type=number] {
     border-color: rgb(230, 222, 177);
 }
 
+
 .settings.actuator input[type=checkbox] {
     background-color: white;
     border-color: rgb(93, 130, 99);
 }
 .settings.actuator input[type=checkbox]:checked:before {
     color: rgb(42, 96, 78);
-}
-
-/* ADD PINS MENU */
-#add-pins-menu {
-    height: 100%;
-    box-sizing: border-box;
-    border-bottom: 100px solid transparent;
-    position: relative;
-}
-#add-pins-menu-bg {
-    background: rgb(198, 188, 175);
-    border-bottom: 20px solid white;
-    box-sizing: border-box;
-    margin: 15px;
-    height: 100%;
-}
-#add-pins-menu-bg-footer {
-    width: 0;
-    height: 0;
-    background: transparent;
-    position: absolute;
-    bottom: 0;
-    border-left: 25px solid transparent;
-    border-right: 25px solid transparent;
-    border-top: 30px solid rgb(198, 188, 175);
-    z-index: 20;
-}
-#add-pins-menu-bg-footer.sensors {
-    left: 40px;
-}
-#add-pins-menu-bg-footer.actuators {
-    right: 40px;
 }
 
 /* CHECKBOX */

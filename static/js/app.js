@@ -330,7 +330,6 @@ cat.app.directive('pinSettings', function($document) {
             }
         };
         $scope.update_pin_label = function() {
-            console.log('update pin label!!!!!!!!!!!!!!!!!!');
             $scope.truncate_label();
             $scope.pin.label = $scope.pin_label.substring();
             $scope.send_pin_update([$scope.pin.id]);
@@ -527,10 +526,26 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         send({pins: cat.server_pin_format(pins, pin_ids)});
     };
     var add_connections = function(connections) {
-        send({connections: connections});
+        var msg = { connections: [] };
+        _.each(connections, function(c) {
+            msg.connections.push({
+                source: c.source,
+                target: c.target,
+                connect: true,
+            });
+        });
+        send(msg);
     };
     var remove_connections = function(connections) {
-        send({connections: connections});
+        var msg = { connections: [] };
+        _.each(connections, function(c) {
+            msg.connections.push({
+                source: c.source,
+                target: c.target,
+                connect: false,
+            });
+        });
+        send(msg);
     };
 
     // if there is a big lag time (>= slowness_time) between messages from the
@@ -593,8 +608,8 @@ cat.my_pin_format = function(server_pins, server_connections) {
             input_max: Math.round(pin.input_max * 100),
             damping: pin.damping,
             is_inverted: pin.is_inverted,
-            is_limited: pin.is_limited,
-            limited_to: pin.limited_to,
+            is_timer_on: pin.is_timer_on,
+            timer_value: pin.timer_value,
         };
     });
 
@@ -618,14 +633,16 @@ cat.server_pin_format = function(my_pins, my_pin_ids) {
             is_visible: pin.is_visible,
             is_analog: pin.is_analog,
             is_input: pin.is_input,
-            input_min: pin.input_min / 100,
-            input_max: pin.input_max / 100,
-            damping: pin.damping,
+            input_min: parseInt(pin.input_min) / 100,
+            input_max: parseInt(pin.input_max) / 100,
+            damping: parseInt(pin.damping),
             is_inverted: pin.is_inverted,
-            is_limited: pin.is_limited,
-            limited_to: pin.limited_to,
+            is_timer_on: pin.is_timer_on,
+            timer_value: pin.timer_value,
         };
     });
+
+    console.log('client is sending damping values', _.pluck(_.values(pins), 'damping'), 'to server');
 
     return pins;
 };
