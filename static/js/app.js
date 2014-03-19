@@ -76,14 +76,19 @@ cat.d = function() {
         var tokens_to_remove_dict = _.object(tokens_to_remove, function(token) {
             return [token, true];
         });
-        console.log('tokens_to_remove_dict', tokens_to_remove_dict);
-
-        var indices = [];
-        _.each(that.connections, function(c, i) {
+        var i = 0;
+        while (i < that.connections.length) {
+            var c = that.connections[i];
             var token = tokenize_connection_object(c);
-            if (tokens_to_remove_dict[token]) {
-                indices.push(i);
+            if (tokens_to_remove_dict[token] !== undefined) {
+                that.connections.splice(i, 1);
+            } else {
+                i++;
             }
+        }
+
+        _.each(tokens_to_add, function(token) {
+            that.connections.push(detokenize_connection(token));
         });
     };
 
@@ -140,8 +145,8 @@ cat.d = function() {
         that.disconnect(conns_to_remove, true);
         that.connect(conns_to_add, true);
 
-        sync_pin_lists();
         sync_connections();
+        sync_pin_lists();
         sync_pin_connectedness();
     };
 
@@ -168,7 +173,7 @@ cat.d = function() {
     };
 
     that.are_connected = function(sensor, actuator) {
-        return that.conns[sensor][actuator];
+        return that.conns[sensor][actuator] !== undefined;
     };
 
     that.show_pin = function(id) {
