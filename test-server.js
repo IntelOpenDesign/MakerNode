@@ -29,8 +29,8 @@ function pin_setter(is_analog, is_input) {
             input_max: 1.0,
             damping: 0,
             is_inverted: false,
-            is_limited: false,
-            limited_to: 0,
+            is_timer_on: false,
+            timer_value: 0,
         };
     }
 }
@@ -107,8 +107,8 @@ var server = ws.createServer(function(conn){
             msg.pins[id].input_min = pin.input_min;
             msg.pins[id].input_max = pin.input_max;
             msg.pins[id].damping = pin.damping;
-            msg.pins[id].is_limited = pin.is_limited;
-            msg.pins[id].limited_to = pin.limited_to;
+            msg.pins[id].is_timer_on = pin.is_timer_on;
+            msg.pins[id].timer_value = pin.timer_value;
         });
     });
     setInterval(function() {

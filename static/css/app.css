@@ -76,14 +76,19 @@ html, body {
     height: 100%;
     width: 0;
     margin-left: -1px;
-    border-width: 1px;
-    z-index: -1;
+    border-left-width: 2px;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
     border-style: dashed;
+    box-sizing: content-box;
+    z-index: -1;
 }
 
 #pins-container {
     min-height: 100%;
     padding-top: 50px;
+    padding-bottom: 50px;
 }
 
 .empty-column-label {
@@ -108,21 +113,21 @@ html, body {
 
 .pin {
     width: 50%;
-    height: 100px;
+    height: 130px;
     margin-top: 50px;
     margin-bottom: 50px;
     margin: 50px inherit;
-    box-sizing: content-box;
+    box-sizing: border-box;
     border-width: 15px;
     border-style: solid;
 }
 .pin.sensor {
-    margin-left: 15%;
-    margin-right: 20%;
+    margin-left: 20%;
+    margin-right: 30%;
 }
 .pin.actuator {
-    margin-left: 25%;
-    margin-right: 5%;
+    margin-left: 30%;
+    margin-right: 20%;
 }
 
 .pin-box {
