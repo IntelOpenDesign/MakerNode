@@ -113,6 +113,7 @@ cat.d = function() {
     }
 
     that.reset = function(data) {
+        console.log('data structure reset');
         that.pins = data.pins;
 
         that.conns = {};
@@ -140,7 +141,7 @@ cat.d = function() {
         var tokens_to_remove = _.difference(my_tokens, new_tokens);
         var tokens_to_add = _.difference(new_tokens, my_tokens);
         var conns_to_remove = _.map(tokens_to_remove, detokenize_connection);
-        var conns_to_add = _.mape(tokens_to_add, detokenize_connection);
+        var conns_to_add = _.map(tokens_to_add, detokenize_connection);
 
         that.disconnect(conns_to_remove, true);
         that.connect(conns_to_add, true);
@@ -173,6 +174,7 @@ cat.d = function() {
     };
 
     that.are_connected = function(sensor, actuator) {
+        console.log('are_connected?', sensor, actuator);
         return that.conns[sensor][actuator] !== undefined;
     };
 
@@ -271,13 +273,14 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
             return;
         }
         var sensor = $scope.activated_sensor;
+        var connections = [{source: sensor, target: actuator}];
         if ($scope.d.are_connected(sensor, actuator)) {
-            $scope.d.disconnect(sensor, actuator);
-            Galileo.remove_connections([{source: sensor, target: actuator}]);
+            $scope.d.disconnect(connections);
+            Galileo.remove_connections(connections);
             cat.clear_connection(sensor, actuator);
         } else {
-            $scope.d.connect(sensor, actuator);
-            Galileo.add_connections([{source: sensor, target: actuator}]);
+            $scope.d.connect(connections);
+            Galileo.add_connections(connections);
         }
         $scope.activated_sensor = null;
     };
@@ -347,6 +350,7 @@ cat.app.directive('actuator', function($document) {
         console.log('actuator link', $scope.pin.id);
 
         $scope.already_connected_to_activated_sensor = function() {
+            if ($scope.activated_sensor === null) return false;
             return $scope.d.are_connected($scope.activated_sensor, $scope.pin.id);
         };
     }
