@@ -71,7 +71,6 @@ cat.d = function() {
     }
 
     that.reset = function(data) {
-        console.log('data structure reset');
         that.pins = data.pins;
         that.connections = data.connections;
         sync_pin_lists();
@@ -100,10 +99,7 @@ cat.d = function() {
         _.each(connections, function(c) {
             if (conns_dict[c.source] === undefined)
                 conns_dict[c.source] = {};
-            if (conns_dict[c.target] === undefined)
-                conns_dict[c.target] = {};
             conns_dict[c.source][c.target] = true;
-            conns_dict[c.target][c.source] = true;
         });
         var indices = [];
         _.each(that.connections, function(c, i) {
@@ -142,10 +138,11 @@ cat.d = function() {
         that.pins[id].is_visible = false;
         sync_pin_lists();
         var end = that.pins[id].is_input ? 'source' : 'target';
-        var connections = _.filter(that.connections, function(c) {
+        var connections_to_remove = _.filter(that.connections, function(c) {
             return c[end] === id;
         });
-        that.disconnect(connections);
+        that.disconnect(connections_to_remove);
+        return connections_to_remove;
     };
 
     return that;
@@ -284,8 +281,9 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
         $scope.send_pin_update([id]);
     };
     $scope.hide_pin = function(id) {
-        $scope.d.hide_pin(id);
+        var connections_to_remove = $scope.d.hide_pin(id);
         $scope.send_pin_update([id]);
+        Galileo.remove_connections(connections_to_remove);
     };
 }]);
 
@@ -295,15 +293,12 @@ cat.pin_template = 'templates/pin.html';
 
 cat.app.directive('sensor', function($document) {
     function link($scope, $el, attrs) {
-        console.log('sensor link', $scope.pin.id);
     }
     return { templateUrl: cat.pin_template, link: link };
 });
 
 cat.app.directive('actuator', function($document) {
     function link($scope, $el, attrs) {
-        console.log('actuator link', $scope.pin.id);
-
         $scope.already_connected_to_activated_sensor = function() {
             if ($scope.activated_sensor === null) return false;
             return $scope.d.are_connected($scope.activated_sensor, $scope.pin.id);
@@ -319,8 +314,6 @@ cat.app.directive('pinStub', function($document) {
 // PIN SETTINGS
 cat.app.directive('pinSettings', function($document) {
     function link($scope, $el, attrs) {
-
-        console.log('link pin settings');
         var $pin_label = $el.find('input.pin-label');
         $scope.label_limit_length = 20;
         $scope.pin_label = $scope.pin.label.substring();
@@ -397,7 +390,18 @@ cat.app.directive('connection', function($document) {
                 },
             });
             $el.on('$destroy', function() {
-                jsPlumb.detach(connection);
+                try { // this is really the right way to remove a connection,
+                      // though I am peeved that it does not seem to remove the
+                      // endpoints - maybe I am just not instantiating the end-
+                      // points in the right way for this to remove them
+                    jsPlumb.detach(connection);
+                } catch(e) { // but if one of the pins has been hidden,
+                    // jsPlumb.detach will fail, and so we do this to at least
+                    // remove the visible svg connection
+                    cat.clear_connection(attrs.sensorId, attrs.actuatorId);
+                } finally {
+                    console.log('connection $destroy', attrs.sensorId, attrs.actuatorId);
+                }
             });
         }
 
