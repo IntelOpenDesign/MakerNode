@@ -3,7 +3,7 @@ var cat = {};
 
 // server connection settings
 cat.on_hardware = false; // to switch to Galileo, just change this to true
-cat.test_server_url = 'ws://localhost:8001';
+cat.test_server_url = 'ws://192.168.15.122:8001';
 cat.hardware_server_url = 'ws://cat/';
 cat.hardware_server_protocol = 'hardware-state-protocol';
 
@@ -23,20 +23,10 @@ function toggle_debug_log() {
 // PINS AND CONNECTIONS DATA STRUCTURE
 cat.d = function() {
     var that = {};
-    // pins and conns are the primary data structure for pins and connections
+    // pins and connections are the primary app state
     that.pins = {};
-    that.conns = {}; // ex. {
-                     //       "0": {"1": true, "3": true},
-                     //       "1": {"0": true},
-                     //       "3": {"0": true},
-                     //     }
-                     // represents connections [
-                     //    {source: "0", target: "1"},
-                     //    {source: "0", target: "3"},
-                     // ]
-    // these lists are convenient for angular templates, and are kept in sync
-    // with pins and conns
     that.connections = [];
+    // these are convenient for templates, and are kept in sync with pins
     that.visible_sensors = [];
     that.visible_actuators = [];
     that.hidden_sensors = [];
@@ -59,45 +49,13 @@ cat.d = function() {
         that.hidden_actuators = hidact;
     };
 
-    var sync_connections = function() {
-        var correct_tokens = [];
-        _.each(that.conns, function(ids, id) {
-            if (that.pins[id].is_input) {
-                _.each(that.ids, function(truth, other_id) {
-                    correct_tokens.push(tokenize_connection_pins(id, other_id));
-                });
-            }
-        });
-        console.log('correct_tokens', correct_tokens);
-        var current_tokens = _.map(that.connections, tokenize_connection_object);
-        var tokens_to_remove = _.difference(current_tokens, correct_tokens);
-        var tokens_to_add = _.difference(correct_tokens, current_tokens);
-
-        var tokens_to_remove_dict = _.object(tokens_to_remove, function(token) {
-            return [token, true];
-        });
-        var i = 0;
-        while (i < that.connections.length) {
-            var c = that.connections[i];
-            var token = tokenize_connection_object(c);
-            if (tokens_to_remove_dict[token] !== undefined) {
-                that.connections.splice(i, 1);
-            } else {
-                i++;
-            }
-        }
-
-        _.each(tokens_to_add, function(token) {
-            that.connections.push(detokenize_connection(token));
-        });
-    };
-
     var sync_pin_connectedness = function() {
         _.each(that.pins, function(pin) {
             pin.is_connected = false;
         });
-        _.each(that.conns, function(pins, pin) {
-            that.pins[pin].is_connected = true;
+        _.each(that.connections, function(c) {
+            that.pins[c.source].is_connected = true;
+            that.pins[c.target].is_connected = true;
         });
     };
 
@@ -115,18 +73,8 @@ cat.d = function() {
     that.reset = function(data) {
         console.log('data structure reset');
         that.pins = data.pins;
-
-        that.conns = {};
-        _.each(that.pins, function(pin, id) {
-            that.conns[id] = {};
-        });
-        _.each(data.connections, function(c) {
-            that.conns[c.source][c.target] = true;
-            that.conns[c.target][c.source] = true;
-        });
-
+        that.connections = data.connections;
         sync_pin_lists();
-        sync_connections();
     };
 
     that.update = function(data) {
@@ -136,41 +84,48 @@ cat.d = function() {
             });
         });
 
-        var my_tokens = _.keys(that.connections);
+        var my_tokens = _.map(that.connections, tokenize_connection_object);
         var new_tokens = _.map(data.connections, tokenize_connection_object);
         var tokens_to_remove = _.difference(my_tokens, new_tokens);
         var tokens_to_add = _.difference(new_tokens, my_tokens);
         var conns_to_remove = _.map(tokens_to_remove, detokenize_connection);
         var conns_to_add = _.map(tokens_to_add, detokenize_connection);
 
-        that.disconnect(conns_to_remove, true);
-        that.connect(conns_to_add, true);
+        that.disconnect(conns_to_remove);
+        that.connect(conns_to_add);
+    };
 
-        sync_connections();
-        sync_pin_lists();
+    that.disconnect = function(connections) {
+        var conns_dict = {};
+        _.each(connections, function(c) {
+            if (conns_dict[c.source] === undefined)
+                conns_dict[c.source] = {};
+            if (conns_dict[c.target] === undefined)
+                conns_dict[c.target] = {};
+            conns_dict[c.source][c.target] = true;
+            conns_dict[c.target][c.source] = true;
+        });
+        var indices = [];
+        _.each(that.connections, function(c, i) {
+            if (conns_dict[c.source] && conns_dict[c.source][c.target]) {
+                // TODO do i need this here: cat.clear_connection(c.source, c.target);
+                indices.push(i);
+            }
+        });
+        indices.sort(function(x, y) { return y - x; }); // descending order
+        _.each(indices, function(index) {
+            that.connections.splice(index, 1);
+        });
         sync_pin_connectedness();
     };
 
-    that.disconnect = function(connections, no_need_to_sync) {
-        _.each(connections, function(c) {
-            delete that.conns[c.source][c.target];
-            delete that.conns[c.target][c.source];
-        });
-        if (!no_need_to_sync) {
-            sync_connections();
-            sync_pin_connectedness();
-        }
-    };
-
-    that.connect = function(connections, no_need_to_sync) {
+    that.connect = function(connections) {
         _.each(connections, function(c) {
             that.conns[c.source][c.target] = true;
             that.conns[c.target][c.source] = true;
+            that.pins[c.source].is_connected = true;
+            that.pins[c.target].is_connected = true;
         });
-        if (!no_need_to_sync) {
-            sync_connections();
-            sync_pin_connectedness();
-        }
     };
 
     that.are_connected = function(sensor, actuator) {
