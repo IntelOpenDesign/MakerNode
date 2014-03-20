@@ -342,21 +342,24 @@ cat.app.directive('connection', function($document) {
 
         console.log('linking connection', attrs.sensorId, '-', attrs.actuatorId);
 
-        var $sensor, $actuator;
-        $sensor = $actuator = null;
+        $scope.stroke_w = 15;
+        $scope.bg_stroke_w = $scope.stroke_w + 4; // background/outline
+        var $sensor_endpoint, $actuator_endpoint;
+        $sensor_endpoint = $actuator_endpoint = null;
         $scope.left = 0;
         $scope.top = 0;
         $scope.w = 0;
         $scope.h = 0;
-        $scope.edge_bg_stroke_w = 19;
-        $scope.edge_stroke_w = 15;
+        $scope.path = [{x: 0, y: 0}, {x: 0, y: 0}];
+        $scope.bg_path = [{x: 0, y: 0}, {x: 0, y: 0}];
 
         // a connection can only draw itself after its endpoints (pins) are
         // drawn on the DOM
         function find_my_pins() {
-            $sensor = $('#'+attrs.sensorId);
-            $actuator = $('#'+attrs.actuatorId);
-            if ($sensor.length === 0 || $actuator.length === 0) {
+            $sensor_endpoint = $('#'+attrs.sensorId + ' .endpoint');
+            $actuator_endpoint = $('#'+attrs.actuatorId + ' .endpoint');
+            if ( $sensor_endpoint.length === 0 ||
+                 $actuator_endpoint.length === 0 ) {
                 setTimeout(find_my_pins, 50);
             } else {
                 render();
@@ -365,19 +368,84 @@ cat.app.directive('connection', function($document) {
 
         function render() {
             console.log('rendering connection', attrs.sensorId, '-', attrs.actuatorId);
-            var $start = $sensor.find('.endpoint');
-            var $end = $actuator.find('.endpoint');
-            var start_pos = $start.offset();
-            var end_pos = $end.offset();
-            $scope.left = start_pos.left + $start.width()/2;
-            $scope.top = start_pos.top + $start.height()/2;
-            var right = end_pos.left + $end.width()/2;
-            var bottom = end_pos.top + $end.height()/2;
-            $scope.w = right - $scope.left;
-            $scope.h = bottom - $scope.top;
+            if (watches_assigned) {
+                console.log('\tbecause of $watch');
+            }
+            var start_pos = $sensor_endpoint.offset();
+            var end_pos = $actuator_endpoint.offset();
+            var $left, $right, $top, $bottom, xmin, xmax, ymin, ymax;
+            if (start_pos.left < end_pos.left) {
+                $left = $sensor_endpoint;
+                $right = $actuator_endpoint;
+                xmin = start_pos.left;
+                xmax = end_pos.left;
+            } else {
+                $left = $actuator_endpoint;
+                $right = $sensor_endpoint;
+                xmin = end_pos.left;
+                xmax = start_pos.left;
+            }
+            if (start_pos.top < end_pos.top) {
+                $top = $sensor_endpoint;
+                $bottom = $actuator_endpoint;
+                ymin = start_pos.top;
+                ymax = end_pos.top;
+            } else {
+                $top = $actuator_endpoint;
+                $bottom = $sensor_endpoint;
+                ymin = end_pos.top;
+                ymax = start_pos.top;
+            }
+            console.log('connection bounds', xmin, xmax, ymin, ymax);
+
+            var padding = $scope.bg_stroke_w/2; // leave room for widest stroke
+            var left   = xmin + $left.width()/2    - padding;
+            var right  = xmax + $right.width()/2   + padding;
+            var top    = ymin + $top.height()/2    - padding;
+            var bottom = ymax + $bottom.height()/2 + padding;
+
+            var w = right - left;
+            var h = bottom - top;
+
+            _.each(['', 'bg_'], function(prefix) {
+                var path = $scope[prefix+'path'];
+                path[0].x = start_pos.left < end_pos.left ? padding : w - padding;
+                path[1].x = start_pos.left < end_pos.left ? w - padding : padding;
+                path[0].y = start_pos.top < end_pos.top ? padding : h - padding;
+                path[1].y = start_pos.top < end_pos.top ? h - padding : padding;
+            });
+
+            $scope.left = left;
+            $scope.top = top;
+            $scope.w = w;
+            $scope.h = h;
+
+            // if the endpoints change size or position, need to re-render
+            if (!watches_assigned) {
+                _.each([$sensor_endpoint, $actuator_endpoint], function($endpoint) {
+                    _.each(['x', 'y'], function(coordinate) {
+                        $scope.$watch(function() {
+                            return $endpoint.offset()[coordinate];
+                        }, watch_callback);
+                    });
+                    _.each(['width', 'height'], function(method) {
+                        $scope.$watch(function() {
+                            return $endpoint[method]();
+                        }, watch_callback);
+                    });
+                });
+                watches_assigned = true;
+            }
+        }
+
+        var watches_assigned = false;
+        function watch_callback(newval, oldval) {
+            if (newval !== oldval)
+                render();
         }
 
         find_my_pins();
+
     }
 
     return { link: link };
