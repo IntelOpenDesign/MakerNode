@@ -651,6 +651,7 @@ label[for=checkbox] {
     top: 0;
     background: rgba(255, 255, 255, .95);
     height: 100%;
+    width: 100%;
 }
 .confirm-remove-row {
     margin-top: 30%;
