@@ -92,6 +92,8 @@ cat.d = function() {
 
         that.disconnect(conns_to_remove);
         that.connect(conns_to_add);
+
+        sync_pin_lists();
     };
 
     that.disconnect = function(connections) {
