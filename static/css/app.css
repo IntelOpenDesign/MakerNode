@@ -644,7 +644,7 @@ label[for=checkbox] {
     float: right;
 }
 
-/* ADDING AND REMOVING PINS */
+/* SHOWING AND HIDING PINS */
 .confirm-remove-container {
     position: fixed;
     z-index: 3;
@@ -701,6 +701,33 @@ label[for=checkbox] {
 }
 #add-pins-menu-bg-footer.actuators {
     right: 40px;
+}
+.pin.will-be-shown .pin-box:before {
+    content: "\e013";
+    font-family: 'Glyphicons Halflings';
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100px;
+    margin-left: -50%;
+    margin-top: -50px;
+    text-align: center;
+    line-height: 100px;
+    -webkit-font-smoothing: antialiased;
+    font-size: 80px;
+}
+.pin.sensor.will-be-shown .pin-box:before {
+    background: rgba(247, 193, 40, .4);
+    /*color: rgb(147, 106, 24);*/
+    color: rgb(247, 193, 40);
+    opacity: .9;
+}
+.pin.actuator.will-be-shown .pin-box:before {
+    background: rgba(45, 104, 84, .4);
+    color: rgb(45, 104, 84);
+    opacity: .85;
 }
 
 /* CONNECTIONS */

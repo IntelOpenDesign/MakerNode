@@ -123,20 +123,27 @@ cat.d = function() {
         return false;
     };
 
-    that.show_pin = function(id) {
-        that.pins[id].is_visible = true;
+    that.show_pins = function(ids) {
+        _.each(ids, function(id) {
+            that.pins[id].is_visible = true;
+        });
         sync_pin_lists();
     };
 
-    that.hide_pin = function(id) {
-        that.pins[id].is_visible = false;
-        sync_pin_lists();
-        var end = that.pins[id].is_input ? 'source' : 'target';
-        var connections_to_remove = _.filter(that.connections, function(c) {
-            return c[end] === id;
+    that.hide_pins = function(ids) {
+        var conns_to_remove = [];
+        _.each(ids, function(id) {
+            that.pins[id].is_visible = false;
+            var end = that.pins[id].is_input ? 'source' : 'target';
+            var more_to_remove = _.filter(that.connections, function(c) {
+                return c[end] === id;
+            });
+            conns_to_remove.push.apply(conns_to_remove, more_to_remove);
         });
-        that.disconnect(connections_to_remove);
-        return connections_to_remove;
+
+        sync_pin_lists();
+        that.disconnect(conns_to_remove);
+        return conns_to_remove;
     };
 
     return that;
@@ -252,28 +259,37 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     };
 
     // HOW THE USER SHOWS/HIDES PINS
-    // When the user taps a "+" button at the bottom of the screen, it opens a
-    // menu of pins that can be added. Tapping one of those pins adds it.
-    // When the user taps "Remove" in a pin's settings window, it removes that
-    // pin.
-    // TODO it's confusing to just tap a pin to add it and have it disappear.
+    // Tapping a "+" button at the bottom of the screen opens or closes the add
+    // pins menu. In this menu, tapping a pin selects it. Leaving the menu adds
+    // the selected pins.
+    // In the settings window for each pin, tapping "Remove" removes that pin
+    // and all its connections, after asking the user for confirmation.
 
-    $scope.adding_pins = null;
+    $scope.adding_pins = null; // 'sensors' or 'actuators'
     $scope.show_remove_confirmation = false;
+    $scope.pins_to_show = {};
     $scope.toggle_add_pins_menu_for = function(type) {
         if ($scope.adding_pins === type) {
+            $scope.show_pins(_.keys($scope.pins_to_show));
+            $scope.pins_to_show = {};
             $scope.adding_pins = null;
         } else {
             $scope.adding_pins = type;
         }
     };
-    $scope.show_pin = function(id) {
-        $scope.d.show_pin(id);
-        $scope.send_pin_update([id]);
+    $scope.toggle_pin_show = function(id) {
+        if ($scope.pins_to_show[id])
+            delete $scope.pins_to_show[id];
+        else
+            $scope.pins_to_show[id] = true;
     };
-    $scope.hide_pin = function(id) {
-        var connections_to_remove = $scope.d.hide_pin(id);
-        $scope.send_pin_update([id]);
+    $scope.show_pins = function(ids) {
+        $scope.d.show_pins(ids);
+        $scope.send_pin_update(ids);
+    };
+    $scope.hide_pins = function(ids) {
+        var connections_to_remove = $scope.d.hide_pins(ids);
+        $scope.send_pin_update(ids);
         Galileo.remove_connections(connections_to_remove);
     };
 }]);
@@ -340,8 +356,6 @@ cat.app.directive('pinSettings', function($document) {
 cat.app.directive('connection', function($document) {
     function link($scope, $el, attrs) {
 
-        console.log('linking connection', attrs.sensorId, '-', attrs.actuatorId);
-
         var stroke_w = 15;
         var bg_stroke_w = stroke_w + 4; // background/outline
 
@@ -365,7 +379,6 @@ cat.app.directive('connection', function($document) {
         }
 
         function render() {
-            console.log('rendering connection', attrs.sensorId, '-', attrs.actuatorId);
             var start_pos = $start.offset();
             var end_pos = $end.offset();
 
@@ -662,8 +675,6 @@ cat.server_pin_format = function(my_pins, my_pin_ids) {
             timer_value: pin.timer_value,
         };
     });
-
-    console.log('client is sending damping values', _.pluck(_.values(pins), 'damping'), 'to server');
 
     return pins;
 };

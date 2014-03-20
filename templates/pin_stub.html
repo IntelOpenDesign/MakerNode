@@ -8,8 +8,10 @@
       'green-border': !pin.is_input,
       'connected': pin.is_connected,
       'analog': pin.is_analog,
-      'digital': !pin.is_analog }">
-    <div class="pin-box" ng-click="show_pin(pin.id)">
+      'digital': !pin.is_analog,
+      'will-be-shown': pins_to_show[pin.id]}">
+    <div class="pin-box"
+      ng-click="toggle_pin_show(pin.id)">
         <!-- TODO handle overflow of pin name from pin-box, also could the same thing happen with pin label? -->
         <div class="pin-label">
             {{pin.label}}
