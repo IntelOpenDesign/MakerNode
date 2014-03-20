@@ -428,11 +428,6 @@ cat.app.directive('connection', function($document) {
                             return $endpoint.offset()[coordinate];
                         }, watch_callback);
                     });
-                    _.each(['width', 'height'], function(method) {
-                        $scope.$watch(function() {
-                            return $endpoint[method]();
-                        }, watch_callback);
-                    });
                 });
                 watches_assigned = true;
             }
