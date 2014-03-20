@@ -5,6 +5,7 @@
     <link rel="shortcut icon" href="favicon.ico"/>
     <script src="static/js/jquery.min.js"></script>
     <script src="static/js/underscore-min.js"></script>
+    <script src="static/js/d3.min.js"></script>
     <script src="static/js/angular.min.js"></script>
     <script src="static/js/app.js"></script>
 
@@ -69,30 +70,11 @@
       data-sensor_id="{{c.source}}"
       data-actuator_id="{{c.target}}"
       connection>
-        <svg
-          ng-attr-style="
-              position: absolute;
-              left: {{left}}px;
-              top:  {{top}}px;"
-          ng-attr-width="{{w}}"
-          ng-attr-height="{{h}}"
-          pointer-events="none"
-          position="absolute">
-            <path class="edge-bg"
-              ng-attr-d="M {{path[0].x}} {{path[0].y}}
-                         L {{path[1].x}} {{path[1].y}}"
-              pointer-events="none"
-              fill="none"
-              stroke-width="{{bg_stroke_w}}">
-            </path>
-            <path class="edge"
-              ng-attr-d="M {{path[0].x}} {{path[0].y}}
-                         L {{path[1].x}} {{path[1].y}}"
-              pointer-events="none"
-              fill="none"
-              stroke-width="{{stroke_w}}">
-            </path>
+        <svg style="position: absolute;" pointer-events="none">
+            <path class="edge-bg" pointer-events="none" fill="none"></path>
+            <path class="edge" pointer-events="none" fill="none"></path>
         </svg>
+
     </div>
 </div>
 

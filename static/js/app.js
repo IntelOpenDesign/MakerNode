@@ -342,59 +342,45 @@ cat.app.directive('connection', function($document) {
 
         console.log('linking connection', attrs.sensorId, '-', attrs.actuatorId);
 
-        $scope.stroke_w = 15;
-        $scope.bg_stroke_w = $scope.stroke_w + 4; // background/outline
-        var $sensor_endpoint, $actuator_endpoint;
-        $sensor_endpoint = $actuator_endpoint = null;
-        $scope.left = 0;
-        $scope.top = 0;
-        $scope.w = 0;
-        $scope.h = 0;
-        $scope.path = [{x: 0, y: 0}, {x: 0, y: 0}];
+        var stroke_w = 15;
+        var bg_stroke_w = stroke_w + 4; // background/outline
 
-        // a connection can only draw itself after its endpoints (pins) are
-        // drawn on the DOM
+        var $start, $end;
+        $start = $end = null;
+
+        var line = d3.svg.line()
+                    .x(function(d) { return d.x; })
+                    .y(function(d) { return d.y; })
+                    .interpolate('linear');
+
+        // can only draw connection after its endpoints (pins) are drawn
         function find_my_pins() {
-            $sensor_endpoint = $('#'+attrs.sensorId + ' .endpoint');
-            $actuator_endpoint = $('#'+attrs.actuatorId + ' .endpoint');
-            if ( $sensor_endpoint.length === 0 ||
-                 $actuator_endpoint.length === 0 ) {
+            $start = $('#' + attrs.sensorId + ' .endpoint');
+            $end = $('#' + attrs.actuatorId + ' .endpoint');
+            if ($start.length === 0 || $end.length === 0) {
                 setTimeout(find_my_pins, 10);
             } else {
                 render();
             }
         }
 
-        var render = function() {
+        function render() {
             console.log('rendering connection', attrs.sensorId, '-', attrs.actuatorId);
-            var start_pos = $sensor_endpoint.offset();
-            var end_pos = $actuator_endpoint.offset();
-            var $left, $right, $top, $bottom, xmin, xmax, ymin, ymax;
-            if (start_pos.left < end_pos.left) {
-                $left = $sensor_endpoint;
-                $right = $actuator_endpoint;
-                xmin = start_pos.left;
-                xmax = end_pos.left;
-            } else {
-                $left = $actuator_endpoint;
-                $right = $sensor_endpoint;
-                xmin = end_pos.left;
-                xmax = start_pos.left;
-            }
-            if (start_pos.top < end_pos.top) {
-                $top = $sensor_endpoint;
-                $bottom = $actuator_endpoint;
-                ymin = start_pos.top;
-                ymax = end_pos.top;
-            } else {
-                $top = $actuator_endpoint;
-                $bottom = $sensor_endpoint;
-                ymin = end_pos.top;
-                ymax = start_pos.top;
-            }
-            console.log('connection bounds', xmin, xmax, ymin, ymax);
+            var start_pos = $start.offset();
+            var end_pos = $end.offset();
 
-            var padding = $scope.bg_stroke_w/2; // leave room for widest stroke
+            var $left = start_pos.left < end_pos.left ? $start : $end;
+            var $right = start_pos.left < end_pos.left ? $end : $start;
+            var $top = start_pos.top < end_pos.top ? $start : $end;
+            var $bottom = start_pos.top < end_pos.top ? $end : $start;
+
+            var xmin = Math.min(start_pos.left, end_pos.left);
+            var xmax = Math.max(start_pos.left, end_pos.left);
+            var ymin = Math.min(start_pos.top, end_pos.top);
+            var ymax = Math.max(start_pos.top, end_pos.top);
+
+            var padding = bg_stroke_w / 2;
+
             var left   = xmin + $left.width()/2    - padding;
             var right  = xmax + $right.width()/2   + padding;
             var top    = ymin + $top.height()/2    - padding;
@@ -403,18 +389,30 @@ cat.app.directive('connection', function($document) {
             var w = right - left;
             var h = bottom - top;
 
-            $scope.path[0].x = start_pos.left < end_pos.left ? padding : w - padding;
-            $scope.path[1].x = start_pos.left < end_pos.left ? w - padding : padding;
-            $scope.path[0].y = start_pos.top < end_pos.top ? padding : h - padding;
-            $scope.path[1].y = start_pos.top < end_pos.top ? h - padding : padding;
+            var points = [{x:0, y:0}, {x:0, y:0}];
+            points[0].x = start_pos.left < end_pos.left ? padding : w - padding;
+            points[1].x = start_pos.left < end_pos.left ? w - padding : padding;
+            points[0].y = start_pos.top < end_pos.top ? padding : h - padding;
+            points[1].y = start_pos.top < end_pos.top ? h - padding : padding;
 
-            $scope.left = left;
-            $scope.top = top;
-            $scope.w = w;
-            $scope.h = h;
+
+            var selector = '#connect-' + attrs.sensorId + '-' + attrs.actuatorId + ' svg';
+            setTimeout(function() {
+                var svg = d3.select(selector)
+                    .attr('width', w)
+                    .attr('height', h)
+                    .style('left', left + 'px')
+                    .style('top', top + 'px');
+                svg.select('path.edge-bg')
+                    .attr('stroke-width', bg_stroke_w);
+                svg.select('path.edge')
+                    .attr('stroke-width', stroke_w);
+                svg.selectAll('path')
+                    .attr('d', line(points));
+            }, 0);
 
             assign_watches();
-        };
+        }
 
         var rerender = _.throttle(render, 50, {leading: false});
 
@@ -424,7 +422,7 @@ cat.app.directive('connection', function($document) {
                 rerender();
         }
         var assign_watches = _.once(function() {
-            _.each([$sensor_endpoint, $actuator_endpoint], function($endpoint) {
+            _.each([$start, $end], function($endpoint) {
                 $scope.$watch(function() {
                     return $endpoint.offset().left + $endpoint.width()/2;
                 }, watch_callback);
