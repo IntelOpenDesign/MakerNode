@@ -4,8 +4,6 @@
     <title>CAT</title>
     <link rel="shortcut icon" href="favicon.ico"/>
     <script src="static/js/jquery.min.js"></script>
-    <script src="static/js/jquery-ui.min.js"></script>
-    <script src="static/js/jquery.jsPlumb-1.4.1-all.js"></script>
     <script src="static/js/underscore-min.js"></script>
     <script src="static/js/angular.min.js"></script>
     <script src="static/js/app.js"></script>
@@ -67,9 +65,32 @@
     <div id="connect-{{c.source}}-{{c.target}}"
       ng-repeat="c in d.connections"
       class="connection"
+      ng-show="left !== null"
       data-sensor_id="{{c.source}}"
       data-actuator_id="{{c.target}}"
       connection>
+        <svg
+          ng-attr-style="
+              position: absolute;
+              left: {{left}}px;
+              top:  {{top}}px;"
+          ng-attr-width="{{w}}"
+          ng-attr-height="{{h}}"
+          pointer-events="none"
+          position="absolute">
+            <path class="edge-bg"
+              ng-attr-d="M 0 0 L {{w}} {{h}}"
+              pointer-events="none"
+              fill="none"
+              stroke-width="{{edge_bg_stroke_w}}">
+            </path>
+            <path class="edge"
+              ng-attr-d="M 0 0 L {{w}} {{h}}"
+              pointer-events="none"
+              fill="none"
+              stroke-width="{{edge_stroke_w}}">
+            </path>
+        </svg>
     </div>
 </div>
 

@@ -3,17 +3,9 @@ var cat = {};
 
 // server connection settings
 cat.on_hardware = false; // to switch to Galileo, just change this to true
-cat.test_server_url = 'ws://192.168.15.122:8001';
+cat.test_server_url = 'ws://localhost:8001';
 cat.hardware_server_url = 'ws://cat/';
 cat.hardware_server_protocol = 'hardware-state-protocol';
-
-// connections can only draw themselves once jsPlumb is ready
-cat.jsplumb_ready = false;
-
-jsPlumb.bind('ready', function() {
-    jsPlumb.Defaults.Container = $('#connections-container');
-    cat.jsplumb_ready = true;
-});
 
 // TODO remove when done debugging
 function toggle_debug_log() {
@@ -172,7 +164,6 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     Galileo.on('update', function(data) {
         if (!$scope.got_data) { // first time initialization
             $scope.got_data = true;
-            cat.clear_all_connections();
             $scope.d.reset(data);
          } else { // after that just update changes
             $scope.got_data = true;
@@ -230,8 +221,6 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
         if ($scope.d.are_connected(sensor, actuator)) {
             $scope.d.disconnect(connections);
             Galileo.remove_connections(connections);
-            // TODO do we need to call clear_connection?
-            cat.clear_connection(sensor, actuator);
         } else {
             $scope.d.connect(connections);
             Galileo.add_connections(connections);
@@ -351,60 +340,41 @@ cat.app.directive('pinSettings', function($document) {
 cat.app.directive('connection', function($document) {
     function link($scope, $el, attrs) {
 
-        // TODO why are connections getting linked all the time?
-        console.log('connection link', attrs.sensorId, '-', attrs.actuatorId);
+        console.log('linking connection', attrs.sensorId, '-', attrs.actuatorId);
 
-        var $sensor, $actuator, connection, msg;
-        $sensor = $actuator = connection = msg = null;
+        var $sensor, $actuator;
+        $sensor = $actuator = null;
+        $scope.left = 0;
+        $scope.top = 0;
+        $scope.w = 0;
+        $scope.h = 0;
+        $scope.edge_bg_stroke_w = 19;
+        $scope.edge_stroke_w = 15;
 
-        // a connection can only draw itself after jsPlumb is ready and its
-        // endpoints are drawn on the DOM. so, a connection keeps checking to
-        // see if these things are ready, and once they are it renders itself
+        // a connection can only draw itself after its endpoints (pins) are
+        // drawn on the DOM
         function find_my_pins() {
             $sensor = $('#'+attrs.sensorId);
             $actuator = $('#'+attrs.actuatorId);
-            if (!cat.jsplumb_ready || $sensor.length === 0 || $actuator.length === 0) {
-                setTimeout(find_my_pins, 10);
+            if ($sensor.length === 0 || $actuator.length === 0) {
+                setTimeout(find_my_pins, 50);
             } else {
                 render();
             }
         }
 
         function render() {
-            console.log('render connection', attrs.sensorId, '-', attrs.actuatorId);
-            cat.clear_connection(attrs.sensorId, attrs.actuatorId);
-            connection = jsPlumb.connect({
-                source: attrs.sensorId+'-endpoint',
-                target: attrs.actuatorId+'-endpoint',
-                connector: 'Straight',
-                cssClass: 'connection pins-'+attrs.sensorId+'-'+attrs.actuatorId,
-                endpoint: 'Blank',
-                endpointClass: 'endpoint pins-'+attrs.sensorId+'-'+attrs.actuatorId,
-                anchors: ['Center', 'Center'],
-                paintStyle: {
-                    lineWidth: 15,
-                    strokeStyle: 'rgb(44, 38, 33)',
-                    outlineWidth: 2,
-                    outlineColor: 'white',
-                },
-                endpointStyle: {
-                    fillStyle: '#a7b04b',
-                },
-            });
-            $el.on('$destroy', function() {
-                try { // this is really the right way to remove a connection,
-                      // though I am peeved that it does not seem to remove the
-                      // endpoints - maybe I am just not instantiating the end-
-                      // points in the right way for this to remove them
-                    jsPlumb.detach(connection);
-                } catch(e) { // but if one of the pins has been hidden,
-                    // jsPlumb.detach will fail, and so we do this to at least
-                    // remove the visible svg connection
-                    cat.clear_connection(attrs.sensorId, attrs.actuatorId);
-                } finally {
-                    console.log('connection $destroy', attrs.sensorId, attrs.actuatorId);
-                }
-            });
+            console.log('rendering connection', attrs.sensorId, '-', attrs.actuatorId);
+            var $start = $sensor.find('.endpoint');
+            var $end = $actuator.find('.endpoint');
+            var start_pos = $start.offset();
+            var end_pos = $end.offset();
+            $scope.left = start_pos.left + $start.width()/2;
+            $scope.top = start_pos.top + $start.height()/2;
+            var right = end_pos.left + $end.width()/2;
+            var bottom = end_pos.top + $end.height()/2;
+            $scope.w = right - $scope.left;
+            $scope.h = bottom - $scope.top;
         }
 
         find_my_pins();
@@ -412,17 +382,6 @@ cat.app.directive('connection', function($document) {
 
     return { link: link };
 });
-
-cat.clear_all_connections = function() {
-    $('._jsPlumb_endpoint').remove();
-    $('._jsPlumb_connector').remove();
-};
-
-cat.clear_connection = function(sensor, actuator) {
-    // TODO find a way to clear connection endpoints too
-    console.log('clear connection', sensor, actuator);
-    $('.connection.pins-'+sensor+'-'+actuator).remove();
-};
 
 // SERVER COMMUNICATION
 

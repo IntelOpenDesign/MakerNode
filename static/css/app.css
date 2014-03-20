@@ -701,3 +701,11 @@ label[for=checkbox] {
 #add-pins-menu-bg-footer.actuators {
     right: 40px;
 }
+
+/* CONNECTIONS */
+.connection path.edge {
+    stroke: #2c2621;
+}
+.connection path.edge-bg {
+    stroke: white;
+}
