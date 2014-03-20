@@ -3,7 +3,7 @@ var cat = {};
 
 // server connection settings
 cat.on_hardware = false; // to switch to Galileo, just change this to true
-cat.test_server_url = 'ws://localhost:8001';
+cat.test_server_url = 'ws://192.168.0.195:8001';
 cat.hardware_server_url = 'ws://cat/';
 cat.hardware_server_protocol = 'hardware-state-protocol';
 
@@ -351,7 +351,6 @@ cat.app.directive('connection', function($document) {
         $scope.w = 0;
         $scope.h = 0;
         $scope.path = [{x: 0, y: 0}, {x: 0, y: 0}];
-        $scope.bg_path = [{x: 0, y: 0}, {x: 0, y: 0}];
 
         // a connection can only draw itself after its endpoints (pins) are
         // drawn on the DOM
@@ -360,17 +359,14 @@ cat.app.directive('connection', function($document) {
             $actuator_endpoint = $('#'+attrs.actuatorId + ' .endpoint');
             if ( $sensor_endpoint.length === 0 ||
                  $actuator_endpoint.length === 0 ) {
-                setTimeout(find_my_pins, 50);
+                setTimeout(find_my_pins, 10);
             } else {
                 render();
             }
         }
 
-        function render() {
+        var render = function() {
             console.log('rendering connection', attrs.sensorId, '-', attrs.actuatorId);
-            if (watches_assigned) {
-                console.log('\tbecause of $watch');
-            }
             var start_pos = $sensor_endpoint.offset();
             var end_pos = $actuator_endpoint.offset();
             var $left, $right, $top, $bottom, xmin, xmax, ymin, ymax;
@@ -407,37 +403,36 @@ cat.app.directive('connection', function($document) {
             var w = right - left;
             var h = bottom - top;
 
-            _.each(['', 'bg_'], function(prefix) {
-                var path = $scope[prefix+'path'];
-                path[0].x = start_pos.left < end_pos.left ? padding : w - padding;
-                path[1].x = start_pos.left < end_pos.left ? w - padding : padding;
-                path[0].y = start_pos.top < end_pos.top ? padding : h - padding;
-                path[1].y = start_pos.top < end_pos.top ? h - padding : padding;
-            });
+            $scope.path[0].x = start_pos.left < end_pos.left ? padding : w - padding;
+            $scope.path[1].x = start_pos.left < end_pos.left ? w - padding : padding;
+            $scope.path[0].y = start_pos.top < end_pos.top ? padding : h - padding;
+            $scope.path[1].y = start_pos.top < end_pos.top ? h - padding : padding;
 
             $scope.left = left;
             $scope.top = top;
             $scope.w = w;
             $scope.h = h;
 
-            // if the endpoints change size or position, need to re-render
-            if (!watches_assigned) {
-                _.each([$sensor_endpoint, $actuator_endpoint], function($endpoint) {
-                    _.each(['x', 'y'], function(coordinate) {
-                        $scope.$watch(function() {
-                            return $endpoint.offset()[coordinate];
-                        }, watch_callback);
-                    });
-                });
-                watches_assigned = true;
-            }
-        }
+            assign_watches();
+        };
 
-        var watches_assigned = false;
+        var rerender = _.throttle(render, 50, {leading: false});
+
+        // if the endpoints change size or position, need to re-render
         function watch_callback(newval, oldval) {
             if (newval !== oldval)
-                render();
+                rerender();
         }
+        var assign_watches = _.once(function() {
+            _.each([$sensor_endpoint, $actuator_endpoint], function($endpoint) {
+                $scope.$watch(function() {
+                    return $endpoint.offset().left + $endpoint.width()/2;
+                }, watch_callback);
+                $scope.$watch(function() {
+                    return $endpoint.offset().top + $endpoint.height()/2;
+                }, watch_callback);
+            });
+        });
 
         find_my_pins();
 
