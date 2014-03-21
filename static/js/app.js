@@ -345,7 +345,6 @@ cat.app.directive('pinSettings', function($document) {
             var max = $scope.pin.input_max;
             $scope.pin.input_max = Math.max(min, max);
             $scope.pin.input_min = Math.min(min, max);
-            // TODO throttle this
             $scope.send_pin_update([$scope.pin.id]);
         };
     }
@@ -460,7 +459,6 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     var ws;               // websocket
     var url, protocol;
 
-    // TODO it's confusing that this one is called wait but start_waiting() and stop_waiting() use slowness_time
     var reconnect_attempts_period = 500; // wait this long between attempts to connect
     var slowness_time = 15000; // max acceptable wait time between server
                                // messages, in milliseconds.
@@ -490,7 +488,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     var do_callback = function(e, arg) {
         $rootScope.$apply(function() {
             callbacks[e](arg); // TODO how to handle multiple args
-         });
+        });
     };
 
     var connect = function(_url, _protocol) {
@@ -553,7 +551,6 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     };
 
     // sending websocket messages
-    // TODO for slider inputs and stuff like that, we need to throttle how often we send stuff to the server.
     var send = function(data) {
         ws.send(JSON.stringify(_.extend({status: 'OK'}, data)));
     };
