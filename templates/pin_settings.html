@@ -108,19 +108,19 @@
                           max="9"
                           step="1"
                           value="{{pin.damping}}"
-                          ng-change="send_pin_update([pin.id])">
+                          ng-change="send_pin_update([pin.id], 'damping')">
                     </div>
                     <div ng-switch-when="false">
                         <input type="checkbox"
                           ng-model="pin.is_timer_on"
-                          ng-change="send_pin_update([pin.id])">
+                          ng-change="send_pin_update([pin.id], 'is_timer_on')">
                         <label for="checkbox">Stay on for</label>
                         <br/>
                         <input type="number"
                           ng-class="{'gray-text': !pin.is_timer_on}"
                           ng-disabled="!pin.is_timer_on"
                           ng-model="pin.timer_value"
-                          ng-change="send_pin_update([pin.id])">
+                          ng-change="send_pin_update([pin.id], 'timer_value')">
                         <label for="number"
                           ng-class="{'gray-text': !pin.is_timer_on}">
                             seconds
@@ -133,7 +133,7 @@
                 <div class="col-xs-12" ng-switch-when="true">
                     <input type="checkbox"
                       ng-model="pin.is_inverted"
-                      ng-change="send_pin_update([pin.id])">
+                      ng-change="send_pin_update([pin.id], 'is_inverted')">
                     <label for="checkbox">Invert</label>
                 </div>
             </div>

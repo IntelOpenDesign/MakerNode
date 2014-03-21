@@ -51,17 +51,6 @@ cat.d = function() {
         });
     };
 
-    var tokenize_connection_pins = function(sensor, actuator) {
-        return sensor + '-' + actuator;
-    }
-    var tokenize_connection_object = function(c) {
-        return tokenize_connection_pins(c.source, c.target);
-    }
-    var detokenize_connection = function(s) {
-        var pins = s.split('-');
-        return {source: pins[0], target: pins[1]};
-    }
-
     that.reset = function(data) {
         that.pins = data.pins;
         that.connections = data.connections;
@@ -75,12 +64,12 @@ cat.d = function() {
             });
         });
 
-        var my_tokens = _.map(that.connections, tokenize_connection_object);
-        var new_tokens = _.map(data.connections, tokenize_connection_object);
+        var my_tokens = _.map(that.connections, cat.tokenize_connection_object);
+        var new_tokens = _.map(data.connections, cat.tokenize_connection_object);
         var tokens_to_remove = _.difference(my_tokens, new_tokens);
         var tokens_to_add = _.difference(new_tokens, my_tokens);
-        var conns_to_remove = _.map(tokens_to_remove, detokenize_connection);
-        var conns_to_add = _.map(tokens_to_add, detokenize_connection);
+        var conns_to_remove = _.map(tokens_to_remove, cat.detokenize_connection);
+        var conns_to_add = _.map(tokens_to_add, cat.detokenize_connection);
 
         that.disconnect(conns_to_remove);
         that.connect(conns_to_add);
@@ -186,8 +175,8 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
         $scope.got_data = false;
     });
 
-    $scope.send_pin_update = function(pin_ids) {
-        Galileo.update_pins($scope.d.pins, pin_ids);
+    $scope.send_pin_update = function(pin_ids, attr) {
+        Galileo.update_pins($scope.d.pins, pin_ids, attr);
     };
 
     if (cat.on_hardware) {
@@ -285,11 +274,11 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     };
     $scope.show_pins = function(ids) {
         $scope.d.show_pins(ids);
-        $scope.send_pin_update(ids);
+        $scope.send_pin_update(ids, 'is_visible');
     };
     $scope.hide_pins = function(ids) {
         var connections_to_remove = $scope.d.hide_pins(ids);
-        $scope.send_pin_update(ids);
+        $scope.send_pin_update(ids, 'is_visible');
         Galileo.remove_connections(connections_to_remove);
     };
 }]);
@@ -332,7 +321,7 @@ cat.app.directive('pinSettings', function($document) {
         $scope.update_pin_label = function() {
             $scope.truncate_label();
             $scope.pin.label = $scope.pin_label.substring();
-            $scope.send_pin_update([$scope.pin.id]);
+            $scope.send_pin_update([$scope.pin.id], 'label');
         };
 
         var $min = $('.vertical-slider.min');
@@ -345,7 +334,8 @@ cat.app.directive('pinSettings', function($document) {
             var max = $scope.pin.input_max;
             $scope.pin.input_max = Math.max(min, max);
             $scope.pin.input_min = Math.min(min, max);
-            $scope.send_pin_update([$scope.pin.id]);
+            $scope.send_pin_update([$scope.pin.id], 'input_min');
+            $scope.send_pin_update([$scope.pin.id], 'input_max');
         };
     }
     return { templateUrl: 'templates/pin_settings.html', link: link };
@@ -463,6 +453,9 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     var slowness_time = 15000; // max acceptable wait time between server
                                // messages, in milliseconds.
 
+    var messages = {}; // messages client side sends to server
+    var client_id = Date.now().toString();
+
     //TODO remove when done debugging
     var $debug_log = $('#debug-log');
 
@@ -518,6 +511,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
 
     var onopen = function() {
         console.log(name, 'websocket opened');
+        messages = {};
         do_callback('websocket-opened');
     };
 
@@ -530,54 +524,95 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         reconnect('websocket closed');
     };
 
-    var onmessage = function(msg) {
+    var onmessage = function(server_msg) {
         stop_waiting();
 
-        console.log('websocket message', msg);
-        var data = JSON.parse(msg.data);
+        console.log('websocket message', server_msg);
+        var data = JSON.parse(server_msg.data);
         console.log('websocket data', data);
 
         //TODO remove when done debugging
-        $debug_log.html(msg.data);
+        $debug_log.html(server_msg.data);
 
-        var d = {
-            pins: cat.my_pin_format(data.pins, data.connections),
-            connections: data.connections,
-        };
+        // we can forget about the messages the server has already processed
+        _.each(data.message_ids, function(message_id) {
+            delete messages[message_id];
+        });
 
-        do_callback('update', d);
+        // the remaining messages are ones that the server has not processed
+        // yet. so, the data from the server is slightly out of date. so, we
+        // take the data from the server, update it using our remaining
+        // messages' updates, and then send that to the controller
+
+        var pins = cat.my_pin_format(data.pins, data.connections);
+        var conns = _.object(_.map(data.connections, function(c) {
+            return [cat.tokenize_connection_object(c), true];
+        }));
+
+        var messages_in_order = _.sortBy(_.values(messages), function(msg) {
+            return msg.time;
+        });
+        _.each(messages_in_order, function(msg) {
+            _.each(msg.updates.pins, function(pin_updates, pin_id) {
+                pins[pin_id] = _.extend(pins[pin_id], pin_updates);
+            });
+            _.each(msg.updates.connections, function(c) {
+                conns[cat.tokenize_connection_object(c)] = c.connect;
+            });
+        });
+
+        var connections = [];
+        _.each(conns, function(val, token) {
+            if (val)
+                connections.push(cat.detokenize_connection(token));
+        });
+
+        do_callback('update', {pins: pins, connections: connections});
 
         start_waiting();
     };
 
     // sending websocket messages
-    var send = function(data) {
-        ws.send(JSON.stringify(_.extend({status: 'OK'}, data)));
+    var send = function(data_in_server_format, granular_updates) {
+        var now = Date.now();
+        var message_id = client_id + now;
+        var message = _.extend({
+            status: 'OK',
+            pins: {},
+            connections: [],
+            message_id: message_id,
+        }, data_in_server_format);
+        messages[message_id] = {
+            time: now,
+            message_id: message_id,
+            message: message,
+            updates: granular_updates,
+        };
+        ws.send(JSON.stringify(message));
     };
-    var update_pins = function(pins, pin_ids) {
-        send({pins: cat.server_pin_format(pins, pin_ids)});
+    var update_pins = function(all_pins, which_pin_ids_to_update, attr) {
+        var data_for_server = {
+            pins: cat.server_pin_format(all_pins, which_pin_ids_to_update),
+        };
+        var updates = { pins: {} };
+        _.each(which_pin_ids_to_update, function(id) {
+            updates.pins[id] = {};
+            updates.pins[id][attr] = all_pins[id][attr];
+        });
+        send(data_for_server, updates);
+    };
+    var update_connections = function(connections, bool) {
+        var data = { connections: [] };
+        data.connections = _.map(connections, function(c) {
+            return { source: c.source, target: c.target, connect: bool };
+        });
+        send(data, data);
     };
     var add_connections = function(connections) {
-        var msg = { connections: [] };
-        _.each(connections, function(c) {
-            msg.connections.push({
-                source: c.source,
-                target: c.target,
-                connect: true,
-            });
-        });
-        send(msg);
+        update_connections(connections, true);
     };
     var remove_connections = function(connections) {
-        var msg = { connections: [] };
-        _.each(connections, function(c) {
-            msg.connections.push({
-                source: c.source,
-                target: c.target,
-                connect: false,
-            });
-        });
-        send(msg);
+        update_connections(connections, false);
     };
 
     // if there is a big lag time (>= slowness_time) between messages from the
@@ -587,6 +622,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     var start_waiting = function() {
         slowness_timeout_id = setTimeout(function() {
             console.log(name, 'is being too slow');
+            messages = {};
             do_callback('slowness');
         }, slowness_time);
     };
@@ -608,6 +644,18 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
 }]);
 
 // UTILITY FUNCTIONS
+
+// tokenize connections
+cat.tokenize_connection_pins = function(sensor, actuator) {
+    return sensor + '-' + actuator;
+};
+cat.tokenize_connection_object = function(c) {
+    return cat.tokenize_connection_pins(c.source, c.target);
+};
+cat.detokenize_connection = function(s) {
+    var pins = s.split('-');
+    return {source: pins[0], target: pins[1]};
+};
 
 // translate the server's pin format into my pin format
 cat.my_pin_format = function(server_pins, server_connections) {
