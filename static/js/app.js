@@ -461,7 +461,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     var url, protocol;
 
     // TODO it's confusing that this one is called wait but start_waiting() and stop_waiting() use slowness_time
-    var wait = 500; // wait this long between attempts to connect
+    var reconnect_attempts_period = 500; // wait this long between attempts to connect
     var slowness_time = 15000; // max acceptable wait time between server
                                // messages, in milliseconds.
 
@@ -507,10 +507,10 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
             ws.onclose = onclose;
             start_waiting();
         } catch(err) {
-            console.log(name + ".connect failed with error", err, "Trying again in", wait, " ms...");
+            console.log(name + ".connect failed with error", err, "Trying again in", reconnect_attempts_period, " ms...");
             setTimeout(function() {
                 connect(url, protocol);
-            }, wait);
+            }, reconnect_attempts_period);
         }
     };
 
@@ -524,11 +524,11 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         // server is not running, that will trigger onclose and will not throw
         // an error
         stop_waiting();
-        console.log(name, 'websocket closed, trying to reconnect in', wait, 'ms...');
+        console.log(name, 'websocket closed, trying to reconnect in', reconnect_attempts_period, 'ms...');
         do_callback('websocket-closed');
         setTimeout(function() {
             connect(url, protocol);
-        }, wait);
+        }, reconnect_attempts_period);
     };
 
     var onmessage = function(msg) {
