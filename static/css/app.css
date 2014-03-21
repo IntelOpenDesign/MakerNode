@@ -70,7 +70,7 @@ html, body {
 }
 
 #column-divider {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 50%;
     height: 100%;
