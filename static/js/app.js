@@ -507,11 +507,15 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
             ws.onclose = onclose;
             start_waiting();
         } catch(err) {
-            console.log(name + ".connect failed with error", err, "Trying again in", reconnect_attempts_period, " ms...");
-            setTimeout(function() {
-                connect(url, protocol);
-            }, reconnect_attempts_period);
+            reconnect('.connect failed with error', err);
         }
+    };
+
+    var reconnect = function(error_description) {
+        console.log(name, error_description, 'Trying again in', reconnect_attempts_period, 'ms...');
+        setTimeout(function() {
+            connect(url, protocol);
+        }, reconnect_attempts_period);
     };
 
     var onopen = function() {
@@ -524,11 +528,8 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         // server is not running, that will trigger onclose and will not throw
         // an error
         stop_waiting();
-        console.log(name, 'websocket closed, trying to reconnect in', reconnect_attempts_period, 'ms...');
         do_callback('websocket-closed');
-        setTimeout(function() {
-            connect(url, protocol);
-        }, reconnect_attempts_period);
+        reconnect('websocket closed');
     };
 
     var onmessage = function(msg) {
