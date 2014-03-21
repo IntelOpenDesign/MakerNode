@@ -617,18 +617,18 @@ label[for=checkbox] {
     cursor: default;
 }
 .button.square {
-    width: 60px;
+    max-width: 60px;
+    width: 100%;
 }
 .button.wide {
-    width: 250px;
+    max-width: 250px;
+    width: 100%;
 }
 
 #play-button {
-    margin-left: -125px !important;
-    line-height: 55px;
+    margin-left: auto;
+    margin-right: auto;
     font-size: 125%;
-    position: relative;
-    left: 50%;
 }
 #play-button .glyphicon-play {
     font-size: 80%;
