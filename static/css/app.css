@@ -54,6 +54,9 @@ html, body {
 .gray-border {
     border-color: rgb(183, 169, 152);
 }
+.gray-text {
+    color: rgba(0, 0, 0, .5);
+}
 
 #settings-button {
     position: absolute;

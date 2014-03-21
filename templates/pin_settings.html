@@ -117,9 +117,14 @@
                         <label for="checkbox">Stay on for</label>
                         <br/>
                         <input type="number"
+                          ng-class="{'gray-text': !pin.is_timer_on}"
+                          ng-disabled="!pin.is_timer_on"
                           ng-model="pin.timer_value"
                           ng-change="send_pin_update([pin.id])">
-                        <label for="number">seconds</label>
+                        <label for="number"
+                          ng-class="{'gray-text': !pin.is_timer_on}">
+                            seconds
+                        </label>
                     </div>
                 </div>
             </div>
