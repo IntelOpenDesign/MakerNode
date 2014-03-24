@@ -449,34 +449,30 @@ cat.app.directive('connection', function($document) {
 
 cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
 
-    var name = 'Galileo'; // to match the module name, for logging purposes
-    var ws;               // websocket
-    var url, protocol;
+    //Settings:
+    //  used in log statements, should match the module name
+    var name = 'Galileo';
+    //  wait this long between attempts to connect with server
+    var reconnect_attempts_period = 500;
+    //  if the we go all of slowness_time without getting an update from the
+    //  server, we start to get suspicious that the server is malfunctioning
+    var slowness_time = 15000;
+    //  we send updates to the server at most once every update_period
+    var update_period = 500;
+    //(end of settings)
 
-    var reconnect_attempts_period = 500; // wait this long between attempts to connect
-    var slowness_time = 15000; // max acceptable wait time between server
-                               // messages, in milliseconds.
-    var update_period = 500; // how often to send updates to server
-
-    var messages = {}; // messages client side has sent to server
-    var batch = null;    // the next batch of updates we will send to server
-    var client_id = Date.now().toString();
-
-    //TODO remove when done debugging
-    var $debug_log = $('#debug-log');
-
+    // Callback Functions
     // for certain "events" you can assign exactly one callback function. they
     // are not real events; the strings just describe the situation in which
     // that callback function will be done
     var callbacks = {
         'websocket-opened': function() {}, // no args
-        'update': function() {}, // gets one arg, the update data
-        'slowness': function() {}, // no args
+        'update': function() {},           // gets one arg, the update data
+        'slowness': function() {},         // no args
         'websocket-closed': function() {}, // no args
     };
 
-    // assign callback functions
-    var on = function(e, f) {
+    var on = function(e, f) { // assign callback functions
         if (!_.has(callbacks, e)) {
             throw name + ".on: " + e + " is not a valid callback type. You can assign exactly one callback for each of the types in " + JSON.stringify(_.keys(callbacks));
         } else {
@@ -486,9 +482,14 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
 
     var do_callback = function(e, arg) {
         $rootScope.$apply(function() {
-            callbacks[e](arg); // TODO how to handle multiple args
+            callbacks[e](arg);
         });
     };
+
+
+    // Maintaining Connection with Server
+
+    var ws, url, protocol; // websocket, URL, protocol
 
     var connect = function(_url, _protocol) {
         url = _url;
@@ -530,6 +531,72 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         reconnect('websocket closed');
     };
 
+
+
+    //TODO remove when done debugging
+    var $debug_log = $('#debug-log');
+
+
+    // Sending Updates to Server
+    var messages = {}; // messages client side has sent to server
+    var batch = null;  // the next batch of updates we will send to server
+    var client_id = Date.now().toString();
+
+    var _send = function() {
+        var now = Date.now();
+        var message_id = client_id + now;
+        messages[message_id] = {
+            time: now,
+            message_id: message_id,
+            updates: batch,
+        };
+        var msg_for_server = {
+            status: 'OK',
+            pins: cat.server_pin_format(get_all_pins(), _.keys(batch.pins)),
+            connections: batch.connections,
+        };
+        batch = null;
+        ws.send(JSON.stringify(msg_for_server));
+    };
+
+    var send = _.throttle(_send, update_period);
+
+    var add_to_batch = function(updates) {
+        batch = _.extend({ pins: {}, connections: [] }, batch);
+        _.each(updates.pins, function(pin, id) {
+            batch.pins[id] = _.extend({}, batch.pins[id], pin);
+        });
+        batch.connections.push.apply(batch.connections, updates.connections);
+        send();
+    };
+
+    var update_pins = function(ids, attr) {
+        var all_pins = get_all_pins();
+        var updates = { pins: {}, connections: [] };
+        _.each(ids, function(id) {
+            updates.pins[id] = {};
+            updates.pins[id][attr] = all_pins[id][attr];
+        });
+        add_to_batch(updates);
+    };
+
+    var update_connections = function(connections, bool) {
+        var updates = { pins: {}, connections: [] };
+        updates.connections = _.map(connections, function(c) {
+            return { source: c.source, target: c.target, connect: bool };
+        });
+        add_to_batch(updates);
+    };
+
+    var add_connections = function(connections) {
+        update_connections(connections, true);
+    };
+
+    var remove_connections = function(connections) {
+        update_connections(connections, false);
+    };
+
+    // Processing Updates from Server
     var onmessage = function(server_msg) {
         stop_waiting();
 
@@ -578,56 +645,6 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         start_waiting();
     };
 
-    // sending websocket messages
-    var _send = function() {
-        console.log('_send');
-        var now = Date.now();
-        var message_id = client_id + now;
-        messages[message_id] = {
-            time: now,
-            message_id: message_id,
-            updates: batch,
-        };
-        var msg_for_server = {
-            status: 'OK',
-            pins: cat.server_pin_format(get_all_pins(), _.keys(batch.pins)),
-            connections: batch.connections,
-        };
-        batch = null;
-        ws.send(JSON.stringify(msg_for_server));
-    };
-    var send = _.throttle(_send, update_period);
-    var add_to_batch = function(updates) {
-        console.log('add_to_batch');
-        batch = _.extend({ pins: {}, connections: [] }, batch);
-        _.each(updates.pins, function(pin, id) {
-            batch.pins[id] = _.extend({}, batch.pins[id], pin);
-        });
-        batch.connections.push.apply(batch.connections, updates.connections);
-        send();
-    };
-    var update_pins = function(ids, attr) {
-        var all_pins = get_all_pins();
-        var updates = { pins: {}, connections: [] };
-        _.each(ids, function(id) {
-            updates.pins[id] = {};
-            updates.pins[id][attr] = all_pins[id][attr];
-        });
-        add_to_batch(updates);
-    };
-    var update_connections = function(connections, bool) {
-        var updates = { pins: {}, connections: [] };
-        updates.connections = _.map(connections, function(c) {
-            return { source: c.source, target: c.target, connect: bool };
-        });
-        add_to_batch(updates);
-    };
-    var add_connections = function(connections) {
-        update_connections(connections, true);
-    };
-    var remove_connections = function(connections) {
-        update_connections(connections, false);
-    };
 
     // if there is a big lag time (>= slowness_time) between messages from the
     // server, we start to get suspicious that the server is malfunctioning,
@@ -647,11 +664,11 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         }
     };
 
-    // it's convenient for everyone to just tell this service to update certain
-    // pin IDs rather than always padding in the whole pin object. but that
-    // means that Galileo needs to be able to access a pin object from just its
-    // ID. so, the controller exposes a way to let Galileo see the pins dict,
-    // and Galileo should only use this in a read only way
+    // it's convenient to be able to tell Galileo to only update certain pins
+    // by passing in the IDs of those pins, not the whole pin object. but that
+    // means Galileo needs to be able to access a pin object from just its ID.
+    // so, the controller exposes a way to let Galileo see the pins dict.
+    // Galileo should only use this in a read only way.
     var get_all_pins = null;
     var set_all_pins_getter = function(f) {
         get_all_pins = f;
