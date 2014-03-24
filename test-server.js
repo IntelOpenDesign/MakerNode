@@ -14,8 +14,11 @@ var msg = {
     status: 'OK', // TODO test client side with "error" status
     pins: {},
     connections: [],
-    message_ids: [],
+    count: 0, // TODO remove when done debugging
+    message_ids_processed: {},
 };
+
+var N_CLIENTS = 0;
 
 function pin_setter(is_analog, is_input) {
     return function(id) {
@@ -79,11 +82,29 @@ function update() {
 setInterval(update, 6000);
 
 var server = ws.createServer(function(conn){
-    console.log('new connection');
+
+    N_CLIENTS += 1;
+    console.log('new connection, N_CLIENTS', N_CLIENTS);
+
+    setInterval(function() {
+        msg.count += 1;
+        console.log('broadcasting message #', msg.count, 'which has message IDs', JSON.stringify(msg.message_ids_processed));
+        conn.sendText(JSON.stringify(msg));
+
+        _und.each(_und.keys(msg.message_ids_processed), function(id) {
+            msg.message_ids_processed[id] += 1;
+        });
+        var message_ids_to_delete = _und.filter(_und.keys(msg.message_ids_processed),
+            function(id) { return msg.message_ids_processed[id] >= N_CLIENTS; });
+        _und.each(message_ids_to_delete, function(id) {
+            delete msg.message_ids_processed[id];
+        });
+    }, 3000);
+
     conn.on('text', function(str) {
         console.log('received ' + str);
         setTimeout(function() {
-            console.log('processing ' + str);
+            //console.log('processing ' + str);
             var d = JSON.parse(str);
             _und.each(d.connections, function(dc) {
                 var index = -1;
@@ -115,14 +136,11 @@ var server = ws.createServer(function(conn){
                 msg.pins[id].is_timer_on = pin.is_timer_on;
                 msg.pins[id].timer_value = pin.timer_value;
             });
-            msg.message_ids.push(d.message_id);
+            console.log('processing message ID', d.message_id);
+            msg.message_ids_processed[d.message_id] = 0;
         }, 20000);
     });
-    setInterval(function() {
-        console.log('broadcasting state');
-        conn.sendText(JSON.stringify(msg));
-        msg.message_ids = [];
-    }, 3000);
+
     conn.on('close', function(code, reason) {
         try {
             console.log('close - try');

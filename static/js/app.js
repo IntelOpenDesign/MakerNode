@@ -486,7 +486,6 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         });
     };
 
-
     // Maintaining Connection with Server
 
     var ws, url, protocol; // websocket, URL, protocol
@@ -532,31 +531,37 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     };
 
 
-
     //TODO remove when done debugging
     var $debug_log = $('#debug-log');
-
 
     // Sending Updates to Server
     var messages = {}; // messages client side has sent to server
     var batch = null;  // the next batch of updates we will send to server
     var client_id = Date.now().toString();
+    var message_count = 0;
+
+    // TODO remove when done debugging
+    window.batch = batch;
+    window.messages = messages;
 
     var _send = function() {
         var now = Date.now();
-        var message_id = client_id + now;
+        message_count += 1; // TODO roll back to 0 at some point
+        var message_id = message_count + '-' + client_id + '-' + now;
         messages[message_id] = {
             time: now,
             message_id: message_id,
-            updates: batch,
+            stringified_updates: JSON.stringify(batch),
         };
+        // TODO i think i used to just send connections or pins if there were updates for them.
         var msg_for_server = {
             status: 'OK',
+            message_id: message_id,
             pins: cat.server_pin_format(get_all_pins(), _.keys(batch.pins)),
             connections: batch.connections,
         };
-        batch = null;
         ws.send(JSON.stringify(msg_for_server));
+        batch = null;
     };
 
     var send = _.throttle(_send, update_period);
@@ -572,7 +577,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
 
     var update_pins = function(ids, attr) {
         var all_pins = get_all_pins();
-        var updates = { pins: {}, connections: [] };
+        var updates = { pins: {} };
         _.each(ids, function(id) {
             updates.pins[id] = {};
             updates.pins[id][attr] = all_pins[id][attr];
@@ -581,7 +586,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     };
 
     var update_connections = function(connections, bool) {
-        var updates = { pins: {}, connections: [] };
+        var updates = { connections: [] };
         updates.connections = _.map(connections, function(c) {
             return { source: c.source, target: c.target, connect: bool };
         });
@@ -607,8 +612,8 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         //TODO remove when done debugging
         $debug_log.html(server_msg.data);
 
-        // we can forget about the messages the server has already processed
-        _.each(data.message_ids, function(message_id) {
+        // forget about the messages we created that the server has processed
+        _.each(data.message_ids_processed, function(nonsense_val, message_id) {
             delete messages[message_id];
         });
 
@@ -626,10 +631,11 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
             return msg.time;
         });
         _.each(messages_in_order, function(msg) {
-            _.each(msg.updates.pins, function(pin_updates, pin_id) {
+            var updates = JSON.parse(msg.stringified_updates);
+            _.each(updates.pins, function(pin_updates, pin_id) {
                 pins[pin_id] = _.extend(pins[pin_id], pin_updates);
             });
-            _.each(msg.updates.connections, function(c) {
+            _.each(updates.connections, function(c) {
                 conns[cat.tokenize_connection_object(c)] = c.connect;
             });
         });
