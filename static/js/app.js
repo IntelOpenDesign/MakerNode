@@ -453,13 +453,8 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     var slowness_time = 15000; // max acceptable wait time between server
                                // messages, in milliseconds.
 
+    var messages = {}; // messages client side sends to server
     var client_id = Date.now().toString();
-    var messages = {};    // messages we have sent to server
-    var next_message = { // the next thing we will send to server
-        message: { pins: {}, connections: [] }, // data in server format
-        updates: { pins: {}, connections: [] }  // granular updates in our format
-    };
-    var update_period = 500; // how often we send the batch update to server
 
     //TODO remove when done debugging
     var $debug_log = $('#debug-log');
@@ -578,28 +573,9 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     };
 
     // sending websocket messages
-    var _send_now = function() {
+    var send = function(data_in_server_format, granular_updates) {
         var now = Date.now();
         var message_id = client_id + now;
-        var message = _.extend({
-            status: 'OK',
-            pins: {},
-            connections: [],
-            message_id: message_id
-        ws.send(JSON.stringify(next_update));
-        next_message = {};
-    };
-    var send = function(data_in_server_format, granular_updates) {
-        _.each(data_in_server_format.pins, function(pin, id) {
-            next_message.message.pins[id] = _.extend({},
-                next_message.message.pins[id],
-                pin);
-        });
-        var conns = {};
-
-        _.each(data_in_server_format.connections, function(c) {
-            
-        });
         var message = _.extend({
             status: 'OK',
             pins: {},
@@ -612,6 +588,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
             message: message,
             updates: granular_updates,
         };
+        ws.send(JSON.stringify(message));
     };
     var update_pins = function(all_pins, which_pin_ids_to_update, attr) {
         var data_for_server = {
