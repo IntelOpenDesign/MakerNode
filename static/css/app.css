@@ -157,7 +157,7 @@ html, body {
 
 .pin-box > .pin-name {
     font-size: 250%;
-    text-align: center;
+    text-align: right;
     width: 100%;
     height: 100px;
     font-weight: 600;
@@ -632,6 +632,11 @@ label[for=checkbox] {
     margin-left: auto;
     margin-right: auto;
     font-size: 125%;
+    display: block;
+}
+#play-button:hover {
+    color: white;
+    text-decoration: none;
 }
 #play-button .glyphicon-play {
     font-size: 80%;

@@ -11,74 +11,16 @@
 
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
     <link rel="stylesheet" href="static/css/app.css">
+    <link rel="stylesheet" href="static/css/play_mode.css">
 </head>
-<body ng-controller="PinsCtrl">
+<body ng-controller="PlayMode">
 
-    <!-- TODO instead of using my own class 'hide', i should just use ng-show. -->
-
-<div id="settings-button"
-  ng-class="{
-      'black': true,
-      'hide': settings_pin !== null || adding_pins !== null}">
-    <span class="glyphicon glyphicon-cog"></span>
-</div>
-
-<div id="column-divider"
-  ng-class="{
-      'gray-border': true,
-      'hide': settings_pin !== null || adding_pins !== null}">
-</div>
-
-<div id="pins-container"
-  ng-class="{
-      'container-fluid': true,
-      'hide': settings_pin !== null || adding_pins !== null}">
+<div id="play-pins" class="container-fluid">
     <div class="row">
-
-        <div id="sensors" class="col-xs-6">
-            <div
-              ng-class="{
-                  'sensors': true,
-                  'column-title': true,
-                  'hide': d.visible_sensors.length > 0}">
-                sensors
-            </div>
-            <div id="{{pin.id}}" ng-repeat="(id, pin) in d.visible_sensors" sensor></div>
-        </div>
-
-        <div id="actuators" class="col-xs-6">
-            <div
-              ng-class="{
-                  'actuators': true,
-                  'column-title': true,
-                  'hide': d.visible_actuators.length > 0}">
-                actuators
-            </div>
-            <div id="{{pin.id}}" ng-repeat="(id, pin) in d.visible_actuators" actuator></div>
-        </div>
-
+        <div class="col-xs-6" ng-repeat="(id, pin) in d.visible_actuators" pin-stub></div>
     </div>
 </div>
 
-<div id="connections-container"
-  ng-class="{
-      'hide': settings_pin !== null || adding_pins !== null}">
-    <div id="connect-{{c.source}}-{{c.target}}"
-      ng-repeat="c in d.connections"
-      class="connection"
-      ng-show="left !== null"
-      data-sensor_id="{{c.source}}"
-      data-actuator_id="{{c.target}}"
-      connection>
-        <svg style="position: absolute;" pointer-events="none">
-            <path class="edge-bg" pointer-events="none" fill="none"></path>
-            <path class="edge" pointer-events="none" fill="none"></path>
-        </svg>
-
-    </div>
-</div>
-
-<!-- TODO add pins menu should visually contain all pins to add with add-pins-menu-bg" -->
 <div id="add-pins-menu"
   ng-switch="adding_pins"
   ng-class="{'hide': settings_pin !== null || adding_pins === null}">
@@ -135,9 +77,7 @@
             </div>
         </div>
         <div class="col-xs-8">
-            <a id="play-button"
-              class="button wide black-bg"
-              href="/play.html">
+            <div id="play-button" class="button wide black-bg">
                 <span class="glyphicon glyphicon-play"></span>
                 Play
             </div>
@@ -151,16 +91,5 @@
         </div>
     </div>
 </div>
-
-<div id="settings-container">
-    <div ng-repeat="pin in d.pins" pin-settings></div>
-</div>
-
-<div id="loading" ng-class="{'hide': got_data}">
-    <div id="loading-msg">
-        waiting for server
-    </div>
-</div>
-
 </body>
 </html>

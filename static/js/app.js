@@ -281,6 +281,58 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     };
 }]);
 
+// The controller for Play Mode.
+// TODO this is a bad copy of PinsCtrl
+cat.app.controller('PlayMode', ['$scope', 'Galileo', function($scope, Galileo) {
+
+    var $document = $(document);
+
+    // TODO take this out when done debugging
+    window.playscope = $scope;
+
+    // whether we have yet received any data from the server
+    $scope.got_data = false;
+
+    // pins and connections
+    $scope.d = cat.d();
+
+    // TALKING WITH GALILEO
+
+    Galileo.set_all_pins_getter(function() {
+        return $scope.d.pins;
+    });
+
+    // TODO I think this overrides the callback for PinsCtrl too
+    Galileo.on('update', function(data) {
+        if (!$scope.got_data) { // first time initialization
+            $scope.got_data = true;
+            $scope.d.reset(data);
+         } else { // after that just update changes
+            $scope.got_data = true;
+            $scope.d.update(data);
+        }
+    });
+
+    Galileo.on('slowness', function() {
+        $scope.got_data = false;
+    });
+
+    Galileo.on('websocket-closed', function() {
+        $scope.got_data = false;
+    });
+
+    $scope.send_pin_update = function(pin_ids, attr) {
+        Galileo.update_pins(pin_ids, attr);
+    };
+
+    if (cat.on_hardware) {
+        Galileo.connect(cat.hardware_server_url, cat.hardware_server_protocol);
+    } else {
+        Galileo.connect(cat.test_server_url);
+    }
+
+}]);
+
 // DRAWING PINS
 
 cat.pin_template = 'templates/pin.html';
