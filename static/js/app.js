@@ -320,7 +320,7 @@ cat.app.controller('PlayMode', ['$scope', 'Galileo', function($scope, Galileo) {
         return $scope.d.pins;
     });
 
-    // TODO I think this overrides the callback for PinsCtrl too
+    // TODO show a loading screen
     Galileo.on('update', function(data) {
         if (!$scope.got_data) { // first time initialization
             $scope.got_data = true;

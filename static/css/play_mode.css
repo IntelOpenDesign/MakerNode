@@ -2,6 +2,12 @@ body {
     background: rgb(25, 25, 25);
 }
 
+#loading {
+    background-color: rgb(25, 25, 25);
+    
+    background-image: url('../img/loading_inverted.gif');
+}
+
 .pin {
     display: inline-block;
     width: 80%;
