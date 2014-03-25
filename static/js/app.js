@@ -256,12 +256,30 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     $scope.show_remove_confirmation = false;
     $scope.pins_to_show = {};
     $scope.toggle_add_pins_menu_for = function(type) {
-        if ($scope.adding_pins === type) {
-            $scope.show_pins(_.keys($scope.pins_to_show));
-            $scope.pins_to_show = {};
-            $scope.adding_pins = null;
-        } else {
+        var prev_type = $scope.adding_pins;
+        // add_pins_menu was closed, so open it
+        if (prev_type === null) {
             $scope.adding_pins = type;
+            window.history.pushState();
+            window.onpopstate = function() {
+                $scope.close_add_pins_menu(true);
+            };
+        }
+        // add_pins_menu was already open
+        else {
+            if (prev_type === type) {
+                $scope.close_add_pins_menu();
+            } else {
+                $scope.adding_pins = type;
+            }
+        }
+    };
+    $scope.close_add_pins_menu = function(history_state_already_popped) {
+        $scope.show_pins(_.keys($scope.pins_to_show));
+        $scope.pins_to_show = {};
+        $scope.adding_pins = null;
+        if (!history_state_already_popped) {
+            window.history.back();
         }
     };
     $scope.toggle_pin_show = function(id) {
