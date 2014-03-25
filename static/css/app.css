@@ -29,6 +29,10 @@ html, body {
 
 }
 
+#app-container {
+    position: relative;
+}
+
 /* COLORS */
 .yellow-bg {
     background-color: rgb(247, 193, 40);
