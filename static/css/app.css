@@ -661,7 +661,10 @@ label[for=checkbox] {
     width: 100%;
 }
 .confirm-remove-row {
-    margin-top: 30%;
+    position: fixed;
+    width: 100%;
+    top: 50%;
+    margin-top: -80px;
 }
 .confirm-remove {
     padding: 30px 50px;
