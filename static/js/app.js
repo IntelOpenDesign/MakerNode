@@ -7,11 +7,6 @@ cat.test_server_url = 'ws://192.168.0.195:8001';
 cat.hardware_server_url = 'ws://cat/';
 cat.hardware_server_protocol = 'hardware-state-protocol';
 
-// TODO remove when done debugging
-function toggle_debug_log() {
-    $('#debug-log').toggleClass('hide');
-}
-
 // PINS AND CONNECTIONS DATA STRUCTURE
 cat.d = function() {
     var that = {};
@@ -244,7 +239,6 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     };
 
     $scope.close_settings = function(history_state_already_popped) {
-        // TODO make sure this does not accumulate history states so that the user would have to hit back many times to exit the whole CAT website
         $scope.settings_pin = null;
         if (!history_state_already_popped) {
             window.history.back();
@@ -530,19 +524,11 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         reconnect('websocket closed');
     };
 
-
-    //TODO remove when done debugging
-    var $debug_log = $('#debug-log');
-
     // Sending Updates to Server
     var messages = {}; // messages client side has sent to server
     var batch = null;  // the next batch of updates we will send to server
     var client_id = Date.now().toString();
     var message_count = 0;
-
-    // TODO remove when done debugging
-    window.batch = batch;
-    window.messages = messages;
 
     var _send = function() {
         var now = Date.now();
@@ -608,9 +594,6 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         console.log('websocket message', server_msg);
         var data = JSON.parse(server_msg.data);
         console.log('websocket data', data);
-
-        //TODO remove when done debugging
-        $debug_log.html(server_msg.data);
 
         // forget about the messages we created that the server has processed
         _.each(data.message_ids_processed, function(nonsense_val, message_id) {
