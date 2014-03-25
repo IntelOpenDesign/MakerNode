@@ -23,7 +23,7 @@ var N_CLIENTS = 0;
 function pin_setter(is_analog, is_input) {
     return function(id) {
         msg.pins[id] = {
-            label: 'Pin ' + id,
+            label: '',
             value: 0,
             is_visible: Math.random() > 0.5 ? true : false,
             //is_visible: true,
