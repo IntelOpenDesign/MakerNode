@@ -349,6 +349,10 @@ cat.app.controller('PlayMode', ['$scope', 'Galileo', function($scope, Galileo) {
         Galileo.connect(cat.test_server_url);
     }
 
+    // TODO send this info to server
+    $scope.toggle_pin_show = function(id) {
+        console.log('pressed pin', id);
+    };
 }]);
 
 // DRAWING PINS
