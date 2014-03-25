@@ -553,6 +553,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     var send = _.throttle(_send, update_period);
 
     var add_to_batch = function(updates) {
+        console.log('add to batch', JSON.stringify(updates));
         batch = _.extend({ pins: {}, connections: [] }, batch);
         _.each(updates.pins, function(pin, id) {
             batch.pins[id] = _.extend({}, batch.pins[id], pin);
@@ -600,28 +601,34 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
             delete messages[message_id];
         });
 
-        // the remaining messages are ones that the server has not processed
-        // yet. so, the data from the server is slightly out of date. so, we
-        // take the data from the server, update it using our remaining
-        // messages' updates, and then send that to the controller
+        // the remaining messages, and the batch of updates that we have not
+        // even sent to the server yet, are all ways in which the data from the
+        // server is out of date. so, first we take the data from the server,
+        // and then we update it based on our remaining messages and the batch
 
         var pins = cat.my_pin_format(data.pins, data.connections);
         var conns = _.object(_.map(data.connections, function(c) {
             return [cat.tokenize_connection_object(c), true];
         }));
 
+        function update(d) {
+            _.each(d.pins, function(pin_updates, pin_id) {
+                pins[pin_id] = _.extend(pins[pin_id], pin_updates);
+            });
+            _.each(d.connections, function(c) {
+                conns[cat.tokenize_connection_object(c)] = c.connect;
+            });
+        }
+
         var messages_in_order = _.sortBy(_.values(messages), function(msg) {
             return msg.time;
         });
         _.each(messages_in_order, function(msg) {
-            var updates = JSON.parse(msg.stringified_updates);
-            _.each(updates.pins, function(pin_updates, pin_id) {
-                pins[pin_id] = _.extend(pins[pin_id], pin_updates);
-            });
-            _.each(updates.connections, function(c) {
-                conns[cat.tokenize_connection_object(c)] = c.connect;
-            });
+            update(JSON.parse(msg.stringified_updates));
         });
+        if (batch !== null) {
+            update(batch);
+        }
 
         var connections = [];
         _.each(conns, function(val, token) {
@@ -633,7 +640,6 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
 
         start_waiting();
     };
-
 
     // if there is a big lag time (>= slowness_time) between messages from the
     // server, we start to get suspicious that the server is malfunctioning,
