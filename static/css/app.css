@@ -29,6 +29,10 @@ html, body {
 
 }
 
+#app-container {
+    position: relative;
+}
+
 /* COLORS */
 .yellow-bg {
     background-color: rgb(247, 193, 40);
@@ -101,7 +105,7 @@ html, body {
 }
 #add-pins-menu .column-title {
     text-align: left;
-    padding: .3em 0 .3em .5em;
+    padding: .3em 0 0 .5em;
 }
 .sensors.column-title {
     color: rgb(147, 106, 24);
@@ -662,7 +666,10 @@ label[for=checkbox] {
     width: 100%;
 }
 .confirm-remove-row {
-    margin-top: 30%;
+    position: fixed;
+    width: 100%;
+    top: 50%;
+    margin-top: -80px;
 }
 .confirm-remove {
     padding: 30px 50px;
@@ -676,22 +683,28 @@ label[for=checkbox] {
     border-color: transparent;
     border-style: solid;
     border-width: 10px 15px 110px;
-    position: relative;
 }
 #add-pins-menu-bg {
     height: 100%;
     width: 100%;
     top: 0;
     left: 0;
-    position: absolute;
+    position: fixed;
     z-index: -1;
+    box-sizing: border-box;
+    border-color: white;
+    border-top-width: 15px;
+    border-left-width: 15px;
+    border-right-width: 15px;
+    border-bottom-width: 110px;
+    border-style: solid;
 }
 #add-pins-menu-bg,
 #add-pins-menu-pins-container {
     background: rgb(198, 188, 175);
 }
 #add-pins-menu-pins-container {
-    margin-bottom: 110px;
+    margin-bottom: 10px;
 }
 #add-pins-menu-bg-footer {
     width: 0;
