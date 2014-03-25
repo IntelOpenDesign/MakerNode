@@ -675,15 +675,21 @@ label[for=checkbox] {
     border-color: transparent;
     border-style: solid;
     border-width: 10px 15px 110px;
-    position: relative;
 }
 #add-pins-menu-bg {
     height: 100%;
     width: 100%;
     top: 0;
     left: 0;
-    position: absolute;
+    position: fixed;
     z-index: -1;
+    box-sizing: border-box;
+    border-color: white;
+    border-top-width: 15px;
+    border-left-width: 15px;
+    border-right-width: 15px;
+    border-bottom-width: 110px;
+    border-style: solid;
 }
 #add-pins-menu-bg,
 #add-pins-menu-pins-container {
