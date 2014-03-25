@@ -157,7 +157,7 @@ html, body {
 
 .pin-box > .pin-name {
     font-size: 250%;
-    text-align: right;
+    text-align: center;
     width: 100%;
     height: 100px;
     font-weight: 600;

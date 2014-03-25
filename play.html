@@ -17,79 +17,13 @@
 
 <div id="play-pins" class="container-fluid">
     <div class="row">
-        <div class="col-xs-6" ng-repeat="(id, pin) in d.visible_actuators" pin-stub></div>
-    </div>
-</div>
-
-<div id="add-pins-menu"
-  ng-switch="adding_pins"
-  ng-class="{'hide': settings_pin !== null || adding_pins === null}">
-    <div id="add-pins-menu-pins-container">
-
-        <div id="add-sensors"
-          class="container-fluid sensors"
-          ng-switch-when="sensors">
-
-            <div class="row">
-                <div class="col-xs-12 sensors column-title">
-                    add a sensor
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-xs-4" ng-repeat="(id, pin) in d.hidden_sensors" pin-stub></div>
-            </div>
-        </div>
-
-        <div id="add-actuators"
-          class="container-fluid actuators"
-          ng-switch-when="actuators">
-
-            <div class="row">
-                <div class="col-xs-12 actuators column-title">
-                    add an actuator
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-xs-4" ng-repeat="(id, pin) in d.hidden_actuators" pin-stub></div>
-            </div>
-        </div>
-
-    </div>
-    <div id="add-pins-menu-bg-footer"
-      ng-class="{
-          'sensors': adding_pins === 'sensors',
-          'actuators': adding_pins === 'actuators'}"></div>
-    <div id="add-pins-menu-bg"></div>
-</div>
-
-<div id="footer"
-  ng-class="{
-      'container-fluid': true,
-      'hide': settings_pin !== null}">
-    <div class="row">
-        <div class="col-xs-2">
-            <div id="add-sensors-button"
-              class="button square yellow-bg"
-              ng-click="toggle_add_pins_menu_for('sensors')">
-                +
-            </div>
-        </div>
-        <div class="col-xs-8">
-            <div id="play-button" class="button wide black-bg">
-                <span class="glyphicon glyphicon-play"></span>
-                Play
-            </div>
-        </div>
-        <div class="col-xs-2">
-            <div id="add-actuators-button"
-              class="button square green-bg"
-              ng-click="toggle_add_pins_menu_for('actuators')">
-                +
-            </div>
+        <div class="col-xs-6 pin-outer"
+          ng-repeat="(id, pin) in d.visible_actuators"
+          ng-hide="pin.is_connected"
+          pin-stub>
         </div>
     </div>
 </div>
+
 </body>
 </html>
