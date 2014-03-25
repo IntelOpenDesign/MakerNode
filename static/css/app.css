@@ -105,7 +105,7 @@ html, body {
 }
 #add-pins-menu .column-title {
     text-align: left;
-    padding: .3em 0 .3em .5em;
+    padding: .3em 0 0 .5em;
 }
 .sensors.column-title {
     color: rgb(147, 106, 24);
@@ -699,7 +699,7 @@ label[for=checkbox] {
     background: rgb(198, 188, 175);
 }
 #add-pins-menu-pins-container {
-    margin-bottom: 110px;
+    margin-bottom: 10px;
 }
 #add-pins-menu-bg-footer {
     width: 0;
