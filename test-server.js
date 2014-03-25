@@ -99,7 +99,7 @@ var server = ws.createServer(function(conn){
         _und.each(message_ids_to_delete, function(id) {
             delete msg.message_ids_processed[id];
         });
-    }, 3000);
+    }, 1000);
 
     conn.on('text', function(str) {
         console.log('received ' + str);
@@ -138,7 +138,7 @@ var server = ws.createServer(function(conn){
             });
             console.log('processing message ID', d.message_id);
             msg.message_ids_processed[d.message_id] = 0;
-        }, 20000);
+        }, 3000);
     });
 
     conn.on('close', function(code, reason) {
