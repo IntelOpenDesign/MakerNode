@@ -3,7 +3,7 @@ var cat = {};
 
 // server connection settings
 cat.on_hardware = false; // to switch to Galileo, just change this to true
-cat.test_server_url = 'ws://192.168.0.195:8001';
+cat.test_server_url = 'ws://localhost:8001';
 cat.hardware_server_url = 'ws://cat/';
 cat.hardware_server_protocol = 'hardware-state-protocol';
 
@@ -613,9 +613,10 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         console.log('websocket message', server_msg);
         var data = JSON.parse(server_msg.data);
         console.log('websocket data', data);
+        console.log('\tdata.message_ids_processed', JSON.stringify(data.message_ids_processed));
 
         // forget about the messages we created that the server has processed
-        _.each(data.message_ids_processed, function(nonsense_val, message_id) {
+        _.each(data.message_ids_processed, function(message_id) {
             delete messages[message_id];
         });
 
@@ -642,6 +643,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
             return msg.time;
         });
         _.each(messages_in_order, function(msg) {
+            console.log('updating server data with message_id', msg.message_id, 'update', msg.stringified_updates);
             update(JSON.parse(msg.stringified_updates));
         });
         if (batch !== null) {
@@ -656,6 +658,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
 
         do_callback('update', {pins: pins, connections: connections});
 
+        console.log('\n\n');
         start_waiting();
     };
 

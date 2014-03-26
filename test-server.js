@@ -15,8 +15,10 @@ var msg = {
     pins: {},
     connections: [],
     count: 0, // TODO remove when done debugging
-    message_ids_processed: {},
+    message_ids_processed: [],
 };
+
+var messages_dict = {};
 
 var N_CLIENTS = 0;
 
@@ -88,16 +90,17 @@ var server = ws.createServer(function(conn){
 
     setInterval(function() {
         msg.count += 1;
+        msg.message_ids_processed = _und.keys(messages_dict);
         console.log('broadcasting message #', msg.count, 'which has message IDs', JSON.stringify(msg.message_ids_processed));
         conn.sendText(JSON.stringify(msg));
 
-        _und.each(_und.keys(msg.message_ids_processed), function(id) {
-            msg.message_ids_processed[id] += 1;
+        _und.each(_und.keys(messages_dict), function(id) {
+            messages_dict[id] += 1;
         });
-        var message_ids_to_delete = _und.filter(_und.keys(msg.message_ids_processed),
-            function(id) { return msg.message_ids_processed[id] >= N_CLIENTS; });
+        var message_ids_to_delete = _und.filter(_und.keys(messages_dict),
+            function(id) { return messages_dict[id] >= N_CLIENTS; });
         _und.each(message_ids_to_delete, function(id) {
-            delete msg.message_ids_processed[id];
+            delete messages_dict[id];
         });
     }, 1000);
 
@@ -137,7 +140,7 @@ var server = ws.createServer(function(conn){
                 msg.pins[id].timer_value = pin.timer_value;
             });
             console.log('processing message ID', d.message_id);
-            msg.message_ids_processed[d.message_id] = 0;
+            messages_dict[d.message_id] = 0;
         }, 3000);
     });
 
