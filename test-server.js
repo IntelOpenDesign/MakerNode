@@ -98,7 +98,7 @@ var server = ws.createServer(function(conn){
             messages_dict[id] += 1;
         });
         var message_ids_to_delete = _und.filter(_und.keys(messages_dict),
-            function(id) { return messages_dict[id] >= N_CLIENTS; });
+            function(id) { return messages_dict[id] >= N_CLIENTS * 2; });
         _und.each(message_ids_to_delete, function(id) {
             delete messages_dict[id];
         });
