@@ -35,7 +35,8 @@ body {
     background: -ms-linear-gradient(top, #55cc85 0%,#5bf090 16%,#5bef90 84%,#55cc85 100%); /* IE10+ */
     background: linear-gradient(to bottom, #55cc85 0%,#5bf090 16%,#5bef90 84%,#55cc85 100%); /* W3C */
 }
-.pin-outer:nth-child(5n-4) .pin-box:active {
+.pin-outer:nth-child(5n-4) .pin-box:active,
+.pin-outer:nth-child(5n-4) .pin.will-be-shown .pin-box {
     background: #337f4f; /* Old browsers */
 background: -moz-linear-gradient(top, #337f4f 0%, #2a6642 16%, #2a6642 84%, #337f4f 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#337f4f), color-stop(16%,#2a6642), color-stop(84%,#2a6642), color-stop(100%,#337f4f)); /* Chrome,Safari4+ */
@@ -53,7 +54,8 @@ background: -o-linear-gradient(top, #4700aa 0%,#5700cc 16%,#5700cc 84%,#4700aa 1
 background: -ms-linear-gradient(top, #4700aa 0%,#5700cc 16%,#5700cc 84%,#4700aa 100%); /* IE10+ */
 background: linear-gradient(to bottom, #4700aa 0%,#5700cc 16%,#5700cc 84%,#4700aa 100%); /* W3C */
 }
-.pin-outer:nth-child(5n-3) .pin-box:active {
+.pin-outer:nth-child(5n-3) .pin-box:active
+.pin-outer:nth-child(5n-3) .pin.will-be-shown .pin-box {
     background: #3f0099; /* Old browsers */
 background: -moz-linear-gradient(top, #3f0099 0%, #2a0066 16%, #2a0066 84%, #3f0099 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3f0099), color-stop(16%,#2a0066), color-stop(84%,#2a0066), color-stop(100%,#3f0099)); /* Chrome,Safari4+ */
@@ -71,7 +73,8 @@ background: -o-linear-gradient(top, #efcb00 0%,#ffe519 16%,#ffe519 84%,#efcb00 1
 background: -ms-linear-gradient(top, #efcb00 0%,#ffe519 16%,#ffe519 84%,#efcb00 100%); /* IE10+ */
 background: linear-gradient(to bottom, #efcb00 0%,#ffe519 16%,#ffe519 84%,#efcb00 100%); /* W3C */
 }
-.pin-outer:nth-child(5n-2) .pin-box:active {
+.pin-outer:nth-child(5n-2) .pin-box:active,
+.pin-outer:nth-child(5n-2) .pin.will-be-shown .pin-box {
     background: #d1ae00; /* Old browsers */
 background: -moz-linear-gradient(top, #d1ae00 0%, #bca600 16%, #baa100 84%, #d1ae00 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#d1ae00), color-stop(16%,#bca600), color-stop(84%,#baa100), color-stop(100%,#d1ae00)); /* Chrome,Safari4+ */
@@ -90,7 +93,8 @@ background: -o-linear-gradient(top, #008be8 0%,#0096ff 16%,#0096ff 84%,#008be8 1
 background: -ms-linear-gradient(top, #008be8 0%,#0096ff 16%,#0096ff 84%,#008be8 100%); /* IE10+ */
 background: linear-gradient(to bottom, #008be8 0%,#0096ff 16%,#0096ff 84%,#008be8 100%); /* W3C */
 }
-.pin-outer:nth-child(5n-1) .pin-box:active {
+.pin-outer:nth-child(5n-1) .pin-box:active,
+.pin-outer:nth-child(5n-1) .pin.will-be-shown .pin-box {
     background: #0082d8; /* Old browsers */
 background: -moz-linear-gradient(top, #0082d8 0%, #0072bf 16%, #0072bf 84%, #0082d8 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0082d8), color-stop(16%,#0072bf), color-stop(84%,#0072bf), color-stop(100%,#0082d8)); /* Chrome,Safari4+ */
@@ -108,7 +112,8 @@ background: -o-linear-gradient(top, #e50085 0%,#ff0097 16%,#ff0097 84%,#e50085 1
 background: -ms-linear-gradient(top, #e50085 0%,#ff0097 16%,#ff0097 84%,#e50085 100%); /* IE10+ */
 background: linear-gradient(to bottom, #e50085 0%,#ff0097 16%,#ff0097 84%,#e50085 100%); /* W3C */
 }
-.pin-outer:nth-child(5n) .pin-box:active {
+.pin-outer:nth-child(5n) .pin-box:active,
+.pin-outer:nth-child(5n) .pin.will-be-shown .pin-box {
     background: #e50082; /* Old browsers */
 background: -moz-linear-gradient(top, #e50082 0%, #bf006c 16%, #bf006c 84%, #e50082 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e50082), color-stop(16%,#bf006c), color-stop(84%,#bf006c), color-stop(100%,#e50082)); /* Chrome,Safari4+ */
@@ -117,6 +122,11 @@ background: -o-linear-gradient(top, #e50082 0%,#bf006c 16%,#bf006c 84%,#e50082 1
 background: -ms-linear-gradient(top, #e50082 0%,#bf006c 16%,#bf006c 84%,#e50082 100%); /* IE10+ */
 background: linear-gradient(to bottom, #e50082 0%,#bf006c 16%,#bf006c 84%,#e50082 100%); /* W3C */
 }
+
+.pin.will-be-shown .pin-box:before {
+    display: none;
+}
+
 .pin-label {
     left: 0 !important;
     top: 0 !important;
