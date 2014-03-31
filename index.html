@@ -13,9 +13,15 @@
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
     <link rel="stylesheet" href="static/css/app.css">
 </head>
-<body>
+<body ng-controller="AppCtrl">
     <div id="app-container">
         <ng-view></ng-view>
+    </div>
+
+    <div id="loading" ng-class="{'hide': got_data}">
+        <div id="loading-msg">
+            waiting for server
+        </div>
     </div>
 </body>
 </html>
