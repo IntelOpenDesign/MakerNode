@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="static/css/play_mode.css">
+
+<div id="play-pins" class="container-fluid">
+    <div class="row">
+        <div class="col-xs-6 pin-outer"
+          ng-repeat="(id, pin) in d.visible_actuators"
+          ng-hide="pin.is_connected"
+          pin-stub>
+        </div>
+    </div>
+</div>
+
+<div id="loading" ng-class="{'hide': got_data}">
+    <div id="loading-msg">
+        waiting for server
+    </div>
+</div>

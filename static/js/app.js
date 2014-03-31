@@ -134,10 +134,25 @@ cat.d = function() {
 };
 
 // cat.app is the angular app
-cat.app = angular.module('ConnectAnything', []);
+cat.app = angular.module('ConnectAnything', ['ngRoute']);
 
-// The controller for the whole app. Also handles talking to the server.
-cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
+cat.app.config(['$routeProvider', function($routeProvider) {
+    $routeProvider
+        .when('/', {
+            templateUrl: 'templates/connect.html',
+            controller: 'ConnectModeCtrl',
+        })
+        .when('/play', {
+            templateUrl: 'templates/play.html',
+            controller: 'PlayModeCtrl',
+        })
+        .otherwise({
+            redirectTo: '/',
+        });
+}]);
+
+// The controller for Connect Mode.
+cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
 
     var $document = $(document);
 
@@ -301,7 +316,7 @@ cat.app.controller('PinsCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
 
 // The controller for Play Mode.
 // TODO this is a bad copy of PinsCtrl
-cat.app.controller('PlayMode', ['$scope', 'Galileo', function($scope, Galileo) {
+cat.app.controller('PlayModeCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
 
     var $document = $(document);
 
