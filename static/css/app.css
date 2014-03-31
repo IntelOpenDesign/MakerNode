@@ -31,6 +31,7 @@ html, body {
 
 #app-container {
     position: relative;
+    padding-bottom: 50px;
 }
 
 /* COLORS */
@@ -95,7 +96,6 @@ html, body {
 #pins-container {
     min-height: 100%;
     padding-top: 50px;
-    padding-bottom: 50px;
 }
 
 .column-title {
@@ -633,11 +633,20 @@ label[for=checkbox] {
     width: 100%;
 }
 
-#play-button {
+#play-button,
+#connect-button {
     margin-left: auto;
     margin-right: auto;
     font-size: 125%;
     display: block;
+}
+#connect-button {
+    background: rgb(250, 250, 250);
+    color: rgb(44, 38, 33);
+}
+#connect-button:hover {
+    color: rgb(44, 38, 33);
+    text-decoration: none;
 }
 #play-button:hover {
     color: white;

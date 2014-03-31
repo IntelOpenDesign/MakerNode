@@ -13,9 +13,85 @@
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
     <link rel="stylesheet" href="static/css/app.css">
 </head>
-<body ng-controller="AppCtrl">
-    <div id="app-container">
-        <ng-view></ng-view>
+<body>
+<div id="app-container" ng-controller="AppCtrl">
+
+    <ng-view></ng-view>
+
+    <div id="add-pins-menu"
+      ng-switch="adding_pins"
+      ng-class="{'hide': settings_pin !== null || adding_pins === null}">
+        <div id="add-pins-menu-pins-container">
+
+            <div id="add-sensors"
+              class="container-fluid sensors"
+              ng-switch-when="sensors">
+
+                <div class="row">
+                    <div class="col-xs-12 sensors column-title">
+                        add a sensor
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-4" ng-repeat="(id, pin) in d.hidden_sensors" pin-stub></div>
+                </div>
+            </div>
+
+            <div id="add-actuators"
+              class="container-fluid actuators"
+              ng-switch-when="actuators">
+
+                <div class="row">
+                    <div class="col-xs-12 actuators column-title">
+                        add an actuator
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-4" ng-repeat="(id, pin) in d.hidden_actuators" pin-stub></div>
+                </div>
+            </div>
+
+        </div>
+        <div id="add-pins-menu-bg-footer"
+          ng-class="{
+              'sensors': adding_pins === 'sensors',
+              'actuators': adding_pins === 'actuators'}"></div>
+        <div id="add-pins-menu-bg"></div>
+    </div>
+
+    <div id="footer"
+      ng-class="{
+          'container-fluid': true,
+          'hide': settings_pin !== null}">
+        <div class="row">
+            <div class="col-xs-2">
+                <div id="add-sensors-button"
+                  ng-if='$location.path() === "/"'
+                  class="button square yellow-bg"
+                  ng-click="toggle_add_pins_menu_for('sensors')">
+                    +
+                </div>
+            </div>
+            <div class="col-xs-8">
+                <a id="play-button"
+                  ng-if='$location.path() === "/"'
+                  class="button wide black-bg"
+                  href="#play"><span class="glyphicon glyphicon-play"></span>&nbsp;Play</a>
+                <a id="connect-button"
+                  ng-if='$location.path() === "/play"'
+                  class="button wide"
+                  href="/">Connect</a>
+            </div>
+            <div class="col-xs-2">
+                <div id="add-actuators-button"
+                  class="button square green-bg"
+                  ng-click="toggle_add_pins_menu_for('actuators')">
+                    +
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="loading" ng-class="{'hide': got_data}">
@@ -23,5 +99,7 @@
             waiting for server
         </div>
     </div>
+
+</div>
 </body>
 </html>

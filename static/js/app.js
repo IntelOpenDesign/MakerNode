@@ -152,7 +152,12 @@ cat.app.config(['$routeProvider', function($routeProvider) {
 }]);
 
 // The highest level app controller.
-cat.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
+cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope, $location, Galileo) {
+
+    $scope.$location = $location;
+
+    // TODO debug
+    window.$scope = $scope;
 
     // whether we have yet received any data from the server
     $scope.got_data = false;
@@ -193,6 +198,10 @@ cat.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
     } else {
         Galileo.connect(cat.test_server_url);
     }
+
+    // this is used primarily by ConnectModeCtrl, but AppCtrl needs to see it
+    // too, because #footer is only shown when settings_pin === null
+    $scope.settings_pin = null;
 
     // HOW THE USER SHOWS/HIDES PINS
     // Tapping a "+" button at the bottom of the screen opens or closes the add
@@ -298,7 +307,6 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
     // settings for that pin. Hitting the OK button in the settings window or
     // hitting the back button in the browser will exit out of pin settings.
 
-    $scope.settings_pin = null;
     $scope.show_settings_for = function(pin) {
         $scope.activated_pin = null;
         $scope.settings_pin = pin;

@@ -4,11 +4,23 @@ body {
 
 #loading {
     background-color: rgb(25, 25, 25);
-    
     background-image: url('../img/loading_inverted.gif');
 }
 
-.pin {
+#footer {
+    background: linear-gradient(rgba(40, 40, 40, .7), rgba(60, 60, 60, 1));
+}
+
+#add-actuators-button {
+    background: rgb(250, 250, 250);
+    color: rgb(44, 38, 33);
+}
+
+#add-pins-menu-bg {
+    border-color: rgb(25, 25, 25);
+}
+
+#play-pins .pin {
     display: inline-block;
     width: 80%;
     border-width: 0;
@@ -19,14 +31,14 @@ body {
     box-sizing: content-box;
     height: inherit;
 }
-.pin-box {
+#play-pins .pin-box {
     height: 200px;
     width: 100%;
     display: inline-block;
     border: 1px solid rgb(25, 25, 25);
     border-radius: 20px;
 }
-.pin-outer:nth-child(5n-4) .pin-box {
+#play-pins .pin-outer:nth-child(5n-4) .pin-box {
     background: #2bbf69; /* Old browsers */
     background: -moz-linear-gradient(top, #55cc85 0%, #5bf090 16%, #5bef90 84%, #55cc85 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#55cc85), color-stop(16%,#5bf090), color-stop(84%,#5bef90), color-stop(100%,#55cc85)); /* Chrome,Safari4+ */
@@ -35,8 +47,8 @@ body {
     background: -ms-linear-gradient(top, #55cc85 0%,#5bf090 16%,#5bef90 84%,#55cc85 100%); /* IE10+ */
     background: linear-gradient(to bottom, #55cc85 0%,#5bf090 16%,#5bef90 84%,#55cc85 100%); /* W3C */
 }
-.pin-outer:nth-child(5n-4) .pin-box:active,
-.pin-outer:nth-child(5n-4) .pin.will-be-shown .pin-box {
+#play-pins .pin-outer:nth-child(5n-4) .pin-box:active,
+#play-pins .pin-outer:nth-child(5n-4) .pin.will-be-shown .pin-box {
     background: #337f4f; /* Old browsers */
 background: -moz-linear-gradient(top, #337f4f 0%, #2a6642 16%, #2a6642 84%, #337f4f 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#337f4f), color-stop(16%,#2a6642), color-stop(84%,#2a6642), color-stop(100%,#337f4f)); /* Chrome,Safari4+ */
@@ -45,7 +57,7 @@ background: -o-linear-gradient(top, #337f4f 0%,#2a6642 16%,#2a6642 84%,#337f4f 1
 background: -ms-linear-gradient(top, #337f4f 0%,#2a6642 16%,#2a6642 84%,#337f4f 100%); /* IE10+ */
 background: linear-gradient(to bottom, #337f4f 0%,#2a6642 16%,#2a6642 84%,#337f4f 100%); /* W3C */
 }
-.pin-outer:nth-child(5n-3) .pin-box {
+#play-pins .pin-outer:nth-child(5n-3) .pin-box {
     background: #4700aa; /* Old browsers */
 background: -moz-linear-gradient(top, #4700aa 0%, #5700cc 16%, #5700cc 84%, #4700aa 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4700aa), color-stop(16%,#5700cc), color-stop(84%,#5700cc), color-stop(100%,#4700aa)); /* Chrome,Safari4+ */
@@ -54,8 +66,8 @@ background: -o-linear-gradient(top, #4700aa 0%,#5700cc 16%,#5700cc 84%,#4700aa 1
 background: -ms-linear-gradient(top, #4700aa 0%,#5700cc 16%,#5700cc 84%,#4700aa 100%); /* IE10+ */
 background: linear-gradient(to bottom, #4700aa 0%,#5700cc 16%,#5700cc 84%,#4700aa 100%); /* W3C */
 }
-.pin-outer:nth-child(5n-3) .pin-box:active
-.pin-outer:nth-child(5n-3) .pin.will-be-shown .pin-box {
+#play-pins .pin-outer:nth-child(5n-3) .pin-box:active
+#play-pins .pin-outer:nth-child(5n-3) .pin.will-be-shown .pin-box {
     background: #3f0099; /* Old browsers */
 background: -moz-linear-gradient(top, #3f0099 0%, #2a0066 16%, #2a0066 84%, #3f0099 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3f0099), color-stop(16%,#2a0066), color-stop(84%,#2a0066), color-stop(100%,#3f0099)); /* Chrome,Safari4+ */
@@ -64,7 +76,7 @@ background: -o-linear-gradient(top, #3f0099 0%,#2a0066 16%,#2a0066 84%,#3f0099 1
 background: -ms-linear-gradient(top, #3f0099 0%,#2a0066 16%,#2a0066 84%,#3f0099 100%); /* IE10+ */
 background: linear-gradient(to bottom, #3f0099 0%,#2a0066 16%,#2a0066 84%,#3f0099 100%); /* W3C */
 }
-.pin-outer:nth-child(5n-2) .pin-box {
+#play-pins .pin-outer:nth-child(5n-2) .pin-box {
     background: #efcb00; /* Old browsers */
 background: -moz-linear-gradient(top, #efcb00 0%, #ffe519 16%, #ffe519 84%, #efcb00 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#efcb00), color-stop(16%,#ffe519), color-stop(84%,#ffe519), color-stop(100%,#efcb00)); /* Chrome,Safari4+ */
@@ -73,8 +85,8 @@ background: -o-linear-gradient(top, #efcb00 0%,#ffe519 16%,#ffe519 84%,#efcb00 1
 background: -ms-linear-gradient(top, #efcb00 0%,#ffe519 16%,#ffe519 84%,#efcb00 100%); /* IE10+ */
 background: linear-gradient(to bottom, #efcb00 0%,#ffe519 16%,#ffe519 84%,#efcb00 100%); /* W3C */
 }
-.pin-outer:nth-child(5n-2) .pin-box:active,
-.pin-outer:nth-child(5n-2) .pin.will-be-shown .pin-box {
+#play-pins .pin-outer:nth-child(5n-2) .pin-box:active,
+#play-pins .pin-outer:nth-child(5n-2) .pin.will-be-shown .pin-box {
     background: #d1ae00; /* Old browsers */
 background: -moz-linear-gradient(top, #d1ae00 0%, #bca600 16%, #baa100 84%, #d1ae00 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#d1ae00), color-stop(16%,#bca600), color-stop(84%,#baa100), color-stop(100%,#d1ae00)); /* Chrome,Safari4+ */
@@ -84,7 +96,7 @@ background: -ms-linear-gradient(top, #d1ae00 0%,#bca600 16%,#baa100 84%,#d1ae00 
 background: linear-gradient(to bottom, #d1ae00 0%,#bca600 16%,#baa100 84%,#d1ae00 100%); /* W3C */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d1ae00', endColorstr='#d1ae00',GradientType=0 ); /* IE6-9 */
 }
-.pin-outer:nth-child(5n-1) .pin-box {
+#play-pins .pin-outer:nth-child(5n-1) .pin-box {
     background: #008be8; /* Old browsers */
 background: -moz-linear-gradient(top, #008be8 0%, #0096ff 16%, #0096ff 84%, #008be8 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#008be8), color-stop(16%,#0096ff), color-stop(84%,#0096ff), color-stop(100%,#008be8)); /* Chrome,Safari4+ */
@@ -93,8 +105,8 @@ background: -o-linear-gradient(top, #008be8 0%,#0096ff 16%,#0096ff 84%,#008be8 1
 background: -ms-linear-gradient(top, #008be8 0%,#0096ff 16%,#0096ff 84%,#008be8 100%); /* IE10+ */
 background: linear-gradient(to bottom, #008be8 0%,#0096ff 16%,#0096ff 84%,#008be8 100%); /* W3C */
 }
-.pin-outer:nth-child(5n-1) .pin-box:active,
-.pin-outer:nth-child(5n-1) .pin.will-be-shown .pin-box {
+#play-pins .pin-outer:nth-child(5n-1) .pin-box:active,
+#play-pins .pin-outer:nth-child(5n-1) .pin.will-be-shown .pin-box {
     background: #0082d8; /* Old browsers */
 background: -moz-linear-gradient(top, #0082d8 0%, #0072bf 16%, #0072bf 84%, #0082d8 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0082d8), color-stop(16%,#0072bf), color-stop(84%,#0072bf), color-stop(100%,#0082d8)); /* Chrome,Safari4+ */
@@ -103,7 +115,7 @@ background: -o-linear-gradient(top, #0082d8 0%,#0072bf 16%,#0072bf 84%,#0082d8 1
 background: -ms-linear-gradient(top, #0082d8 0%,#0072bf 16%,#0072bf 84%,#0082d8 100%); /* IE10+ */
 background: linear-gradient(to bottom, #0082d8 0%,#0072bf 16%,#0072bf 84%,#0082d8 100%); /* W3C */
 }
-.pin-outer:nth-child(5n) .pin-box {
+#play-pins .pin-outer:nth-child(5n) .pin-box {
     background: #e50085; /* Old browsers */
 background: -moz-linear-gradient(top, #e50085 0%, #ff0097 16%, #ff0097 84%, #e50085 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e50085), color-stop(16%,#ff0097), color-stop(84%,#ff0097), color-stop(100%,#e50085)); /* Chrome,Safari4+ */
@@ -112,8 +124,8 @@ background: -o-linear-gradient(top, #e50085 0%,#ff0097 16%,#ff0097 84%,#e50085 1
 background: -ms-linear-gradient(top, #e50085 0%,#ff0097 16%,#ff0097 84%,#e50085 100%); /* IE10+ */
 background: linear-gradient(to bottom, #e50085 0%,#ff0097 16%,#ff0097 84%,#e50085 100%); /* W3C */
 }
-.pin-outer:nth-child(5n) .pin-box:active,
-.pin-outer:nth-child(5n) .pin.will-be-shown .pin-box {
+#play-pins .pin-outer:nth-child(5n) .pin-box:active,
+#play-pins .pin-outer:nth-child(5n) .pin.will-be-shown .pin-box {
     background: #e50082; /* Old browsers */
 background: -moz-linear-gradient(top, #e50082 0%, #bf006c 16%, #bf006c 84%, #e50082 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e50082), color-stop(16%,#bf006c), color-stop(84%,#bf006c), color-stop(100%,#e50082)); /* Chrome,Safari4+ */
@@ -123,11 +135,11 @@ background: -ms-linear-gradient(top, #e50082 0%,#bf006c 16%,#bf006c 84%,#e50082 
 background: linear-gradient(to bottom, #e50082 0%,#bf006c 16%,#bf006c 84%,#e50082 100%); /* W3C */
 }
 
-.pin.will-be-shown .pin-box:before {
+#play-pins .pin.will-be-shown .pin-box:before {
     display: none;
 }
 
-.pin-label {
+#play-pins .pin-label {
     left: 0 !important;
     top: 0 !important;
     text-align: center;
@@ -138,9 +150,8 @@ background: linear-gradient(to bottom, #e50082 0%,#bf006c 16%,#bf006c 84%,#e5008
     box-sizing: border-box;
     border-bottom: 70px solid transparent;
 }
-.pin-name {
+#play-pins .pin-name {
     font-size: 30px !important;
-    
     z-index: 0 !important;
     top: initial !important;
     left: initial !important;
@@ -153,7 +164,6 @@ background: linear-gradient(to bottom, #e50082 0%,#bf006c 16%,#bf006c 84%,#e5008
     padding-bottom: 10px;
     color: rgb(50, 50, 50) !important;
 }
-.pin-value-container {
+#play-pins .pin-value-container {
     display: none;
-    
 }
