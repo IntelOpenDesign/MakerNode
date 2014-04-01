@@ -9,9 +9,9 @@
       'connected': pin.is_connected,
       'analog': pin.is_analog,
       'digital': !pin.is_analog,
-      'will-be-shown': pins_to_show[pin.id]}">
+      'clicked': clicked_pin_stubs[pin.id]}">
     <div class="pin-box"
-      ng-click="toggle_pin_show(pin.id)">
+      ng-click="pin_stub_click(pin.id)">
         <!-- TODO handle overflow of pin name from pin-box, also could the same thing happen with pin label? -->
         <div class="pin-label">
             {{pin.label}}
@@ -20,9 +20,8 @@
             {{pin.name}}
         </div>
         <div class="pin-value-container">
-            <div ng-class="{
-                'hide': pin.value === 0,
-                'pin-value': true }"
+            <div class="pin-value"
+              ng-hide="pin.value === 0"
               style="height:{{pin.value}}%;">
             </div>
         </div>

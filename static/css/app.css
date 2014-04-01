@@ -733,7 +733,7 @@ label[for=checkbox] {
 #add-pins-menu-bg-footer.actuators {
     right: 40px;
 }
-.pin.will-be-shown .pin-box:before {
+.pin.clicked .pin-box:before {
     content: "\e013";
     font-family: 'Glyphicons Halflings';
     position: absolute;
@@ -749,13 +749,13 @@ label[for=checkbox] {
     -webkit-font-smoothing: antialiased;
     font-size: 80px;
 }
-.pin.sensor.will-be-shown .pin-box:before {
+.pin.sensor.clicked .pin-box:before {
     background: rgba(247, 193, 40, .4);
     /*color: rgb(147, 106, 24);*/
     color: rgb(247, 193, 40);
     opacity: .9;
 }
-.pin.actuator.will-be-shown .pin-box:before {
+.pin.actuator.clicked .pin-box:before {
     background: rgba(45, 104, 84, .4);
     color: rgb(45, 104, 84);
     opacity: .85;
