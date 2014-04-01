@@ -334,22 +334,11 @@ cat.app.controller('PlayModeCtrl', ['$scope', 'Galileo', function($scope, Galile
     // DEBUG
     window.PlayModeScope = $scope;
 
-    $scope.clicked_pin_stubs = {};
-    _.each($scope.d.visible_actuators, function(pin) {
-        if (pin.value === 1.0)
-            $scope.clicked_pin_stubs[pin.id] = true;
-    });
-    // TODO send this info to server
-    $scope.pin_stub_click = function(id) {
-        var val;
-        if (_.has($scope.clicked_pin_stubs, id)) {
-            delete $scope.clicked_pin_stubs[id];
-            val = 0.0;
-        } else {
-            $scope.clicked_pin_stubs[id] = true;
-            val = 100.0;
-        }
-        $scope.d.pins[id].value = val;
+    $scope.pin_button_click = function(id) {
+        if ($scope.d.pins[id].value === 100)
+            $scope.d.pins[id].value = 0;
+        else
+            $scope.d.pins[id].value = 100;
         $scope.send_pin_update([id], 'value');
     };
 }]);
@@ -376,6 +365,10 @@ cat.app.directive('actuator', function($document) {
 
 cat.app.directive('pinStub', function($document) {
     return { templateUrl: 'templates/pin_stub.html' };
+});
+
+cat.app.directive('pinButton', function($document) {
+    return { templateUrl: 'templates/pin_button.html' };
 });
 
 // PIN SETTINGS
