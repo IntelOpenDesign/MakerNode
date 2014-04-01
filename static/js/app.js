@@ -332,15 +332,23 @@ cat.app.controller('PlayModeCtrl', ['$scope', 'Galileo', function($scope, Galile
     // DEBUG
     window.PlayModeScope = $scope;
 
-    $scope.pins_to_show = {};
+    $scope.clicked_pin_stubs = {};
+    _.each($scope.d.visible_actuators, function(pin) {
+        if (pin.value === 1.0)
+            $scope.clicked_pin_stubs[pin.id] = true;
+    });
     // TODO send this info to server
-    $scope.toggle_pin_show = function(id) {
-        console.log('pressed pin', id);
-        if (_.has($scope.pins_to_show, id)) {
-            delete $scope.pins_to_show[id];
+    $scope.pin_stub_click = function(id) {
+        var val;
+        if (_.has($scope.clicked_pin_stubs, id)) {
+            delete $scope.clicked_pin_stubs[id];
+            val = 0.0;
         } else {
-            $scope.pins_to_show[id] = true;
+            $scope.clicked_pin_stubs[id] = true;
+            val = 1.0;
         }
+        $scope.d.pins[id].value = val;
+        $scope.send_pin_update([id], 'value');
     };
 }]);
 
@@ -616,7 +624,6 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     var send = _.throttle(_send, update_period);
 
     var add_to_batch = function(updates) {
-        console.log('add to batch', JSON.stringify(updates));
         batch = _.extend({ pins: {}, connections: [] }, batch);
         _.each(updates.pins, function(pin, id) {
             batch.pins[id] = _.extend({}, batch.pins[id], pin);
