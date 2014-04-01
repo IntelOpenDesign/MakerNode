@@ -220,9 +220,9 @@ html, body {
 .endpoint-container {
     position: absolute;
     top: 50%;
-    height: 100px;
-    width: 100px;
-    margin-top: -50px;
+    height: 90px;
+    width: 90px;
+    margin-top: -45px;
     z-index: 5;
     background: white;
     border-radius: 50px;
@@ -235,15 +235,15 @@ html, body {
 }
 
 .endpoint {
-    width: 70px;
-    height: 70px;
-    border-radius: 35px;
+    width: 74px;
+    height: 74px;
+    border-radius: 37px;
     position: relative;
     box-sizing: content-box;
     top: 50%;
     left: 50%;
-    margin-top: -35px;
-    margin-left: -35px;
+    margin-top: -37px;
+    margin-left: -37px;
 }
 .actuator .endpoint-inner {
     position: absolute;
