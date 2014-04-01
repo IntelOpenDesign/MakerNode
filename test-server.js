@@ -73,6 +73,8 @@ for (var i = 0; i < n_connections; i++) {
 // change state randomly to simulate other users and hardware
 function update() {
     _und.each(all_pins, function(id) {
+        if (!msg.pins[id].is_input)
+            return;
         if (msg.pins[id].is_analog) {
             msg.pins[id].value = Math.random();
         } else {
@@ -102,7 +104,7 @@ var server = ws.createServer(function(conn){
         _und.each(message_ids_to_delete, function(id) {
             delete messages_dict[id];
         });
-    }, 1000);
+    }, 500);
 
     conn.on('text', function(str) {
         console.log('received ' + str);
@@ -128,6 +130,7 @@ var server = ws.createServer(function(conn){
                 }
             });
             _und.each(d.pins, function(pin, id) {
+                msg.pins[id].value = pin.value;
                 msg.pins[id].label = pin.label;
                 msg.pins[id].is_visible = pin.is_visible;
                 msg.pins[id].is_analog = pin.is_analog;
@@ -141,7 +144,7 @@ var server = ws.createServer(function(conn){
             });
             console.log('processing message ID', d.message_id);
             messages_dict[d.message_id] = 0;
-        }, 3000);
+        }, 0);
     });
 
     conn.on('close', function(code, reason) {
