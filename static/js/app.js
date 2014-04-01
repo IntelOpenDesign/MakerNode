@@ -3,7 +3,7 @@ var cat = {};
 
 // server connection settings
 cat.on_hardware = false; // to switch to Galileo, just change this to true
-cat.test_server_url = 'ws://localhost:8001';
+cat.test_server_url = 'ws://192.168.0.197:8001';
 cat.hardware_server_url = 'ws://cat/';
 cat.hardware_server_protocol = 'hardware-state-protocol';
 
@@ -347,7 +347,7 @@ cat.app.controller('PlayModeCtrl', ['$scope', 'Galileo', function($scope, Galile
             val = 0.0;
         } else {
             $scope.clicked_pin_stubs[id] = true;
-            val = 1.0;
+            val = 100.0;
         }
         $scope.d.pins[id].value = val;
         $scope.send_pin_update([id], 'value');
