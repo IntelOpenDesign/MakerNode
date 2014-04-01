@@ -156,6 +156,8 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
 
     $scope.$location = $location;
 
+    $scope.parseInt = parseInt;
+
     // TODO debug
     window.$scope = $scope;
 
