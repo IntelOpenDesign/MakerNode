@@ -8,11 +8,11 @@
       'connected': pin.is_connected,
       'analog': pin.is_analog,
       'digital': !pin.is_analog,
-      'activated': pin.is_input ? 
-            activated_sensor === pin.id 
+      'activated': pin.is_input ?
+            activated_sensor === pin.id
           : activated_sensor !== null,
-      'already-connected-to-activated-sensor': pin.is_input ? 
-            false 
+      'already-connected-to-activated-sensor': pin.is_input ?
+            false
           : already_connected_to_activated_sensor() }">
     <div class="pin-box" ng-click="show_settings_for(pin.id)">
         <div class="pin-label">
@@ -29,8 +29,8 @@
             </div>
         </div>
         <div class="endpoint-container"
-          ng-click="pin.is_input ? 
-                toggle_activated($event, pin.id) 
+          ng-click="pin.is_input ?
+                toggle_activated($event, pin.id)
               : connect_or_disconnect($event, pin.id)">
             <div id="{{pin.id}}-endpoint"
               ng-class="{
