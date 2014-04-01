@@ -212,7 +212,7 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
 
     $scope.adding_pins = null; // 'sensors' or 'actuators'
     $scope.show_remove_confirmation = false;
-    $scope.pins_to_show = {};
+    $scope.clicked_pin_stubs = {};
     $scope.toggle_add_pins_menu_for = function(type) {
         var prev_type = $scope.adding_pins;
         // add_pins_menu was closed, so open it
@@ -233,18 +233,18 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
         }
     };
     $scope.close_add_pins_menu = function(history_state_already_popped) {
-        $scope.show_pins(_.keys($scope.pins_to_show));
-        $scope.pins_to_show = {};
+        $scope.show_pins(_.keys($scope.clicked_pin_stubs));
+        $scope.clicked_pin_stubs = {};
         $scope.adding_pins = null;
         if (!history_state_already_popped) {
             window.history.back();
         }
     };
-    $scope.toggle_pin_show = function(id) {
-        if ($scope.pins_to_show[id])
-            delete $scope.pins_to_show[id];
+    $scope.pin_stub_click = function(id) {
+        if ($scope.clicked_pin_stubs[id])
+            delete $scope.clicked_pin_stubs[id];
         else
-            $scope.pins_to_show[id] = true;
+            $scope.clicked_pin_stubs[id] = true;
     };
     $scope.show_pins = function(ids) {
         $scope.d.show_pins(ids);
