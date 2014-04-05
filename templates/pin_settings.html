@@ -116,11 +116,15 @@
                           ng-change="send_pin_update([pin.id], 'is_timer_on')">
                         <label for="checkbox">Stay on for</label>
                         <br/>
+                        <!-- TODO timer_value data binding does not work as well as angular stuff should. I don't know why --> 
                         <input type="number"
-                          ng-class="{'gray-text': !pin.is_timer_on}"
+                          ng-class="{
+                              'gray-text': !pin.is_timer_on,
+                              'timer-value': true}"
+                          min="0"
                           ng-disabled="!pin.is_timer_on"
-                          ng-model="pin.timer_value"
-                          ng-change="send_pin_update([pin.id], 'timer_value')">
+                          ng-model="pin_timer_value"
+                          ng-blur="update_pin_timer_value()">
                         <label for="number"
                           ng-class="{'gray-text': !pin.is_timer_on}">
                             seconds

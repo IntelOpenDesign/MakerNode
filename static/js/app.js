@@ -3,7 +3,7 @@ var cat = {};
 
 // server connection settings
 cat.on_hardware = false; // to switch to Galileo, just change this to true
-cat.test_server_url = 'ws://192.168.0.197:8001';
+cat.test_server_url = 'ws://192.168.0.195:8001';
 cat.hardware_server_url = 'ws://cat/';
 cat.hardware_server_protocol = 'hardware-state-protocol';
 
@@ -374,6 +374,13 @@ cat.app.directive('pinButton', function($document) {
 // PIN SETTINGS
 cat.app.directive('pinSettings', function($document) {
     function link($scope, $el, attrs) {
+        // DEBUG
+        if (window.$els === undefined) {
+            window.$els = {};
+        }
+        window.$els[$scope.pin.id] = $el;
+
+        // pin label
         var $pin_label = $el.find('input.pin-label');
         $scope.label_limit_length = 20;
         $scope.pin_label = $scope.pin.label.substring();
@@ -388,6 +395,7 @@ cat.app.directive('pinSettings', function($document) {
             $scope.send_pin_update([$scope.pin.id], 'label');
         };
 
+        // min and max sliders
         var $min = $('.vertical-slider.min');
         var $max = $('.vertical-slider.max');
         $scope.average_min_max = function() {
@@ -400,6 +408,24 @@ cat.app.directive('pinSettings', function($document) {
             $scope.pin.input_min = Math.min(min, max);
             $scope.send_pin_update([$scope.pin.id], 'input_min');
             $scope.send_pin_update([$scope.pin.id], 'input_max');
+        };
+
+        // timer value
+        // TODO this is very un-angular. data binding not working always. I don't know why it wasn't working where if I just made ng-model="pin_timer_value" in the HTML then pin_timer_value is supposed to (but wasn't) update/ing to reflect the value in the input[type="number"]
+        $scope.pin_timer_value = $scope.pin.timer_value;
+        $scope.$watch(function() { return $scope.pin.timer_value; },
+            function(new_val, old_val) {
+                $scope.pin_timer_value = new_val;
+                $el.find('input.timer-value').first().val(new_val);
+        });
+        $scope.update_pin_timer_value = function() {
+            var $input = $el.find('input.timer-value').first();
+            var val_str = $input.val();
+            var val = Math.max(val_str.length > 0 ? parseFloat(val_str) : 0, 0);
+            $scope.pin.timer_value = val;
+            $scope.pin_timer_value = val;
+            $input.val(val);
+            $scope.send_pin_update([$scope.pin.id], 'timer_value');
         };
     }
     return { templateUrl: 'templates/pin_settings.html', link: link };
