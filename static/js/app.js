@@ -402,8 +402,6 @@ cat.app.directive('pinSettings', function($document) {
         };
 
         // min and max sliders
-        var $min = $('.vertical-slider.min');
-        var $max = $('.vertical-slider.max');
         $scope.average_min_max = function() {
             return (parseFloat($scope.pin.input_min) + parseFloat($scope.pin.input_max))/2;
         };
