@@ -381,13 +381,19 @@ cat.app.directive('pinSettings', function($document) {
         window.$els[$scope.pin.id] = $el;
 
         // pin label
-        var $pin_label = $el.find('input.pin-label');
+        // TODO as with timer value, two way data binding seems not to be working.
         $scope.label_limit_length = 20;
         $scope.pin_label = $scope.pin.label.substring();
+        $scope.$watch(function() { return $scope.pin.label; },
+            function(new_val, old_val) {
+                $scope.pin_label = new_val;
+                $el.find('input.pin-label').first().val(new_val);
+        });
         $scope.truncate_label = function() {
-            if ($scope.pin_label.length > $scope.label_limit_length) {
-                $scope.pin_label = $scope.pin_label.substring(0, $scope.label_limit_length);
-            }
+            var $input = $el.find('input.pin-label').first();
+            var val = $input.val().substring(0, $scope.label_limit_length);
+            $scope.pin_label = val;
+            $input.val(val);
         };
         $scope.update_pin_label = function() {
             $scope.truncate_label();
