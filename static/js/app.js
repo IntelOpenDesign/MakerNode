@@ -310,21 +310,31 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
     // hitting the back button in the browser will exit out of pin settings.
 
     $scope.show_settings_for = function(pin) {
+        $scope.show_remove_confirmation = false;
         $scope.activated_pin = null;
         $scope.settings_pin = pin;
         window.history.pushState();
         window.onpopstate = function() {
-            $scope.close_settings(true);
+            $scope.$apply(function() {
+                $scope.close_settings(true);
+            });
         };
     };
 
     $scope.close_settings = function(history_state_already_popped) {
-        $scope.settings_pin = null;
         if (!history_state_already_popped) {
             window.history.back();
         }
+        $scope.settings_pin = null;
+        $scope.show_remove_confirmation = false;
     };
 
+    $scope.open_remove_dialog = function() {
+        $scope.show_remove_confirmation = true;
+    };
+    $scope.close_remove_dialog = function() {
+        $scope.show_remove_confirmation = false;
+    };
 }]);
 
 // The controller for Play Mode.

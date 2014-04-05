@@ -145,7 +145,7 @@
             <div class="row padded">
                 <div class="col-xs-6">
                     <div class="button gray-bg"
-                      ng-click="show_remove_confirmation = true;">
+                      ng-click="open_remove_dialog()">
                         Remove
                     </div>
                 </div>
@@ -160,10 +160,8 @@
         </div> <!-- end container-fluid -->
     </div> <!-- end settings-inner -->
 
-    <div ng-class="{
-        'confirm-remove-container': true,
-        'container-fluid': true,
-        'hide': !show_remove_confirmation}">
+    <div class="confirm-remove-container container-fluid"
+        ng-hide="!show_remove_confirmation">
         <div class="row confirm-remove-row">
             <div class="confirm-remove col-xs-8 col-xs-offset-2">
                 <div class="row padded">
@@ -174,7 +172,7 @@
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="button gray-bg"
-                          ng-click="show_remove_confirmation = false;">
+                          ng-click="close_remove_dialog()">
                             No
                         </div>
                     </div>
