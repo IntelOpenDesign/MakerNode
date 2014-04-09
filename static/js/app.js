@@ -312,7 +312,6 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
     // hitting the back button in the browser will exit out of pin settings.
 
     $scope.show_settings_for = function(pin) {
-        $scope.s.show_remove_confirmation = false;
         $scope.activated_pin = null;
         $scope.s.settings_pin = pin;
         window.history.pushState();
