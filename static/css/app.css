@@ -203,11 +203,7 @@ html, body {
     background: rgb(180, 206, 184);
 }
 .analog .pin-value {
-    transition: height 1s;
-    -webkit-transition: height 1s;
     width: 100%;
-    -moz-transition: height 1s;
-    -o-transition: height 1s;
 }
 .digital .pin-value {
     width: 100%;
