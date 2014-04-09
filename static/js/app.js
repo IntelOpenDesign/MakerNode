@@ -3,7 +3,7 @@ var cat = {};
 
 // server connection settings
 cat.on_hardware = false; // to switch to Galileo, just change this to true
-cat.test_server_url = 'ws://192.168.0.195:8001';
+cat.test_server_url = 'ws://localhost:8001';
 cat.hardware_server_url = 'ws://cat/';
 cat.hardware_server_protocol = 'hardware-state-protocol';
 
@@ -161,11 +161,19 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
     // TODO debug
     window.$scope = $scope;
 
+    // pins and connections
+    $scope.d = cat.d();
+
     // whether we have yet received any data from the server
     $scope.got_data = false;
 
-    // pins and connections
-    $scope.d = cat.d();
+    // other app state, shared with child controllers
+    // determines which view to show, not actual data to share with server
+    $scope.s = {
+        settings_pin: null, // pin id to show settings for
+        adding_pins: null,  // 'sensors' or 'actuators'
+        show_remove_confirmation: false, // whether to show this dialog box
+    };
 
     // TALKING WITH GALILEO
 
@@ -201,10 +209,6 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
         Galileo.connect(cat.test_server_url);
     }
 
-    // this is used primarily by ConnectModeCtrl, but AppCtrl needs to see it
-    // too, because #footer is only shown when settings_pin === null
-    $scope.settings_pin = null;
-
     // HOW THE USER SHOWS/HIDES PINS
     // Tapping a "+" button at the bottom of the screen opens or closes the add
     // pins menu. In this menu, tapping a pin selects it. Leaving the menu adds
@@ -212,14 +216,12 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
     // In the settings window for each pin, tapping "Remove" removes that pin
     // and all its connections, after asking the user for confirmation.
 
-    $scope.adding_pins = null; // 'sensors' or 'actuators'
-    $scope.show_remove_confirmation = false;
     $scope.clicked_pin_stubs = {};
     $scope.toggle_add_pins_menu_for = function(type) {
-        var prev_type = $scope.adding_pins;
+        var prev_type = $scope.s.adding_pins;
         // add_pins_menu was closed, so open it
         if (prev_type === null) {
-            $scope.adding_pins = type;
+            $scope.s.adding_pins = type;
             window.history.pushState();
             window.onpopstate = function() {
                 $scope.close_add_pins_menu(true);
@@ -230,14 +232,14 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
             if (prev_type === type) {
                 $scope.close_add_pins_menu();
             } else {
-                $scope.adding_pins = type;
+                $scope.s.adding_pins = type;
             }
         }
     };
     $scope.close_add_pins_menu = function(history_state_already_popped) {
         $scope.show_pins(_.keys($scope.clicked_pin_stubs));
         $scope.clicked_pin_stubs = {};
-        $scope.adding_pins = null;
+        $scope.s.adding_pins = null;
         if (!history_state_already_popped) {
             window.history.back();
         }
@@ -310,9 +312,9 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
     // hitting the back button in the browser will exit out of pin settings.
 
     $scope.show_settings_for = function(pin) {
-        $scope.show_remove_confirmation = false;
+        $scope.s.show_remove_confirmation = false;
         $scope.activated_pin = null;
-        $scope.settings_pin = pin;
+        $scope.s.settings_pin = pin;
         window.history.pushState();
         window.onpopstate = function() {
             $scope.$apply(function() {
@@ -325,15 +327,15 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
         if (!history_state_already_popped) {
             window.history.back();
         }
-        $scope.settings_pin = null;
-        $scope.show_remove_confirmation = false;
+        $scope.s.settings_pin = null;
+        $scope.s.show_remove_confirmation = false;
     };
 
     $scope.open_remove_dialog = function() {
-        $scope.show_remove_confirmation = true;
+        $scope.s.show_remove_confirmation = true;
     };
     $scope.close_remove_dialog = function() {
-        $scope.show_remove_confirmation = false;
+        $scope.s.show_remove_confirmation = false;
     };
 }]);
 

@@ -5,7 +5,7 @@
       'actuator': !pin.is_input,
       'analog': pin.is_analog,
       'digital': !pin.is_analog,
-      'hide': settings_pin !== pin.id}">
+      'hide': s.settings_pin !== pin.id}">
     <div class="settings-inner">
         <div class="container-fluid">
 
@@ -161,7 +161,7 @@
     </div> <!-- end settings-inner -->
 
     <div class="confirm-remove-container container-fluid"
-        ng-hide="!show_remove_confirmation">
+        ng-hide="!s.show_remove_confirmation">
         <div class="row confirm-remove-row">
             <div class="confirm-remove col-xs-8 col-xs-offset-2">
                 <div class="row padded">
