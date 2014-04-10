@@ -16,7 +16,7 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    font-size: 24px;
+    font-size: 42px;
     font-family: 'Neo Sans Intel';
 }
 
@@ -68,7 +68,7 @@ html, body {
     top: 0;
     left: 50%;
     width: 50px;
-    margin-left: -25px;
+    margin-left: -31px;
     font-size: 150%;
     text-align: center;
     background: white;
@@ -101,11 +101,10 @@ html, body {
 .column-title {
     text-align: center;
     padding: 1em 0;
-    font-size: 200%;
 }
 #add-pins-menu .column-title {
     text-align: left;
-    padding: .3em 0 0 .5em;
+    padding: .3em 0 .6em .5em;
 }
 .sensors.column-title {
     color: rgb(147, 106, 24);
@@ -126,8 +125,7 @@ html, body {
     width: 50%;
     height: 130px;
     margin-top: 50px;
-    margin-bottom: 50px;
-    margin: 50px inherit;
+    margin-bottom: 100px;
     box-sizing: border-box;
     border-width: 15px;
     border-style: solid;
@@ -152,15 +150,22 @@ html, body {
     text-align: right;
 }
 
+.pin-label { 
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+}
 .pin-box > .pin-label {
     position: absolute;
     left: -15px;
-    top: -50px;
+    top: -1.75em;
     cursor: default;
+    width: 120%;
+    text-align: left;
 }
 
 .pin-box > .pin-name {
-    font-size: 250%;
+    font-size: 60px;
     text-align: center;
     width: 100%;
     height: 100px;
@@ -548,11 +553,11 @@ input[type=checkbox]:focus {
 label[for=checkbox] {
     position: relative;
     
-    top: -25px;
-    line-height: 55px;
+    top: -.4em;
+    line-height: 1em;
     margin: 0;
     padding: 0;
-    height: 55px;
+    height: 1em;
 }
 
 /* LOADING PAGE */
@@ -633,7 +638,6 @@ label[for=checkbox] {
 #connect-button {
     margin-left: auto;
     margin-right: auto;
-    font-size: 125%;
     display: block;
 }
 #connect-button {
@@ -654,6 +658,7 @@ label[for=checkbox] {
 #add-sensors-button,
 #add-actuators-button {
     font-size: 200%;
+    line-height: 57px;
 }
 #add-sensors-button {
     float: left;
@@ -728,6 +733,9 @@ label[for=checkbox] {
 }
 #add-pins-menu-bg-footer.actuators {
     right: 40px;
+}
+#add-pins-menu .pin-stub {
+    margin-bottom: 50px;
 }
 .pin.clicked .pin-box:before {
     content: "\e013";

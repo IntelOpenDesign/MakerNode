@@ -148,15 +148,16 @@ background: linear-gradient(to bottom, #e50082 0%,#bf006c 16%,#bf006c 84%,#e5008
 }
 
 #play-pins .pin-label {
-    left: 0 !important;
+    left: 5% !important;
     top: 0 !important;
     text-align: center;
     height: 100%;
-    line-height: 200px;
-    font-size: 80px;
-    width: 100%;
+    line-height: 1em;
+    font-size: 150%;
+    width: 90%;
     box-sizing: border-box;
-    border-bottom: 70px solid transparent;
+    border-bottom: 60px solid transparent;
+    border-top: 60px solid transparent;
 }
 #play-pins .pin-name {
     font-size: 30px !important;
