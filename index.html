@@ -68,7 +68,7 @@
         <div class="row">
             <div class="col-xs-2">
                 <div id="add-sensors-button"
-                  ng-if='$location.path() === "/"'
+                  ng-if='$location.path() === "/" && s.adding_pins !== "actuators"'
                   class="button square yellow-bg"
                   ng-click="toggle_add_pins_menu_for('sensors')">
                     +
@@ -76,16 +76,17 @@
             </div>
             <div class="col-xs-8">
                 <a id="play-button"
-                  ng-if='$location.path() === "/"'
+                  ng-if='$location.path() === "/" && s.adding_pins === null'
                   class="button wide black-bg"
                   href="#play"><span class="glyphicon glyphicon-play"></span>&nbsp;Play</a>
                 <a id="connect-button"
-                  ng-if='$location.path() === "/play"'
+                  ng-if='$location.path() === "/play" && s.adding_pins === null'
                   class="button wide"
                   href="/">Connect</a>
             </div>
             <div class="col-xs-2">
                 <div id="add-actuators-button"
+                  ng-if='s.adding_pins !== "sensors"'
                   class="button square green-bg"
                   ng-click="toggle_add_pins_menu_for('actuators')">
                     +
