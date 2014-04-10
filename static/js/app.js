@@ -815,11 +815,10 @@ cat.my_pin_format = function(server_pins, server_connections) {
             name = 'A' + (parseInt(id) - 14); // 14 = A0, 15 = A1, etc
 
         var type = '';
-        if (pin.is_analog) {
-            type = 'Analog';
-        } else {
-            type = 'Digital';
-        }
+        if ( pin.is_analog &&  pin.is_input) type = 'Analog Input';
+        if ( pin.is_analog && !pin.is_input) type = 'PWM Output';
+        if (!pin.is_analog &&  pin.is_input) type = 'Digital Input';
+        if (!pin.is_analog && !pin.is_input) type = 'Digital Output';
 
         pins[id] = {
             id: id,
