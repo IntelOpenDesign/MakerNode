@@ -640,15 +640,8 @@ label[for=checkbox] {
     margin-right: auto;
     display: block;
 }
-#connect-button {
-    background: rgb(250, 250, 250);
-    color: rgb(44, 38, 33);
-}
+#play-button:hover,
 #connect-button:hover {
-    color: rgb(44, 38, 33);
-    text-decoration: none;
-}
-#play-button:hover {
     color: white;
     text-decoration: none;
 }

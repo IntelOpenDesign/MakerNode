@@ -11,10 +11,12 @@
     <div class="pin-box"
       ng-click="pin_button_click(pin.id)">
         <!-- TODO handle overflow of pin name from pin-box, also could the same thing happen with pin label? -->
-        <div class="pin-label">
+        <div class="pin-label"
+          ng-if="pin.label.length > 0">
             {{pin.label}}
         </div>
-        <div class="pin-name">
+        <div class="pin-name"
+          ng-if="pin.label.length === 0">
             {{pin.name}}
         </div>
     </div>
