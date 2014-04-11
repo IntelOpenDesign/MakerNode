@@ -29,12 +29,12 @@
 
                 <div class="row">
                     <div class="col-xs-12 sensors column-title">
-                        add a sensor
+                        add/remove sensors
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-xs-4" ng-repeat="(id, pin) in d.hidden_sensors" pin-stub></div>
+                    <div class="col-xs-4" ng-repeat="pin in d.sensors" pin-stub></div>
                 </div>
             </div>
 
@@ -44,12 +44,12 @@
 
                 <div class="row">
                     <div class="col-xs-12 actuators column-title">
-                        add an actuator
+                        add/remove actuators
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-xs-4" ng-repeat="(id, pin) in d.hidden_actuators" pin-stub></div>
+                    <div class="col-xs-4" ng-repeat="pin in d.actuators" pin-stub></div>
                 </div>
             </div>
 

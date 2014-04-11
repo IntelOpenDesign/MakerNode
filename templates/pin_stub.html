@@ -1,3 +1,5 @@
+<!-- pin stubs are meant to be toggled between "clicked" and "unclicked" -->
+
 <div
   ng-class="{
       'pin': true,
@@ -8,11 +10,10 @@
       'connected': pin.is_connected,
       'analog': pin.is_analog,
       'digital': !pin.is_analog,
-      'clicked': clicked_pin_stubs[pin.id],
+      'clicked': is_pin_stub_clicked(pin.id),
       'pin-stub': true}">
     <div class="pin-box"
       ng-click="pin_stub_click(pin.id)">
-        <!-- TODO handle overflow of pin name from pin-box, also could the same thing happen with pin label? -->
         <div class="pin-label">
             {{pin.label}}
         </div>

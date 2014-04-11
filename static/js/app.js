@@ -14,26 +14,26 @@ cat.d = function() {
     that.pins = {};
     that.connections = [];
     // these are convenient for templates, and are kept in sync with pins
+    that.sensors = [];
+    that.actuators = [];
     that.visible_sensors = [];
     that.visible_actuators = [];
-    that.hidden_sensors = [];
-    that.hidden_actuators = [];
 
     var sync_pin_lists = function() {
-        var vissen = [], visact = [], hidsen = [], hidact = [];
+        var sen = [], act = [], vissen = [], visact = [];
         _.each(that.pins, function(pin, id) {
-            if (pin.is_visible) {
-                if (pin.is_input) vissen.push(pin);
-                else              visact.push(pin);
+            if (pin.is_input) {
+                sen.push(pin);
+                if (pin.is_visible) vissen.push(pin);
             } else {
-                if (pin.is_input) hidsen.push(pin);
-                else              hidact.push(pin);
+                act.push(pin);
+                if (pin.is_visible) visact.push(pin);
             }
         });
+        that.sensors = sen;
+        that.actuators = act;
         that.visible_sensors = vissen;
         that.visible_actuators = visact;
-        that.hidden_sensors = hidsen;
-        that.hidden_actuators = hidact;
     };
 
     var sync_pin_connectedness = function() {
@@ -216,7 +216,6 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
     // In the settings window for each pin, tapping "Remove" removes that pin
     // and all its connections, after asking the user for confirmation.
 
-    $scope.clicked_pin_stubs = {};
     $scope.toggle_add_pins_menu_for = function(type) {
         var prev_type = $scope.s.adding_pins;
         // add_pins_menu was closed, so open it
@@ -237,19 +236,23 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
         }
     };
     $scope.close_add_pins_menu = function(history_state_already_popped) {
-        $scope.show_pins(_.keys($scope.clicked_pin_stubs));
-        $scope.clicked_pin_stubs = {};
         $scope.s.adding_pins = null;
         if (!history_state_already_popped) {
             window.history.back();
         }
     };
-    $scope.pin_stub_click = function(id) {
-        if ($scope.clicked_pin_stubs[id])
-            delete $scope.clicked_pin_stubs[id];
-        else
-            $scope.clicked_pin_stubs[id] = true;
+
+    $scope.is_pin_stub_clicked = function(id) {
+        return $scope.d.pins[id].is_visible;
     };
+    $scope.pin_stub_click = function(id) {
+        if ($scope.d.pins[id].is_visible) {
+            $scope.hide_pins([id]);
+        } else {
+            $scope.show_pins([id]);
+        }
+    };
+
     $scope.show_pins = function(ids) {
         $scope.d.show_pins(ids);
         $scope.send_pin_update(ids, 'is_visible');
@@ -664,6 +667,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         _.each(updates.pins, function(pin, id) {
             batch.pins[id] = _.extend({}, batch.pins[id], pin);
         });
+        // TODO remove redundant add/remove connection updates before sending out batch
         batch.connections.push.apply(batch.connections, updates.connections);
         send();
     };
