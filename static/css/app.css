@@ -709,6 +709,8 @@ label[for=checkbox] {
 }
 #add-pins-menu-pins-container {
     margin-bottom: 10px;
+    padding-left: 50px;
+    padding-right: 50px;
 }
 #add-pins-menu-bg-footer {
     width: 0;
@@ -729,6 +731,9 @@ label[for=checkbox] {
 }
 #add-pins-menu .pin-stub {
     margin-bottom: 50px;
+    width: 76%;
+    margin-left: 12%;
+    margin-righ: 12%;
 }
 .pin.clicked .pin-box:before {
     content: "\e013";
