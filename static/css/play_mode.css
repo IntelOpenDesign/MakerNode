@@ -1,3 +1,5 @@
+/* clean up CSS. now that I am using different templates for pins in the add pins menu and pins in the play mode, I don't think I need this separate CSS file at all. */
+
 #play-pins {
     padding-top: 50px;
     padding-bottom: 100px;
