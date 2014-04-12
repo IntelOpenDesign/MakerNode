@@ -5,7 +5,8 @@
       'actuator': !pin.is_input,
       'analog': pin.is_analog,
       'digital': !pin.is_analog,
-      'hide': s.settings_pin !== pin.id}">
+      'hide': s.settings_pin !== pin.id}"
+  data-pin="{{pin.id}}">
     <div class="settings-inner">
         <div class="container-fluid">
 
@@ -73,15 +74,27 @@
                               ng-change="sync_min_max()">
                         </div>
                         <div class="pin-value-container">
-                            <div ng-class="{
-                              'threshold': true,
-                              'hide': !pin.is_analog}"
+                            <div class="threshold"
+                              ng-hide="!pin.is_analog"
                               style="bottom: {{average_min_max()}}%;">
                             </div>
-                            <div ng-class="{
-                              'pin-value': true,
-                              'hide': pin.value === 0}"
-                              style="height:{{pin.value}}%;">
+                            <div class="pin-value"
+                              ng-hide="pin.value === 0"
+                              style="height: {{pin.value}}%;">
+                            </div>
+                            <div class="pin-value-range-outline-top"
+                              ng-hide="!(pin.is_analog && pin.is_input)"
+                              style="top: {{diff_100_max()}}%;">
+                            </div>
+                            <div class="pin-value-range-outline-not-top"
+                              ng-hide="!(pin.is_analog && pin.is_input)"
+                              style="bottom: {{pin.input_min}}%;
+                                     height: {{diff_max_min()}}%;">
+                            </div>
+                            <div class="pin-value-in-range"
+                              ng-hide="!(pin.is_analog && pin.is_input)"
+                              style="bottom: {{pin.input_min}}%;
+                                     height: {{val_in_range()}}%;">
                             </div>
                         </div>
                         <div ng-class="{

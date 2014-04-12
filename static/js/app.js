@@ -416,9 +416,6 @@ cat.app.directive('pinSettings', function($document) {
         };
 
         // min and max sliders
-        $scope.average_min_max = function() {
-            return (parseFloat($scope.pin.input_min) + parseFloat($scope.pin.input_max))/2;
-        };
         $scope.sync_min_max = function() {
             var min = $scope.pin.input_min;
             var max = $scope.pin.input_max;
@@ -426,6 +423,20 @@ cat.app.directive('pinSettings', function($document) {
             $scope.pin.input_min = Math.min(min, max);
             $scope.send_pin_update([$scope.pin.id], 'input_min');
             $scope.send_pin_update([$scope.pin.id], 'input_max');
+        };
+
+        // calculations for drawing
+        $scope.average_min_max = function() {
+            return ($scope.pin.input_max + $scope.pin.input_min) / 2;
+        };
+        $scope.diff_100_max = function() {
+            return 100 - $scope.pin.input_max;
+        };
+        $scope.diff_max_min = function() {
+            return $scope.pin.input_max - $scope.pin.input_min;
+        };
+        $scope.val_in_range = function() {
+            return Math.min($scope.pin.value - $scope.pin.input_min, $scope.pin.input_max - $scope.pin.input_min);
         };
 
         // timer value
