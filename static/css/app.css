@@ -104,7 +104,7 @@ html, body {
 }
 #add-pins-menu .column-title {
     text-align: left;
-    padding: .3em 0 .6em .5em;
+    padding: .6em 0;
 }
 .sensors.column-title {
     color: rgb(147, 106, 24);
@@ -760,7 +760,7 @@ label[for=checkbox] {
     margin-bottom: 50px;
     width: 76%;
     margin-left: 12%;
-    margin-righ: 12%;
+    margin-right: 12%;
 }
 .pin.clicked .pin-box:before {
     content: "\e013";
