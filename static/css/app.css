@@ -410,6 +410,9 @@ input[type=range].vertical-slider::-webkit-slider-thumb {
     box-sizing: content-box;
     margin-bottom: -2px;
 }
+.settings .actuator-value-display .threshold {
+    border-color: rgb(45, 104, 84);
+}
 .settings .pin-value-range-outline-top,
 .settings .pin-value-range-outline-not-top {
     position:absolute;
