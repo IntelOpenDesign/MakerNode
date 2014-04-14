@@ -894,7 +894,32 @@ label[for=checkbox] {
     border-radius: 53px;
 }
 
+.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
+.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider{
+    width: 480px !important;
+    top: 140px;
+    left: -203px;
 }
+.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
+    left: -217px;
+    margin-top: -2px;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
+.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
+    border-left-width: 40px;
+    border-right-width: 40px;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
+    border-bottom-width: 70px;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
+    border-top-width: 70px;
+}
+
+
+
+}
+
 
 @media (max-device-width: 4in) and (min-resolution: 100dpi) {
     
