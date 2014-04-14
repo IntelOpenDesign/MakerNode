@@ -606,6 +606,8 @@ label[for=checkbox] {
     margin: 0;
     padding: 0;
     height: 1em;
+}
+label {
     font-weight: normal;
 }
 
