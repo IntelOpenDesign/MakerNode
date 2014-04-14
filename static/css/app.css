@@ -17,7 +17,7 @@ html, body {
     margin: 0;
     padding: 0;
     font-size: 42px;
-    font-family: 'Neo Sans Intel';
+    font-family: 'Neo Sans Intel'; 
 }
 
 .hide {
@@ -26,7 +26,6 @@ html, body {
 
 .row.padded {
     padding-bottom: .5em;
-
 }
 
 #app-container {
@@ -338,7 +337,7 @@ html, body {
     width: 100%;
 }
 .extra-small {
-    font-size: 75%;
+    font-size: 55%;
 }
 .settings .vertical-slider-container.damping {
     margin-top: 45px;
@@ -602,12 +601,12 @@ input[type=checkbox]:focus {
 }
 label[for=checkbox] {
     position: relative;
-    
     top: -.4em;
     line-height: 1em;
     margin: 0;
     padding: 0;
     height: 1em;
+    font-weight: normal;
 }
 
 /* LOADING PAGE */
@@ -819,4 +818,79 @@ label[for=checkbox] {
 }
 .connection path.edge-bg {
     stroke: white;
+}
+
+/* SMALL DEVICES */
+@media (max-device-width: 4in) {
+    
+.pin {
+    width: 60%;
+    height: 170px;
+    margin-top: 50px;
+    margin-bottom: 120px;
+}
+.pin.sensor {
+    margin-left: 10%;
+}
+.pin.actuator {
+    margin-right: 10%;
+}
+.pin-box > .pin-name {
+    line-height: 140px;
+}
+.pin.clicked .pin-box:before {
+    height: 140px;
+    margin-top: -70px;
+    line-height: 140px;
+}
+
+}
+
+@media (max-device-width: 4in) and (min-resolution: 100dpi) {
+    
+html, body {
+    font-size: 60px;
+} 
+#footer {
+    height: 120px;
+}
+.button {
+    height: 100px;
+    margin: 10px;
+    line-height: 100px;
+}
+.button.square {
+    max-width: 100px;
+    width: 100%;
+}
+.button.wide {
+    max-width: 400px;
+}
+#add-sensors-button,
+#add-actuators-button {
+    line-height: 97px;
+}
+#add-pins-menu {
+    border-bottom-width: 145px;
+}
+#add-pins-menu-bg {
+    border-bottom-width: 145px;
+}
+#add-pins-menu-bg-footer {
+    bottom: 120px;
+}
+#add-pins-menu-bg-footer.sensors {
+    left: 50px;
+}
+#add-pins-menu-bg-footer.actuators {
+    right: 50px;
+}
+.settings {
+    font-size: 85%;
+}
+label[for=checkbox] {
+    top: -12px;
+}
+
+
 }
