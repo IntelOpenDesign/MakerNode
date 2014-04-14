@@ -625,12 +625,11 @@ label {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 500px;
-    margin-left: -250px;
+    width: 700px;
+    margin-left: -350px;
     text-align: center;
     color: rgb(100, 100, 100);
-    padding-top: 70px;
-    font-size: 40px;
+    padding-top: 80px;
 }
 
 /* TODO remove when done debugging*/
