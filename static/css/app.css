@@ -861,6 +861,38 @@ label[for=checkbox] {
     font-weight: normal;
 }
 
+.endpoint {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    margin-top: -50px;
+    margin-left: -50px;
+}
+.actuator .endpoint-inner {
+    width: 70px;
+    height: 70px;
+    margin-top: -35px;
+    margin-left: -35px;
+    border-radius: 35px;
+}
+.sensor.activated .endpoint {
+    background: rgb(231, 98, 40);
+    width: 110px;
+    height: 110px;
+    border-radius: 55px;
+    margin-top: -55px;
+    margin-left: -55px;
+}
+.actuator .slash {
+    width: 90px;
+}
+.endpoint-container {
+    height: 106px;
+    width: 106px;
+    margin-top: -53px;
+    border-radius: 53px;
+}
+
 }
 
 @media (max-device-width: 4in) and (min-resolution: 100dpi) {
