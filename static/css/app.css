@@ -844,6 +844,23 @@ label[for=checkbox] {
     line-height: 140px;
 }
 
+input[type=checkbox] {
+    width: 75px;
+    height: 75px;
+}
+input[type=checkbox]:checked {
+    font-size: 65px;
+}
+label[for=checkbox] {
+    position: relative;
+    top: -.4em;
+    line-height: 1em;
+    margin: 0;
+    padding: 0;
+    height: 1em;
+    font-weight: normal;
+}
+
 }
 
 @media (max-device-width: 4in) and (min-resolution: 100dpi) {
@@ -887,9 +904,6 @@ html, body {
 }
 .settings {
     font-size: 85%;
-}
-label[for=checkbox] {
-    top: -12px;
 }
 
 
