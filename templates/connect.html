@@ -29,7 +29,7 @@
                   'hide': d.visible_sensors.length > 0}">
                 sensors
             </div>
-            <div id="{{pin.id}}" ng-repeat="(id, pin) in d.visible_sensors" sensor></div>
+            <div id="{{pin.id}}" ng-repeat="pin in d.visible_sensors" sensor></div>
         </div>
 
         <div id="actuators" class="col-xs-6">
@@ -40,7 +40,7 @@
                   'hide': d.visible_actuators.length > 0}">
                 actuators
             </div>
-            <div id="{{pin.id}}" ng-repeat="(id, pin) in d.visible_actuators" actuator></div>
+            <div id="{{pin.id}}" ng-repeat="pin in d.visible_actuators" actuator></div>
         </div>
 
     </div>
