@@ -7,7 +7,7 @@
     <div ng-class="{
         'actuators': true,
         'column-title': true,
-        'hide': d.visible_actuators.length > 0}">
+        'hide': d.visible_actuators_no_connections.length > 0}">
         <div class="col-xs-12">
             actuators with no connections
         </div>
@@ -16,7 +16,7 @@
         <div class="col-xs-6"
           ng-repeat="pin in d.visible_actuators"
           ng-hide="pin.is_connected">
-            <div class="pin-outer pin-id-mod-5-is-{{parseInt(pin.id) % 5}}"
+            <div class="pin-outer"
               pin-button>
             </div>
         </div>

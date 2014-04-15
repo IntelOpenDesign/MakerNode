@@ -18,25 +18,10 @@ cat.d = function() {
     that.actuators = [];
     that.visible_sensors = [];
     that.visible_actuators = [];
+    that.visible_actuators_no_connections = [];
 
-    var sync_pin_lists = function() {
-        var sen = [], act = [], vissen = [], visact = [];
-        _.each(that.pins, function(pin, id) {
-            if (pin.is_input) {
-                sen.push(pin);
-                if (pin.is_visible) vissen.push(pin);
-            } else {
-                act.push(pin);
-                if (pin.is_visible) visact.push(pin);
-            }
-        });
-        that.sensors = sen;
-        that.actuators = act;
-        that.visible_sensors = vissen;
-        that.visible_actuators = visact;
-    };
-
-    var sync_pin_connectedness = function() {
+    var sync = function() {
+        // sync pin connectedness
         _.each(that.pins, function(pin) {
             pin.is_connected = false;
         });
@@ -44,12 +29,36 @@ cat.d = function() {
             that.pins[c.source].is_connected = true;
             that.pins[c.target].is_connected = true;
         });
+
+        // sync pin lists
+        var sen = [], act = [], vissen = [], visact = [], visactnoc = [];
+        _.each(that.pins, function(pin, id) {
+            if (pin.is_input) {
+                sen.push(pin);
+                if (pin.is_visible) {
+                    vissen.push(pin);
+                }
+            } else {
+                act.push(pin);
+                if (pin.is_visible) {
+                    visact.push(pin);
+                    if (!pin.is_connected) {
+                        visactnoc.push(pin);
+                    }
+                }
+            }
+        });
+        that.sensors = sen;
+        that.actuators = act;
+        that.visible_sensors = vissen;
+        that.visible_actuators = visact;
+        that.visible_actuators_no_connections = visactnoc;
     };
 
     that.reset = function(data) {
         that.pins = data.pins;
         that.connections = data.connections;
-        sync_pin_lists();
+        sync();
     };
 
     that.update = function(data) {
@@ -68,8 +77,7 @@ cat.d = function() {
 
         that.disconnect(conns_to_remove);
         that.connect(conns_to_add);
-
-        sync_pin_lists();
+        sync();
     };
 
     that.disconnect = function(connections) {
@@ -89,12 +97,12 @@ cat.d = function() {
         _.each(indices, function(index) {
             that.connections.splice(index, 1);
         });
-        sync_pin_connectedness();
+        sync();
     };
 
     that.connect = function(connections) {
         that.connections.push.apply(that.connections, connections);
-        sync_pin_connectedness();
+        sync();
     };
 
     that.are_connected = function(sensor, actuator) {
@@ -111,7 +119,7 @@ cat.d = function() {
         _.each(ids, function(id) {
             that.pins[id].is_visible = true;
         });
-        sync_pin_lists();
+        sync();
     };
 
     that.hide_pins = function(ids) {
@@ -125,8 +133,8 @@ cat.d = function() {
             conns_to_remove.push.apply(conns_to_remove, more_to_remove);
         });
 
-        sync_pin_lists();
         that.disconnect(conns_to_remove);
+        sync();
         return conns_to_remove;
     };
 
