@@ -688,6 +688,15 @@ label {
     text-align: center;
     line-height: 60px;
     cursor: default;
+    position: relative;
+}
+.button:active:before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.07);
+    display: block;
+    position: absolute;
 }
 .button.square {
     max-width: 60px;
@@ -704,6 +713,11 @@ label {
     margin-right: auto;
     display: block;
 }
+#play-button:active:before,
+#connect-button:active:before {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+/* TODO more general purpose way of doing :active change would be nice, rather than piecemeal by each thing individually */
 #play-button:hover,
 #connect-button:hover {
     color: white;
@@ -834,6 +848,24 @@ label {
 .connection path.edge-bg {
     stroke: white;
 }
+
+/* :ACTIVE CLICK FEEDBACK */
+
+.pin-box:active:before,
+.button:active:before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.07);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 5;
+}
+.button.black-bg:active:before {
+    background-color: rgba(255, 255, 255, 0.07);
+}
+
 
 /* SMALL DEVICES */
 @media (max-device-width: 4in) {
