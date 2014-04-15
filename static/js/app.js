@@ -279,34 +279,43 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
     // sensor that was already activated, then we deactivate that sensor and go
     // back to having no activated pins.
 
-    $scope.activated_sensor = null;
+    $scope.activated_pin = null;
 
-    // triggered when the user taps a sensor
-    $scope.toggle_activated = function($event, sensor) {
+    $scope.pin_endpoint_click = function($event, pin) {
         $event.stopPropagation();
-        if ($scope.activated_sensor === sensor) {
-            $scope.activated_sensor = null;
-        } else {
-            $scope.activated_sensor = sensor;
-        }
-    };
-
-    // triggered when the user taps an actuator
-    $scope.connect_or_disconnect = function($event, actuator) {
-        $event.stopPropagation();
-        if ($scope.activated_sensor === null) {
+        console.log('pin_endpoint_click', pin);
+        if ($scope.activated_pin === null) {
+            $scope.activated_pin = pin;
             return;
-        }
-        var sensor = $scope.activated_sensor;
-        var connections = [{source: sensor, target: actuator}];
-        if ($scope.d.are_connected(sensor, actuator)) {
-            $scope.d.disconnect(connections);
-            Galileo.remove_connections(connections);
+        } else if ($scope.activated_pin === pin) {
+            $scope.activated_pin = null;
+            return;
+        } else if ($scope.d.pins[$scope.activated_pin].is_input
+                                === $scope.d.pins[pin].is_input) {
+            $scope.activated_pin = pin;
+            return;
         } else {
-            $scope.d.connect(connections);
-            Galileo.add_connections(connections);
+            var sensor  = null, actuator = null;
+            if ($scope.d.pins[$scope.activated_pin].is_input) {
+                // sensor already activated and actuator just clicked
+                sensor = $scope.activated_pin;
+                actuator = pin;
+            } else {
+                // actuatur already activated and sensor just clicked
+                sensor = pin;
+                actuator = $scope.activated_pin;
+            }
+
+            var connections = [{source: sensor, target: actuator}];
+            if ($scope.d.are_connected(sensor, actuator)) {
+                $scope.d.disconnect(connections);
+                Galileo.remove_connections(connections);
+            } else {
+                $scope.d.connect(connections);
+                Galileo.add_connections(connections);
+            }
+            $scope.activated_sensor = null;
         }
-        $scope.activated_sensor = null;
     };
 
     // HOW THE USER ADJUSTS PIN SETTINGS

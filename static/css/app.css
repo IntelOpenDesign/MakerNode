@@ -259,6 +259,7 @@ html, body {
 .actuator.connected .endpoint-inner {
     background-color: rgb(247, 193, 40);
 }
+
 .sensor.activated .endpoint {
     background: rgb(231, 98, 40);
     width: 84px;
@@ -267,14 +268,20 @@ html, body {
     margin-top: -42px;
     margin-left: -42px;
 }
-.actuator.activated .endpoint, .actuator.activated.connected .endpoint {
+.pin.possible-connection .endpoint,
+.pin.possible-connection.connected .endpoint {
     background: rgb(231, 98, 40);
     -webkit-animation-duration: 2s;
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-name: pulseGlow;
 }
+.pin.possible-connection.already-connected-to-activated-pin .endpoint,
+.pin.possible-connection.connected.already-connected-to-activated-pin .endpoint {
+    -webkit-animation: none;
+}
 
-.actuator .slash {
+.pin .slash {
+    display: none;
     position: absolute;
     top: 50%;
     margin-top: -7.5px;
@@ -282,16 +289,9 @@ html, body {
     width: 60px;
     height: 15px;
     background: rgb(231, 98, 40);
-    display: none;
     -webkit-transform: rotate(-45deg);
 }
-.x-1 {
-    -webkit-transform: rotate(45deg);
-}
-.pin.actuator.activated.already-connected-to-activated-sensor .endpoint {
-    -webkit-animation: none;
-}
-.pin.actuator.activated.already-connected-to-activated-sensor .slash {
+.pin.already-connected-to-activated-pin .slash {
     display: block;
 }
 
