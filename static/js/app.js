@@ -123,19 +123,18 @@ cat.d = function() {
     };
 
     that.hide_pins = function(ids) {
-        var conns_to_remove = [];
+        var affected_conns = [];
         _.each(ids, function(id) {
             that.pins[id].is_visible = false;
             var end = that.pins[id].is_input ? 'source' : 'target';
-            var more_to_remove = _.filter(that.connections, function(c) {
+            var more_conns = _.filter(that.connections, function(c) {
                 return c[end] === id;
             });
-            conns_to_remove.push.apply(conns_to_remove, more_to_remove);
+            affected_conns.push.apply(affected_conns, more_conns);
         });
 
-        that.disconnect(conns_to_remove);
         sync();
-        return conns_to_remove;
+        return affected_conns;
     };
 
     return that;
@@ -268,7 +267,27 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
     $scope.hide_pins = function(ids) {
         var connections_to_remove = $scope.d.hide_pins(ids);
         $scope.send_pin_update(ids, 'is_visible');
-        Galileo.remove_connections(connections_to_remove);
+        $scope.remove_connections(connections_to_remove);
+    };
+
+    $scope.add_connections = function(connections) {
+        $scope.d.connect(connections);
+        Galileo.add_connections(connections);
+    };
+    $scope.remove_connections = function(connections) {
+        // when removing connections, actuators that used to be connected, but
+        // then lose all their connections, get their value set to 0
+        var connected_actuators = _.filter($scope.d.pins, function(pin) {
+            return !pin.is_input && pin.is_connected;
+        });
+        $scope.d.disconnect(connections);
+        Galileo.remove_connections(connections);
+        _.each(connected_actuators, function(pin) {
+            if (!pin.is_connected) {
+                pin.value = 0;
+                $scope.send_pin_update([pin.id], 'value');
+            }
+        });
     };
 }]);
 
@@ -316,20 +335,9 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
 
             var connections = [{source: sensor, target: actuator}];
             if ($scope.d.are_connected(sensor, actuator)) {
-                // if they are already connected, disconnect them
-                $scope.d.disconnect(connections);
-                Galileo.remove_connections(connections);
-                // if removing the connection leaves the actuator with no
-                // connections, set that actuator's value to 0
-                // TODO I think this should happen server side?
-                if (!$scope.d.pins[actuator].is_connected) {
-                    $scope.d.pins[actuator].value = 0;
-                    $scope.send_pin_update([actuator], 'value');
-                }
+                $scope.remove_connections(connections);
             } else {
-                // if they are not connected, connect them
-                $scope.d.connect(connections);
-                Galileo.add_connections(connections);
+                $scope.add_connections(connections);
             }
 
             $scope.activated_pin = null;
