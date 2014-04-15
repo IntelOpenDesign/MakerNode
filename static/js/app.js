@@ -216,6 +216,31 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
         Galileo.connect(cat.test_server_url);
     }
 
+    // HOW TO ADD/REMOVE CONNECTIONS
+    // These helper functions dot all the i's and cross all the t's in terms of
+    // maintaining consistent internal state and communicating with Galileo
+
+    $scope.add_connections = function(connections) {
+        $scope.d.connect(connections);
+        Galileo.add_connections(connections);
+    };
+
+    $scope.remove_connections = function(connections) {
+        // when removing connections, actuators that used to be connected, but
+        // then lose all their connections, get their value set to 0
+        var connected_actuators = _.filter($scope.d.pins, function(pin) {
+            return !pin.is_input && pin.is_connected;
+        });
+        $scope.d.disconnect(connections);
+        Galileo.remove_connections(connections);
+        _.each(connected_actuators, function(pin) {
+            if (!pin.is_connected) {
+                pin.value = 0;
+                $scope.send_pin_update([pin.id], 'value');
+            }
+        });
+    };
+
     // HOW THE USER SHOWS/HIDES PINS
     // Tapping a "+" button at the bottom of the screen opens or closes the add
     // pins menu. In this menu, tapping a pin selects it. Leaving the menu adds
@@ -271,25 +296,6 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
         $scope.remove_connections(connections_to_remove);
     };
 
-    $scope.add_connections = function(connections) {
-        $scope.d.connect(connections);
-        Galileo.add_connections(connections);
-    };
-    $scope.remove_connections = function(connections) {
-        // when removing connections, actuators that used to be connected, but
-        // then lose all their connections, get their value set to 0
-        var connected_actuators = _.filter($scope.d.pins, function(pin) {
-            return !pin.is_input && pin.is_connected;
-        });
-        $scope.d.disconnect(connections);
-        Galileo.remove_connections(connections);
-        _.each(connected_actuators, function(pin) {
-            if (!pin.is_connected) {
-                pin.value = 0;
-                $scope.send_pin_update([pin.id], 'value');
-            }
-        });
-    };
 }]);
 
 // The controller for Connect Mode.
