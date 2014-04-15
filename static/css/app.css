@@ -66,9 +66,9 @@ html, body {
     position: absolute;
     top: 0;
     left: 50%;
-    width: 50px;
-    margin-left: -31px;
-    font-size: 150%;
+    width: 100px;
+    margin-left: -50px;
+    font-size: 60px;
     text-align: center;
     background: white;
     padding-top: 10px;
@@ -865,7 +865,18 @@ label {
 .button.black-bg:active:before {
     background-color: rgba(255, 255, 255, 0.07);
 }
-
+#settings-button:active:before {
+    width: 24px;
+    height: 24px;
+    display: block;
+    background: rgba(0,0,0,0.1);
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -12px;
+    margin-top: -12px; 
+}
 
 /* SMALL DEVICES */
 @media (max-device-width: 4in) {
