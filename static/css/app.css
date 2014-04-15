@@ -235,38 +235,52 @@ html, body {
 }
 
 .endpoint {
-    width: 74px;
-    height: 74px;
-    border-radius: 37px;
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
     position: relative;
     box-sizing: content-box;
     top: 50%;
     left: 50%;
-    margin-top: -37px;
-    margin-left: -37px;
+    margin-top: -40px;
+    margin-left: -40px;
 }
-.actuator .endpoint-inner {
+.sensor .endpoint {
+    background-color: rgb(247, 193, 40);
+}
+.actuator .endpoint {
+    background-color: rgb(45, 104, 84);
+}
+.endpoint-inner {
     position: absolute;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     top: 50%;
     left: 50%;
-    margin-top: -20px;
-    margin-left: -20px;
-    background-color: white;
-    border-radius: 20px;
+    margin-top: -25px;
+    margin-left: -25px; 
+    border-radius: 25px;
 }
-.actuator.connected .endpoint-inner {
+.actuator .endpoint-inner {
+    background-color: white;
+}
+.sensor .endpoint-inner,
+.actuator.connected .endpoint-inner,
+.pin.sensor.possible-connection.already-connected-to-activated-pin .endpoint-inner {
     background-color: rgb(247, 193, 40);
 }
 
-.sensor.activated .endpoint {
-    background: rgb(231, 98, 40);
+.pin.activated .endpoint {
+    background-color: rgb(231, 98, 40);
     width: 84px;
     height: 84px;
     border-radius: 42px;
     margin-top: -42px;
     margin-left: -42px;
+}
+.pin.sensor.activated .endpoint-inner,
+.pin.sensor.possible-connection .endpoint-inner {
+    background-color: rgb(231, 98, 40);
 }
 .pin.possible-connection .endpoint,
 .pin.possible-connection.connected .endpoint {
@@ -285,7 +299,7 @@ html, body {
     position: absolute;
     top: 50%;
     margin-top: -7.5px;
-    left: 5px;
+    left: 9px;
     width: 60px;
     height: 15px;
     background: rgb(231, 98, 40);

@@ -33,14 +33,11 @@
             </div>
         </div>
         <div class="endpoint-container"
-          ng-click="pin_endpoint_click(pin.id)">
+          ng-click="pin_endpoint_click($event, pin.id)">
             <div id="{{pin.id}}-endpoint"
-              ng-class="{
-                  'endpoint': true,
-                  'yellow-bg': pin.is_input,
-                  'green-bg': !pin.is_input}">
-                  <div class="endpoint-inner"></div>
-                  <div class="slash"></div>
+              class="endpoint">
+                <div class="endpoint-inner"></div>
+                <div class="slash"></div>
             </div>
         </div>
     </div>

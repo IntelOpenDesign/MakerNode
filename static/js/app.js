@@ -314,7 +314,8 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
                 $scope.d.connect(connections);
                 Galileo.add_connections(connections);
             }
-            $scope.activated_sensor = null;
+
+            $scope.activated_pin = null;
         }
     };
 
