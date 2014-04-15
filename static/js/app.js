@@ -316,9 +316,18 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
 
             var connections = [{source: sensor, target: actuator}];
             if ($scope.d.are_connected(sensor, actuator)) {
+                // if they are already connected, disconnect them
                 $scope.d.disconnect(connections);
                 Galileo.remove_connections(connections);
+                // if removing the connection leaves the actuator with no
+                // connections, set that actuator's value to 0
+                // TODO I think this should happen server side?
+                if (!$scope.d.pins[actuator].is_connected) {
+                    $scope.d.pins[actuator].value = 0;
+                    $scope.send_pin_update([actuator], 'value');
+                }
             } else {
+                // if they are not connected, connect them
                 $scope.d.connect(connections);
                 Galileo.add_connections(connections);
             }
