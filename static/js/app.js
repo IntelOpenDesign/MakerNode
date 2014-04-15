@@ -244,6 +244,7 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
     };
     $scope.close_add_pins_menu = function(history_state_already_popped) {
         $scope.s.adding_pins = null;
+        /* TODO this window history stuff, which happens in showing/hiding pins AND in pin settings AND with overall app settings, should really be taken care of by some kind of modal/popup directive */
         if (!history_state_already_popped) {
             window.history.back();
         }
