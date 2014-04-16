@@ -352,9 +352,14 @@ html, body {
 }
 .settings .pin-label {
     width: 100%;
+    max-width: 600px; /* NOTE this is based on 20 times the width of "W" in our current font. 20 because we limit label length to 20 chars. TODO make this dynamically update with changing font size, and base it on the font size that the label input is in */
 }
 .extra-small {
     font-size: 55%;
+}
+.settings .pin-label-input-label {
+    position: relative;
+    top: -.5em;
 }
 .settings .vertical-slider-container.damping {
     margin-top: 45px;
