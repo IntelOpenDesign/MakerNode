@@ -3,7 +3,7 @@ var cat = {};
 
 // server connection settings
 cat.on_hardware = false; // to switch to Galileo, just change this to true
-cat.test_server_url = 'ws://192.168.0.195:8001';
+cat.test_server_url = 'ws://10.12.10.53:8001';
 cat.hardware_server_url = 'ws://cat/';
 cat.hardware_server_protocol = 'hardware-state-protocol';
 
@@ -303,9 +303,32 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
     // RESET APP
     // This hides all pins, removes all connections, and resets all pin settings
     // to defaults.
-    // TODO I think pin defaults should live on the server not on the client
+    // TODO I think pin defaults should live on the server not on the client,
+    // because the app initializes itself with server data
+    var pin_defaults = {
+        label: '',
+        input_min: 0,
+        input_max: 100,
+        is_inverted: false,
+        is_visible: false,
+        value: 0,
+        is_timer_on: false,
+        timer_value: 0,
+        damping: 0,
+        is_connected: false,
+    };
     $scope.reset_app = function() {
-        console.log('reset_app !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        Galileo.remove_connections($scope.d.connections);
+        var data = {connections: [], pins: {}};
+        _.each($scope.d.pins, function(pin) {
+            data.pins[pin.id] = _.extend({}, pin, pin_defaults);
+        });
+        $scope.d.reset(data);
+        var ids = _.keys(data.pins);
+        var attrs = _.keys(pin_defaults);
+        _.each(attrs, function(attr) {
+            $scope.send_pin_update(ids, attr);
+        });
     };
 
 }]);
