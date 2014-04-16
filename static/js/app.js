@@ -3,7 +3,7 @@ var cat = {};
 
 // server connection settings
 cat.on_hardware = false; // to switch to Galileo, just change this to true
-cat.test_server_url = 'ws://10.12.10.53:8001';
+cat.test_server_url = 'ws://localhost:8001';
 cat.hardware_server_url = 'ws://cat/';
 cat.hardware_server_protocol = 'hardware-state-protocol';
 
@@ -184,7 +184,6 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
         show_reset_confirmation: false,
     };
 
-    /* TODO confirmation message (show_remove_confirmation, show_reset_confirmation) should be a directive */
 
     // TALKING WITH GALILEO
 
@@ -300,37 +299,6 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
         $scope.remove_connections(connections_to_remove);
     };
 
-    // RESET APP
-    // This hides all pins, removes all connections, and resets all pin settings
-    // to defaults.
-    // TODO I think pin defaults should live on the server not on the client,
-    // because the app initializes itself with server data
-    var pin_defaults = {
-        label: '',
-        input_min: 0,
-        input_max: 100,
-        is_inverted: false,
-        is_visible: false,
-        value: 0,
-        is_timer_on: false,
-        timer_value: 0,
-        damping: 0,
-        is_connected: false,
-    };
-    $scope.reset_app = function() {
-        Galileo.remove_connections($scope.d.connections);
-        var data = {connections: [], pins: {}};
-        _.each($scope.d.pins, function(pin) {
-            data.pins[pin.id] = _.extend({}, pin, pin_defaults);
-        });
-        $scope.d.reset(data);
-        var ids = _.keys(data.pins);
-        var attrs = _.keys(pin_defaults);
-        _.each(attrs, function(attr) {
-            $scope.send_pin_update(ids, attr);
-        });
-    };
-
 }]);
 
 // The controller for Connect Mode.
@@ -410,11 +378,67 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
         $scope.s.show_remove_confirmation = false;
     };
 
+    /* TODO confirmation message (show_remove_confirmation, show_reset_confirmation) should be a directive */
+    // TODO hitting "back" should get you out of the remove confirmation dialog and back into pin settings.
     $scope.open_remove_dialog = function() {
         $scope.s.show_remove_confirmation = true;
     };
     $scope.close_remove_dialog = function() {
         $scope.s.show_remove_confirmation = false;
+    };
+
+    // APP SETTINGS - CURRENTLY ONLY RESET FEATURE
+    // This hides all pins, removes all connections, and resets all pin settings
+    // to defaults.
+
+    // TODO why is setting_pin in $scope.s when it is only used by ConnectModeCtrl?
+    $scope.open_app_settings = function() {
+        $scope.activated_pin = null;
+        $scope.s.settings_pin = null;
+        $scope.s.show_app_settings = true;
+        window.history.pushState();
+        window.onpopstate = function() {
+            $scope.$apply(function() {
+                $scope.close_app_settings(true);
+            });
+        };
+    };
+
+    $scope.close_app_settings = function(history_state_already_popped) {
+        if (!history_state_already_popped) {
+            window.history.back();
+        }
+        $scope.s.show_app_settings = false;
+        $scope.s.show_reset_confirmation = false;
+    };
+
+    // TODO I think pin defaults should live on the server not on the client,
+    // because the app initializes itself with server data
+    var pin_defaults = {
+        label: '',
+        input_min: 0,
+        input_max: 100,
+        is_inverted: false,
+        is_visible: false,
+        value: 0,
+        is_timer_on: false,
+        timer_value: 0,
+        damping: 0,
+        is_connected: false,
+    };
+
+    $scope.reset_app = function() {
+        Galileo.remove_connections($scope.d.connections);
+        var data = {connections: [], pins: {}};
+        _.each($scope.d.pins, function(pin) {
+            data.pins[pin.id] = _.extend({}, pin, pin_defaults);
+        });
+        $scope.d.reset(data);
+        var ids = _.keys(data.pins);
+        var attrs = _.keys(pin_defaults);
+        _.each(attrs, function(attr) {
+            $scope.send_pin_update(ids, attr);
+        });
     };
 }]);
 

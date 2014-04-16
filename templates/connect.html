@@ -11,7 +11,7 @@
 <div id="settings-button"
   class="black"
   ng-show="s.settings_pin === null && s.adding_pins === null && !s.show_app_settings"
-  ng-click="s.show_app_settings = true;">
+  ng-click="open_app_settings()">
     <span class="glyphicon glyphicon-cog"></span>
 </div>
 
@@ -41,7 +41,7 @@
             <div class="row padded">
                 <div class="col-xs-3 col-xs-offset-9">
                     <div class="button black-bg"
-                      ng-click="s.show_app_settings = false; s.show_reset_confirmation = false;">
+                      ng-click="close_app_settings()">
                         OK
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                     </div>
                     <div class="col-xs-6">
                         <div class="button black-bg"
-                          ng-click="reset_app(); s.show_app_settings = false; s.show_reset_confirmation = false;">
+                          ng-click="reset_app(); close_app_settings();">
                             Yes
                         </div>
                     </div>
