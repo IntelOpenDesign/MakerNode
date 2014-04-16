@@ -21,6 +21,7 @@
     <div id="add-pins-menu"
       ng-switch="s.adding_pins"
       ng-class="{'hide': s.settings_pin !== null || s.adding_pins === null}">
+      <!-- TODO do i really need the s.settings_pin !== null part of the above line? -->
         <div id="add-pins-menu-pins-container">
 
             <div id="add-sensors"
@@ -64,7 +65,7 @@
     <div id="footer"
       ng-class="{
           'container-fluid': true,
-          'hide': s.settings_pin !== null}">
+          'hide': s.settings_pin !== null || s.show_app_settings}">
         <div class="row">
             <div class="col-xs-2">
                 <div id="add-sensors-button"

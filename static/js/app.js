@@ -180,7 +180,11 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
         settings_pin: null, // pin id to show settings for
         adding_pins: null,  // 'sensors' or 'actuators'
         show_remove_confirmation: false, // whether to show this dialog box
+        show_app_settings: false,
+        show_reset_confirmation: false,
     };
+
+    /* TODO confirmation message (show_remove_confirmation, show_reset_confirmation) should be a directive */
 
     // TALKING WITH GALILEO
 
@@ -294,6 +298,14 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
         var connections_to_remove = $scope.d.hide_pins(ids);
         $scope.send_pin_update(ids, 'is_visible');
         $scope.remove_connections(connections_to_remove);
+    };
+
+    // RESET APP
+    // This hides all pins, removes all connections, and resets all pin settings
+    // to defaults.
+    // TODO I think pin defaults should live on the server not on the client
+    $scope.reset_app = function() {
+        console.log('reset_app !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     };
 
 }]);
