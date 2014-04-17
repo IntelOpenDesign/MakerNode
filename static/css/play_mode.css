@@ -72,12 +72,24 @@
     z-index: 0;
 }
 
+#play-pins .pin-value-container .pin-name,
+#play-pins .pin-value-container .pin-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    line-height: 110px;
+}
+
 #play-pins .vertical-slider-container {
     position: absolute;
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
+    z-index: 5;
 }
 
 #play-pins input[type=range].vertical-slider {
