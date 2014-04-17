@@ -486,6 +486,10 @@ cat.app.directive('pinButton', function($document) {
     return { templateUrl: 'templates/pin_button.html' };
 });
 
+cat.app.directive('pinSlider', function($document) {
+    return { templateUrl: 'templates/pin_slider.html' };
+});
+
 // PIN SETTINGS
 cat.app.directive('pinSettings', function($document) {
     function link($scope, $el, attrs) {

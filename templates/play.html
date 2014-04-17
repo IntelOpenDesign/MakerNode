@@ -16,8 +16,13 @@
         <div class="col-xs-6"
           ng-repeat="pin in d.visible_actuators"
           ng-hide="pin.is_connected">
-            <div class="pin-outer"
+            <!-- TODO instead of ng-if for two mutually exclusive cases, there is probably an ng-if and ng-else -->
+            <div ng-if="!pin.is_analog"
+              class="pin-outer"
               pin-button>
+            </div>
+            <div ng-if="pin.is_analog"
+              pin-slider>
             </div>
         </div>
     </div>
