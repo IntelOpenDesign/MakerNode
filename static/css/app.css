@@ -37,10 +37,12 @@ html, body {
   margin-left: -50px;
   font-size: 60px;
   text-align: center;
-  background: white;
   padding-top: 10px;
   line-height: 1em;
-  padding-bottom: 5px; }
+  padding-bottom: 5px;
+  background-color: white; }
+  #settings-button:active {
+    background-color: #e6e6e6; }
 
 #column-divider {
   position: fixed;
@@ -109,7 +111,9 @@ html, body {
   position: relative;
   height: 100%;
   width: 100%;
-  background: white; }
+  background-color: white; }
+  .pin-box:active {
+    background-color: #e6e6e6; }
 
 .actuator .pin-box {
   float: right;
@@ -156,7 +160,8 @@ html, body {
   top: 0;
   left: 0;
   z-index: 0;
-  width: 100%; }
+  width: 100%;
+  background: transparent; }
 
 .pin-value {
   position: absolute;
@@ -174,10 +179,11 @@ html, body {
 
 .digital .pin-value {
   width: 100%;
-  border: 10px solid white;
+  border: 10px solid transparent;
   box-sizing: border-box;
   margin: 0;
-  height: 100%; }
+  height: 100%;
+  -webkit-background-clip: content-box; }
 
 .endpoint-container {
   position: absolute;
@@ -633,6 +639,8 @@ label {
   cursor: default;
   position: relative;
   background-color: #2c2621; }
+  .button:active {
+    background-color: #493f37; }
 
 .button.square {
   max-width: 60px;
@@ -644,9 +652,13 @@ label {
 
 .button.danger {
   background-color: #bd2a2a; }
+  .button.danger:active {
+    background-color: #932121; }
 
 .button.secondary {
   background-color: #878787; }
+  .button.secondary:active {
+    background-color: #6e6e6e; }
 
 #play-button,
 #connect-button {
@@ -654,11 +666,6 @@ label {
   margin-right: auto;
   display: block; }
 
-#play-button:active:before,
-#connect-button:active:before {
-  background-color: rgba(255, 255, 255, 0.2); }
-
-/* TODO more general purpose way of doing :active change would be nice, rather than piecemeal by each thing individually */
 #play-button:hover,
 #connect-button:hover {
   color: white;
@@ -674,11 +681,15 @@ label {
 
 #add-sensors-button {
   float: left;
-  background: #f7c128; }
+  background-color: #f7c128; }
+  #add-sensors-button:active {
+    background-color: #e4aa08; }
 
 #add-actuators-button {
   float: right;
-  background: #2d6854; }
+  background-color: #2d6854; }
+  #add-actuators-button:active {
+    background-color: #1e4437; }
 
 /* SHOWING AND HIDING PINS */
 .confirm-remove-container {
@@ -787,33 +798,6 @@ label {
 
 .connection path.edge-bg {
   stroke: white; }
-
-/* :ACTIVE CLICK FEEDBACK */
-.pin-box:active:before,
-.button:active:before {
-  content: "";
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.07);
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 5; }
-
-.button:active:before {
-  background-color: rgba(255, 255, 255, 0.07); }
-
-#settings-button:active:before {
-  width: 24px;
-  height: 24px;
-  display: block;
-  background: rgba(0, 0, 0, 0.1);
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-left: -12px;
-  margin-top: -12px; }
 
 /* SMALL DEVICES */
 @media (max-device-width: 4in) {

@@ -2,6 +2,18 @@ $yellow: rgb(247, 193, 40);
 $green: rgb(45, 104, 84);
 $black: rgb(44, 38, 33);
 
+@mixin tap_feedback($color) {
+    background-color: $color;
+
+    &:active {
+        @if lightness($color) > 16 {
+            background-color: darken($color, 10%);
+        } @else {
+            background-color: lighten($color, 10%);
+        }
+    }
+}
+
 @font-face {
     font-family: 'Neo Sans Intel';
     font-weight: normal;
@@ -50,10 +62,10 @@ html, body {
     margin-left: -50px;
     font-size: 60px;
     text-align: center;
-    background: white;
     padding-top: 10px;
     line-height: 1em;
     padding-bottom: 5px;
+    @include tap_feedback(white);
 }
 
 #column-divider {
@@ -125,7 +137,7 @@ html, body {
     position: relative;
     height: 100%;
     width: 100%;
-    background: white;
+    @include tap_feedback(white);
 }
 .actuator .pin-box {
     float: right;
@@ -177,6 +189,7 @@ html, body {
     left: 0;
     z-index: 0;
     width: 100%;
+    background: transparent;
 }
 .pin-value {
     position: absolute;
@@ -194,10 +207,11 @@ html, body {
 }
 .digital .pin-value {
     width: 100%;
-    border: 10px solid white;
+    border: 10px solid transparent;
     box-sizing: border-box;
     margin: 0;
     height: 100%;
+    -webkit-background-clip: content-box;
 }
 
 .endpoint-container {
@@ -680,7 +694,7 @@ label {
     line-height: 60px;
     cursor: default;
     position: relative;
-    background-color: $black;
+    @include tap_feedback($black);
 }
 .button.square {
     max-width: 60px;
@@ -691,10 +705,10 @@ label {
     width: 100%;
 }
 .button.danger {
-    background-color: rgb(189, 42, 42);
+    @include tap_feedback(rgb(189, 42, 42));
 }
 .button.secondary {
-    background-color: rgb(135, 135, 135);
+    @include tap_feedback(rgb(135, 135, 135));
 }
 
 #play-button,
@@ -703,11 +717,6 @@ label {
     margin-right: auto;
     display: block;
 }
-#play-button:active:before,
-#connect-button:active:before {
-    background-color: rgba(255, 255, 255, 0.2);
-}
-/* TODO more general purpose way of doing :active change would be nice, rather than piecemeal by each thing individually */
 #play-button:hover,
 #connect-button:hover {
     color: white;
@@ -723,11 +732,11 @@ label {
 }
 #add-sensors-button {
     float: left;
-    background: $yellow;
+    @include tap_feedback($yellow);
 }
 #add-actuators-button {
     float: right;
-    background: $green;
+    @include tap_feedback($green);
 }
 
 /* SHOWING AND HIDING PINS */
@@ -841,34 +850,6 @@ label {
     stroke: white;
 }
 
-/* :ACTIVE CLICK FEEDBACK */
-
-.pin-box:active:before,
-.button:active:before {
-    content: "";
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.07);
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 5;
-}
-.button:active:before {
-    background-color: rgba(255, 255, 255, 0.07);
-}
-#settings-button:active:before {
-    width: 24px;
-    height: 24px;
-    display: block;
-    background: rgba(0,0,0,0.1);
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-left: -12px;
-    margin-top: -12px; 
-}
 
 /* SMALL DEVICES */
 @media (max-device-width: 4in) {
