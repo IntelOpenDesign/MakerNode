@@ -55,22 +55,16 @@ html, body {
 }
 
 #settings-button {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 100px;
-    margin-left: -50px;
+    @include tap_feedback(white);
     font-size: 60px;
     text-align: center;
-    padding-top: 10px;
-    line-height: 1em;
-    padding-bottom: 5px;
-    @include tap_feedback(white);
+    line-height: 70px;
+    padding: 10px inherit;
 }
 
 #column-divider {
     position: fixed;
-    top: 0;
+    top: 10px;
     left: 50%;
     height: 100%;
     width: 0;
@@ -87,7 +81,6 @@ html, body {
 
 #pins-container {
     min-height: 100%;
-    padding-top: 50px;
 }
 
 .column-title {
@@ -121,6 +114,9 @@ html, body {
     box-sizing: border-box;
     border-width: 15px;
     border-style: solid;
+}
+.pin:first-child {
+    margin-top: 25px;
 }
 .pin.sensor {
     margin-left: 20%;

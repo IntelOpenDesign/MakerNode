@@ -30,23 +30,17 @@ html, body {
   color: rgba(0, 0, 0, 0.5); }
 
 #settings-button {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 100px;
-  margin-left: -50px;
+  background-color: white;
   font-size: 60px;
   text-align: center;
-  padding-top: 10px;
-  line-height: 1em;
-  padding-bottom: 5px;
-  background-color: white; }
+  line-height: 70px;
+  padding: 10px inherit; }
   #settings-button:active {
     background-color: #e6e6e6; }
 
 #column-divider {
   position: fixed;
-  top: 0;
+  top: 10px;
   left: 50%;
   height: 100%;
   width: 0;
@@ -61,8 +55,7 @@ html, body {
   border-color: #b7a998; }
 
 #pins-container {
-  min-height: 100%;
-  padding-top: 50px; }
+  min-height: 100%; }
 
 .column-title {
   text-align: center;
@@ -96,6 +89,9 @@ html, body {
   box-sizing: border-box;
   border-width: 15px;
   border-style: solid; }
+
+.pin:first-child {
+  margin-top: 25px; }
 
 .pin.sensor {
   margin-left: 20%;
