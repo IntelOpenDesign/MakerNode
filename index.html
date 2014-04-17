@@ -70,7 +70,7 @@
             <div class="col-xs-2">
                 <div id="add-sensors-button"
                   ng-if='$location.path() === "/" && s.adding_pins !== "actuators"'
-                  class="button square yellow-bg"
+                  class="button square"
                   ng-click="toggle_add_pins_menu_for('sensors')">
                     +
                 </div>
@@ -78,17 +78,17 @@
             <div class="col-xs-8">
                 <a id="play-button"
                   ng-if='$location.path() === "/" && s.adding_pins === null'
-                  class="button wide black-bg"
+                  class="button wide"
                   href="#play">Controller Mode</a>
                 <a id="connect-button"
                   ng-if='$location.path() === "/play" && s.adding_pins === null'
-                  class="button wide black-bg"
+                  class="button wide"
                   href="/">Configure</a>
             </div>
             <div class="col-xs-2">
                 <div id="add-actuators-button"
                   ng-if='s.adding_pins !== "sensors"'
-                  class="button square green-bg"
+                  class="button square"
                   ng-click="toggle_add_pins_menu_for('actuators')">
                     +
                 </div>

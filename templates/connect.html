@@ -2,7 +2,6 @@
 
 <div id="column-divider"
   ng-class="{
-      'gray-border': true,
       'hide': s.settings_pin !== null ||
               s.adding_pins !== null ||
               s.show_app_settings}">
@@ -40,7 +39,7 @@
             </div>
             <div class="row padded">
                 <div class="col-xs-3 col-xs-offset-9">
-                    <div class="button black-bg"
+                    <div class="button"
                       ng-click="close_app_settings()">
                         OK
                     </div>
@@ -60,13 +59,13 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-6">
-                        <div class="button gray-bg"
+                        <div class="button secondary"
                           ng-click="s.show_reset_confirmation = false;">
                             No
                         </div>
                     </div>
                     <div class="col-xs-6">
-                        <div class="button black-bg"
+                        <div class="button"
                           ng-click="reset_app(); close_app_settings();">
                             Yes
                         </div>

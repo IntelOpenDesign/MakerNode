@@ -26,30 +26,6 @@ html, body {
   padding-bottom: 50px; }
 
 /* COLORS */
-.yellow-bg {
-  background-color: #f7c128; }
-
-.yellow-border {
-  border-color: #f7c128; }
-
-.green-bg {
-  background-color: #2d6854; }
-
-.green-border {
-  border-color: #2d6854; }
-
-.green-text {
-  color: #2d6854; }
-
-.black-bg {
-  background-color: #2c2621; }
-
-.gray-bg {
-  background-color: #878787; }
-
-.gray-border {
-  border-color: #b7a998; }
-
 .gray-text {
   color: rgba(0, 0, 0, 0.5); }
 
@@ -79,7 +55,8 @@ html, body {
   border-bottom-width: 0;
   border-style: dashed;
   box-sizing: content-box;
-  z-index: -1; }
+  z-index: -1;
+  border-color: #b7a998; }
 
 #pins-container {
   min-height: 100%;
@@ -120,11 +97,13 @@ html, body {
 
 .pin.sensor {
   margin-left: 20%;
-  margin-right: 30%; }
+  margin-right: 30%;
+  border-color: #f7c128; }
 
 .pin.actuator {
   margin-left: 30%;
-  margin-right: 20%; }
+  margin-right: 20%;
+  border-color: #2d6854; }
 
 .pin-box {
   position: relative;
@@ -652,7 +631,8 @@ label {
   text-align: center;
   line-height: 60px;
   cursor: default;
-  position: relative; }
+  position: relative;
+  background-color: #2c2621; }
 
 .button.square {
   max-width: 60px;
@@ -664,6 +644,9 @@ label {
 
 .button.danger {
   background-color: #bd2a2a; }
+
+.button.secondary {
+  background-color: #878787; }
 
 #play-button,
 #connect-button {
@@ -690,10 +673,12 @@ label {
   line-height: 57px; }
 
 #add-sensors-button {
-  float: left; }
+  float: left;
+  background: #f7c128; }
 
 #add-actuators-button {
-  float: right; }
+  float: right;
+  background: #2d6854; }
 
 /* SHOWING AND HIDING PINS */
 .confirm-remove-container {
@@ -815,7 +800,7 @@ label {
   left: 0;
   z-index: 5; }
 
-.button.black-bg:active:before {
+.button:active:before {
   background-color: rgba(255, 255, 255, 0.07); }
 
 #settings-button:active:before {

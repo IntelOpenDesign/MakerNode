@@ -21,7 +21,7 @@ html, body {
     margin: 0;
     padding: 0;
     font-size: 42px;
-    font-family: 'Neo Sans Intel'; 
+    font-family: 'Neo Sans Intel';
 }
 
 .hide {
@@ -38,30 +38,6 @@ html, body {
 }
 
 /* COLORS */
-.yellow-bg {
-    background-color: $yellow;
-}
-.yellow-border {
-    border-color: $yellow;
-}
-.green-bg {
-    background-color: $green;
-}
-.green-border {
-    border-color: $green;
-}
-.green-text {
-    color: $green;
-}
-.black-bg {
-    background-color: $black;
-}
-.gray-bg {
-    background-color: rgb(135, 135, 135);
-}
-.gray-border {
-    border-color: rgb(183, 169, 152);
-}
 .gray-text {
     color: rgba(0, 0, 0, .5);
 }
@@ -94,6 +70,7 @@ html, body {
     border-style: dashed;
     box-sizing: content-box;
     z-index: -1;
+    border-color: rgb(183, 169, 152);
 }
 
 #pins-container {
@@ -136,10 +113,12 @@ html, body {
 .pin.sensor {
     margin-left: 20%;
     margin-right: 30%;
+    border-color: $yellow;
 }
 .pin.actuator {
     margin-left: 30%;
     margin-right: 20%;
+    border-color: $green;
 }
 
 .pin-box {
@@ -701,6 +680,7 @@ label {
     line-height: 60px;
     cursor: default;
     position: relative;
+    background-color: $black;
 }
 .button.square {
     max-width: 60px;
@@ -712,6 +692,9 @@ label {
 }
 .button.danger {
     background-color: rgb(189, 42, 42);
+}
+.button.secondary {
+    background-color: rgb(135, 135, 135);
 }
 
 #play-button,
@@ -740,9 +723,11 @@ label {
 }
 #add-sensors-button {
     float: left;
+    background: $yellow;
 }
 #add-actuators-button {
     float: right;
+    background: $green;
 }
 
 /* SHOWING AND HIDING PINS */
@@ -869,7 +854,7 @@ label {
     left: 0;
     z-index: 5;
 }
-.button.black-bg:active:before {
+.button:active:before {
     background-color: rgba(255, 255, 255, 0.07);
 }
 #settings-button:active:before {
