@@ -1,0 +1,1028 @@
+@font-face {
+    font-family: 'Neo Sans Intel';
+    font-weight: normal;
+    font-style: normal;
+    src: url('../fonts/NeoSansIntel/NeoSansIntel.ttf');
+}
+
+@font-face {
+    font-family: 'Droid Sans';
+    font-weight: normal;
+    font-style: normal;
+    src: url('../fonts/droid-sans/DroidSans.ttf');
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 42px;
+    font-family: 'Neo Sans Intel'; 
+}
+
+.hide {
+    display: none;
+}
+
+.row.padded {
+    padding-bottom: .5em;
+}
+
+#app-container {
+    position: relative;
+    padding-bottom: 50px;
+}
+
+/* COLORS */
+.yellow-bg {
+    background-color: rgb(247, 193, 40);
+}
+.yellow-border {
+    border-color: rgb(247, 193, 40);
+}
+.green-bg {
+    background-color: rgb(45, 104, 84);
+}
+.green-border {
+    border-color: rgb(45, 104, 84);
+}
+.green-text {
+    color: rgb(45, 104, 84);
+}
+.black-bg {
+    background-color: rgb(44, 38, 33);
+}
+.gray-bg {
+    background-color: rgb(135, 135, 135);
+}
+.gray-border {
+    border-color: rgb(183, 169, 152);
+}
+.gray-text {
+    color: rgba(0, 0, 0, .5);
+}
+
+#settings-button {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 100px;
+    margin-left: -50px;
+    font-size: 60px;
+    text-align: center;
+    background: white;
+    padding-top: 10px;
+    line-height: 1em;
+    padding-bottom: 5px;
+}
+
+#column-divider {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    height: 100%;
+    width: 0;
+    margin-left: -1px;
+    border-left-width: 2px;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    border-style: dashed;
+    box-sizing: content-box;
+    z-index: -1;
+}
+
+#pins-container {
+    min-height: 100%;
+    padding-top: 50px;
+}
+
+.column-title {
+    text-align: center;
+    padding: 1em 0;
+}
+#add-pins-menu .column-title {
+    text-align: left;
+    padding: .6em 0;
+}
+.sensors.column-title {
+    color: rgb(147, 106, 24);
+}
+.actuators.column-title {
+    color: rgb(45, 104, 84);
+}
+
+/* PINS */
+
+@-webkit-keyframes pulseGlow {
+    from { -webkit-box-shadow: 0 0 0 rgb(247, 193, 40); }
+    50%  { -webkit-box-shadow: 0 0 30px rgb(231, 98, 40); }
+    to   { -webkit-box-shadow: 0 0 0 rgb(247, 193, 40); }
+}
+
+.pin {
+    width: 50%;
+    height: 130px;
+    margin-top: 50px;
+    margin-bottom: 100px;
+    box-sizing: border-box;
+    border-width: 15px;
+    border-style: solid;
+}
+.pin.sensor {
+    margin-left: 20%;
+    margin-right: 30%;
+}
+.pin.actuator {
+    margin-left: 30%;
+    margin-right: 20%;
+}
+
+.pin-box {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background: white;
+}
+.actuator .pin-box {
+    float: right;
+    text-align: right;
+}
+
+.pin-label { 
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+}
+.pin-box > .pin-label {
+    position: absolute;
+    left: -15px;
+    top: -1.75em;
+    cursor: default;
+    width: 120%;
+    text-align: left;
+}
+
+.pin-box > .pin-name {
+    font-size: 60px;
+    text-align: center;
+    width: 100%;
+    height: 100px;
+    font-weight: 600;
+    line-height: 100px;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.pin-name {
+    cursor: default;
+}
+
+/* TODO SASS variables for colors would be so good */
+.sensor .pin-name {
+    color: rgb(108, 79, 18);
+}
+.actuator .pin-name {
+    color: rgb(45, 104, 84);
+}
+
+.pin-value-container {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: 100%;
+}
+.pin-value {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+.sensor .pin-value {
+    background: rgb(222, 217, 194);
+}
+.actuator .pin-value {
+    background: rgb(180, 206, 184);
+}
+.analog .pin-value {
+    width: 100%;
+}
+.digital .pin-value {
+    width: 100%;
+    border: 10px solid white;
+    box-sizing: border-box;
+    margin: 0;
+    height: 100%;
+}
+
+.endpoint-container {
+    position: absolute;
+    top: 50%;
+    height: 90px;
+    width: 90px;
+    margin-top: -45px;
+    z-index: 5;
+    background: white;
+    border-radius: 50px;
+}
+.sensor .endpoint-container {
+    right: -70px;
+}
+.actuator .endpoint-container {
+    left: -70px;
+}
+
+.endpoint {
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+    position: relative;
+    box-sizing: content-box;
+    top: 50%;
+    left: 50%;
+    margin-top: -40px;
+    margin-left: -40px;
+}
+.sensor .endpoint {
+    background-color: rgb(247, 193, 40);
+}
+.actuator .endpoint {
+    background-color: rgb(45, 104, 84);
+}
+.endpoint-inner {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 50%;
+    left: 50%;
+    margin-top: -25px;
+    margin-left: -25px; 
+    border-radius: 25px;
+}
+.actuator .endpoint-inner {
+    background-color: white;
+}
+.sensor .endpoint-inner,
+.actuator.connected .endpoint-inner,
+.pin.sensor.possible-connection.already-connected-to-activated-pin .endpoint-inner {
+    background-color: rgb(247, 193, 40);
+}
+
+.pin.activated .endpoint {
+    background-color: rgb(231, 98, 40);
+    width: 84px;
+    height: 84px;
+    border-radius: 42px;
+    margin-top: -42px;
+    margin-left: -42px;
+}
+.pin.sensor.activated .endpoint-inner,
+.pin.sensor.possible-connection .endpoint-inner {
+    background-color: rgb(231, 98, 40);
+}
+.pin.possible-connection .endpoint,
+.pin.possible-connection.connected .endpoint {
+    background: rgb(231, 98, 40);
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: pulseGlow;
+}
+.pin.possible-connection.already-connected-to-activated-pin .endpoint,
+.pin.possible-connection.connected.already-connected-to-activated-pin .endpoint {
+    -webkit-animation: none;
+}
+
+.pin .slash {
+    display: none;
+    position: absolute;
+    top: 50%;
+    margin-top: -7.5px;
+    left: 9px;
+    width: 60px;
+    height: 15px;
+    background: rgb(231, 98, 40);
+    -webkit-transform: rotate(-45deg);
+}
+.pin.already-connected-to-activated-pin .slash {
+    display: block;
+}
+
+/* SETTINGS WINDOW */
+
+.settings.digital .pin-value-label:before {
+    content: 'On/Off';
+}
+.settings.analog.sensor .pin-value-label:before {
+    content: 'Calibrate';
+}
+.settings.analog.actuator .pin-value-label:before {
+    content: 'Value';
+}
+
+.settings.actuator .pin-extra-setting-label:before {
+    content: 'Limit/Hold';
+}
+.settings.sensor .pin-extra-setting-label:before {
+    content: 'Damping';
+}
+
+.settings {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 20;
+    background: white;
+}
+.settings-inner {
+    margin: 15px 2%;
+    width: 96%;
+    border-width: 15px;
+    border-style: solid;
+    border-color: rgb(183, 169, 152);
+}
+.settings.sensor .settings-inner {
+    border-color: rgb(247, 193, 40);
+}
+.settings .pin-name {
+    font-size: 200%;
+    text-align: center;
+}
+.settings .pin-label {
+    width: 100%;
+    max-width: 600px; /* NOTE this is based on 20 times the width of "W" in our current font. 20 because we limit label length to 20 chars. TODO make this dynamically update with changing font size, and base it on the font size that the label input is in */
+}
+.extra-small {
+    font-size: 55%;
+}
+.settings .pin-label-input-label {
+    position: relative;
+    top: -.5em;
+}
+.settings .vertical-slider-container.damping {
+    margin-top: 45px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 120px;
+}
+.settings .button {
+    margin: 0;
+    
+}
+/* TODO make settings theme yellow for sensors and green for actuators */
+
+/* VERTICAL SLIDER */
+.settings .vertical-slider-container {
+    height: 410px;
+}
+.settings input[type=range].vertical-slider {
+    -webkit-appearance: none;
+    position: relative;
+    left: -140px;
+    top: 200px;
+    width: 400px !important;
+    height: 10px;
+    -webkit-transform: rotate(270deg);
+    margin: 0;
+    padding: 0;
+    background: rgb(194, 165, 46);
+    display: block;
+    box-sizing: content-box;
+}
+.settings input[type=range].vertical-slider:focus {
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+    outline: 0 none;
+}
+.settings input[type=range].vertical-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 80px;
+    height: 120px;
+    background: rgb(247, 193, 40);
+    border-radius: 10px;
+    border: 5px solid white;
+}
+
+/* SETTINGS PIN VALUE DISPLAY */
+
+.sensor-value-settings,
+.actuator-value-display {
+    position: relative;
+    height: 400px;
+    width: 300px;
+    margin: 50px auto;
+}
+.settings .pin-value-container {
+    position: absolute;
+    top: 0;
+    left: 20%;
+    width: 60%;
+    height: 100%;
+    border-width: 2px;
+    border-style: solid;
+}
+.settings .actuator-value-display .pin-value-container {
+    border-color: rgb(45, 104, 84);
+    background: rgba(0,0,0,0);
+}
+.settings.digital .sensor-value-settings .pin-value-container {
+    border-color: rgb(159, 122, 35);
+}
+.settings.analog .sensor-value-settings .pin-value-container {
+    background: rgb(223, 223, 223);
+    border-width: 0;
+}
+
+.settings .threshold {
+    width: 90%;
+    position: absolute;
+    left: 5%;
+    border-top: 4px dashed;
+    z-index: 1;
+    padding: 0;
+    box-sizing: content-box;
+    margin-bottom: -2px;
+}
+.settings .sensor-value-settings .threshold {
+    border-color: rgb(159, 122, 35);
+}
+.settings .actuator-value-display .threshold {
+    border-color: rgb(45, 104, 84);
+}
+
+/* SETTINGS PIN VALUE RANGE FOR ANALOG INPUTS */
+
+.settings .pin-value-range-outline-top,
+.settings .pin-value-range-outline-not-top {
+    position:absolute;
+    left: -2px;
+    width: 100%;
+    border-width: 2px;
+    border-style: solid;
+    border-color: rgb(159, 122, 35);
+    z-index: 2;
+    box-sizing: content-box;
+}
+.settings .pin-value-range-outline-top {
+    height: 0;
+    border-bottom-width: 0;
+    margin-top: -2px;
+}
+.settings .pin-value-range-outline-not-top {
+    border-top-width: 0;
+}
+.settings .pin-value-in-range {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background: rgb(216, 192, 85);
+}
+
+/* DIGITAL PINS SHOW "ON" OR "OFF" IN SETTINGS PIN VALUE DISPLAY */
+
+.settings.digital .pin-value-container:before,
+.settings.digital .pin-value:before {
+    font-size: 45px;
+    font-weight: 800;
+    position: absolute;
+    height: 66px;
+    top: 50%;
+    margin-top: -33px;
+    line-height: 52px;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    border-width: 5px;
+    border-style: solid;
+}
+.settings.digital.actuator .pin-value-container:before,
+.settings.digital.actuator .pin-value:before {
+    color: rgb(45, 104, 84);
+    background: rgb(232, 240, 232);
+}
+.settings.digital.sensor .pin-value-container:before,
+.settings.digital.sensor .pin-value:before {
+    color: rgb(147, 106, 24);
+    background: rgb(243, 235, 191);
+}
+.settings.digital .pin-value-container:before {
+    content: "OFF";
+    border-color: white;
+}
+.settings.digital .pin-value:before {
+    content: "ON";
+}
+.settings.digital.actuator .pin-value:before {
+    border-color: rgb(180, 206, 184);
+}
+.settings.digital.sensor .pin-value:before {
+    border-color: rgb(230, 222, 177);
+}
+
+/* SETTINGS FOR ANALOG INPUTS HAVE SLIDERS */
+
+.sensor-value-settings .vertical-slider-container.triangle-point-left,
+.sensor-value-settings .vertical-slider-container.triangle-point-right {
+    width: 20%;
+    position: absolute;
+    height: 100%;
+    z-index: 2;
+    box-sizing: content-box;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-left {
+    right: 0;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-right {
+    left: 0;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
+.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider{
+    width: 460px !important;
+    height: 120px;
+    top: 140px;
+    left: -203px;
+    background-color: rgba(0, 0, 0, 0);
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
+    left: -197px;
+    margin-top: -2px;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
+.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
+    width: 0;
+    height: 0;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    background: transparent;
+    padding:0;
+    margin: 0;
+    border-top-width:0;
+    border-bottom-width:0;
+    border-radius:0;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
+    border-bottom: 50px solid rgb(247, 193, 40);
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
+    border-top: 50px solid rgb(247, 193, 40);
+}
+
+/* ACTUATOR SETTINGS ARE A LITTLE DIFFERENT */
+
+.settings.actuator .settings-inner {
+    border-color: rgb(45, 104, 84);
+}
+input[type=number] {
+    width: 100px; 
+}
+.actuator-value-display {
+    margin: 0 auto;
+}
+.settings.actuator input[type=checkbox] {
+    background-color: white;
+    border-color: rgb(93, 130, 99);
+}
+.settings.actuator input[type=checkbox]:checked:before {
+    color: rgb(42, 96, 78);
+}
+
+/* CHECKBOX */
+
+input[type=checkbox] {
+    -webkit-appearance: none;
+    width: 55px;
+    height: 55px;
+    border: 10px solid rgb(194, 165, 46);
+    background-color: rgb(235, 227, 181);
+    margin: 5px;
+    padding: 0;
+}
+input[type=checkbox]:checked {
+    position: relative;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    font-size: 45px;
+}
+input[type=checkbox]:checked:before {
+    content: "\e013";
+    padding:0;
+    color: rgb(147, 106, 24);
+    background: rgba(0,0,0,0);
+    position: absolute;
+    top: -8px;
+    left: -5px;
+}
+input[type=checkbox]:focus {
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+    outline: 0 none;
+}
+label[for=checkbox] {
+    position: relative;
+    top: -.4em;
+    line-height: 1em;
+    margin: 0;
+    padding: 0;
+    height: 1em;
+}
+label {
+    font-weight: normal;
+}
+
+/* LOADING PAGE */
+#loading {
+    background: rgb(255, 255, 255) url('../img/loading.gif') center center no-repeat;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+}
+#loading-msg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 700px;
+    margin-left: -350px;
+    text-align: center;
+    color: rgb(100, 100, 100);
+    padding-top: 80px;
+}
+
+/* TODO remove when done debugging*/
+#debug-log {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: .7;
+    width: 100%;
+    background: blanchedalmond;
+    word-break: break-all;
+}
+
+#toggle-debug-log {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0;
+    margin: 0;
+    border-width: 0;
+    width: inherit;
+    z-index: 10;
+    height: 60px;
+}
+
+#footer {
+    height: 100px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    background: linear-gradient(rgba(255, 255, 255, .7), rgba(255, 255, 255, 1));
+    z-index: 10;
+}
+
+/* BUTTONS */
+
+.button {
+    height: 60px;
+    margin: 20px;
+    padding: 0;
+    color: white;
+    text-align: center;
+    line-height: 60px;
+    cursor: default;
+    position: relative;
+}
+.button.square {
+    max-width: 60px;
+    width: 100%;
+}
+.button.wide {
+    max-width: 300px;
+    width: 100%;
+}
+.button.danger {
+    background-color: rgb(189, 42, 42);
+}
+
+#play-button,
+#connect-button {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+#play-button:active:before,
+#connect-button:active:before {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+/* TODO more general purpose way of doing :active change would be nice, rather than piecemeal by each thing individually */
+#play-button:hover,
+#connect-button:hover {
+    color: white;
+    text-decoration: none;
+}
+#play-button .glyphicon-play {
+    font-size: 80%;
+}
+#add-sensors-button,
+#add-actuators-button {
+    font-size: 200%;
+    line-height: 57px;
+}
+#add-sensors-button {
+    float: left;
+}
+#add-actuators-button {
+    float: right;
+}
+
+/* SHOWING AND HIDING PINS */
+.confirm-remove-container {
+    position: fixed;
+    z-index: 3;
+    top: 0;
+    background: rgba(255, 255, 255, .95);
+    height: 100%;
+    width: 100%;
+}
+.confirm-remove-row {
+    position: fixed;
+    width: 100%;
+    top: 50%;
+    margin-top: -80px;
+}
+.confirm-remove {
+    padding: 30px 50px;
+    background: rgb(198, 188, 175);
+}
+
+#add-pins-menu {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 10px 15px 110px;
+}
+#add-pins-menu-bg {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    z-index: -1;
+    box-sizing: border-box;
+    border-color: white;
+    border-top-width: 15px;
+    border-left-width: 15px;
+    border-right-width: 15px;
+    border-bottom-width: 110px;
+    border-style: solid;
+}
+#add-pins-menu-bg,
+#add-pins-menu-pins-container {
+    background: rgb(198, 188, 175);
+}
+#add-pins-menu-pins-container {
+    margin-bottom: 10px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+#add-pins-menu-bg-footer {
+    width: 0;
+    height: 0;
+    background: transparent;
+    position: fixed;
+    bottom: 85px;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-top: 30px solid rgb(198, 188, 175);
+    z-index: 20;
+}
+#add-pins-menu-bg-footer.sensors {
+    left: 40px;
+}
+#add-pins-menu-bg-footer.actuators {
+    right: 40px;
+}
+#add-pins-menu .pin-stub {
+    margin-bottom: 50px;
+    width: 76%;
+    margin-left: 12%;
+    margin-right: 12%;
+}
+.pin.clicked .pin-box:before {
+    content: "\e013";
+    font-family: 'Glyphicons Halflings';
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100px;
+    margin-left: -50%;
+    margin-top: -50px;
+    text-align: center;
+    line-height: 100px;
+    -webkit-font-smoothing: antialiased;
+    font-size: 80px;
+}
+.pin.sensor.clicked .pin-box:before {
+    background: rgba(247, 193, 40, .4);
+    /*color: rgb(147, 106, 24);*/
+    color: rgb(247, 193, 40);
+    opacity: .9;
+}
+.pin.actuator.clicked .pin-box:before {
+    background: rgba(45, 104, 84, .4);
+    color: rgb(45, 104, 84);
+    opacity: .85;
+}
+
+/* CONNECTIONS */
+.connection path.edge {
+    stroke: #2c2621;
+}
+.connection path.edge-bg {
+    stroke: white;
+}
+
+/* :ACTIVE CLICK FEEDBACK */
+
+.pin-box:active:before,
+.button:active:before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.07);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 5;
+}
+.button.black-bg:active:before {
+    background-color: rgba(255, 255, 255, 0.07);
+}
+#settings-button:active:before {
+    width: 24px;
+    height: 24px;
+    display: block;
+    background: rgba(0,0,0,0.1);
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -12px;
+    margin-top: -12px; 
+}
+
+/* SMALL DEVICES */
+@media (max-device-width: 4in) {
+    
+.pin {
+    width: 60%;
+    height: 170px;
+    margin-top: 50px;
+    margin-bottom: 120px;
+}
+.pin.sensor {
+    margin-left: 10%;
+}
+.pin.actuator {
+    margin-right: 10%;
+}
+.pin-box > .pin-name {
+    line-height: 140px;
+}
+.pin.clicked .pin-box:before {
+    height: 140px;
+    margin-top: -70px;
+    line-height: 140px;
+}
+
+input[type=checkbox] {
+    width: 75px;
+    height: 75px;
+}
+input[type=checkbox]:checked {
+    font-size: 65px;
+}
+label[for=checkbox] {
+    position: relative;
+    top: -.4em;
+    line-height: 1em;
+    margin: 0;
+    padding: 0;
+    height: 1em;
+    font-weight: normal;
+}
+
+.endpoint {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    margin-top: -50px;
+    margin-left: -50px;
+}
+.actuator .endpoint-inner {
+    width: 70px;
+    height: 70px;
+    margin-top: -35px;
+    margin-left: -35px;
+    border-radius: 35px;
+}
+.sensor.activated .endpoint {
+    background: rgb(231, 98, 40);
+    width: 110px;
+    height: 110px;
+    border-radius: 55px;
+    margin-top: -55px;
+    margin-left: -55px;
+}
+.actuator .slash {
+    width: 90px;
+}
+.endpoint-container {
+    height: 106px;
+    width: 106px;
+    margin-top: -53px;
+    border-radius: 53px;
+}
+
+.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
+.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider{
+    width: 480px !important;
+    top: 140px;
+    left: -203px;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
+    left: -217px;
+    margin-top: -2px;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
+.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
+    border-left-width: 40px;
+    border-right-width: 40px;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
+    border-bottom-width: 70px;
+}
+.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
+    border-top-width: 70px;
+}
+
+
+
+}
+
+
+@media (max-device-width: 4in) and (min-resolution: 100dpi) {
+    
+html, body {
+    font-size: 60px;
+} 
+#footer {
+    height: 120px;
+}
+.button {
+    height: 100px;
+    margin: 10px;
+    line-height: 100px;
+}
+.button.square {
+    max-width: 100px;
+    width: 100%;
+}
+.button.wide {
+    max-width: 400px;
+}
+#add-sensors-button,
+#add-actuators-button {
+    line-height: 97px;
+}
+#add-pins-menu {
+    border-bottom-width: 145px;
+}
+#add-pins-menu-bg {
+    border-bottom-width: 145px;
+}
+#add-pins-menu-bg-footer {
+    bottom: 120px;
+}
+#add-pins-menu-bg-footer.sensors {
+    left: 50px;
+}
+#add-pins-menu-bg-footer.actuators {
+    right: 50px;
+}
+.settings {
+    font-size: 85%;
+}
+
+
+}
