@@ -799,6 +799,123 @@ label {
 .connection path.edge-bg {
   stroke: white; }
 
+/* PLAY MODE */
+#play-pins {
+  padding-top: 50px;
+  padding-bottom: 100px; }
+
+#play-pins .pin {
+  display: inline-block;
+  width: 94%;
+  border-width: 15px;
+  border-color: transparent;
+  margin-left: 3% !important;
+  margin-right: 3% !important;
+  margin-top: 25px;
+  margin-bottom: 0;
+  box-sizing: border-box;
+  height: inherit; }
+
+#play-pins .pin-box {
+  height: 145px;
+  width: 100%;
+  display: inline-block;
+  background-color: #878787; }
+
+#play-pins .pin.pressed {
+  border-color: #b4ceb8; }
+
+#play-pins .pin.pressed .pin-box {
+  background-color: #2d6854; }
+
+#play-pins .pin.pressed .pin-box:before {
+  display: none; }
+
+#play-pins .pin .pin-box:active {
+  background-color: #535353;
+  border-color: transparent; }
+
+#play-pins .pin.pressed .pin-box:active {
+  background-color: #2d5440; }
+
+#play-pins .pin-label,
+#play-pins .pin-name {
+  color: white;
+  font-size: 100%;
+  font-weight: normal;
+  height: 140px;
+  line-height: 140px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center; }
+
+#play-pins .pin-value-container {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border: 15px solid #878787;
+  background: #afafaf;
+  box-sizing: border-box; }
+
+#play-pins .pin-value-in-range {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  background: #2d6854;
+  z-index: 0; }
+
+#play-pins .pin-value-container .pin-name,
+#play-pins .pin-value-container .pin-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  line-height: 110px; }
+
+#play-pins .vertical-slider-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 5; }
+
+#play-pins input[type=range].vertical-slider {
+  -webkit-appearance: none;
+  -webkit-transform: rotate(270deg);
+  width: 144px;
+  height: 150px;
+  background-color: transparent;
+  z-index: 4;
+  position: absolute;
+  top: -67px;
+  left: 50%;
+  margin-left: -100px;
+  border-style: solid;
+  border-color: transparent;
+  border-top-width: 50px;
+  border-bottom-width: 50px;
+  border-left-width: 30px;
+  border-right-width: 30px;
+  box-sizing: content-box; }
+
+#play-pins input[type=range].vertical-slider:focus {
+  box-shadow: 0 0 0 transparent;
+  outline: 0 none; }
+
+#play-pins input[type=range].vertical-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  display: block;
+  width: 24px;
+  height: 160px;
+  background: #737373;
+  border-radius: 10px; }
+
 /* SMALL DEVICES */
 @media (max-device-width: 4in) {
   .pin {
