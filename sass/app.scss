@@ -1,3 +1,7 @@
+$yellow: rgb(247, 193, 40);
+$green: rgb(45, 104, 84);
+$black: rgb(44, 38, 33);
+
 @font-face {
     font-family: 'Neo Sans Intel';
     font-weight: normal;
@@ -35,22 +39,22 @@ html, body {
 
 /* COLORS */
 .yellow-bg {
-    background-color: rgb(247, 193, 40);
+    background-color: $yellow;
 }
 .yellow-border {
-    border-color: rgb(247, 193, 40);
+    border-color: $yellow;
 }
 .green-bg {
-    background-color: rgb(45, 104, 84);
+    background-color: $green;
 }
 .green-border {
-    border-color: rgb(45, 104, 84);
+    border-color: $green;
 }
 .green-text {
-    color: rgb(45, 104, 84);
+    color: $green;
 }
 .black-bg {
-    background-color: rgb(44, 38, 33);
+    background-color: $black;
 }
 .gray-bg {
     background-color: rgb(135, 135, 135);
@@ -109,15 +113,15 @@ html, body {
     color: rgb(147, 106, 24);
 }
 .actuators.column-title {
-    color: rgb(45, 104, 84);
+    color: $green;
 }
 
 /* PINS */
 
 @-webkit-keyframes pulseGlow {
-    from { -webkit-box-shadow: 0 0 0 rgb(247, 193, 40); }
+    from { -webkit-box-shadow: 0 0 0 $yellow; }
     50%  { -webkit-box-shadow: 0 0 30px rgb(231, 98, 40); }
-    to   { -webkit-box-shadow: 0 0 0 rgb(247, 193, 40); }
+    to   { -webkit-box-shadow: 0 0 0 $yellow; }
 }
 
 .pin {
@@ -184,7 +188,7 @@ html, body {
     color: rgb(108, 79, 18);
 }
 .actuator .pin-name {
-    color: rgb(45, 104, 84);
+    color: $green;
 }
 
 .pin-value-container {
@@ -246,10 +250,10 @@ html, body {
     margin-left: -40px;
 }
 .sensor .endpoint {
-    background-color: rgb(247, 193, 40);
+    background-color: $yellow;
 }
 .actuator .endpoint {
-    background-color: rgb(45, 104, 84);
+    background-color: $green;
 }
 .endpoint-inner {
     position: absolute;
@@ -267,7 +271,7 @@ html, body {
 .sensor .endpoint-inner,
 .actuator.connected .endpoint-inner,
 .pin.sensor.possible-connection.already-connected-to-activated-pin .endpoint-inner {
-    background-color: rgb(247, 193, 40);
+    background-color: $yellow;
 }
 
 .pin.activated .endpoint {
@@ -344,7 +348,7 @@ html, body {
     border-color: rgb(183, 169, 152);
 }
 .settings.sensor .settings-inner {
-    border-color: rgb(247, 193, 40);
+    border-color: $yellow;
 }
 .settings .pin-name {
     font-size: 200%;
@@ -399,7 +403,7 @@ html, body {
     -webkit-appearance: none;
     width: 80px;
     height: 120px;
-    background: rgb(247, 193, 40);
+    background: $yellow;
     border-radius: 10px;
     border: 5px solid white;
 }
@@ -423,7 +427,7 @@ html, body {
     border-style: solid;
 }
 .settings .actuator-value-display .pin-value-container {
-    border-color: rgb(45, 104, 84);
+    border-color: $green;
     background: rgba(0,0,0,0);
 }
 .settings.digital .sensor-value-settings .pin-value-container {
@@ -448,7 +452,7 @@ html, body {
     border-color: rgb(159, 122, 35);
 }
 .settings .actuator-value-display .threshold {
-    border-color: rgb(45, 104, 84);
+    border-color: $green;
 }
 
 /* SETTINGS PIN VALUE RANGE FOR ANALOG INPUTS */
@@ -498,7 +502,7 @@ html, body {
 }
 .settings.digital.actuator .pin-value-container:before,
 .settings.digital.actuator .pin-value:before {
-    color: rgb(45, 104, 84);
+    color: $green;
     background: rgb(232, 240, 232);
 }
 .settings.digital.sensor .pin-value-container:before,
@@ -562,16 +566,16 @@ html, body {
     border-radius:0;
 }
 .sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
-    border-bottom: 50px solid rgb(247, 193, 40);
+    border-bottom: 50px solid $yellow;
 }
 .sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
-    border-top: 50px solid rgb(247, 193, 40);
+    border-top: 50px solid $yellow;
 }
 
 /* ACTUATOR SETTINGS ARE A LITTLE DIFFERENT */
 
 .settings.actuator .settings-inner {
-    border-color: rgb(45, 104, 84);
+    border-color: $green;
 }
 input[type=number] {
     width: 100px; 
@@ -835,12 +839,12 @@ label {
 .pin.sensor.clicked .pin-box:before {
     background: rgba(247, 193, 40, .4);
     /*color: rgb(147, 106, 24);*/
-    color: rgb(247, 193, 40);
+    color: $yellow;
     opacity: .9;
 }
 .pin.actuator.clicked .pin-box:before {
     background: rgba(45, 104, 84, .4);
-    color: rgb(45, 104, 84);
+    color: $green;
     opacity: .85;
 }
 
