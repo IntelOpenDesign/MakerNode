@@ -292,10 +292,11 @@ html, body {
     display: none;
     position: absolute;
     top: 50%;
-    margin-top: -7.5px;
-    left: 9px;
+    left: 50%;
     width: 60px;
     height: 15px;
+    margin-top: -7.5px;
+    margin-left: -30px;
     background: rgb(231, 98, 40);
     -webkit-transform: rotate(-45deg);
 }
@@ -1018,9 +1019,7 @@ label[for=checkbox] {
 /* TODO why use top and margin-top when top isn't even something convenient like 50% ?*/
 .pin .slash {
     width: 80px;
-    height: 15px;
-    margin-top: -8px;
-    left: 12px;
+    margin-left: -40px;
 }
 .endpoint-container {
     height: 106px;
