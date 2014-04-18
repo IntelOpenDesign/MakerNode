@@ -827,6 +827,8 @@ label {
 #play-pins .pin.pressed .pin-box:before {
   display: none; }
 
+/* TODO use tap_feedback for this instead */
+/* TODO make sure tap_feedback is working for analog sliders in play mode too */
 #play-pins .pin .pin-box:active {
   background-color: #535353;
   border-color: transparent; }
