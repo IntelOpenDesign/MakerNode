@@ -143,7 +143,7 @@ html, body {
 .pin-name {
   cursor: default; }
 
-/* TODO SASS variables for colors would be so good */
+/* TODO SASS color variable for actived pin*/
 .sensor .pin-name {
   color: #6c4f12; }
 
@@ -328,7 +328,6 @@ html, body {
 .settings .button {
   margin: 0; }
 
-/* TODO make settings theme yellow for sensors and green for actuators */
 /* VERTICAL SLIDER */
 .settings .vertical-slider-container {
   height: 410px; }
@@ -594,16 +593,6 @@ label {
   text-align: center;
   color: #646464;
   padding-top: 80px; }
-
-/* TODO remove when done debugging*/
-#debug-log {
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: .7;
-  width: 100%;
-  background: blanchedalmond;
-  word-break: break-all; }
 
 #toggle-debug-log {
   position: absolute;

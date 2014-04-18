@@ -443,7 +443,6 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
 }]);
 
 // The controller for Play Mode.
-// TODO this is a bad copy of PinsCtrl
 cat.app.controller('PlayModeCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
 
     // DEBUG
