@@ -1,6 +1,8 @@
 $yellow: rgb(247, 193, 40);
 $green: rgb(45, 104, 84);
 $black: rgb(44, 38, 33);
+$gray: rgb(135, 135, 135);
+
 
 @mixin tap_feedback($color) {
     background-color: $color;
@@ -691,7 +693,7 @@ label {
     @include tap_feedback(rgb(189, 42, 42));
 }
 .button.secondary {
-    @include tap_feedback(rgb(135, 135, 135));
+    @include tap_feedback($gray);
 }
 
 #play-button,
@@ -855,7 +857,7 @@ label {
     height: 145px;
     width: 100%;
     display: inline-block;
-    background-color: rgb(135, 135, 135);
+    background-color: $gray;
 }
 
 #play-pins .pin.pressed {
@@ -895,7 +897,7 @@ label {
     height: 100%;
     top: 0;
     left: 0;
-    border: 15px solid rgb(135, 135, 135);
+    border: 15px solid $gray;
     background: rgb(175, 175, 175);
     box-sizing: border-box;
 }
