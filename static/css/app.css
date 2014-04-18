@@ -883,6 +883,7 @@ label {
   left: 0;
   z-index: 5; }
 
+/* TODO it would be nice to figure out a way to make the touch target on this be as wide as the pin box */
 #play-pins input[type=range].vertical-slider {
   -webkit-appearance: none;
   -webkit-transform: rotate(270deg);
