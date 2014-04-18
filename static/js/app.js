@@ -3,7 +3,7 @@ var cat = {};
 
 // server connection settings
 cat.on_hardware = false; // to switch to Galileo, just change this to true
-cat.test_server_url = 'ws://192.168.0.195:8001';
+cat.test_server_url = 'ws://localhost:8001';
 cat.hardware_server_url = 'ws://cat/';
 cat.hardware_server_protocol = 'hardware-state-protocol';
 
@@ -171,9 +171,6 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
     // pins and connections
     $scope.d = cat.d();
 
-    // whether we have yet received any data from the server
-    $scope.got_data = false;
-
     // other app state, shared with child controllers
     // determines which view to show, not actual data to share with server
     $scope.s = {
@@ -182,6 +179,7 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
         show_remove_confirmation: false, // whether to show this dialog box
         show_app_settings: false,
         show_reset_confirmation: false,
+        got_data: false, // whether we have received any data from the server
     };
 
 
@@ -192,21 +190,21 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
     });
 
     Galileo.on('update', function(data) {
-        if (!$scope.got_data) { // first time initialization
-            $scope.got_data = true;
+        if (!$scope.s.got_data) { // first time initialization
+            $scope.s.got_data = true;
             $scope.d.reset(data);
          } else { // after that just update changes
-            $scope.got_data = true;
+            $scope.s.got_data = true;
             $scope.d.update(data);
         }
     });
 
     Galileo.on('slowness', function() {
-        $scope.got_data = false;
+        $scope.s.got_data = false;
     });
 
     Galileo.on('websocket-closed', function() {
-        $scope.got_data = false;
+        $scope.s.got_data = false;
     });
 
     $scope.send_pin_update = function(pin_ids, attr) {
