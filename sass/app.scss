@@ -3,7 +3,6 @@ $green: rgb(45, 104, 84);
 $black: rgb(44, 38, 33);
 $gray: rgb(135, 135, 135);
 
-
 @mixin tap_feedback($color) {
     background-color: $color;
 
@@ -857,26 +856,17 @@ label {
     height: 145px;
     width: 100%;
     display: inline-block;
-    background-color: $gray;
+    @include tap_feedback($gray);
 }
 
 #play-pins .pin.pressed {
     border-color: rgb(180, 206, 184);
 }
 #play-pins .pin.pressed .pin-box {
-    background-color: rgb(45, 104, 84);
+    @include tap_feedback($green);
 }
 #play-pins .pin.pressed .pin-box:before {
     display: none;
-}
-/* TODO use tap_feedback for this instead */
-/* TODO make sure tap_feedback is working for analog sliders in play mode too */
-#play-pins .pin .pin-box:active {
-    background-color: rgb(83, 83, 83);
-    border-color: transparent;
-}
-#play-pins .pin.pressed .pin-box:active {
-    background-color: rgb(45, 84, 64);
 }
 
 #play-pins .pin-label,

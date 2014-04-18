@@ -806,24 +806,19 @@ label {
   width: 100%;
   display: inline-block;
   background-color: #878787; }
+  #play-pins .pin-box:active {
+    background-color: #6e6e6e; }
 
 #play-pins .pin.pressed {
   border-color: #b4ceb8; }
 
 #play-pins .pin.pressed .pin-box {
   background-color: #2d6854; }
+  #play-pins .pin.pressed .pin-box:active {
+    background-color: #1e4437; }
 
 #play-pins .pin.pressed .pin-box:before {
   display: none; }
-
-/* TODO use tap_feedback for this instead */
-/* TODO make sure tap_feedback is working for analog sliders in play mode too */
-#play-pins .pin .pin-box:active {
-  background-color: #535353;
-  border-color: transparent; }
-
-#play-pins .pin.pressed .pin-box:active {
-  background-color: #2d5440; }
 
 #play-pins .pin-label,
 #play-pins .pin-name {
