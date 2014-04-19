@@ -151,7 +151,7 @@ cat.app.config(['$routeProvider', function($routeProvider) {
         })
         .when('/play', {
             templateUrl: 'templates/play.html',
-            controller: 'PlayModeCtrl',
+            controller: 'EmptyCtrl',
         })
         .when('/app_settings', {
             templateUrl: 'templates/app_settings.html',
@@ -185,8 +185,6 @@ cat.app.config(['$routeProvider', function($routeProvider) {
 // The highest level app controller.
 cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo', function($scope, $routeParams, $location, Galileo) {
 
-    console.log('AppCtrl init');
-
     $scope.$location = $location;
 
     $scope.$routeParams = $routeParams;
@@ -200,13 +198,10 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
     $scope.d = cat.d();
 
     // other app state, shared with child controllers
-    // determines which view to show, not actual data to share with server
+    // - does not need to be synced with server
+    // - needs to be attrs of an object so that primitive values can work with
+    // prototypal inheritance of $scope
     $scope.s = {
-        settings_pin: null, // pin id to show settings for
-        adding_pins: null,  // 'sensors' or 'actuators'
-        show_remove_confirmation: false, // whether to show this dialog box
-        show_app_settings: false,
-        show_reset_confirmation: false,
         got_data: false, // whether we have received any data from the server
     };
 
@@ -235,7 +230,12 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
         $scope.s.got_data = false;
     });
 
-    $scope.send_pin_update = function(pin_ids, attr) {
+    $scope.send_pin_update = function(pin_ids, attr, val) {
+        if (arguments.length >= 3) {
+            _.each(pin_ids, function(id) {
+                $scope.d.pins[id][attr] = val;
+            });
+        }
         Galileo.update_pins(pin_ids, attr);
     };
 
@@ -379,83 +379,9 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
         }
     };
 
-    // HOW THE USER ADJUSTS PIN SETTINGS
-    // When the user taps a pin's box, we deactivate all pins and show the
-    // settings for that pin. Hitting the OK button in the settings window or
-    // hitting the back button in the browser will exit out of pin settings.
-
-    $scope.show_settings_for = function(pin) {
-        $scope.activated_pin = null;
-        $scope.s.settings_pin = pin;
-        window.history.pushState();
-        window.onpopstate = function() {
-            $scope.$apply(function() {
-                $scope.close_settings(true);
-            });
-        };
-    };
-
-    $scope.close_settings = function(history_state_already_popped) {
-        if (!history_state_already_popped) {
-            window.history.back();
-        }
-        $scope.s.settings_pin = null;
-        $scope.s.show_remove_confirmation = false;
-    };
-
-    /* TODO confirmation message (show_remove_confirmation, show_reset_confirmation) should be a directive */
-    // TODO hitting "back" should get you out of the remove confirmation dialog and back into pin settings.
-    $scope.open_remove_dialog = function() {
-        $scope.s.show_remove_confirmation = true;
-    };
-    $scope.close_remove_dialog = function() {
-        $scope.s.show_remove_confirmation = false;
-    };
-
-    // APP SETTINGS - CURRENTLY ONLY RESET FEATURE
-    // This hides all pins, removes all connections, and resets all pin settings
-    // to defaults.
-
-    // TODO why is setting_pin in $scope.s when it is only used by ConnectModeCtrl?
-    $scope.open_app_settings = function() {
-        $scope.activated_pin = null;
-        $scope.s.settings_pin = null;
-        $scope.s.show_app_settings = true;
-        window.history.pushState();
-        window.onpopstate = function() {
-            $scope.$apply(function() {
-                $scope.close_app_settings(true);
-            });
-        };
-    };
-
-    $scope.close_app_settings = function(history_state_already_popped) {
-        if (!history_state_already_popped) {
-            window.history.back();
-        }
-        $scope.s.show_app_settings = false;
-        $scope.s.show_reset_confirmation = false;
-    };
-
-}]);
-
-// The controller for Play Mode.
-cat.app.controller('PlayModeCtrl', ['$scope', function($scope) {
-
-    // DEBUG
-    window.PlayModeScope = $scope;
-
-    $scope.pin_button_click = function(id) {
-        if ($scope.d.pins[id].value === 100)
-            $scope.d.pins[id].value = 0;
-        else
-            $scope.d.pins[id].value = 100;
-        $scope.send_pin_update([id], 'value');
-    };
 }]);
 
 cat.app.controller('EmptyCtrl', ['$scope', function($scope) {
-    console.log('EmptyCtrl init');
 }]);
 
 // DRAWING PINS

@@ -39,11 +39,7 @@
     </div>
 </div>
 
-<div id="connections-container"
-  ng-class="{
-    'hide': s.settings_pin !== null ||
-            s.adding_pins !== null ||
-            s.show_app_settings}">
+<div id="connections-container">
     <div id="connect-{{c.source}}-{{c.target}}"
       ng-repeat="c in d.connections"
       class="connection"

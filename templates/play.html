@@ -1,10 +1,7 @@
 <div id="play-pins"
-  class="container-fluid"
-  ng-hide="s.settings_pin !== null || s.adding_pins !== null">
-    <div ng-class="{
-        'actuators': true,
-        'column-title': true,
-        'hide': d.visible_actuators_no_connections.length > 0}">
+  class="container-fluid">
+    <div class="actuators column-title"
+      ng-hide="d.visible_actuators_no_connections.length > 0">
         <div class="col-xs-12">
             actuators with no connections
         </div>

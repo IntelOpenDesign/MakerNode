@@ -9,7 +9,7 @@
       'pressed': pin.value === 100,
       'pin-button': true}">
     <div class="pin-box"
-      ng-click="pin_button_click(pin.id)">
+      ng-click="send_pin_update([pin.id], 'value', pin.value === 100 ? 0:100)">
         <div class="pin-label"
           ng-if="pin.label.length > 0">
             {{pin.label}}
