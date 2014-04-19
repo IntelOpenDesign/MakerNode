@@ -185,6 +185,8 @@ cat.app.config(['$routeProvider', function($routeProvider) {
 // The highest level app controller.
 cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo', function($scope, $routeParams, $location, Galileo) {
 
+    console.log('AppCtrl init');
+
     $scope.$location = $location;
 
     $scope.$routeParams = $routeParams;
@@ -496,7 +498,7 @@ cat.app.controller('PlayModeCtrl', ['$scope', function($scope) {
 }]);
 
 cat.app.controller('EmptyCtrl', ['$scope', function($scope) {
-
+    console.log('EmptyCtrl init');
 }]);
 
 // DRAWING PINS
