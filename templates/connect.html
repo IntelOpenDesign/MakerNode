@@ -18,75 +18,8 @@
     </div>
 </div>
 
-<div id="app-settings"
-  class="settings"
-  ng-show="s.show_app_settings">
-    <div class="settings-inner">
-        <div class="container-fluid">
-            <div class="row padded">
-                <div class="col-xs-12">
-                    <div class="column-title">
-                        App Settings
-                    </div>
-                </div>
-            </div>
-            <div class="row padded">
-                <div class="col-xs-3">
-                    <div class="button danger"
-                      ng-click="s.show_reset_confirmation = true;">
-                        Reset
-                    </div>
-                </div>
-                <div class="col-xs-9">
-                    Remove all pins and connections, restore all pin settings to defaults.
-                </div>
-            </div>
-            <div class="row padded">
-                <div class="col-xs-3 col-xs-offset-9">
-                    <div class="button"
-                      ng-click="close_app_settings()">
-                        OK
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="confirm-remove-container container-fluid"
-        ng-show="s.show_reset_confirmation">
-        <div class="row confirm-remove-row">
-            <div class="confirm-remove col-xs-8 col-xs-offset-2">
-                <div class="row padded">
-                    <div class="col-xs-12">
-                        Are you sure you want to do this?
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <div class="button secondary"
-                          ng-click="s.show_reset_confirmation = false;">
-                            No
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="button"
-                          ng-click="reset_app(); close_app_settings();">
-                            Yes
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 <div id="pins-container"
-  ng-class="{
-      'container-fluid': true,
-      'hide': s.settings_pin !== null ||
-              s.adding_pins !== null ||
-              s.show_app_settings}">
+  class="container-fluid">
     <div class="row">
 
         <div id="sensors" class="col-xs-6">

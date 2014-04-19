@@ -18,84 +18,51 @@
 
     <ng-view></ng-view>
 
-    <div id="add-pins-menu"
-      ng-switch="s.adding_pins"
-      ng-class="{'hide': s.settings_pin !== null || s.adding_pins === null}">
-        <div id="add-pins-menu-pins-container">
-
-            <div id="add-sensors"
-              class="container-fluid sensors"
-              ng-switch-when="sensors">
-
-                <div class="row">
-                    <div class="col-xs-12 sensors column-title">
-                        add/remove sensors
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-xs-4" ng-repeat="pin in d.sensors" pin-stub></div>
-                </div>
-            </div>
-
-            <div id="add-actuators"
-              class="container-fluid actuators"
-              ng-switch-when="actuators">
-
-                <div class="row">
-                    <div class="col-xs-12 actuators column-title">
-                        add/remove actuators
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-xs-4" ng-repeat="pin in d.actuators" pin-stub></div>
-                </div>
-            </div>
-
-        </div>
-        <div id="add-pins-menu-bg-footer"
-          ng-class="{
-              'sensors': s.adding_pins === 'sensors',
-              'actuators': s.adding_pins === 'actuators'}"></div>
-        <div id="add-pins-menu-bg"></div>
-    </div>
-
     <div id="footer"
-      ng-class="{
-          'container-fluid': true,
-          'hide': s.settings_pin !== null || s.show_app_settings}">
+      class="container-fluid"
+      ng-show="$location.path() === '/' ||
+               $location.path() === '/play' ||
+               $location.path() === '/add_remove_pins/sensors' ||
+               $location.path() === '/add_remove_pins/actuators'">
         <div class="row">
             <div class="col-xs-2">
                 <div id="add-sensors-button"
-                  ng-if='$location.path() === "/" && s.adding_pins !== "actuators"'
+                  ng-show="$location.path() === '/' ||
+                           $location.path() === '/add_remove_pins/sensors'"
                   class="button square"
-                  ng-click="toggle_add_pins_menu_for('sensors')">
+                  ng-click="$location.path() === '/add_remove_pins/sensors' ?
+                      goBack(1) : goTo('add_remove_pins/sensors')">
                     +
                 </div>
             </div>
             <div class="col-xs-8">
-                <a id="play-button"
-                  ng-if='$location.path() === "/" && s.adding_pins === null'
+                <div id="play-button"
+                  ng-if="$location.path() === '/'"
                   class="button wide"
-                  href="#play">Controller Mode</a>
-                <a id="connect-button"
-                  ng-if='$location.path() === "/play" && s.adding_pins === null'
+                  ng-click="goTo('play');">
+                    Controller Mode
+                </div>
+                <div id="connect-button"
+                  ng-if="$location.path() === '/play'"
                   class="button wide"
-                  href="/">Configure</a>
+                  ng-click="goTo('');">
+                    Configure
+                </div>
             </div>
             <div class="col-xs-2">
                 <div id="add-actuators-button"
-                  ng-if='s.adding_pins !== "sensors"'
+                  ng-hide="$location.path() === '/add_remove_pins/sensors'"
                   class="button square"
-                  ng-click="toggle_add_pins_menu_for('actuators')">
+                  ng-click="$location.path() === '/add_remove_pins/actuators' ?
+                      goBack(1) : goTo('add_remove_pins/actuators')">
                     +
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="loading" ng-class="{'hide': s.got_data}">
+    <div id="loading"
+      ng-hide="s.got_data">
         <div id="loading-msg">
             waiting for connection
         </div>

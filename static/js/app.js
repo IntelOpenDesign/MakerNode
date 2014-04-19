@@ -153,9 +153,29 @@ cat.app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'templates/play.html',
             controller: 'PlayModeCtrl',
         })
+        .when('/app_settings', {
+            templateUrl: 'templates/app_settings.html',
+            controller: 'EmptyCtrl',
+        })
+        .when('/app_settings/reset_dialog', {
+            templateUrl: 'templates/app_settings.html',
+            controller: 'EmptyCtrl',
+        })
+        .when('/app_settings/ssid_dialog', {
+            templateUrl: 'templates/app_settings.html',
+            controller: 'EmptyCtrl',
+        })
         .when('/pin_settings/:id', {
             templateUrl: 'templates/pin_settings.html',
-            controller: 'AppCtrl',
+            controller: 'EmptyCtrl',
+        })
+        .when('/pin_settings/:id/remove_pin_dialog', {
+            templateUrl: 'templates/pin_settings.html',
+            controller: 'EmptyCtrl',
+        })
+        .when('/add_remove_pins/:type', {
+            templateUrl: 'templates/add_remove_pins.html',
+            controller: 'EmptyCtrl',
         })
         .otherwise({
             redirectTo: '/',
@@ -163,9 +183,11 @@ cat.app.config(['$routeProvider', function($routeProvider) {
 }]);
 
 // The highest level app controller.
-cat.app.controller('AppCtrl', ['$scope', '$routeParams', 'Galileo', function($scope, $routeParams, Galileo) {
+cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo', function($scope, $routeParams, $location, Galileo) {
 
-    $scope.routeParams = $routeParams;
+    $scope.$location = $location;
+
+    $scope.$routeParams = $routeParams;
 
     $scope.parseInt = parseInt;
 
@@ -301,7 +323,7 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', 'Galileo', function($sc
         $scope.remove_connections(connections_to_remove);
     };
 
-    // NAVIGATION BETWEEN ROUTES
+    // APP NAVIGATION
 
     $scope.goTo = function(hash) {
         window.location.hash = '#/' + hash;
@@ -309,6 +331,12 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', 'Galileo', function($sc
     $scope.goBack = function(n) {
         window.history.go(-n);
     };
+    $scope.show_dialog = function() {
+        var keyword = 'dialog';
+        var path = $location.path();
+        return path.slice(path.length - keyword.length) === keyword;
+    };
+
 }]);
 
 // The controller for Connect Mode.
@@ -453,7 +481,7 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
 }]);
 
 // The controller for Play Mode.
-cat.app.controller('PlayModeCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
+cat.app.controller('PlayModeCtrl', ['$scope', function($scope) {
 
     // DEBUG
     window.PlayModeScope = $scope;
@@ -465,6 +493,10 @@ cat.app.controller('PlayModeCtrl', ['$scope', 'Galileo', function($scope, Galile
             $scope.d.pins[id].value = 100;
         $scope.send_pin_update([id], 'value');
     };
+}]);
+
+cat.app.controller('EmptyCtrl', ['$scope', function($scope) {
+
 }]);
 
 // DRAWING PINS
@@ -501,8 +533,8 @@ cat.app.directive('pinSlider', function($document) {
 
 // PIN SETTINGS
 cat.app.directive('pinSettings', function($document) {
-    function link($scope, $el, attrs) {
-        $scope.pin = $scope.d.pins[$scope.routeParams[id]];
+    function when_ready($scope, $el, attrs) {
+        $scope.pin = $scope.d.pins[$scope.$routeParams.id];
 
         // pin label
         // TODO as with timer value, two way data binding seems not to be working.
@@ -566,8 +598,21 @@ cat.app.directive('pinSettings', function($document) {
             $input.val(val);
             $scope.send_pin_update([$scope.pin.id], 'timer_value');
         };
+
+        $scope.ready = true;
     }
-    return { templateUrl: 'templates/pin_settings.html', link: link };
+
+    function link($scope, $el, attrs) {
+        $scope.ready = false;
+        if ($scope.s.got_data) {
+            when_ready($scope, $el, attrs);
+        } else {
+            setTimeout(function() {
+                link($scope, $el, attrs);
+            }, 10);
+        }
+    }
+    return { templateUrl: 'templates/pin_settings_directive.html', link: link };
 });
 
 // DRAWING CONNECTIONS
