@@ -153,15 +153,19 @@ cat.app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'templates/play.html',
             controller: 'PlayModeCtrl',
         })
+        .when('/pin_settings/:id', {
+            templateUrl: 'templates/pin_settings.html',
+            controller: 'AppCtrl',
+        })
         .otherwise({
             redirectTo: '/',
         });
 }]);
 
 // The highest level app controller.
-cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope, $location, Galileo) {
+cat.app.controller('AppCtrl', ['$scope', '$routeParams', 'Galileo', function($scope, $routeParams, Galileo) {
 
-    $scope.$location = $location;
+    $scope.routeParams = $routeParams;
 
     $scope.parseInt = parseInt;
 
@@ -297,6 +301,14 @@ cat.app.controller('AppCtrl', ['$scope', '$location', 'Galileo', function($scope
         $scope.remove_connections(connections_to_remove);
     };
 
+    // NAVIGATION BETWEEN ROUTES
+
+    $scope.goTo = function(hash) {
+        window.location.hash = '#/' + hash;
+    };
+    $scope.goBack = function(n) {
+        window.history.go(-n);
+    };
 }]);
 
 // The controller for Connect Mode.
@@ -490,11 +502,7 @@ cat.app.directive('pinSlider', function($document) {
 // PIN SETTINGS
 cat.app.directive('pinSettings', function($document) {
     function link($scope, $el, attrs) {
-        // DEBUG
-        if (window.$els === undefined) {
-            window.$els = {};
-        }
-        window.$els[$scope.pin.id] = $el;
+        $scope.pin = $scope.d.pins[$scope.routeParams[id]];
 
         // pin label
         // TODO as with timer value, two way data binding seems not to be working.
@@ -815,10 +823,11 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     var onmessage = function(server_msg) {
         stop_waiting();
 
-        console.log('websocket message', server_msg);
+        // TODO put these back in for deployment
+        //console.log('websocket message', server_msg);
         var data = JSON.parse(server_msg.data);
-        console.log('websocket data', data);
-        console.log('\tdata.message_ids_processed', JSON.stringify(data.message_ids_processed));
+        //console.log('websocket data', data);
+        //console.log('\tdata.message_ids_processed', JSON.stringify(data.message_ids_processed));
 
         // forget about the messages we created that the server has processed
         _.each(data.message_ids_processed, function(message_id) {
@@ -863,7 +872,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
 
         do_callback('update', {pins: pins, connections: connections});
 
-        console.log('\n\n');
+        //console.log('\n\n');
         start_waiting();
     };
 

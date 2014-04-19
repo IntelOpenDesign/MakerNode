@@ -4,8 +4,7 @@
       'sensor': pin.is_input,
       'actuator': !pin.is_input,
       'analog': pin.is_analog,
-      'digital': !pin.is_analog,
-      'hide': s.settings_pin !== pin.id}"
+      'digital': !pin.is_analog}"
   data-pin="{{pin.id}}">
     <div class="settings-inner">
         <div class="container-fluid">
@@ -164,13 +163,13 @@
             <div class="row padded">
                 <div class="col-xs-6">
                     <div class="button secondary"
-                      ng-click="open_remove_dialog()">
+                      ng-click="goTo('pin_settings/'+pin.id+'/remove_dialog');">
                         Remove
                     </div>
                 </div>
                 <div class="col-xs-6">
                     <div class="button"
-                      ng-click="close_settings()">
+                      ng-click="goBack(1);">
                         OK
                     </div>
                 </div>
@@ -191,13 +190,13 @@
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="button secondary"
-                          ng-click="close_remove_dialog()">
+                          ng-click="window.history.back();">
                             No
                         </div>
                     </div>
                     <div class="col-xs-6">
                         <div class="button"
-                          ng-click="hide_pins([pin.id]); close_settings();">
+                          ng-click="hide_pins([pin.id]); goBack(2);">
                             Yes
                         </div>
                     </div>

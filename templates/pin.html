@@ -16,7 +16,7 @@
           ( d.pins[activated_pin].is_input ?
                 d.are_connected(activated_pin, pin.id)
               : d.are_connected(pin.id, activated_pin) ) }">
-    <div class="pin-box" ng-click="show_settings_for(pin.id)">
+    <div class="pin-box" ng-click="goTo('pin_settings/' + pin.id);">
         <div class="pin-label">
             {{pin.label}}
         </div>
