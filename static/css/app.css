@@ -435,14 +435,12 @@ html, body {
   font-size: 45px;
   font-weight: 800;
   position: absolute;
-  height: 66px;
+  height: 72px;
   top: 50%;
-  margin-top: -33px;
-  line-height: 52px;
+  margin-top: -36px;
   width: 100%;
   text-align: center;
   box-sizing: border-box;
-  border-width: 5px;
   border-style: solid; }
 
 .settings.digital.actuator .pin-value-container:before,
@@ -457,10 +455,14 @@ html, body {
 
 .settings.digital .pin-value-container:before {
   content: "OFF";
-  border-color: white; }
+  border-color: white;
+  border-width: 10px;
+  line-height: 50px; }
 
 .settings.digital .pin-value:before {
-  content: "ON"; }
+  content: "ON";
+  border-width: 5px;
+  line-height: 55px; }
 
 .settings.digital.actuator .pin-value:before {
   border-color: #b4ceb8; }
