@@ -157,9 +157,9 @@ cat.app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'templates/app_settings.html',
             controller: 'EmptyCtrl',
         })
-        .when('/app_settings/reset_dialog', {
-            templateUrl: 'templates/app_settings.html',
-            controller: 'EmptyCtrl',
+        .when('/app_settings/reset_dialog', { // NOTE if it ends in 'dialog' |
+            templateUrl: 'templates/app_settings.html',    // then AppCtrl's |
+            controller: 'EmptyCtrl',    // $scope.show_dialog() returns true |
         })
         .when('/app_settings/ssid_dialog', {
             templateUrl: 'templates/app_settings.html',
