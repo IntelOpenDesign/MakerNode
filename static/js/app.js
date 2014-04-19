@@ -270,18 +270,6 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
         });
     };
 
-
-    $scope.is_pin_stub_clicked = function(id) {
-        return $scope.d.pins[id].is_visible;
-    };
-    $scope.pin_stub_click = function(id) {
-        if ($scope.d.pins[id].is_visible) {
-            $scope.hide_pins([id]);
-        } else {
-            $scope.show_pins([id]);
-        }
-    };
-
     $scope.show_pins = function(ids) {
         $scope.d.show_pins(ids);
         $scope.send_pin_update(ids, 'is_visible');

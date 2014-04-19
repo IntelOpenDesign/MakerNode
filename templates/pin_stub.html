@@ -1,5 +1,3 @@
-<!-- pin stubs are meant to be toggled between "clicked" and "unclicked" -->
-
 <div
   ng-class="{
       'pin': true,
@@ -8,10 +6,10 @@
       'connected': pin.is_connected,
       'analog': pin.is_analog,
       'digital': !pin.is_analog,
-      'clicked': is_pin_stub_clicked(pin.id),
+      'clicked': pin.is_visible,
       'pin-stub': true}">
     <div class="pin-box"
-      ng-click="pin_stub_click(pin.id)">
+      ng-click="pin.is_visible ? hide_pins([pin.id]) : show_pins([pin.id])">
         <div class="pin-label">
             {{pin.label}}
         </div>
