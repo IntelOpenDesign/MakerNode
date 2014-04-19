@@ -270,39 +270,6 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
         });
     };
 
-    // HOW THE USER SHOWS/HIDES PINS
-    // Tapping a "+" button at the bottom of the screen opens or closes the add
-    // pins menu. In this menu, tapping a pin selects it. Leaving the menu adds
-    // the selected pins.
-    // In the settings window for each pin, tapping "Remove" removes that pin
-    // and all its connections, after asking the user for confirmation.
-
-    $scope.toggle_add_pins_menu_for = function(type) {
-        var prev_type = $scope.s.adding_pins;
-        // add_pins_menu was closed, so open it
-        if (prev_type === null) {
-            $scope.s.adding_pins = type;
-            window.history.pushState();
-            window.onpopstate = function() {
-                $scope.close_add_pins_menu(true);
-            };
-        }
-        // add_pins_menu was already open
-        else {
-            if (prev_type === type) {
-                $scope.close_add_pins_menu();
-            } else {
-                $scope.s.adding_pins = type;
-            }
-        }
-    };
-    $scope.close_add_pins_menu = function(history_state_already_popped) {
-        $scope.s.adding_pins = null;
-        /* TODO this window history stuff, which happens in showing/hiding pins AND in pin settings AND with overall app settings, should really be taken care of by some kind of modal/popup directive */
-        if (!history_state_already_popped) {
-            window.history.back();
-        }
-    };
 
     $scope.is_pin_stub_clicked = function(id) {
         return $scope.d.pins[id].is_visible;
