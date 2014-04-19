@@ -1,0 +1,36 @@
+<div id="add-pins-menu">
+    <div id="add-pins-menu-pins-container">
+
+        <div id="add-pins-menu-inner">
+            <div class="row">
+                <div class="col-xs-12 column-title {{$routeParams.type}}">
+                    <span ng-if="$routeParams.type === 'sensors'">
+                        add/remove sensors
+                    </span>
+                    <span ng-if="$routeParams.type === 'actuators'">
+                        add/remove actuators
+                    </span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-4"
+                  ng-if="$routeParams.type === 'sensors'"
+                  ng-repeat="pin in d.sensors"
+                  pin-stub>
+                </div>
+                <div class="col-xs-4"
+                  ng-if="$routeParams.type === 'actuators'"
+                  ng-repeat="pin in d.actuators"
+                  pin-stub>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="add-pins-menu-bg-footer" class="{{$routeParams.type}}"></div>
+
+    <div id="add-pins-menu-bg"></div>
+</div>

@@ -1,0 +1,60 @@
+<div id="app-settings"
+  class="settings">
+    <div class="settings-inner">
+        <div class="container-fluid">
+            <div class="row padded">
+                <div class="col-xs-12">
+                    <div class="column-title">
+                        App Settings
+                    </div>
+                </div>
+            </div>
+            <div class="row padded">
+                <div class="col-xs-3">
+                    <div class="button danger"
+                      ng-click="goTo('app_settings/reset_dialog');">
+                        Reset
+                    </div>
+                </div>
+                <div class="col-xs-9">
+                    Remove all pins and connections, restore all pin settings to defaults.
+                </div>
+            </div>
+            <div class="row padded">
+                <div class="col-xs-3 col-xs-offset-9">
+                    <div class="button"
+                      ng-click="goBack(1);">
+                        OK
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialog-container container-fluid"
+        ng-show="s.show_reset_confirmation">
+        <div class="row dialog-row">
+            <div class="dialog col-xs-8 col-xs-offset-2">
+                <div class="row padded">
+                    <div class="col-xs-12">
+                        Are you sure you want to reset all pins and connections?
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="button secondary"
+                          ng-click="goBack(1);">
+                            No
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="button"
+                          ng-click="reset_app(); goBack(2);">
+                            Yes
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
