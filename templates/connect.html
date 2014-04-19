@@ -1,18 +1,10 @@
-<!-- TODO instead of using my own class 'hide', i should just use ng-show. -->
-
-<div id="column-divider"
-  ng-class="{
-      'hide': s.settings_pin !== null ||
-              s.adding_pins !== null ||
-              s.show_app_settings}">
-</div>
+<div id="column-divider"></div>
 
 <div class="container-fluid">
     <div class="row">
         <div id="settings-button"
           class="col-xs-6 col-xs-offset-3"
-          ng-show="s.settings_pin === null && s.adding_pins === null && !s.show_app_settings"
-          ng-click="open_app_settings()">
+          ng-click="goTo('app_settings');">
             <span class="glyphicon glyphicon-cog"></span>
         </div>
     </div>

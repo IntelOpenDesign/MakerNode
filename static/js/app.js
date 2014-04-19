@@ -325,6 +325,36 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
         $scope.remove_connections(connections_to_remove);
     };
 
+    // RESET PINS AND CONNECTIONS
+    // TODO I think pin defaults should live on the server not on the client,
+    // because the app initializes itself with server data
+    var pin_defaults = {
+        label: '',
+        input_min: 0,
+        input_max: 100,
+        is_inverted: false,
+        is_visible: false,
+        value: 0,
+        is_timer_on: false,
+        timer_value: 0,
+        damping: 0,
+        is_connected: false,
+    };
+
+    $scope.reset_app = function() {
+        Galileo.remove_connections($scope.d.connections);
+        var data = {connections: [], pins: {}};
+        _.each($scope.d.pins, function(pin) {
+            data.pins[pin.id] = _.extend({}, pin, pin_defaults);
+        });
+        $scope.d.reset(data);
+        var ids = _.keys(data.pins);
+        var attrs = _.keys(pin_defaults);
+        _.each(attrs, function(attr) {
+            $scope.send_pin_update(ids, attr);
+        });
+    };
+
     // APP NAVIGATION
 
     $scope.goTo = function(hash) {
@@ -452,34 +482,6 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
         $scope.s.show_reset_confirmation = false;
     };
 
-    // TODO I think pin defaults should live on the server not on the client,
-    // because the app initializes itself with server data
-    var pin_defaults = {
-        label: '',
-        input_min: 0,
-        input_max: 100,
-        is_inverted: false,
-        is_visible: false,
-        value: 0,
-        is_timer_on: false,
-        timer_value: 0,
-        damping: 0,
-        is_connected: false,
-    };
-
-    $scope.reset_app = function() {
-        Galileo.remove_connections($scope.d.connections);
-        var data = {connections: [], pins: {}};
-        _.each($scope.d.pins, function(pin) {
-            data.pins[pin.id] = _.extend({}, pin, pin_defaults);
-        });
-        $scope.d.reset(data);
-        var ids = _.keys(data.pins);
-        var attrs = _.keys(pin_defaults);
-        _.each(attrs, function(attr) {
-            $scope.send_pin_update(ids, attr);
-        });
-    };
 }]);
 
 // The controller for Play Mode.
