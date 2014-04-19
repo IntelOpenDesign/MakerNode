@@ -725,7 +725,7 @@ label {
 }
 
 /* SHOWING AND HIDING PINS */
-.confirm-remove-container {
+.dialog-container {
     position: fixed;
     z-index: 3;
     top: 0;
@@ -733,13 +733,13 @@ label {
     height: 100%;
     width: 100%;
 }
-.confirm-remove-row {
+.dialog-row {
     position: fixed;
     width: 100%;
     top: 50%;
     margin-top: -80px;
 }
-.confirm-remove {
+.dialog {
     padding: 30px 50px;
     background: rgb(198, 188, 175);
 }
