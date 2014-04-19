@@ -15,25 +15,19 @@
     <div class="row">
 
         <div id="sensors" class="col-xs-6">
-            <div
-              ng-class="{
-                  'sensors': true,
-                  'column-title': true,
-                  'hide': d.visible_sensors.length > 0}">
+            <div class="sensors column-title"
+              ng-show="d.visible_sensors.length === 0">
                 sensors
             </div>
-            <div id="{{pin.id}}" ng-repeat="pin in d.visible_sensors" sensor></div>
+            <div id="{{pin.id}}" ng-repeat="pin in d.visible_sensors" pin-original></div>
         </div>
 
         <div id="actuators" class="col-xs-6">
-            <div
-              ng-class="{
-                  'actuators': true,
-                  'column-title': true,
-                  'hide': d.visible_actuators.length > 0}">
+            <div class="actuators column-title"
+              ng-show="d.visible_actuators.length === 0">
                 actuators
             </div>
-            <div id="{{pin.id}}" ng-repeat="pin in d.visible_actuators" actuator></div>
+            <div id="{{pin.id}}" ng-repeat="pin in d.visible_actuators" pin-original></div>
         </div>
 
     </div>

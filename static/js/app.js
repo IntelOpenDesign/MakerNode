@@ -185,6 +185,7 @@ cat.app.config(['$routeProvider', function($routeProvider) {
 // The highest level app controller.
 cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo', function($scope, $routeParams, $location, Galileo) {
 
+    // STATE
     $scope.$location = $location;
 
     $scope.$routeParams = $routeParams;
@@ -205,13 +206,23 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
         got_data: false, // whether we have received any data from the server
     };
 
+    // NAVIGATION
+    $scope.goTo = function(hash) {
+        window.location.hash = '#/' + hash;
+    };
+    $scope.goBack = function(n) {
+        window.history.go(-n);
+    };
+    $scope.show_dialog = function() {
+        var keyword = 'dialog';
+        var path = $location.path();
+        return path.slice(path.length - keyword.length) === keyword;
+    };
 
-    // TALKING WITH GALILEO
-
+    // SYNC WITH SERVER
     Galileo.set_all_pins_getter(function() {
         return $scope.d.pins;
     });
-
     Galileo.on('update', function(data) {
         if (!$scope.s.got_data) { // first time initialization
             $scope.s.got_data = true;
@@ -221,15 +232,20 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
             $scope.d.update(data);
         }
     });
-
     Galileo.on('slowness', function() {
         $scope.s.got_data = false;
     });
-
     Galileo.on('websocket-closed', function() {
         $scope.s.got_data = false;
     });
+    if (cat.on_hardware) {
+        Galileo.connect(cat.hardware_server_url, cat.hardware_server_protocol);
+    } else {
+        Galileo.connect(cat.test_server_url);
+    }
 
+    // GENERAL PURPOSE PIN UPDATE
+    // NOTE do not use for showing or hiding pins
     $scope.send_pin_update = function(pin_ids, attr, val) {
         if (arguments.length >= 3) {
             _.each(pin_ids, function(id) {
@@ -239,16 +255,18 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
         Galileo.update_pins(pin_ids, attr);
     };
 
-    if (cat.on_hardware) {
-        Galileo.connect(cat.hardware_server_url, cat.hardware_server_protocol);
-    } else {
-        Galileo.connect(cat.test_server_url);
-    }
+    // SHOW/HIDE PINS
+    $scope.show_pins = function(ids) {
+        $scope.d.show_pins(ids);
+        $scope.send_pin_update(ids, 'is_visible');
+    };
+    $scope.hide_pins = function(ids) {
+        var connections_to_remove = $scope.d.hide_pins(ids);
+        $scope.send_pin_update(ids, 'is_visible');
+        $scope.remove_connections(connections_to_remove);
+    };
 
-    // HOW TO ADD/REMOVE CONNECTIONS
-    // These helper functions dot all the i's and cross all the t's in terms of
-    // maintaining consistent internal state and communicating with Galileo
-
+    // ADD/REMOVE CONNECTIONS
     $scope.add_connections = function(connections) {
         $scope.d.connect(connections);
         Galileo.add_connections(connections);
@@ -270,16 +288,6 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
         });
     };
 
-    $scope.show_pins = function(ids) {
-        $scope.d.show_pins(ids);
-        $scope.send_pin_update(ids, 'is_visible');
-    };
-    $scope.hide_pins = function(ids) {
-        var connections_to_remove = $scope.d.hide_pins(ids);
-        $scope.send_pin_update(ids, 'is_visible');
-        $scope.remove_connections(connections_to_remove);
-    };
-
     // RESET PINS AND CONNECTIONS
     // TODO I think pin defaults should live on the server not on the client,
     // because the app initializes itself with server data
@@ -295,7 +303,6 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
         damping: 0,
         is_connected: false,
     };
-
     $scope.reset_app = function() {
         Galileo.remove_connections($scope.d.connections);
         var data = {connections: [], pins: {}};
@@ -310,20 +317,6 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
         });
     };
 
-    // APP NAVIGATION
-
-    $scope.goTo = function(hash) {
-        window.location.hash = '#/' + hash;
-    };
-    $scope.goBack = function(n) {
-        window.history.go(-n);
-    };
-    $scope.show_dialog = function() {
-        var keyword = 'dialog';
-        var path = $location.path();
-        return path.slice(path.length - keyword.length) === keyword;
-    };
-
 }]);
 
 // The controller for Connect Mode.
@@ -333,13 +326,18 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
     window.ConnectModeScope = $scope;
 
     // HOW THE USER ADDS/REMOVES CONNECTIONS
-    // When the user taps a sensor's endpoint, we activate that sensor,
-    // deactivate all other sensors, and activate all actuators. Then if the
-    // user taps an actuator's endpoint, we either form a new connection
-    // between the activated sensor and the tapped actuator, or delete that
-    // connection if it already existed. If the user taps the endpoint of the
-    // sensor that was already activated, then we deactivate that sensor and go
-    // back to having no activated pins.
+    // Starting from all pins being deactivated, it works like this:
+    // Tapping a pin activates that pin and all pins of the other type, where
+    // by type we mean sensors or actuators. So, tapping a sensor activates
+    // that sensor and all actuators, and vice versa.
+    // Then there are three possible things that could happen next:
+    // 1. Tapping that same pin again will deactivate all pins
+    // OR
+    // 2. Tapping another pin of the same type will deactivate the original pin
+    //    and activate the just-tapped pin
+    // OR
+    // 3. Tapping another pin of the opposite type will connect the original
+    //    pin and the just-tapped pin, and deactivate all pins
 
     $scope.activated_pin = null;
 
@@ -359,11 +357,11 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
         } else {
             var sensor  = null, actuator = null;
             if ($scope.d.pins[$scope.activated_pin].is_input) {
-                // sensor already activated and actuator just clicked
+                // sensor already activated and actuator just tapped
                 sensor = $scope.activated_pin;
                 actuator = pin;
             } else {
-                // actuatur already activated and sensor just clicked
+                // actuatur already activated and sensor just tapped
                 sensor = pin;
                 actuator = $scope.activated_pin;
             }
@@ -381,27 +379,12 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
 
 }]);
 
+// TODO do I really need this or can I just not specify a controller in ngRoute?
 cat.app.controller('EmptyCtrl', ['$scope', function($scope) {
 }]);
 
-// DRAWING PINS
-
-cat.pin_template = 'templates/pin.html';
-
-cat.app.directive('sensor', function($document) {
-    function link($scope, $el, attrs) {
-    }
-    return { templateUrl: cat.pin_template, link: link };
-});
-
-cat.app.directive('actuator', function($document) {
-    function link($scope, $el, attrs) {
-        $scope.already_connected_to_activated_sensor = function() {
-            if ($scope.activated_sensor === null) return false;
-            return $scope.d.are_connected($scope.activated_sensor, $scope.pin.id);
-        };
-    }
-    return { templateUrl: cat.pin_template, link: link };
+cat.app.directive('pinOriginal', function($document) {
+    return { templateUrl: 'templates/pin.html' };
 });
 
 cat.app.directive('pinStub', function($document) {
