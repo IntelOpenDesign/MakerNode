@@ -698,6 +698,13 @@ label {
   padding: 30px 50px;
   background: #c6bcaf; }
 
+#ssid-dialog {
+  top: 15%;
+  margin-top: 0; }
+
+#ssid-dialog input {
+  width: 100%; }
+
 #add-pins-menu {
   height: 100%;
   width: 100%;

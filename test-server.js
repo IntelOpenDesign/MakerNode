@@ -16,11 +16,14 @@ var msg = {
     connections: [],
     count: 0, // TODO remove when done debugging
     message_ids_processed: [],
+    ssid: 'ConnectAnything',
 };
 
 var messages_dict = {};
 
 var N_CLIENTS = 0;
+
+var change_ssid_message_id = null;
 
 function pin_setter(is_analog, is_input) {
     return function(id) {
@@ -90,10 +93,9 @@ var server = ws.createServer(function(conn){
     N_CLIENTS += 1;
     console.log('new connection, N_CLIENTS', N_CLIENTS);
 
-    setInterval(function() {
+    var broadcast_interval_id = setInterval(function() {
         msg.count += 1;
         msg.message_ids_processed = _und.keys(messages_dict);
-        console.log('broadcasting message #', msg.count, 'which has message IDs', JSON.stringify(msg.message_ids_processed));
         conn.sendText(JSON.stringify(msg));
 
         _und.each(_und.keys(messages_dict), function(id) {
@@ -103,6 +105,10 @@ var server = ws.createServer(function(conn){
             function(id) { return messages_dict[id] >= N_CLIENTS * 2; });
         _und.each(message_ids_to_delete, function(id) {
             delete messages_dict[id];
+            if (id === change_ssid_message_id) {
+                clearInterval(broadcast_interval_id);
+                console.log('clearing broadcast interval');
+            }
         });
     }, 500);
 
@@ -144,6 +150,13 @@ var server = ws.createServer(function(conn){
             });
             console.log('processing message ID', d.message_id);
             messages_dict[d.message_id] = 0;
+            if (d.ssid !== msg.ssid) {
+                // a user has changed the SSID. we should notify all other
+                // users and then stop broadcasting, to mimic the users having
+                // to reconnect to another wifi hotspot
+                msg.ssid = d.ssid;
+                var change_ssid_message_id = d.message_id;
+            }
         }, 0);
     });
 
@@ -166,7 +179,7 @@ var server = ws.createServer(function(conn){
         }
     });
     conn.on('error', function() {
-        console.log('error');
+        //console.log('error');
     });
 }).listen(8001);
 

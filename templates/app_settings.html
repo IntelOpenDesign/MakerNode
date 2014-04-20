@@ -10,14 +10,25 @@
                 </div>
             </div>
             <div class="row padded">
-                <div class="col-xs-3">
+                <div class="col-xs-5">
                     <div class="button danger"
                       ng-click="goTo('app_settings/reset_dialog');">
                         Reset
                     </div>
                 </div>
-                <div class="col-xs-9">
+                <div class="col-xs-7">
                     Remove all pins and connections, restore all pin settings to defaults.
+                </div>
+            </div>
+            <div class="row padded">
+                <div class="col-xs-5">
+                    <div class="button"
+                      ng-click="goTo('app_settings/ssid_dialog');">
+                        Change Network Name
+                    </div>
+                </div>
+                <div class="col-xs-7">
+                    Change the name of the wifi network ConnectAnything uses.
                 </div>
             </div>
             <div class="row padded">
@@ -32,7 +43,7 @@
     </div>
 
     <div class="dialog-container container-fluid"
-        ng-show="show_dialog()">
+        ng-show="path_ends_in('reset_dialog')">
         <div class="row dialog-row">
             <div class="dialog col-xs-8 col-xs-offset-2">
                 <div class="row padded">
@@ -51,6 +62,42 @@
                         <div class="button"
                           ng-click="reset_app(); goBack(2);">
                             Yes
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div
+      class="dialog-container container-fluid"
+      ng-show="path_ends_in('ssid_dialog')">
+        <div id="ssid-dialog"
+          class="row dialog-row">
+            <div class="dialog col-xs-8 col-xs-offset-2">
+                <div class="row padded">
+                    <div class="col-xs-12">
+                        Enter a new wifi network name, press submit, wait a few minutes, then connect to that network.
+                    </div>
+                </div>
+                <div class="row padded">
+                    <div class="col-xs-12">
+                        <input id="ssid"
+                          ng-model="ssid_copy"
+                          ng-change="truncate_ssid_copy()">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="button secondary"
+                          ng-click="goBack(1);">
+                            Cancel
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="button"
+                          ng-click="change_ssid(); goTo('ssid_changed');">
+                            Submit
                         </div>
                     </div>
                 </div>

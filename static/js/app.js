@@ -144,6 +144,8 @@ cat.d = function() {
 cat.app = angular.module('ConnectAnything', ['ngRoute']);
 
 cat.app.config(['$routeProvider', function($routeProvider) {
+    // TODO encode the routes in scope so templates can look at them too
+    // right now they are hardcoded throughout templates
     $routeProvider
         .when('/', {
             templateUrl: 'templates/connect.html',
@@ -157,9 +159,13 @@ cat.app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'templates/app_settings.html',
             controller: 'EmptyCtrl',
         })
-        .when('/app_settings/reset_dialog', { // NOTE if it ends in 'dialog' |
-            templateUrl: 'templates/app_settings.html',    // then AppCtrl's |
-            controller: 'EmptyCtrl',    // $scope.show_dialog() returns true |
+        .when('/app_settings/reset_dialog', {
+            templateUrl: 'templates/app_settings.html',
+            controller: 'EmptyCtrl',
+        })
+        .when('/app_settings/ssid_dialog', {
+            templateUrl: 'templates/app_settings.html',
+            controller: 'EmptyCtrl',
         })
         .when('/app_settings/ssid_dialog', {
             templateUrl: 'templates/app_settings.html',
@@ -175,6 +181,10 @@ cat.app.config(['$routeProvider', function($routeProvider) {
         })
         .when('/add_remove_pins/:type', {
             templateUrl: 'templates/add_remove_pins.html',
+            controller: 'EmptyCtrl',
+        })
+        .when('/ssid_changed', {
+            templateUrl: 'templates/ssid_changed.html',
             controller: 'EmptyCtrl',
         })
         .otherwise({
@@ -204,6 +214,10 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
     // prototypal inheritance of $scope
     $scope.s = {
         got_data: false, // whether we have received any data from the server
+        ssid: null, // name of wifi network. this does not need to be synced
+                    // with server because, when someone changes it, the wifi
+                    // network changes name and so everyone has to disconnect
+                    // and reconnect, which should reload the whole app.
     };
 
     // NAVIGATION
@@ -213,10 +227,9 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
     $scope.goBack = function(n) {
         window.history.go(-n);
     };
-    $scope.show_dialog = function() {
-        var keyword = 'dialog';
+    $scope.path_ends_in = function(s) {
         var path = $location.path();
-        return path.slice(path.length - keyword.length) === keyword;
+        return path.slice(path.length - s.length) === s;
     };
 
     // SYNC WITH SERVER
@@ -230,7 +243,11 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
          } else { // after that just update changes
             $scope.s.got_data = true;
             $scope.d.update(data);
+            if ($scope.s.ssid !== data.ssid) {
+                $location.path('/ssid_changed');
+            }
         }
+        $scope.s.ssid = data.ssid;
     });
     Galileo.on('slowness', function() {
         $scope.s.got_data = false;
@@ -317,6 +334,25 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
         });
     };
 
+    // CHANGE SSID
+    // TODO this is terrible angular form
+    // TODO I would really like to re-use part of what I did from the pin label input stuff, but I was having so much trouble with it
+    $scope.ssid_copy = $scope.s.ssid ? $scope.s.ssid.substring() : '';
+    $scope.$watch(function() { return $scope.s.ssid; },
+        function(new_val, old_val) {
+            if (new_val === old_val) return;
+            $scope.ssid_copy = $scope.s.ssid.substring();
+    });
+    $scope.truncate_ssid_copy = function() {
+        var $input = $('#ssid-dialog').find('input').first();
+        $scope.ssid_copy = $input.val().substring(0, 32);
+        $input.val($scope.ssid_copy);
+    };
+    $scope.change_ssid = function() {
+        $scope.truncate_ssid_copy();
+        $scope.s.ssid = $scope.ssid_copy.substring();
+        Galileo.update_ssid($scope.ssid_copy);
+    };
 }]);
 
 // The controller for Connect Mode.
@@ -599,6 +635,9 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     var update_period = 500;
     //(end of settings)
 
+    var ssid; // the most recent ssid we got from the server
+              // TODO this is a bad way to do it
+
     // Callback Functions
     // for certain "events" you can assign exactly one callback function. they
     // are not real events; the strings just describe the situation in which
@@ -686,9 +725,10 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         // TODO i think i used to just send connections or pins if there were updates for them.
         var msg_for_server = {
             status: 'OK',
-            message_id: message_id,
+            ssid: batch.ssid,
             pins: cat.server_pin_format(get_all_pins(), _.keys(batch.pins)),
             connections: batch.connections,
+            message_id: message_id,
         };
         ws.send(JSON.stringify(msg_for_server));
         batch = null;
@@ -697,13 +737,19 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
     var send = _.throttle(_send, update_period);
 
     var add_to_batch = function(updates) {
-        batch = _.extend({ pins: {}, connections: [] }, batch);
+        batch = _.extend({ pins: {}, connections: [], ssid: ssid }, batch);
         _.each(updates.pins, function(pin, id) {
             batch.pins[id] = _.extend({}, batch.pins[id], pin);
         });
         // TODO remove redundant add/remove connection updates before sending out batch
         batch.connections.push.apply(batch.connections, updates.connections);
+        if (_.has(updates, 'ssid'))
+            batch.ssid = updates.ssid;
         send();
+    };
+
+    var update_ssid = function(ssid) {
+        add_to_batch({ssid: ssid});
     };
 
     var update_pins = function(ids, attr) {
@@ -783,7 +829,13 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
                 connections.push(cat.detokenize_connection(token));
         });
 
-        do_callback('update', {pins: pins, connections: connections});
+        ssid = data.ssid;
+
+        do_callback('update', {
+            pins: pins,
+            connections: connections,
+            ssid: ssid,
+        });
 
         //console.log('\n\n');
         start_waiting();
@@ -823,6 +875,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         update_pins: update_pins,
         add_connections: add_connections,
         remove_connections: remove_connections,
+        update_ssid: update_ssid,
         set_all_pins_getter: set_all_pins_getter,
     };
 
