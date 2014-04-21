@@ -80,6 +80,7 @@
                               ng-change="sync_min_max()">
                         </div>
                         <div class="pin-value-container">
+                            <!-- TODO instead of drawing pin-value and pin-value-in-range separately, just draw pin-value and then make pin-value-container-above-range and pin-value-container-below range actual overlays so that they make the pin value not in range look dulled out -->
                             <div class="threshold"
                               ng-show="pin.is_analog"
                               style="bottom: {{average_min_max()}}%;">
@@ -101,6 +102,14 @@
                               ng-show="pin.is_analog && pin.is_input"
                               style="bottom: {{pin.input_min}}%;
                                      height: {{val_in_range()}}%;">
+                            </div>
+                            <div class="pin-value-container-above-range"
+                              ng-show="pin.is_analog && pin.is_input"
+                              style="height: {{diff_100_max()}}%;">
+                            </div>
+                            <div class="pin-value-container-below-range"
+                              ng-show="pin.is_analog && pin.is_input"
+                              style="height: {{pin.input_min}}%;">
                             </div>
                         </div>
                         <div ng-class="{

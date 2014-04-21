@@ -423,7 +423,7 @@ html, body {
     border-color: rgb(159, 122, 35);
 }
 .settings.analog .sensor-value-settings .pin-value-container {
-    background: rgb(223, 223, 223);
+    background: white;
     border-width: 0;
 }
 
@@ -470,6 +470,20 @@ html, body {
     left: 0;
     width: 100%;
     background: rgb(216, 192, 85);
+}
+.settings .pin-value-container-above-range,
+.settings .pin-value-container-below-range {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background: rgb(223, 223, 223);
+    z-index: -1;
+}
+.settings .pin-value-container-above-range {
+    top: 0;
+}
+.settings .pin-value-container-below-range {
+    bottom: 0;
 }
 
 /* DIGITAL PINS SHOW "ON" OR "OFF" IN SETTINGS PIN VALUE DISPLAY */

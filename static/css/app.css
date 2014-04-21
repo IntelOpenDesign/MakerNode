@@ -384,7 +384,7 @@ html, body {
   border-color: #9f7a23; }
 
 .settings.analog .sensor-value-settings .pin-value-container {
-  background: #dfdfdf;
+  background: white;
   border-width: 0; }
 
 .settings .threshold {
@@ -428,6 +428,20 @@ html, body {
   left: 0;
   width: 100%;
   background: #d8c055; }
+
+.settings .pin-value-container-above-range,
+.settings .pin-value-container-below-range {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background: #dfdfdf;
+  z-index: -1; }
+
+.settings .pin-value-container-above-range {
+  top: 0; }
+
+.settings .pin-value-container-below-range {
+  bottom: 0; }
 
 /* DIGITAL PINS SHOW "ON" OR "OFF" IN SETTINGS PIN VALUE DISPLAY */
 .settings.digital .pin-value-container:before,
