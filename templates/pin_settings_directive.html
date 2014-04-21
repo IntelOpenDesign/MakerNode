@@ -81,7 +81,7 @@
                         </div>
                         <div class="pin-value-container">
                             <div class="threshold"
-                              ng-hide="!pin.is_analog"
+                              ng-show="pin.is_analog"
                               style="bottom: {{average_min_max()}}%;">
                             </div>
                             <div class="pin-value"
@@ -89,16 +89,16 @@
                               style="height: {{pin.value}}%;">
                             </div>
                             <div class="pin-value-range-outline-top"
-                              ng-hide="!(pin.is_analog && pin.is_input)"
+                              ng-show="pin.is_analog && pin.is_input"
                               style="top: {{diff_100_max()}}%;">
                             </div>
                             <div class="pin-value-range-outline-not-top"
-                              ng-hide="!(pin.is_analog && pin.is_input)"
+                              ng-show="pin.is_analog && pin.is_input"
                               style="bottom: {{pin.input_min}}%;
                                      height: {{diff_max_min()}}%;">
                             </div>
                             <div class="pin-value-in-range"
-                              ng-hide="!(pin.is_analog && pin.is_input)"
+                              ng-show="pin.is_analog && pin.is_input"
                               style="bottom: {{pin.input_min}}%;
                                      height: {{val_in_range()}}%;">
                             </div>
