@@ -314,23 +314,6 @@ p {
 
 /* SETTINGS WINDOW */
 
-.settings.digital .pin-value-label:before {
-    content: 'On/Off';
-}
-.settings.analog.sensor .pin-value-label:before {
-    content: 'Calibrate';
-}
-.settings.analog.actuator .pin-value-label:before {
-    content: 'Value';
-}
-
-.settings.actuator .pin-extra-setting-label:before {
-    content: 'Limit/Hold';
-}
-.settings.sensor .pin-extra-setting-label:before {
-    content: 'Damping';
-}
-
 .settings {
     position: absolute;
     top: 0;
