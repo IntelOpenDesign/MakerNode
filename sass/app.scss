@@ -336,6 +336,15 @@ p {
     border-style: solid;
     border-color: rgb(183, 169, 152);
 }
+#ssid-changed .settings-inner {
+    padding: 15px;
+}
+#new-ssid {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: .5em 0;
+}
 .settings.sensor .settings-inner {
     border-color: $yellow;
 }

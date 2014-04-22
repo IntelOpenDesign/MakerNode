@@ -300,6 +300,15 @@ p {
   border-style: solid;
   border-color: #b7a998; }
 
+#ssid-changed .settings-inner {
+  padding: 15px; }
+
+#new-ssid {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: .5em 0; }
+
 .settings.sensor .settings-inner {
   border-color: #f7c128; }
 
