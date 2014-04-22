@@ -902,9 +902,8 @@ $play_pin_h: 145px;
 }
 #play-pins .pin.analog .pin-box {
     height: 65px;
-    margin: (($play_pin_h - 65px)/2) 0;
     width: 100%;
-    border-width: 0 ($play_margin + $play_border);
+    border-width: (($play_pin_h - 65px)/2) ($play_margin + $play_border);
 }
 
 #play-pins .pin.pressed .pin-box {

@@ -848,9 +848,8 @@ label {
 
 #play-pins .pin.analog .pin-box {
   height: 65px;
-  margin: 40px 0;
   width: 100%;
-  border-width: 0 35px; }
+  border-width: 40px 35px; }
 
 #play-pins .pin.pressed .pin-box {
   border-color: #b4ceb8;
