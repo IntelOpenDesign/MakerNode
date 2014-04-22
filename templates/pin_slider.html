@@ -19,21 +19,19 @@
                 {{pin.name}}
             </div>
 
-            <div class="vertical-slider-container">
-                <input type="range"
-                  class="vertical-slider"
-                  min="0"
-                  max="100"
-                  step="1"
-                  ng-model="pin.value"
-                  value="{{pin.value}}"
-                  ng-change="send_pin_update([pin.id], 'value')">
-            </div>
-
-            <div class="pin-value-in-range"
-              style="bottom: 0%;
-                     height: {{pin.value}}%;">
+            <div class="pin-value"
+              style="width: {{pin.value}}%;">
             </div>
         </div>
+    </div>
+
+    <div class="pin-slider-container">
+        <input type="range"
+          min="0"
+          max="100"
+          step="1"
+          ng-model="pin.value"
+          value="{{pin.value}}"
+          ng-change="send_pin_update([pin.id], 'value')">
     </div>
 </div>
