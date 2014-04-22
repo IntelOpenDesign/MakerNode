@@ -1,9 +1,8 @@
-<div id="add-pins-menu">
-    <div id="add-pins-menu-pins-container">
-
-        <div id="add-pins-menu-inner">
+<div id="add-pins-menu" class="chatbox-container {{$routeParams.type}}">
+    <div class="chatbox">
+        <div class="chatbox-inner">
             <div class="row">
-                <div class="col-xs-12 column-title {{$routeParams.type}}">
+                <div class="col-xs-12 column-title">
                     <span ng-if="$routeParams.type === 'sensors'">
                         add/remove sensors
                     </span>
@@ -27,10 +26,9 @@
             </div>
 
         </div>
-
     </div>
 
-    <div id="add-pins-menu-bg-footer" class="{{$routeParams.type}}"></div>
+    <div class="chatbox-triangle"></div>
 
-    <div id="add-pins-menu-bg"></div>
+    <div class="chatbox-bg"></div>
 </div>

@@ -103,10 +103,12 @@ p {
     text-align: left;
     padding: .6em 0;
 }
-.sensors.column-title {
+.sensors.column-title,
+.sensors .column-title {
     color: rgb(147, 106, 24);
 }
-.actuators.column-title {
+.actuators.column-title,
+.actuators .column-title {
     color: $green;
 }
 
@@ -744,7 +746,7 @@ label {
     width: 100%;
 }
 
-#add-pins-menu {
+.chatbox-container {
     height: 100%;
     width: 100%;
     box-sizing: border-box;
@@ -752,7 +754,12 @@ label {
     border-style: solid;
     border-width: 10px 15px 110px;
 }
-#add-pins-menu-bg {
+#app-settings.chatbox-container {
+    border-top-width: 50px;
+    border-bottom-width: 0;
+}
+
+.chatbox-bg {
     height: 100%;
     width: 100%;
     top: 0;
@@ -767,16 +774,25 @@ label {
     border-bottom-width: 110px;
     border-style: solid;
 }
-#add-pins-menu-bg,
-#add-pins-menu-pins-container {
+#app-settings .chatbox-bg {
+    position: absolute;
+    border-bottom-width: 15px;
+    border-top-width: 100px;
+}
+.chatbox-bg,
+.chatbox {
     background: rgb(198, 188, 175);
 }
-#add-pins-menu-pins-container {
+.chatbox {
     margin-bottom: 10px;
     padding-left: 50px;
     padding-right: 50px;
 }
-#add-pins-menu-bg-footer {
+#app-settings .chatbox {
+    margin-bottom: 0;
+}
+
+.chatbox-triangle {
     width: 0;
     height: 0;
     background: transparent;
@@ -787,10 +803,19 @@ label {
     border-top: 30px solid rgb(198, 188, 175);
     z-index: 20;
 }
-#add-pins-menu-bg-footer.sensors {
+#app-settings .chatbox-triangle {
+    border-top-width: 0;
+    border-bottom: 30px solid rgb(198, 188, 175);
+    position: absolute;
+    bottom: inherit;
+    top: 75px;
+    left: 50%;
+    margin-left: -25px;
+}
+.chatbox-container.sensors .chatbox-triangle {
     left: 40px;
 }
-#add-pins-menu-bg-footer.actuators {
+.chatbox-container.actuators .chatbox-triangle {
     right: 40px;
 }
 #add-pins-menu .pin-stub {
@@ -1104,19 +1129,19 @@ html, body {
 #add-actuators-button {
     line-height: 97px;
 }
-#add-pins-menu {
+.chatbox {
     border-bottom-width: 145px;
 }
-#add-pins-menu-bg {
+#add-pins-menu .chatbox-bg {
     border-bottom-width: 145px;
 }
-#add-pins-menu-bg-footer {
+#add-pins-menu .chatbox-triangle {
     bottom: 120px;
 }
-#add-pins-menu-bg-footer.sensors {
+#add-pins-menu.sensors .chatbox-triangle {
     left: 50px;
 }
-#add-pins-menu-bg-footer.actuators {
+#add-pins-menu.actuators .chatbox-triangle {
     right: 50px;
 }
 .settings {

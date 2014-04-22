@@ -1,7 +1,16 @@
-<div id="app-settings"
-  class="settings">
-    <div class="settings-inner">
-        <div class="container-fluid">
+<div class="container-fluid">
+    <div class="row">
+        <div id="settings-button"
+          class="col-xs-6 col-xs-offset-3"
+          ng-click="goTo('app_settings');">
+            <span class="glyphicon glyphicon-cog"></span>
+        </div>
+    </div>
+</div>
+
+<div id="app-settings" class="chatbox-container">
+    <div class="chatbox">
+        <div class="container-inner">
             <div class="row padded">
                 <div class="col-xs-12">
                     <div class="column-title">
@@ -41,4 +50,8 @@
             </div>
         </div>
     </div>
+
+    <div class="chatbox-triangle"></div>
+
+    <div class="chatbox-bg"></div>
 </div>
