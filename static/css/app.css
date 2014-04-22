@@ -71,16 +71,17 @@ p {
   text-align: center;
   padding: 1em 0; }
 
-#add-pins-menu .column-title {
-  text-align: left;
-  padding: .6em 0; }
+.chatbox-container .column-title {
+  text-align: left; }
 
 .sensors.column-title,
-.sensors .column-title {
+.sensors .column-title,
+.chatbox-container.sensors {
   color: #936a18; }
 
 .actuators.column-title,
-.actuators .column-title {
+.actuators .column-title,
+.chatbox-container.actuators {
   color: #2d6854; }
 
 /* PINS */
@@ -717,8 +718,26 @@ label {
   border-width: 10px 15px 110px; }
 
 #app-settings.chatbox-container {
-  border-top-width: 50px;
   border-bottom-width: 0; }
+
+.chatbox-inner .row:first-child div {
+  padding: 20px 0; }
+
+.chatbox .my-close {
+  font-size: 200%;
+  width: 100px;
+  height: 100px;
+  background-color: #c6bcaf;
+  line-height: 60px;
+  text-align: right;
+  cursor: default;
+  position: relative;
+  top: -15px; }
+  .chatbox .my-close:active {
+    background-color: #b1a391; }
+
+#app-settings .my-close {
+  top: 0; }
 
 .chatbox-bg {
   height: 100%;

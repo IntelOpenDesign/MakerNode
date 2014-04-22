@@ -2,6 +2,7 @@ $yellow: rgb(247, 193, 40);
 $green: rgb(45, 104, 84);
 $black: rgb(44, 38, 33);
 $gray: rgb(135, 135, 135);
+$chatbox_color: rgb(198, 188, 175);
 
 @mixin tap_feedback($color) {
     background-color: $color;
@@ -99,16 +100,17 @@ p {
     text-align: center;
     padding: 1em 0;
 }
-#add-pins-menu .column-title {
+.chatbox-container .column-title {
     text-align: left;
-    padding: .6em 0;
 }
 .sensors.column-title,
-.sensors .column-title {
+.sensors .column-title,
+.chatbox-container.sensors {
     color: rgb(147, 106, 24);
 }
 .actuators.column-title,
-.actuators .column-title {
+.actuators .column-title,
+.chatbox-container.actuators {
     color: $green;
 }
 
@@ -743,7 +745,7 @@ label {
 /* SHOWING AND HIDING PINS */
 .dialog {
     padding: 30px 50px;
-    background: rgb(198, 188, 175);
+    background: $chatbox_color;
     margin-top: 50px;
 }
 
@@ -764,8 +766,25 @@ label {
     border-width: 10px 15px 110px;
 }
 #app-settings.chatbox-container {
-    border-top-width: 50px;
     border-bottom-width: 0;
+}
+
+.chatbox-inner .row:first-child div {
+    padding: 20px 0;
+}
+.chatbox .my-close {
+    font-size: 200%;
+    width: 100px;
+    height: 100px;
+    @include tap_feedback($chatbox_color);
+    line-height: 60px;
+    text-align: right;
+    cursor: default;
+    position: relative;
+    top: -15px;
+}
+#app-settings .my-close {
+    top: 0;
 }
 
 .chatbox-bg {
@@ -790,7 +809,7 @@ label {
 }
 .chatbox-bg,
 .chatbox {
-    background: rgb(198, 188, 175);
+    background: $chatbox_color;
 }
 .chatbox {
     margin-bottom: 10px;
@@ -809,12 +828,12 @@ label {
     bottom: 85px;
     border-left: 25px solid transparent;
     border-right: 25px solid transparent;
-    border-top: 30px solid rgb(198, 188, 175);
+    border-top: 30px solid $chatbox_color;
     z-index: 20;
 }
 #app-settings .chatbox-triangle {
     border-top-width: 0;
-    border-bottom: 30px solid rgb(198, 188, 175);
+    border-bottom: 30px solid $chatbox_color;
     position: absolute;
     bottom: inherit;
     top: 75px;

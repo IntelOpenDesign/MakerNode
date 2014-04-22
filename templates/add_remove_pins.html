@@ -2,13 +2,20 @@
     <div class="chatbox">
         <div class="chatbox-inner">
             <div class="row">
-                <div class="col-xs-12 column-title">
+                <div class="col-xs-10 column-title">
                     <span ng-if="$routeParams.type === 'sensors'">
                         add/remove sensors
                     </span>
                     <span ng-if="$routeParams.type === 'actuators'">
                         add/remove actuators
                     </span>
+                </div>
+
+                <div class="col-xs-2">
+                    <div class="my-close"
+                      ng-click="goBack(1)">
+                        &times;
+                    </div>
                 </div>
             </div>
 
