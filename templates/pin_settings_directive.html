@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            <div class="row padded droid-font">
+            <div class="row padded">
                 <div class="col-xs-6">
                     <div ng-class="{
                       'sensor-value-settings': pin.is_input,
@@ -117,7 +117,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-6" ng-switch="pin.is_input">
+                <div class="col-xs-6 droid-font" ng-switch="pin.is_input">
                     <div class="vertical-slider-container damping" ng-switch-when="true">
                         <input type="range"
                           class="vertical-slider"
