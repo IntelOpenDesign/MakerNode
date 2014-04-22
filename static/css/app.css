@@ -15,6 +15,9 @@ html, body {
   font-size: 42px;
   font-family: 'Neo Sans Intel'; }
 
+.droid-font {
+  font-family: 'Droid Sans'; }
+
 .hide {
   display: none; }
 

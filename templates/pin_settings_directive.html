@@ -16,7 +16,7 @@
                 </div>
             </div>
 
-            <div class="row padded">
+            <div class="row padded droid-font">
                 <div class="col-xs-2">
                     Name
                 </div>
@@ -42,7 +42,7 @@
                 </div>
             </div>
 
-            <div class="row padded">
+            <div class="row padded droid-font">
                 <div class="col-xs-2">
                     Type
                 </div>
@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            <div class="row padded">
+            <div class="row padded droid-font">
                 <!-- NOTE text is set in app.css using :before -->
                 <div class="col-xs-6 text-center pin-value-label">
                     &nbsp;
@@ -61,7 +61,7 @@
                 </div>
             </div>
 
-            <div class="row padded">
+            <div class="row padded droid-font">
                 <div class="col-xs-6">
                     <div ng-class="{
                       'sensor-value-settings': pin.is_input,
@@ -161,7 +161,7 @@
                 </div>
             </div>
 
-            <div class="row padded" ng-switch="pin.is_input">
+            <div class="row padded droid-font" ng-switch="pin.is_input">
                 <div class="col-xs-12" ng-switch-when="true">
                     <input type="checkbox"
                       ng-model="pin.is_inverted"
@@ -192,7 +192,7 @@
         ng-show="path_ends_in('remove_pin_dialog')">
         <div class="row dialog-row">
             <div class="dialog col-xs-8 col-xs-offset-2">
-                <div class="row padded">
+                <div class="row padded droid-font">
                     <div class="col-xs-12">
                         Are you sure you want to remove pin {{pin.name}} and all its connections?
                     </div>
