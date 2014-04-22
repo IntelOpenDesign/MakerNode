@@ -109,7 +109,11 @@
                 <div class="col-xs-6">
                     <div class="row">
                         <div class="col-xs-12 pin-scaled-val">
-                            {{pin.scaled_value}}%
+                            <!--TODO better CSS than this -->
+                            <span class="black-text">
+                                Value:&nbsp;
+                            </span>
+                            {{scaled_value()}}%
                         </div>
                     </div>
                     <div class="row droid-font"

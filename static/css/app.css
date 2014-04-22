@@ -11,6 +11,9 @@
 .droid-font {
   font-family: 'Droid Sans'; }
 
+.black-text {
+  color: #333; }
+
 html, body {
   height: 100%;
   margin: 0;
@@ -347,12 +350,15 @@ p {
   border-radius: 10px;
   border: 5px solid white; }
 
+.settings .pin-scaled-val {
+  margin-top: 10px; }
+
 /* SETTINGS PIN VALUE DISPLAY */
 .pin-value-display-settings {
   position: relative;
   height: 400px;
   width: 300px;
-  margin: 50px auto; }
+  margin: 10px auto; }
 
 .settings .pin-value-container {
   position: absolute;

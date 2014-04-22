@@ -484,6 +484,15 @@ cat.app.directive('pinSettings', function($document) {
         $scope.val_in_range = function() {
             return Math.min($scope.pin.value - $scope.pin.input_min, $scope.pin.input_max - $scope.pin.input_min);
         };
+        $scope.scaled_value = function() {
+            var pin = $scope.pin;
+            var res = (pin.value - pin.input_min) / (pin.input_max - pin.input_min);
+            res *= 100;
+            res = Math.min(100, res);
+            res = Math.max(0, res);
+            res = Math.round(res);
+            return res;
+        };
 
         // timer value
         // TODO this is very un-angular. data binding not working always. I don't know why it wasn't working where if I just made ng-model="pin_timer_value" in the HTML then pin_timer_value is supposed to (but wasn't) update/ing to reflect the value in the input[type="number"]
@@ -928,16 +937,6 @@ cat.my_pin_format = function(server_pins, server_connections) {
             is_timer_on: pin.is_timer_on,
             timer_value: pin.timer_value,
         };
-        // TODO either get this from the server or calculate it client side.
-        // checking like this will just hide an error in the future
-        if (_.has(pin, 'scaled_value')) {
-            pins[id].scaled_value = pin.scaled_value * 100;
-        } else {
-            pins[id].scaled_value = ((pin.value - pin.input_min) * (pin.input_max - pin.input_min)) * 100;
-        }
-        pins[id].scaled_value = Math.max(0, pins[id].scaled_value);
-        pins[id].scaled_value = Math.min(100, pins[id].scaled_value);
-        pins[id].scaled_value = Math.round(pins[id].scaled_value);
     });
 
     _.each(server_connections, function(c) {
