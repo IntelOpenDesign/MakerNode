@@ -685,23 +685,10 @@ label {
     background-color: #1e4437; }
 
 /* SHOWING AND HIDING PINS */
-.dialog-container {
-  position: fixed;
-  z-index: 3;
-  top: 0;
-  background: rgba(255, 255, 255, 0.95);
-  height: 100%;
-  width: 100%; }
-
-.dialog-row {
-  position: fixed;
-  width: 100%;
-  top: 50%;
-  margin-top: -80px; }
-
 .dialog {
   padding: 30px 50px;
-  background: #c6bcaf; }
+  background: #c6bcaf;
+  margin-top: 50px; }
 
 #ssid-dialog {
   top: 15%;

@@ -160,15 +160,11 @@ cat.app.config(['$routeProvider', function($routeProvider) {
             controller: 'EmptyCtrl',
         })
         .when('/app_settings/reset_dialog', {
-            templateUrl: 'templates/app_settings.html',
+            templateUrl: 'templates/reset_dialog.html',
             controller: 'EmptyCtrl',
         })
         .when('/app_settings/ssid_dialog', {
-            templateUrl: 'templates/app_settings.html',
-            controller: 'EmptyCtrl',
-        })
-        .when('/app_settings/ssid_dialog', {
-            templateUrl: 'templates/app_settings.html',
+            templateUrl: 'templates/ssid_dialog.html',
             controller: 'EmptyCtrl',
         })
         .when('/pin_settings/:id', {
@@ -176,8 +172,8 @@ cat.app.config(['$routeProvider', function($routeProvider) {
             controller: 'EmptyCtrl',
         })
         .when('/pin_settings/:id/remove_pin_dialog', {
-            templateUrl: 'templates/pin_settings.html',
-            controller: 'EmptyCtrl',
+            templateUrl: 'templates/remove_pin_dialog.html',
+            controller: 'RemovePinDialogCtrl',
         })
         .when('/add_remove_pins/:type', {
             templateUrl: 'templates/add_remove_pins.html',
@@ -226,10 +222,6 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
     };
     $scope.goBack = function(n) {
         window.history.go(-n);
-    };
-    $scope.path_ends_in = function(s) {
-        var path = $location.path();
-        return path.slice(path.length - s.length) === s;
     };
 
     // SYNC WITH SERVER
@@ -417,6 +409,10 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
 
 // TODO do I really need this or can I just not specify a controller in ngRoute?
 cat.app.controller('EmptyCtrl', ['$scope', function($scope) {
+}]);
+
+cat.app.controller('RemovePinDialogCtrl', ['$scope', function($scope) {
+    $scope.pin = $scope.d.pins[$scope.$routeParams.id];
 }]);
 
 cat.app.directive('pinOriginal', function($document) {

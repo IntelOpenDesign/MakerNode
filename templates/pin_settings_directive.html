@@ -171,31 +171,4 @@
 
         </div> <!-- end container-fluid -->
     </div> <!-- end settings-inner -->
-
-    <div class="dialog-container container-fluid"
-        ng-show="path_ends_in('remove_pin_dialog')">
-        <div class="row dialog-row">
-            <div class="dialog col-xs-8 col-xs-offset-2">
-                <div class="row padded droid-font">
-                    <div class="col-xs-12">
-                        <p>Are you sure you want to remove pin {{pin.name}} and all its connections?</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <div class="button secondary"
-                          ng-click="goBack(1);">
-                            No
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="button"
-                          ng-click="hide_pins([pin.id]); goBack(2);">
-                            Yes
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
