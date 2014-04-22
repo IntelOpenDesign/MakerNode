@@ -53,13 +53,9 @@
 
             <div class="row padded">
                 <div class="col-xs-6">
-                    <div ng-class="{
-                      'sensor-value-settings': pin.is_input,
-                      'actuator-value-display': !pin.is_input}">
-                        <div ng-class="{
-                          'vertical-slider-container': true,
-                          'triangle-point-right': true,
-                          'hide': !(pin.is_analog && pin.is_input)}">
+                    <div class="pin-value-display-settings">
+                        <div class="vertical-slider-container triangle-point-right"
+                          ng-show="pin.is_analog && !pin.is_input">
                             <input type="range"
                               class="vertical-slider min"
                               min="0"
@@ -84,28 +80,21 @@
                               style="top: {{diff_100_max()}}%;">
                             </div>
                             <div class="pin-value-range-outline-not-top"
-                              ng-show="pin.is_analog && pin.is_input"
+                              ng-show="pin.is_analog && !pin.is_input"
                               style="bottom: {{pin.input_min}}%;
                                      height: {{diff_max_min()}}%;">
                             </div>
-                            <div class="pin-value-in-range"
-                              ng-show="pin.is_analog && pin.is_input"
-                              style="bottom: {{pin.input_min}}%;
-                                     height: {{val_in_range()}}%;">
-                            </div>
                             <div class="pin-value-container-above-range"
-                              ng-show="pin.is_analog && pin.is_input"
+                              ng-show="pin.is_analog && !pin.is_input"
                               style="height: {{diff_100_max()}}%;">
                             </div>
                             <div class="pin-value-container-below-range"
-                              ng-show="pin.is_analog && pin.is_input"
+                              ng-show="pin.is_analog && !pin.is_input"
                               style="height: {{pin.input_min}}%;">
                             </div>
                         </div>
-                        <div ng-class="{
-                          'vertical-slider-container': true,
-                          'triangle-point-left': true,
-                          'hide': !(pin.is_analog && pin.is_input)}">
+                        <div ng-class="vertical-slider-container triangle-point-left"
+                          ng-show="pin.is_analog && !pin.is_input">
                             <input type="range"
                               class="vertical-slider max"
                               min="0"
@@ -117,36 +106,34 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-6 droid-font" ng-switch="pin.is_input">
-                    <div class="vertical-slider-container damping" ng-switch-when="true">
-                        <input type="range"
-                          class="vertical-slider"
-                          ng-model="pin.damping"
-                          min="0"
-                          max="9"
-                          step="1"
-                          value="{{pin.damping}}"
-                          ng-change="send_pin_update([pin.id], 'damping')">
+                <div class="col-xs-6">
+                    <div class="row">
+                        <div class="col-xs-12 pin-scaled-val">
+                            {{pin.scaled_value}}%
+                        </div>
                     </div>
-                    <div ng-switch-when="false">
-                        <input type="checkbox"
-                          ng-model="pin.is_timer_on"
-                          ng-change="send_pin_update([pin.id], 'is_timer_on')">
-                        <label for="checkbox">Stay on for</label>
-                        <br/>
-                        <!-- TODO timer_value data binding does not work as well as angular stuff should. I don't know why --> 
-                        <input type="number"
-                          ng-class="{
-                              'gray-text': !pin.is_timer_on,
-                              'timer-value': true}"
-                          min="0"
-                          ng-disabled="!pin.is_timer_on"
-                          ng-model="pin_timer_value"
-                          ng-blur="update_pin_timer_value()">
-                        <label for="number"
-                          ng-class="{'gray-text': !pin.is_timer_on}">
-                            seconds
-                        </label>
+                    <div class="row droid-font"
+                      ng-if="!pin.is_input">
+                        <div class="col-xs-12">
+                            <input type="checkbox"
+                              ng-model="pin.is_timer_on"
+                              ng-change="send_pin_update([pin.id], 'is_timer_on')">
+                            <label for="checkbox">Stay on for</label>
+                            <br/>
+                            <!-- TODO timer_value data binding does not work as well as angular stuff should. I don't know why --> 
+                            <input type="number"
+                              ng-class="{
+                                  'gray-text': !pin.is_timer_on,
+                                  'timer-value': true}"
+                              min="0"
+                              ng-disabled="!pin.is_timer_on"
+                              ng-model="pin_timer_value"
+                              ng-blur="update_pin_timer_value()">
+                            <label for="number"
+                              ng-class="{'gray-text': !pin.is_timer_on}">
+                                seconds
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>

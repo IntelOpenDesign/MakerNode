@@ -151,10 +151,12 @@ p {
   cursor: default; }
 
 /* TODO SASS color variable for actived pin*/
-.sensor .pin-name {
+.sensor .pin-name,
+.sensor .pin-scaled-val {
   color: #6c4f12; }
 
-.actuator .pin-name {
+.actuator .pin-name,
+.sensor .pin-scaled-val {
   color: #2d6854; }
 
 .pin-value-container {
@@ -312,12 +314,6 @@ p {
   position: relative;
   top: -.5em; }
 
-.settings .vertical-slider-container.damping {
-  margin-top: 45px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 120px; }
-
 .settings .button {
   margin: 0; }
 
@@ -352,8 +348,7 @@ p {
   border: 5px solid white; }
 
 /* SETTINGS PIN VALUE DISPLAY */
-.sensor-value-settings,
-.actuator-value-display {
+.pin-value-display-settings {
   position: relative;
   height: 400px;
   width: 300px;
@@ -368,14 +363,14 @@ p {
   border-width: 2px;
   border-style: solid; }
 
-.settings .actuator-value-display .pin-value-container {
+.settings.actuator .pin-value-container {
   border-color: #2d6854;
   background: transparent; }
 
-.settings.digital .sensor-value-settings .pin-value-container {
+.settings.digital.sensor .pin-value-container {
   border-color: #9f7a23; }
 
-.settings.analog .sensor-value-settings .pin-value-container {
+.settings.analog.sensor .pin-value-container {
   background: white;
   border-width: 0; }
 
@@ -389,13 +384,12 @@ p {
   box-sizing: content-box;
   margin-bottom: -2px; }
 
-.settings .sensor-value-settings .threshold {
+.settings.sensor .threshold {
   border-color: #9f7a23; }
 
-.settings .actuator-value-display .threshold {
+.settings.actuator .threshold {
   border-color: #2d6854; }
 
-/* SETTINGS PIN VALUE RANGE FOR ANALOG INPUTS */
 .settings .pin-value-range-outline-top,
 .settings .pin-value-range-outline-not-top {
   position: absolute;
@@ -415,19 +409,13 @@ p {
 .settings .pin-value-range-outline-not-top {
   border-top-width: 0; }
 
-.settings .pin-value-in-range {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  background: #d8c055; }
-
 .settings .pin-value-container-above-range,
 .settings .pin-value-container-below-range {
   position: absolute;
   left: 0;
   width: 100%;
-  background: #dfdfdf;
-  z-index: -1; }
+  background: rgba(223, 223, 223, 0.5);
+  z-index: 2; }
 
 .settings .pin-value-container-above-range {
   top: 0; }
