@@ -28,6 +28,9 @@ $gray: rgb(135, 135, 135);
     font-style: normal;
     src: url('../fonts/droid-sans/DroidSans.ttf');
 }
+.droid-font {
+    font-family: 'Droid Sans';
+}
 
 html, body {
     height: 100%;
@@ -37,8 +40,9 @@ html, body {
     font-family: 'Neo Sans Intel';
 }
 
-.droid-font {
-    font-family: 'Droid Sans';
+p {
+    font-size: 95%;
+    line-height: 1.2em;
 }
 
 .hide {
