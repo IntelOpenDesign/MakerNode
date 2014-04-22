@@ -53,7 +53,7 @@
 
             <div class="row padded">
                 <div class="col-xs-6">
-                    <div class="pin-value-display-settings">
+                    <div class="pin-value-display-settings"> <!-- TODO better class name than this -->
                         <div class="vertical-slider-container triangle-point-right"
                           ng-show="pin.is_analog && !pin.is_input">
                             <input type="range"
@@ -66,7 +66,6 @@
                               ng-change="sync_min_max()">
                         </div>
                         <div class="pin-value-container">
-                            <!-- TODO instead of drawing pin-value and pin-value-in-range separately, just draw pin-value and then make pin-value-container-above-range and pin-value-container-below range actual overlays so that they make the pin value not in range look dulled out -->
                             <div class="threshold"
                               ng-show="pin.is_analog"
                               style="bottom: {{average_min_max()}}%;">
