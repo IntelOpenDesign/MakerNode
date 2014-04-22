@@ -138,8 +138,8 @@
                 </div>
             </div>
 
-            <div class="row padded droid-font" ng-switch="pin.is_input">
-                <div class="col-xs-12" ng-switch-when="true">
+            <div class="row padded droid-font" ng-if="!pin.is_input">
+                <div class="col-xs-12">
                     <input type="checkbox"
                       ng-model="pin.is_inverted"
                       ng-change="send_pin_update([pin.id], 'is_inverted')">
