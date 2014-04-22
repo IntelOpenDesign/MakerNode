@@ -491,6 +491,7 @@ cat.app.directive('pinSettings', function($document) {
             res = Math.min(100, res);
             res = Math.max(0, res);
             res = Math.round(res);
+            // TODO does pin.value take into account whether the pin is inverted, or should I do that here?
             return res;
         };
 
