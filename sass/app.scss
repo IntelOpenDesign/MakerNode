@@ -185,7 +185,7 @@ p {
     color: rgb(108, 79, 18);
 }
 .actuator .pin-name,
-.sensor .pin-scaled-val {
+.actuator .pin-scaled-val {
     color: $green;
 }
 
@@ -401,15 +401,14 @@ p {
     border-width: 2px;
     border-style: solid;
 }
-.settings.actuator .pin-value-container {
+.settings.sensor .pin-value-container {
+    border-color: rgb(159, 122, 35);
+}
+.settings.actuator.digital .pin-value-container {
     border-color: $green;
     background: rgba(0,0,0,0);
 }
-.settings.digital.sensor .pin-value-container {
-    border-color: rgb(159, 122, 35);
-}
-.settings.analog.sensor .pin-value-container {
-    background: white;
+.settings.actuator.analog .pin-value-container {
     border-width: 0;
 }
 
@@ -437,7 +436,7 @@ p {
     width: 100%;
     border-width: 2px;
     border-style: solid;
-    border-color: rgb(159, 122, 35);
+    border-color: $green;
     z-index: 2;
     box-sizing: content-box;
 }
@@ -509,34 +508,34 @@ p {
 
 /* SETTINGS FOR ANALOG INPUTS HAVE SLIDERS */
 
-.sensor-value-settings .vertical-slider-container.triangle-point-left,
-.sensor-value-settings .vertical-slider-container.triangle-point-right {
+.pin-value-display-settings .vertical-slider-container.triangle-point-left,
+.pin-value-display-settings .vertical-slider-container.triangle-point-right {
     width: 20%;
     position: absolute;
     height: 100%;
     z-index: 2;
     box-sizing: content-box;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-left {
+.pin-value-display-settings .vertical-slider-container.triangle-point-left {
     right: 0;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-right {
+.pin-value-display-settings .vertical-slider-container.triangle-point-right {
     left: 0;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider{
+.pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider{
     width: 460px !important;
     height: 120px;
     top: 140px;
     left: -203px;
     background-color: rgba(0, 0, 0, 0);
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
     left: -197px;
     margin-top: -2px;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
+.pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
     width: 0;
     height: 0;
     border-left: 30px solid transparent;
@@ -548,23 +547,18 @@ p {
     border-bottom-width:0;
     border-radius:0;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
-    border-bottom: 50px solid $yellow;
+.pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
+    border-bottom: 50px solid $green;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
-    border-top: 50px solid $yellow;
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
+    border-top: 50px solid $green;
 }
-
-/* ACTUATOR SETTINGS ARE A LITTLE DIFFERENT */
 
 .settings.actuator .settings-inner {
     border-color: $green;
 }
 input[type=number] {
-    width: 100px; 
-}
-.actuator-value-display {
-    margin: 0 auto;
+    width: 100px;
 }
 .settings.actuator input[type=checkbox] {
     background-color: white;

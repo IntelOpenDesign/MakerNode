@@ -928,6 +928,16 @@ cat.my_pin_format = function(server_pins, server_connections) {
             is_timer_on: pin.is_timer_on,
             timer_value: pin.timer_value,
         };
+        // TODO either get this from the server or calculate it client side.
+        // checking like this will just hide an error in the future
+        if (_.has(pin, 'scaled_value')) {
+            pins[id].scaled_value = pin.scaled_value * 100;
+        } else {
+            pins[id].scaled_value = ((pin.value - pin.input_min) * (pin.input_max - pin.input_min)) * 100;
+        }
+        pins[id].scaled_value = Math.max(0, pins[id].scaled_value);
+        pins[id].scaled_value = Math.min(100, pins[id].scaled_value);
+        pins[id].scaled_value = Math.round(pins[id].scaled_value);
     });
 
     _.each(server_connections, function(c) {
