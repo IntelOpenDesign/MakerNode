@@ -814,47 +814,52 @@ label {
   padding-bottom: 100px; }
 
 #play-pins .pin {
-  display: inline-block;
-  width: 94%;
-  border-width: 15px;
-  border-color: transparent;
-  margin-left: 3% !important;
-  margin-right: 3% !important;
-  margin-top: 25px;
-  margin-bottom: 0;
-  box-sizing: border-box;
-  height: inherit; }
-
-#play-pins .pin-box {
-  height: 145px;
+  margin-bottom: 50px;
   width: 100%;
-  display: inline-block;
+  -webkit-background-clip: content-box;
+  position: relative; }
+
+#play-pins .pin.digital {
+  width: 100%;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 0 20px;
+  box-sizing: border-box;
+  border-color: transparent; }
+
+#play-pins .pin.analog {
+  border-width: 0; }
+
+#play-pins .pin .pin-box {
+  -webkit-background-clip: content-box;
+  background: #878787;
+  width: 100%;
+  border-color: white;
+  border-style: solid;
+  position: relative; }
+
+#play-pins .pin.digital .pin-box {
+  height: 145px;
+  border-width: 15px;
+  width: 100%;
   background-color: #878787; }
-  #play-pins .pin-box:active {
+  #play-pins .pin.digital .pin-box:active {
     background-color: #6e6e6e; }
 
-#play-pins .pin.pressed {
-  border-color: #b4ceb8; }
+#play-pins .pin.analog .pin-box {
+  height: 65px;
+  margin: 40px 0;
+  width: 100%;
+  border-width: 0 35px; }
 
 #play-pins .pin.pressed .pin-box {
+  border-color: #b4ceb8;
   background-color: #2d6854; }
   #play-pins .pin.pressed .pin-box:active {
     background-color: #1e4437; }
 
 #play-pins .pin.pressed .pin-box:before {
   display: none; }
-
-#play-pins .pin.analog {
-  border-width: 0; }
-
-#play-pins .pin.analog .pin-box {
-  height: 65px;
-  margin-top: 40px;
-  margin-bottom: 40px;
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  box-sizing: border-box;
-  -webkit-background-clip: content-box; }
 
 #play-pins .pin-label,
 #play-pins .pin-name {
@@ -881,7 +886,8 @@ label {
   bottom: 0;
   background: #2d6854;
   z-index: 0;
-  border-width: 0; }
+  border-width: 0;
+  height: 100%; }
 
 #play-pins .pin-value-container .pin-name,
 #play-pins .pin-value-container .pin-label {
@@ -895,7 +901,11 @@ label {
 
 #play-pins .pin-slider-container {
   width: 100%;
-  height: 100%; }
+  height: 145px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5; }
 
 #play-pins .pin-slider-container input[type=range] {
   z-index: 4;

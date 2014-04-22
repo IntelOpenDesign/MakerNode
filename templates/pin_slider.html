@@ -1,13 +1,7 @@
 <div
   ng-class="{
       'pin': true,
-      'pin-slider': true,
-      'sensor': pin.is_input,
-      'actuator': !pin.is_input,
-      'connected': pin.is_connected,
-      'analog': pin.is_analog,
-      'digital': !pin.is_digital,
-      'pressed': pin.value === 100}">
+      'analog': true}">
     <div class="pin-box">
         <div class="pin-value-container">
             <div class="pin-label"
