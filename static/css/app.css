@@ -814,7 +814,6 @@ label {
   padding-bottom: 100px; }
 
 #play-pins .pin {
-  margin-bottom: 50px;
   width: 100%;
   -webkit-background-clip: content-box;
   position: relative; }
@@ -825,10 +824,12 @@ label {
   border-color: transparent;
   border-width: 0 20px;
   box-sizing: border-box;
-  border-color: transparent; }
+  border-color: transparent;
+  margin-bottom: 50px; }
 
 #play-pins .pin.analog {
-  border-width: 0; }
+  border-width: 0;
+  margin-bottom: 0; }
 
 #play-pins .pin .pin-box {
   -webkit-background-clip: content-box;
@@ -848,8 +849,9 @@ label {
 
 #play-pins .pin.analog .pin-box {
   height: 65px;
+  margin-top: 65px;
   width: 100%;
-  border-width: 40px 35px; }
+  border-width: 0 35px; }
 
 #play-pins .pin.pressed .pin-box {
   border-color: #b4ceb8;

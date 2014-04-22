@@ -870,7 +870,6 @@ $play_pin_h: 145px;
     padding-bottom: 100px;
 }
 #play-pins .pin {
-    margin-bottom: 50px;
     width: 100%;
     -webkit-background-clip: content-box;
     position: relative;
@@ -882,9 +881,11 @@ $play_pin_h: 145px;
     border-width: 0 $play_margin;
     box-sizing: border-box;
     border-color: transparent;
+    margin-bottom: 50px;
 }
 #play-pins .pin.analog {
     border-width: 0;
+    margin-bottom: 0;
 }
 #play-pins .pin .pin-box {
     -webkit-background-clip: content-box;
@@ -902,8 +903,9 @@ $play_pin_h: 145px;
 }
 #play-pins .pin.analog .pin-box {
     height: 65px;
+    margin-top: 65px;
     width: 100%;
-    border-width: (($play_pin_h - 65px)/2) ($play_margin + $play_border);
+    border-width: 0 ($play_margin + $play_border);
 }
 
 #play-pins .pin.pressed .pin-box {
