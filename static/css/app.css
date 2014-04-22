@@ -360,6 +360,9 @@ p {
   width: 300px;
   margin: 10px auto; }
 
+.pin-value-display-settings.has-pin-invert {
+  margin-bottom: 120px; }
+
 .settings .pin-value-container {
   position: absolute;
   top: 0;
@@ -427,6 +430,13 @@ p {
 
 .settings .pin-value-container-below-range {
   bottom: 0; }
+
+.settings .pin-invert-container {
+  position: absolute;
+  top: 100%;
+  width: 150%;
+  left: -5px;
+  margin-top: 30px; }
 
 /* DIGITAL PINS SHOW "ON" OR "OFF" IN SETTINGS PIN VALUE DISPLAY */
 .settings.digital .pin-value-container:before,

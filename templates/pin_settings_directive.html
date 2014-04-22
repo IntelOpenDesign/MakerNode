@@ -53,7 +53,11 @@
 
             <div class="row padded">
                 <div class="col-xs-6">
-                    <div class="pin-value-display-settings"> <!-- TODO better class name than this -->
+
+                    <!-- PIN VALUE SETTINGS & INVERT -->
+                    <div ng-class="{
+                        'pin-value-display-settings': true,
+                        'has-pin-invert': !pin.is_input}"> <!-- TODO better class name than this --> <!-- NOTE the has-pin-invert gives an extra bottom margin so the pin invert div will show up. TODO better CSS -->
                         <div class="vertical-slider-container triangle-point-right"
                           ng-show="pin.is_analog && !pin.is_input">
                             <input type="range"
@@ -90,6 +94,15 @@
                             <div class="pin-value-container-below-range"
                               ng-show="pin.is_analog && !pin.is_input"
                               style="height: {{pin.input_min}}%;">
+                            </div>
+
+                            <!-- PIN INVERT -->
+                            <div class="pin-invert-container"
+                              ng-if="!pin.is_input">
+                                <input type="checkbox"
+                                  ng-model="pin.is_inverted"
+                                  ng-change="send_pin_update([pin.id], 'is_inverted')">
+                                <label for="checkbox">Invert</label>
                             </div>
                         </div>
                         <div class="vertical-slider-container triangle-point-left"
@@ -138,15 +151,6 @@
                             </label>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="row padded droid-font" ng-if="!pin.is_input">
-                <div class="col-xs-12">
-                    <input type="checkbox"
-                      ng-model="pin.is_inverted"
-                      ng-change="send_pin_update([pin.id], 'is_inverted')">
-                    <label for="checkbox">Invert</label>
                 </div>
             </div>
 
