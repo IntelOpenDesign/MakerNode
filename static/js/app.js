@@ -746,8 +746,9 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         });
         // TODO remove redundant add/remove connection updates before sending out batch
         batch.connections.push.apply(batch.connections, updates.connections);
-        if (_.has(updates, 'ssid'))
+        if (_.has(updates, 'ssid')) {
             batch.ssid = updates.ssid;
+        }
         send();
     };
 
@@ -814,7 +815,8 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
             _.each(d.connections, function(c) {
                 conns[cat.tokenize_connection_object(c)] = c.connect;
             });
-            ssid = d.ssid;
+            if (_.has(d, 'ssid'))
+                ssid = d.ssid;
         }
 
         var messages_in_order = _.sortBy(_.values(messages), function(msg) {
