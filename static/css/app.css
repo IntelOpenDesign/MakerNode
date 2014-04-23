@@ -725,7 +725,6 @@ label {
 
 .chatbox .my-close {
   font-size: 200%;
-  width: 100px;
   height: 100px;
   background-color: #c6bcaf;
   line-height: 60px;
@@ -738,6 +737,9 @@ label {
 
 #app-settings .my-close {
   top: 0; }
+
+#app-settings .button {
+  margin: 0; }
 
 .chatbox-bg {
   height: 100%;
@@ -866,7 +868,8 @@ label {
   width: 100%;
   border-color: white;
   border-style: solid;
-  position: relative; }
+  position: relative;
+  border-radius: 1px; }
 
 #play-pins .pin.digital .pin-box {
   height: 145px;
@@ -1087,6 +1090,13 @@ label {
   .chatbox {
     border-bottom-width: 145px; }
 
+  .chatbox-inner .row:first-child div {
+    padding: .6em 0; }
+
+  .chatbox .my-close {
+    line-height: 0;
+    top: -20px; }
+
   #add-pins-menu .chatbox-bg {
     border-bottom-width: 145px; }
 
@@ -1100,4 +1110,22 @@ label {
     right: 50px; }
 
   .settings {
-    font-size: 85%; } }
+    font-size: 85%; }
+
+  #play-pins .pin.digital .pin-box {
+    height: 200px; }
+
+  #play-pins .pin.digital .pin-name,
+  #play-pins .pin.digital .pin-label {
+    line-height: 165px; }
+
+  #play-pins .pin.analog .pin-box {
+    height: 100px;
+    margin-top: 75px; }
+
+  #play-pins .pin.analog .pin-name,
+  #play-pins .pin.analog .pin-label {
+    line-height: 90px; }
+
+  #play-pins .pin-slider-container input[type=range] {
+    height: 200px; } }

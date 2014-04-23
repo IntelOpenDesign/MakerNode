@@ -774,7 +774,6 @@ label {
 }
 .chatbox .my-close {
     font-size: 200%;
-    width: 100px;
     height: 100px;
     @include tap_feedback($chatbox_color);
     line-height: 60px;
@@ -785,6 +784,9 @@ label {
 }
 #app-settings .my-close {
     top: 0;
+}
+#app-settings .button {
+    margin: 0;
 }
 
 .chatbox-bg {
@@ -923,6 +925,7 @@ $play_pin_h: 145px;
     border-color: white;
     border-style: solid;
     position: relative;
+    border-radius: 1px;
 }
 #play-pins .pin.digital .pin-box {
     height: $play_pin_h;
@@ -1160,6 +1163,13 @@ html, body {
 .chatbox {
     border-bottom-width: 145px;
 }
+.chatbox-inner .row:first-child div {
+    padding: .6em 0;
+}
+.chatbox .my-close {
+    line-height: 0;
+    top: -20px;
+}
 #add-pins-menu .chatbox-bg {
     border-bottom-width: 145px;
 }
@@ -1174,6 +1184,25 @@ html, body {
 }
 .settings {
     font-size: 85%;
+}
+
+#play-pins .pin.digital .pin-box {
+    height: 200px;
+}
+#play-pins .pin.digital .pin-name,
+#play-pins .pin.digital .pin-label {
+    line-height: 165px;
+}
+#play-pins .pin.analog .pin-box {
+    height: 100px;
+    margin-top: 75px;
+}
+#play-pins .pin.analog .pin-name,
+#play-pins .pin.analog .pin-label {
+    line-height: 90px;
+}
+#play-pins .pin-slider-container input[type=range] {
+    height: 200px;
 }
 
 
