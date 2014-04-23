@@ -56,6 +56,10 @@ p {
 .row.padded {
     padding-bottom: .5em;
 }
+.pin-type-row {
+    position: relative;
+    top: -20px;
+}
 
 #app-container {
     position: relative;
