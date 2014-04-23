@@ -1,16 +1,10 @@
-<div
-  ng-class="{
-      'pin': true,
-      'sensor': pin.is_input,
-      'actuator': !pin.is_input,
-      'connected': pin.is_connected,
-      'analog': pin.is_analog,
-      'digital': !pin.is_analog,
-      'pressed': pin.value === 100,
-      'pin-button': true}">
+<div ng-class="{
+    'pin': true,
+    'digital': true,
+    'pressed': pin.value === 100}">
     <div class="pin-box"
       ng-click="send_pin_update([pin.id], 'value', pin.value === 100 ? 0:100)">
-        <div class="pin-label"
+        <div class="pin-label droid-font"
           ng-if="pin.label.length > 0">
             {{pin.label}}
         </div>

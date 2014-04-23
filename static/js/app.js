@@ -160,15 +160,11 @@ cat.app.config(['$routeProvider', function($routeProvider) {
             controller: 'EmptyCtrl',
         })
         .when('/app_settings/reset_dialog', {
-            templateUrl: 'templates/app_settings.html',
+            templateUrl: 'templates/reset_dialog.html',
             controller: 'EmptyCtrl',
         })
         .when('/app_settings/ssid_dialog', {
-            templateUrl: 'templates/app_settings.html',
-            controller: 'EmptyCtrl',
-        })
-        .when('/app_settings/ssid_dialog', {
-            templateUrl: 'templates/app_settings.html',
+            templateUrl: 'templates/ssid_dialog.html',
             controller: 'EmptyCtrl',
         })
         .when('/pin_settings/:id', {
@@ -176,8 +172,8 @@ cat.app.config(['$routeProvider', function($routeProvider) {
             controller: 'EmptyCtrl',
         })
         .when('/pin_settings/:id/remove_pin_dialog', {
-            templateUrl: 'templates/pin_settings.html',
-            controller: 'EmptyCtrl',
+            templateUrl: 'templates/remove_pin_dialog.html',
+            controller: 'RemovePinDialogCtrl',
         })
         .when('/add_remove_pins/:type', {
             templateUrl: 'templates/add_remove_pins.html',
@@ -226,10 +222,6 @@ cat.app.controller('AppCtrl', ['$scope', '$routeParams', '$location', 'Galileo',
     };
     $scope.goBack = function(n) {
         window.history.go(-n);
-    };
-    $scope.path_ends_in = function(s) {
-        var path = $location.path();
-        return path.slice(path.length - s.length) === s;
     };
 
     // SYNC WITH SERVER
@@ -419,6 +411,10 @@ cat.app.controller('ConnectModeCtrl', ['$scope', 'Galileo', function($scope, Gal
 cat.app.controller('EmptyCtrl', ['$scope', function($scope) {
 }]);
 
+cat.app.controller('RemovePinDialogCtrl', ['$scope', function($scope) {
+    $scope.pin = $scope.d.pins[$scope.$routeParams.id];
+}]);
+
 cat.app.directive('pinOriginal', function($document) {
     return { templateUrl: 'templates/pin.html' };
 });
@@ -483,6 +479,16 @@ cat.app.directive('pinSettings', function($document) {
         };
         $scope.val_in_range = function() {
             return Math.min($scope.pin.value - $scope.pin.input_min, $scope.pin.input_max - $scope.pin.input_min);
+        };
+        $scope.scaled_value = function() {
+            var pin = $scope.pin;
+            var res = (pin.value - pin.input_min) / (pin.input_max - pin.input_min);
+            res *= 100;
+            res = Math.min(100, res);
+            res = Math.max(0, res);
+            res = Math.round(res);
+            // TODO does pin.value take into account whether the pin is inverted, or should I do that here?
+            return res;
         };
 
         // timer value

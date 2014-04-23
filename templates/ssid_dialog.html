@@ -1,0 +1,33 @@
+<div class="container-fluid">
+    <div id="ssid-dialog"
+      class="row">
+        <div class="dialog col-xs-8 col-xs-offset-2">
+            <div class="row padded">
+                <div class="col-xs-12 droid-font">
+                    <p>Enter a new wifi network name, press submit, wait a few minutes, then connect to new network.</p>
+                </div>
+            </div>
+            <div class="row padded">
+                <div class="col-xs-12">
+                    <input id="ssid"
+                      ng-model="ssid_copy"
+                      ng-change="truncate_ssid_copy()">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="button secondary"
+                      ng-click="goBack(1);">
+                        Cancel
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="button"
+                      ng-click="change_ssid(); goTo('ssid_changed');">
+                        Submit
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

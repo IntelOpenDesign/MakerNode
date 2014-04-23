@@ -1,16 +1,10 @@
 <div
   ng-class="{
       'pin': true,
-      'pin-slider': true,
-      'sensor': pin.is_input,
-      'actuator': !pin.is_input,
-      'connected': pin.is_connected,
-      'analog': pin.is_analog,
-      'digital': !pin.is_digital,
-      'pressed': pin.value === 100}">
+      'analog': true}">
     <div class="pin-box">
         <div class="pin-value-container">
-            <div class="pin-label"
+            <div class="pin-label droid-font"
               ng-if="pin.label.length > 0">
                 {{pin.label}}
             </div>
@@ -19,21 +13,19 @@
                 {{pin.name}}
             </div>
 
-            <div class="vertical-slider-container">
-                <input type="range"
-                  class="vertical-slider"
-                  min="0"
-                  max="100"
-                  step="1"
-                  ng-model="pin.value"
-                  value="{{pin.value}}"
-                  ng-change="send_pin_update([pin.id], 'value')">
-            </div>
-
-            <div class="pin-value-in-range"
-              style="bottom: 0%;
-                     height: {{pin.value}}%;">
+            <div class="pin-value"
+              style="width: {{pin.value}}%;">
             </div>
         </div>
+    </div>
+
+    <div class="pin-slider-container">
+        <input type="range"
+          min="0"
+          max="100"
+          step="1"
+          ng-model="pin.value"
+          value="{{pin.value}}"
+          ng-change="send_pin_update([pin.id], 'value')">
     </div>
 </div>

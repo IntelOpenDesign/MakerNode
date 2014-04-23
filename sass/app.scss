@@ -2,6 +2,7 @@ $yellow: rgb(247, 193, 40);
 $green: rgb(45, 104, 84);
 $black: rgb(44, 38, 33);
 $gray: rgb(135, 135, 135);
+$chatbox_color: rgb(198, 188, 175);
 
 @mixin tap_feedback($color) {
     background-color: $color;
@@ -28,6 +29,12 @@ $gray: rgb(135, 135, 135);
     font-style: normal;
     src: url('../fonts/droid-sans/DroidSans.ttf');
 }
+.droid-font {
+    font-family: 'Droid Sans';
+}
+.black-text {
+    color: #333;
+}
 
 html, body {
     height: 100%;
@@ -37,12 +44,21 @@ html, body {
     font-family: 'Neo Sans Intel';
 }
 
+p {
+    font-size: 95%;
+    line-height: 1.2em;
+}
+
 .hide {
     display: none;
 }
 
 .row.padded {
     padding-bottom: .5em;
+}
+.pin-type-row {
+    position: relative;
+    top: -20px;
 }
 
 #app-container {
@@ -88,14 +104,17 @@ html, body {
     text-align: center;
     padding: 1em 0;
 }
-#add-pins-menu .column-title {
+.chatbox-container .column-title {
     text-align: left;
-    padding: .6em 0;
 }
-.sensors.column-title {
+.sensors.column-title,
+.sensors .column-title,
+.chatbox-container.sensors {
     color: rgb(147, 106, 24);
 }
-.actuators.column-title {
+.actuators.column-title,
+.actuators .column-title,
+.chatbox-container.actuators {
     color: $green;
 }
 
@@ -172,10 +191,12 @@ html, body {
 }
 
 /* TODO SASS color variable for actived pin*/
-.sensor .pin-name {
+.sensor .pin-name,
+.sensor .pin-scaled-val {
     color: rgb(108, 79, 18);
 }
-.actuator .pin-name {
+.actuator .pin-name,
+.actuator .pin-scaled-val {
     color: $green;
 }
 
@@ -306,23 +327,6 @@ html, body {
 
 /* SETTINGS WINDOW */
 
-.settings.digital .pin-value-label:before {
-    content: 'On/Off';
-}
-.settings.analog.sensor .pin-value-label:before {
-    content: 'Calibrate';
-}
-.settings.analog.actuator .pin-value-label:before {
-    content: 'Value';
-}
-
-.settings.actuator .pin-extra-setting-label:before {
-    content: 'Limit/Hold';
-}
-.settings.sensor .pin-extra-setting-label:before {
-    content: 'Damping';
-}
-
 .settings {
     position: absolute;
     top: 0;
@@ -337,6 +341,15 @@ html, body {
     border-width: 15px;
     border-style: solid;
     border-color: rgb(183, 169, 152);
+}
+#ssid-changed .settings-inner {
+    padding: 15px;
+}
+#new-ssid {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: .5em 0;
 }
 .settings.sensor .settings-inner {
     border-color: $yellow;
@@ -355,12 +368,6 @@ html, body {
 .settings .pin-label-input-label {
     position: relative;
     top: -.5em;
-}
-.settings .vertical-slider-container.damping {
-    margin-top: 45px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 120px;
 }
 .settings .button {
     margin: 0;
@@ -396,15 +403,20 @@ html, body {
     border-radius: 10px;
     border: 5px solid white;
 }
+.settings .pin-scaled-val {
+    margin-top: 10px;
+}
 
 /* SETTINGS PIN VALUE DISPLAY */
 
-.sensor-value-settings,
-.actuator-value-display {
+.pin-value-display-settings {
     position: relative;
     height: 400px;
     width: 300px;
-    margin: 50px auto;
+    margin: 10px auto;
+}
+.pin-value-display-settings.has-pin-invert {
+    margin-bottom: 120px;
 }
 .settings .pin-value-container {
     position: absolute;
@@ -415,15 +427,14 @@ html, body {
     border-width: 2px;
     border-style: solid;
 }
-.settings .actuator-value-display .pin-value-container {
+.settings.sensor .pin-value-container {
+    border-color: rgb(159, 122, 35);
+}
+.settings.actuator.digital .pin-value-container {
     border-color: $green;
     background: rgba(0,0,0,0);
 }
-.settings.digital .sensor-value-settings .pin-value-container {
-    border-color: rgb(159, 122, 35);
-}
-.settings.analog .sensor-value-settings .pin-value-container {
-    background: white;
+.settings.actuator.analog .pin-value-container {
     border-width: 0;
 }
 
@@ -437,14 +448,12 @@ html, body {
     box-sizing: content-box;
     margin-bottom: -2px;
 }
-.settings .sensor-value-settings .threshold {
+.settings.sensor .threshold {
     border-color: rgb(159, 122, 35);
 }
-.settings .actuator-value-display .threshold {
+.settings.actuator .threshold {
     border-color: $green;
 }
-
-/* SETTINGS PIN VALUE RANGE FOR ANALOG INPUTS */
 
 .settings .pin-value-range-outline-top,
 .settings .pin-value-range-outline-not-top {
@@ -453,7 +462,7 @@ html, body {
     width: 100%;
     border-width: 2px;
     border-style: solid;
-    border-color: rgb(159, 122, 35);
+    border-color: $green;
     z-index: 2;
     box-sizing: content-box;
 }
@@ -465,25 +474,27 @@ html, body {
 .settings .pin-value-range-outline-not-top {
     border-top-width: 0;
 }
-.settings .pin-value-in-range {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    background: rgb(216, 192, 85);
-}
 .settings .pin-value-container-above-range,
 .settings .pin-value-container-below-range {
     position: absolute;
     left: 0;
     width: 100%;
-    background: rgb(223, 223, 223);
-    z-index: -1;
+    background: rgba(223, 223, 223, 0.5);
+    z-index: 2;
 }
 .settings .pin-value-container-above-range {
     top: 0;
 }
 .settings .pin-value-container-below-range {
     bottom: 0;
+}
+
+.settings .pin-invert-container {
+    position: absolute;
+    top: 100%;
+    width: 150%;
+    left: -5px;
+    margin-top: 30px;
 }
 
 /* DIGITAL PINS SHOW "ON" OR "OFF" IN SETTINGS PIN VALUE DISPLAY */
@@ -531,34 +542,34 @@ html, body {
 
 /* SETTINGS FOR ANALOG INPUTS HAVE SLIDERS */
 
-.sensor-value-settings .vertical-slider-container.triangle-point-left,
-.sensor-value-settings .vertical-slider-container.triangle-point-right {
+.pin-value-display-settings .vertical-slider-container.triangle-point-left,
+.pin-value-display-settings .vertical-slider-container.triangle-point-right {
     width: 20%;
     position: absolute;
     height: 100%;
     z-index: 2;
     box-sizing: content-box;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-left {
+.pin-value-display-settings .vertical-slider-container.triangle-point-left {
     right: 0;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-right {
+.pin-value-display-settings .vertical-slider-container.triangle-point-right {
     left: 0;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider{
+.pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider{
     width: 460px !important;
     height: 120px;
     top: 140px;
     left: -203px;
     background-color: rgba(0, 0, 0, 0);
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
     left: -197px;
     margin-top: -2px;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
+.pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
     width: 0;
     height: 0;
     border-left: 30px solid transparent;
@@ -570,23 +581,18 @@ html, body {
     border-bottom-width:0;
     border-radius:0;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
-    border-bottom: 50px solid $yellow;
+.pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
+    border-bottom: 50px solid $green;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
-    border-top: 50px solid $yellow;
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
+    border-top: 50px solid $green;
 }
-
-/* ACTUATOR SETTINGS ARE A LITTLE DIFFERENT */
 
 .settings.actuator .settings-inner {
     border-color: $green;
 }
 input[type=number] {
-    width: 100px; 
-}
-.actuator-value-display {
-    margin: 0 auto;
+    width: 100px;
 }
 .settings.actuator input[type=checkbox] {
     background-color: white;
@@ -741,23 +747,10 @@ label {
 }
 
 /* SHOWING AND HIDING PINS */
-.dialog-container {
-    position: fixed;
-    z-index: 3;
-    top: 0;
-    background: rgba(255, 255, 255, .95);
-    height: 100%;
-    width: 100%;
-}
-.dialog-row {
-    position: fixed;
-    width: 100%;
-    top: 50%;
-    margin-top: -80px;
-}
 .dialog {
     padding: 30px 50px;
-    background: rgb(198, 188, 175);
+    background: $chatbox_color;
+    margin-top: 50px;
 }
 
 #ssid-dialog {
@@ -768,7 +761,7 @@ label {
     width: 100%;
 }
 
-#add-pins-menu {
+.chatbox-container {
     height: 100%;
     width: 100%;
     box-sizing: border-box;
@@ -776,7 +769,31 @@ label {
     border-style: solid;
     border-width: 10px 15px 110px;
 }
-#add-pins-menu-bg {
+#app-settings.chatbox-container {
+    border-bottom-width: 0;
+}
+
+.chatbox-inner .row:first-child div {
+    padding: 20px 0;
+}
+.chatbox .my-close {
+    font-size: 200%;
+    height: 100px;
+    @include tap_feedback($chatbox_color);
+    line-height: 60px;
+    text-align: right;
+    cursor: default;
+    position: relative;
+    top: -15px;
+}
+#app-settings .my-close {
+    top: 0;
+}
+#app-settings .button {
+    margin: 0;
+}
+
+.chatbox-bg {
     height: 100%;
     width: 100%;
     top: 0;
@@ -791,16 +808,25 @@ label {
     border-bottom-width: 110px;
     border-style: solid;
 }
-#add-pins-menu-bg,
-#add-pins-menu-pins-container {
-    background: rgb(198, 188, 175);
+#app-settings .chatbox-bg {
+    position: absolute;
+    border-bottom-width: 15px;
+    border-top-width: 100px;
 }
-#add-pins-menu-pins-container {
+.chatbox-bg,
+.chatbox {
+    background: $chatbox_color;
+}
+.chatbox {
     margin-bottom: 10px;
     padding-left: 50px;
     padding-right: 50px;
 }
-#add-pins-menu-bg-footer {
+#app-settings .chatbox {
+    margin-bottom: 0;
+}
+
+.chatbox-triangle {
     width: 0;
     height: 0;
     background: transparent;
@@ -808,13 +834,22 @@ label {
     bottom: 85px;
     border-left: 25px solid transparent;
     border-right: 25px solid transparent;
-    border-top: 30px solid rgb(198, 188, 175);
+    border-top: 30px solid $chatbox_color;
     z-index: 20;
 }
-#add-pins-menu-bg-footer.sensors {
+#app-settings .chatbox-triangle {
+    border-top-width: 0;
+    border-bottom: 30px solid $chatbox_color;
+    position: absolute;
+    bottom: inherit;
+    top: 75px;
+    left: 50%;
+    margin-left: -25px;
+}
+.chatbox-container.sensors .chatbox-triangle {
     left: 40px;
 }
-#add-pins-menu-bg-footer.actuators {
+.chatbox-container.actuators .chatbox-triangle {
     right: 40px;
 }
 #add-pins-menu .pin-stub {
@@ -861,33 +896,56 @@ label {
 
 /* PLAY MODE */
 
+$play_margin: 20px;
+$play_border: 15px;
+$play_pin_h: 145px;
+
 #play-pins {
     padding-top: 50px;
     padding-bottom: 100px;
 }
 #play-pins .pin {
-    display: inline-block;
-    width: 94%;
-    border-width: 15px;
-    border-color: transparent;
-    margin-left: 3% !important;
-    margin-right: 3% !important;
-    margin-top: 25px;
-    margin-bottom: 0;
-    box-sizing: border-box;
-    height: inherit;
-}
-#play-pins .pin-box {
-    height: 145px;
     width: 100%;
-    display: inline-block;
+    -webkit-background-clip: content-box;
+    position: relative;
+}
+#play-pins .pin.digital {
+    width: 100%;
+    border-style: solid;
+    border-color: transparent;
+    border-width: 0 $play_margin;
+    box-sizing: border-box;
+    border-color: transparent;
+    margin-bottom: 50px;
+}
+#play-pins .pin.analog {
+    border-width: 0;
+    margin-bottom: 0;
+}
+#play-pins .pin .pin-box {
+    -webkit-background-clip: content-box;
+    background: $gray;
+    width: 100%;
+    border-color: white;
+    border-style: solid;
+    position: relative;
+    border-radius: 1px;
+}
+#play-pins .pin.digital .pin-box {
+    height: $play_pin_h;
+    border-width: $play_border;
+    width: 100%;
     @include tap_feedback($gray);
 }
-
-#play-pins .pin.pressed {
-    border-color: rgb(180, 206, 184);
+#play-pins .pin.analog .pin-box {
+    height: 65px;
+    margin-top: 65px;
+    width: 100%;
+    border-width: 0 ($play_margin + $play_border);
 }
+
 #play-pins .pin.pressed .pin-box {
+    border-color: rgb(180, 206, 184);
     @include tap_feedback($green);
 }
 #play-pins .pin.pressed .pin-box:before {
@@ -900,7 +958,7 @@ label {
     font-size: 100%;
     font-weight: normal;
     height: 140px;
-    line-height: 140px;
+    line-height: 110px;
     top: 0;
     left: 0;
     width: 100%;
@@ -912,18 +970,17 @@ label {
     height: 100%;
     top: 0;
     left: 0;
-    border: 15px solid $gray;
-    background: rgb(175, 175, 175);
-    box-sizing: border-box;
+    background: transparent;
 }
 
-#play-pins .pin-value-in-range {
+#play-pins .pin-value {
     position: absolute;
-    width: 100%;
     left: 0;
     bottom: 0;
     background: rgb(45, 104, 84);
     z-index: 0;
+    border-width: 0;
+    height: 100%;
 }
 
 #play-pins .pin-value-container .pin-name,
@@ -934,51 +991,55 @@ label {
     z-index: 1;
     width: 100%;
     height: 100%;
-    line-height: 110px;
+    line-height: 62px;
 }
 
-#play-pins .vertical-slider-container {
-    position: absolute;
+#play-pins .pin-slider-container {
     width: 100%;
-    height: 100%;
+    height: $play_pin_h;
+    position: absolute;
     top: 0;
     left: 0;
     z-index: 5;
 }
-
-/* TODO it would be nice to figure out a way to make the touch target on this be as wide as the pin box */
-#play-pins input[type=range].vertical-slider {
-    -webkit-appearance: none;
-    -webkit-transform: rotate(270deg);
-    width: 144px;
-    height: 150px;
-    background-color: transparent;
+#play-pins .pin-slider-container input[type=range] {
     z-index: 4;
     position: absolute;
-    top: -67px;
-    left: 50%;
-    margin-left: -100px;
-    border-style: solid;
-    border-color: transparent;
-    border-top-width: 50px;
-    border-bottom-width: 50px;
-    border-left-width: 30px;
-    border-right-width: 30px;
-    box-sizing: content-box;
+    top: -40px;
+    left: 0;
+    -webkit-appearance: none;
+    background: transparent;
+    height: 145px;
+    width: 100%;
 }
-
-#play-pins input[type=range].vertical-slider:focus {
-    box-shadow: 0 0 0 rgba(0,0,0,0);
+#play-pins .pin-slider-container input[type=range]:focus {
+    box-shadow: 0 0 0 transparent;
     outline: 0 none;
 }
-
-#play-pins input[type=range].vertical-slider::-webkit-slider-thumb {
+#play-pins .pin-slider-container input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
     display: block;
-    width: 24px;
-    height: 160px;
-    background: rgb(115, 115, 115);
-    border-radius: 10px;
+    background: green;
+    width: 0;
+    height: 0;
+    border-left: 35px solid transparent;
+    border-right: 35px solid transparent;
+    border-bottom: 56px solid white;
+    -webkit-background-clip: content-box;
+    position: relative;
+    top: 50px;
+}
+#play-pins .pin-slider-container input[type=range]::-webkit-slider-thumb:before {
+    width: 0;
+    height: 0;
+    display: block;
+    content: "\A";
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    border-bottom: 50px solid $green;
+    position: absolute;
+    top: 3px;
+    left: -30px;
 }
 
 
@@ -1103,23 +1164,49 @@ html, body {
 #add-actuators-button {
     line-height: 97px;
 }
-#add-pins-menu {
+.chatbox {
     border-bottom-width: 145px;
 }
-#add-pins-menu-bg {
+.chatbox-inner .row:first-child div {
+    padding: .6em 0;
+}
+.chatbox .my-close {
+    line-height: 0;
+    top: -20px;
+}
+#add-pins-menu .chatbox-bg {
     border-bottom-width: 145px;
 }
-#add-pins-menu-bg-footer {
+#add-pins-menu .chatbox-triangle {
     bottom: 120px;
 }
-#add-pins-menu-bg-footer.sensors {
+#add-pins-menu.sensors .chatbox-triangle {
     left: 50px;
 }
-#add-pins-menu-bg-footer.actuators {
+#add-pins-menu.actuators .chatbox-triangle {
     right: 50px;
 }
 .settings {
     font-size: 85%;
+}
+
+#play-pins .pin.digital .pin-box {
+    height: 200px;
+}
+#play-pins .pin.digital .pin-name,
+#play-pins .pin.digital .pin-label {
+    line-height: 165px;
+}
+#play-pins .pin.analog .pin-box {
+    height: 100px;
+    margin-top: 75px;
+}
+#play-pins .pin.analog .pin-name,
+#play-pins .pin.analog .pin-label {
+    line-height: 90px;
+}
+#play-pins .pin-slider-container input[type=range] {
+    height: 200px;
 }
 
 

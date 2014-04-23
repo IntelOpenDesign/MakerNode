@@ -1,11 +1,26 @@
-<div id="app-settings"
-  class="settings">
-    <div class="settings-inner">
-        <div class="container-fluid">
+<div class="container-fluid">
+    <div class="row">
+        <div id="settings-button"
+          class="col-xs-6 col-xs-offset-3"
+          ng-click="goTo('');">
+            <span class="glyphicon glyphicon-cog"></span>
+        </div>
+    </div>
+</div>
+
+<div id="app-settings" class="chatbox-container">
+    <div class="chatbox">
+        <div class="chatbox-inner">
             <div class="row padded">
-                <div class="col-xs-12">
+                <div class="col-xs-10">
                     <div class="column-title">
                         App Settings
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="my-close"
+                      ng-click="goBack(1)">
+                        &times;
                     </div>
                 </div>
             </div>
@@ -16,8 +31,8 @@
                         Reset
                     </div>
                 </div>
-                <div class="col-xs-7">
-                    Remove all pins and connections, restore all pin settings to defaults.
+                <div class="col-xs-7 droid-font">
+                    <p>Remove all pins and connections, restore all pin settings to defaults.</p>
                 </div>
             </div>
             <div class="row padded">
@@ -27,8 +42,8 @@
                         Change Network Name
                     </div>
                 </div>
-                <div class="col-xs-7">
-                    Change the name of the wifi network ConnectAnything uses.
+                <div class="col-xs-7 droid-font">
+                    <p>Change the name of the wifi network ConnectAnything uses.<p>
                 </div>
             </div>
             <div class="row padded">
@@ -42,66 +57,7 @@
         </div>
     </div>
 
-    <div class="dialog-container container-fluid"
-        ng-show="path_ends_in('reset_dialog')">
-        <div class="row dialog-row">
-            <div class="dialog col-xs-8 col-xs-offset-2">
-                <div class="row padded">
-                    <div class="col-xs-12">
-                        Are you sure you want to reset all pins and connections?
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <div class="button secondary"
-                          ng-click="goBack(1);">
-                            No
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="button"
-                          ng-click="reset_app(); goBack(2);">
-                            Yes
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="chatbox-triangle"></div>
 
-    <div
-      class="dialog-container container-fluid"
-      ng-show="path_ends_in('ssid_dialog')">
-        <div id="ssid-dialog"
-          class="row dialog-row">
-            <div class="dialog col-xs-8 col-xs-offset-2">
-                <div class="row padded">
-                    <div class="col-xs-12">
-                        Enter a new wifi network name, press submit, wait a few minutes, then connect to that network.
-                    </div>
-                </div>
-                <div class="row padded">
-                    <div class="col-xs-12">
-                        <input id="ssid"
-                          ng-model="ssid_copy"
-                          ng-change="truncate_ssid_copy()">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <div class="button secondary"
-                          ng-click="goBack(1);">
-                            Cancel
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="button"
-                          ng-click="change_ssid(); goTo('ssid_changed');">
-                            Submit
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="chatbox-bg"></div>
 </div>
