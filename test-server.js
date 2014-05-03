@@ -150,7 +150,7 @@ var server = ws.createServer(function(conn){
             });
             console.log('processing message ID', d.message_id);
             messages_dict[d.message_id] = 0;
-            if (d.ssid !== msg.ssid) {
+            if (_und.has(d, 'ssid') && d.ssid !== msg.ssid) {
                 // a user has changed the SSID. we should notify all other
                 // users and then stop broadcasting, to mimic the users having
                 // to reconnect to another wifi hotspot
