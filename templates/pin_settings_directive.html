@@ -79,7 +79,7 @@
                               style="height: {{pin.value}}%;">
                             </div>
                             <div class="pin-value-range-outline-top"
-                              ng-show="pin.is_analog && !pin.is_input"
+                              ng-show="pin.is_analog && pin.is_input"
                               style="top: {{diff_100_max()}}%;">
                             </div>
                             <div class="pin-value-range-outline-not-top"
@@ -105,7 +105,7 @@
                                 <label for="checkbox">Invert</label>
                             </div>
                         </div>
-                        <div class="vertical-slider-container triangle-point-left"
+                        <div ng-class="vertical-slider-container triangle-point-left"
                           ng-show="pin.is_analog && !pin.is_input">
                             <input type="range"
                               class="vertical-slider max"
