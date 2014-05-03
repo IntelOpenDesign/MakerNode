@@ -57,7 +57,7 @@
                     <!-- PIN VALUE SETTINGS & INVERT -->
                     <div ng-class="{
                         'pin-value-display-settings': true,
-                        'has-pin-invert': !pin.is_input}"> <!-- TODO better class name than this --> <!-- NOTE the has-pin-invert gives an extra bottom margin so the pin invert div will show up. TODO better CSS -->
+                        'has-pin-invert': pin.is_input}"> <!-- TODO better class name than this --> <!-- NOTE the has-pin-invert gives an extra bottom margin so the pin invert div will show up. TODO better CSS -->
                         <div class="vertical-slider-container triangle-point-right"
                           ng-show="pin.is_analog && !pin.is_input">
                             <input type="range"
@@ -83,16 +83,21 @@
                               style="top: {{diff_100_max()}}%;">
                             </div>
                             <div class="pin-value-range-outline-not-top"
-                              ng-show="pin.is_analog && !pin.is_input"
+                              ng-show="pin.is_analog && pin.is_input"
                               style="bottom: {{pin.input_min}}%;
                                      height: {{diff_max_min()}}%;">
                             </div>
+                            <div class="pin-value-in-range"
+                              ng-show="pin.is_analog && pin.is_input"
+                              style="bottom: {{pin.input_min}}%;
+                                     height: {{val_in_range()}}%;">
+                            </div>
                             <div class="pin-value-container-above-range"
-                              ng-show="pin.is_analog && !pin.is_input"
+                              ng-show="pin.is_analog && pin.is_input"
                               style="height: {{diff_100_max()}}%;">
                             </div>
                             <div class="pin-value-container-below-range"
-                              ng-show="pin.is_analog && !pin.is_input"
+                              ng-show="pin.is_analog && pin.is_input"
                               style="height: {{pin.input_min}}%;">
                             </div>
 
@@ -105,8 +110,10 @@
                                 <label for="checkbox">Invert</label>
                             </div>
                         </div>
-                        <div ng-class="vertical-slider-container triangle-point-left"
-                          ng-show="pin.is_analog && !pin.is_input">
+                        <div ng-class="{
+                          'vertical-slider-container': true,
+                          'triangle-point-left': true,
+                          'hide': !(pin.is_analog && pin.is_input)}">
                             <input type="range"
                               class="vertical-slider max"
                               min="0"
@@ -128,28 +135,25 @@
                             {{scaled_value()}}%
                         </div>
                     </div>
-                    <div class="row droid-font"
-                      ng-if="!pin.is_input">
-                        <div class="col-xs-12">
-                            <input type="checkbox"
-                              ng-model="pin.is_timer_on"
-                              ng-change="send_pin_update([pin.id], 'is_timer_on')">
-                            <label for="checkbox">Stay on for</label>
-                            <br/>
-                            <!-- TODO timer_value data binding does not work as well as angular stuff should. I don't know why --> 
-                            <input type="number"
-                              ng-class="{
-                                  'gray-text': !pin.is_timer_on,
-                                  'timer-value': true}"
-                              min="0"
-                              ng-disabled="!pin.is_timer_on"
-                              ng-model="pin_timer_value"
-                              ng-blur="update_pin_timer_value()">
-                            <label for="number"
-                              ng-class="{'gray-text': !pin.is_timer_on}">
-                                seconds
-                            </label>
-                        </div>
+                    <div ng-switch-when="false">
+                        <input type="checkbox"
+                          ng-model="pin.is_timer_on"
+                          ng-change="send_pin_update([pin.id], 'is_timer_on')">
+                        <label for="checkbox">Stay on for</label>
+                        <br/>
+                        <!-- TODO timer_value data binding does not work as well as angular stuff should. I don't know why --> 
+                        <input type="number"
+                          ng-class="{
+                              'gray-text': !pin.is_timer_on,
+                              'timer-value': true}"
+                          min="0"
+                          ng-disabled="!pin.is_timer_on"
+                          ng-model="pin_timer_value"
+                          ng-blur="update_pin_timer_value()">
+                        <label for="number"
+                          ng-class="{'gray-text': !pin.is_timer_on}">
+                            seconds
+                        </label>
                     </div>
                 </div>
             </div>

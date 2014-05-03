@@ -191,12 +191,10 @@ p {
 }
 
 /* TODO SASS color variable for actived pin*/
-.sensor .pin-name,
-.sensor .pin-scaled-val {
+.sensor .pin-name {
     color: rgb(108, 79, 18);
 }
-.actuator .pin-name,
-.sensor .pin-scaled-val {
+.actuator .pin-name {
     color: $green;
 }
 
@@ -369,6 +367,12 @@ p {
     position: relative;
     top: -.5em;
 }
+.settings .vertical-slider-container.damping {
+    margin-top: 45px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 120px;
+}
 .settings .button {
     margin: 0;
 }
@@ -427,14 +431,14 @@ p {
     border-width: 2px;
     border-style: solid;
 }
-.settings.actuator .pin-value-container {
+.settings .pin-value-display-settings .pin-value-container {
     border-color: $green;
     background: rgba(0,0,0,0);
 }
-.settings.digital.sensor .pin-value-container {
+.settings.digital .pin-value-display-settings .pin-value-container {
     border-color: rgb(159, 122, 35);
 }
-.settings.analog.sensor .pin-value-container {
+.settings.analog .pin-value-display-settings .pin-value-container {
     background: white;
     border-width: 0;
 }
@@ -449,12 +453,14 @@ p {
     box-sizing: content-box;
     margin-bottom: -2px;
 }
-.settings.sensor .threshold {
+.settings .pin-value-display-settings .threshold {
     border-color: rgb(159, 122, 35);
 }
-.settings.actuator .threshold {
+.settings .pin-value-display-settings .threshold {
     border-color: $green;
 }
+
+/* SETTINGS PIN VALUE RANGE FOR ANALOG INPUTS */
 
 .settings .pin-value-range-outline-top,
 .settings .pin-value-range-outline-not-top {
@@ -475,13 +481,19 @@ p {
 .settings .pin-value-range-outline-not-top {
     border-top-width: 0;
 }
+.settings .pin-value-in-range {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background: rgb(216, 192, 85);
+}
 .settings .pin-value-container-above-range,
 .settings .pin-value-container-below-range {
     position: absolute;
     left: 0;
     width: 100%;
-    background: rgba(223, 223, 223, 0.5);
-    z-index: 2;
+    background: rgb(223, 223, 223);
+    z-index: -1;
 }
 .settings .pin-value-container-above-range {
     top: 0;
@@ -543,34 +555,34 @@ p {
 
 /* SETTINGS FOR ANALOG INPUTS HAVE SLIDERS */
 
-.sensor-value-settings .vertical-slider-container.triangle-point-left,
-.sensor-value-settings .vertical-slider-container.triangle-point-right {
+.pin-value-display-settings .vertical-slider-container.triangle-point-left,
+.pin-value-display-settings .vertical-slider-container.triangle-point-right {
     width: 20%;
     position: absolute;
     height: 100%;
     z-index: 2;
     box-sizing: content-box;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-left {
+.pin-value-display-settings .vertical-slider-container.triangle-point-left {
     right: 0;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-right {
+.pin-value-display-settings .vertical-slider-container.triangle-point-right {
     left: 0;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider{
+.pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider{
     width: 460px !important;
     height: 120px;
     top: 140px;
     left: -203px;
     background-color: rgba(0, 0, 0, 0);
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
     left: -197px;
     margin-top: -2px;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
+.pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
     width: 0;
     height: 0;
     border-left: 30px solid transparent;
@@ -582,10 +594,10 @@ p {
     border-bottom-width:0;
     border-radius:0;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
+.pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
     border-bottom: 50px solid $yellow;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
     border-top: 50px solid $yellow;
 }
 
@@ -597,7 +609,7 @@ p {
 input[type=number] {
     width: 100px; 
 }
-.actuator-value-display {
+.pin-value-display-settings {
     margin: 0 auto;
 }
 .settings.actuator input[type=checkbox] {
@@ -1119,25 +1131,25 @@ label[for=checkbox] {
     border-radius: 53px;
 }
 
-.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider{
+.pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider{
     width: 480px !important;
     top: 140px;
     left: -203px;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
     left: -217px;
     margin-top: -2px;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
+.pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
     border-left-width: 40px;
     border-right-width: 40px;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
+.pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
     border-bottom-width: 70px;
 }
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
     border-top-width: 70px;
 }
 
