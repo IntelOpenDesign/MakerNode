@@ -424,6 +424,12 @@ p {
 .settings .pin-scaled-val {
     margin-top: 10px;
 }
+.settings.sensor .pin-scaled-val {
+    color: $dark_yellow;
+}
+.settings.actuator .pin-scaled-val {
+    color: $green;
+}
 
 /* SETTINGS PIN VALUE DISPLAY */
 

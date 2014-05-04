@@ -388,6 +388,12 @@ p {
 .settings .pin-scaled-val {
   margin-top: 10px; }
 
+.settings.sensor .pin-scaled-val {
+  color: #9f7a23; }
+
+.settings.actuator .pin-scaled-val {
+  color: #2d6854; }
+
 /* SETTINGS PIN VALUE DISPLAY */
 .pin-value-display-settings {
   position: relative;
