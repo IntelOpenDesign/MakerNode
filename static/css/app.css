@@ -315,6 +315,9 @@ p {
 .settings.sensor .settings-inner {
   border-color: #f7c128; }
 
+.settings.actuator .settings-inner {
+  border-color: #2d6854; }
+
 .settings .pin-name {
   font-size: 200%;
   text-align: center; }
@@ -328,10 +331,12 @@ p {
   font-size: 55%; }
 
 .settings .pin-label-input-label {
+  /* TODO better class name. NOTE this is the label for the input box where you type in the pin label */
   position: relative;
   top: -.5em; }
 
 .settings .vertical-slider-container.damping {
+  /* TODO if we are not using damping, take this out! */
   margin-top: 45px;
   margin-left: auto;
   margin-right: auto;
@@ -354,9 +359,14 @@ p {
   -webkit-transform: rotate(270deg);
   margin: 0;
   padding: 0;
-  background: #c2a52e;
   display: block;
   box-sizing: content-box; }
+
+.settings.sensor input[type=range].vertical-slider {
+  background: yellow; }
+
+.settings.actuator input[type=range].vertical-slider {
+  background: #c2a52e; }
 
 .settings input[type=range].vertical-slider:focus {
   box-shadow: 0 0 0 transparent;
@@ -366,16 +376,20 @@ p {
   -webkit-appearance: none;
   width: 80px;
   height: 120px;
-  background: #f7c128;
   border-radius: 10px;
   border: 5px solid white; }
+
+.settings.sensor input[type=range].vertical-slider::-webkit-slider-thumb {
+  background: #f7c128; }
+
+.settings.actuator input[type=range].vertical-slider::-webkit-slider-thumb {
+  background: #2d6854; }
 
 .settings .pin-scaled-val {
   margin-top: 10px; }
 
 /* SETTINGS PIN VALUE DISPLAY */
-.sensor-value-settings,
-.actuator-value-display {
+.pin-value-display-settings {
   position: relative;
   height: 400px;
   width: 300px;
@@ -393,15 +407,16 @@ p {
   border-width: 2px;
   border-style: solid; }
 
-.settings .actuator-value-display .pin-value-container {
-  border-color: #2d6854;
-  background: transparent; }
+.settings .pin-value-container {
+  background: white; }
 
-.settings.digital .sensor-value-settings .pin-value-container {
+.settings.sensor .pin-value-container {
   border-color: #9f7a23; }
 
-.settings.analog .sensor-value-settings .pin-value-container {
-  background: white;
+.settings.actuator .pin-value-container {
+  border-color: #2d6854; }
+
+.settings.analog.sensor .pin-value-container {
   border-width: 0; }
 
 .settings .threshold {
@@ -414,13 +429,12 @@ p {
   box-sizing: content-box;
   margin-bottom: -2px; }
 
-.settings .sensor-value-settings .threshold {
+.settings.sensor .threshold {
   border-color: #9f7a23; }
 
-.settings .actuator-value-display .threshold {
+.settings.actuator .threshold {
   border-color: #2d6854; }
 
-/* SETTINGS PIN VALUE RANGE FOR ANALOG INPUTS */
 .settings .pin-value-range-outline-top,
 .settings .pin-value-range-outline-not-top {
   position: absolute;
@@ -428,9 +442,16 @@ p {
   width: 100%;
   border-width: 2px;
   border-style: solid;
-  border-color: #9f7a23;
   z-index: 2;
   box-sizing: content-box; }
+
+.settings.sensor .pin-value-range-outline-top,
+.settings.sensor .pin-value-range-outline-not-top {
+  border-color: #9f7a23; }
+
+.settings.actuator .pin-value-range-outline-top,
+.settings.actuator .pin-value-range-outline-not-top {
+  border-color: #2d6854; }
 
 .settings .pin-value-range-outline-top {
   height: 0;
@@ -443,8 +464,13 @@ p {
 .settings .pin-value-in-range {
   position: absolute;
   left: 0;
-  width: 100%;
+  width: 100%; }
+
+.settings.sensor .pin-value-in-range {
   background: #d8c055; }
+
+.settings.actuator .pin-value-in-range {
+  background: #2d6854; }
 
 .settings .pin-value-container-above-range,
 .settings .pin-value-container-below-range {
@@ -481,15 +507,15 @@ p {
   box-sizing: border-box;
   border-style: solid; }
 
-.settings.digital.actuator .pin-value-container:before,
-.settings.digital.actuator .pin-value:before {
-  color: #2d6854;
-  background: #e8f0e8; }
-
 .settings.digital.sensor .pin-value-container:before,
 .settings.digital.sensor .pin-value:before {
   color: #936a18;
   background: #f3ebbf; }
+
+.settings.digital.actuator .pin-value-container:before,
+.settings.digital.actuator .pin-value:before {
+  color: #2d6854;
+  background: #e8f0e8; }
 
 .settings.digital .pin-value-container:before {
   content: "OFF";
@@ -502,43 +528,44 @@ p {
   border-width: 5px;
   line-height: 55px; }
 
-.settings.digital.actuator .pin-value:before {
-  border-color: #b4ceb8; }
-
 .settings.digital.sensor .pin-value:before {
   border-color: #e6deb1; }
 
+.settings.digital.actuator .pin-value:before {
+  border-color: #b4ceb8; }
+
 /* SETTINGS FOR ANALOG INPUTS HAVE SLIDERS */
-.sensor-value-settings .vertical-slider-container.triangle-point-left,
-.sensor-value-settings .vertical-slider-container.triangle-point-right {
+.pin-value-display-settings .vertical-slider-container.triangle-point-left,
+.pin-value-display-settings .vertical-slider-container.triangle-point-right {
   width: 20%;
   position: absolute;
   height: 100%;
   z-index: 2;
   box-sizing: content-box; }
 
-.sensor-value-settings .vertical-slider-container.triangle-point-left {
+.pin-value-display-settings .vertical-slider-container.triangle-point-left {
   right: 0; }
 
-.sensor-value-settings .vertical-slider-container.triangle-point-right {
+.pin-value-display-settings .vertical-slider-container.triangle-point-right {
   left: 0; }
 
-.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
+.pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
   width: 460px !important;
   height: 120px;
   top: 140px;
   left: -203px;
   background-color: transparent; }
 
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
   left: -197px;
   margin-top: -2px; }
 
-.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
+.pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
   width: 0;
   height: 0;
+  border-style: solid;
   border-left: 30px solid transparent;
   border-right: 30px solid transparent;
   background: transparent;
@@ -548,24 +575,40 @@ p {
   border-bottom-width: 0;
   border-radius: 0; }
 
-.sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
-  border-bottom: 50px solid #f7c128; }
+.pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
+  border-bottom-width: 50px; }
 
-.sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
-  border-top: 50px solid #f7c128; }
+.pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
+  border-top-width: 50px; }
 
-/* ACTUATOR SETTINGS ARE A LITTLE DIFFERENT */
-.settings.actuator .settings-inner {
-  border-color: #2d6854; }
+.settings.sensor .pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
+  border-bottom-color: #f7c128; }
+
+.settings.sensor .pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
+  border-top-color: #f7c128; }
+
+.settings.actuator .pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
+  border-bottom-color: #2d6854; }
+
+.settings.actuator .pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
+  border-top-color: #2d6854; }
 
 input[type=number] {
   width: 100px; }
 
-.actuator-value-display {
+.pin-value-display-settings {
   margin: 0 auto; }
 
+.settings input[type=checkbox] {
+  background-color: white; }
+
+.settings.sensor input[type=checkbox] {
+  border-color: #f7c128; }
+
+.settings.sensor input[type=checkbox]:checked:before {
+  color: #936a18; }
+
 .settings.actuator input[type=checkbox] {
-  background-color: white;
   border-color: #5d8263; }
 
 .settings.actuator input[type=checkbox]:checked:before {
@@ -594,7 +637,6 @@ input[type=checkbox]:checked {
 input[type=checkbox]:checked:before {
   content: "\e013";
   padding: 0;
-  color: #936a18;
   background: transparent;
   position: absolute;
   top: -8px;
@@ -1065,25 +1107,25 @@ label {
     margin-top: -53px;
     border-radius: 53px; }
 
-  .sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
-  .sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
+  .pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider,
+  .pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
     width: 480px !important;
     top: 140px;
     left: -203px; }
 
-  .sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
+  .pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider {
     left: -217px;
     margin-top: -2px; }
 
-  .sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
-  .sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
+  .pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb,
+  .pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
     border-left-width: 40px;
     border-right-width: 40px; }
 
-  .sensor-value-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
+  .pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
     border-bottom-width: 70px; }
 
-  .sensor-value-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
+  .pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
     border-top-width: 70px; } }
 @media (max-device-width: 4in) and (min-resolution: 100dpi) {
   html, body {

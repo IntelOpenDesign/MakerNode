@@ -1,4 +1,5 @@
 $yellow: rgb(247, 193, 40);
+$dark_yellow: rgb(159, 122, 35);
 $green: rgb(45, 104, 84);
 $black: rgb(44, 38, 33);
 $gray: rgb(135, 135, 135);
@@ -352,6 +353,9 @@ p {
 .settings.sensor .settings-inner {
     border-color: $yellow;
 }
+.settings.actuator .settings-inner {
+    border-color: $green;
+}
 .settings .pin-name {
     font-size: 200%;
     text-align: center;
@@ -363,11 +367,11 @@ p {
 .extra-small {
     font-size: 55%;
 }
-.settings .pin-label-input-label {
+.settings .pin-label-input-label { /* TODO better class name. NOTE this is the label for the input box where you type in the pin label */
     position: relative;
     top: -.5em;
 }
-.settings .vertical-slider-container.damping {
+.settings .vertical-slider-container.damping { /* TODO if we are not using damping, take this out! */
     margin-top: 45px;
     margin-left: auto;
     margin-right: auto;
@@ -391,9 +395,14 @@ p {
     -webkit-transform: rotate(270deg);
     margin: 0;
     padding: 0;
-    background: rgb(194, 165, 46);
     display: block;
     box-sizing: content-box;
+}
+.settings.sensor input[type=range].vertical-slider {
+    background: yellow;
+}
+.settings.actuator input[type=range].vertical-slider {
+    background: rgb(194, 165, 46);
 }
 .settings input[type=range].vertical-slider:focus {
     box-shadow: 0 0 0 rgba(0,0,0,0);
@@ -403,9 +412,14 @@ p {
     -webkit-appearance: none;
     width: 80px;
     height: 120px;
-    background: $yellow;
     border-radius: 10px;
     border: 5px solid white;
+}
+.settings.sensor input[type=range].vertical-slider::-webkit-slider-thumb {
+    background: $yellow;
+}
+.settings.actuator input[type=range].vertical-slider::-webkit-slider-thumb {
+    background: $green;
 }
 .settings .pin-scaled-val {
     margin-top: 10px;
@@ -431,15 +445,16 @@ p {
     border-width: 2px;
     border-style: solid;
 }
-.settings .pin-value-display-settings .pin-value-container {
-    border-color: $green;
-    background: rgba(0,0,0,0);
-}
-.settings.digital .pin-value-display-settings .pin-value-container {
-    border-color: rgb(159, 122, 35);
-}
-.settings.analog .pin-value-display-settings .pin-value-container {
+.settings .pin-value-container {
     background: white;
+}
+.settings.sensor .pin-value-container {
+    border-color: $dark_yellow;
+}
+.settings.actuator .pin-value-container {
+    border-color: $green;
+}
+.settings.analog.sensor .pin-value-container {
     border-width: 0;
 }
 
@@ -453,14 +468,12 @@ p {
     box-sizing: content-box;
     margin-bottom: -2px;
 }
-.settings .pin-value-display-settings .threshold {
-    border-color: rgb(159, 122, 35);
+.settings.sensor .threshold {
+    border-color: $dark_yellow;
 }
-.settings .pin-value-display-settings .threshold {
+.settings.actuator .threshold {
     border-color: $green;
 }
-
-/* SETTINGS PIN VALUE RANGE FOR ANALOG INPUTS */
 
 .settings .pin-value-range-outline-top,
 .settings .pin-value-range-outline-not-top {
@@ -469,9 +482,16 @@ p {
     width: 100%;
     border-width: 2px;
     border-style: solid;
-    border-color: rgb(159, 122, 35);
     z-index: 2;
     box-sizing: content-box;
+}
+.settings.sensor .pin-value-range-outline-top,
+.settings.sensor .pin-value-range-outline-not-top {
+    border-color: $dark_yellow;
+}
+.settings.actuator .pin-value-range-outline-top,
+.settings.actuator .pin-value-range-outline-not-top {
+    border-color: $green;
 }
 .settings .pin-value-range-outline-top {
     height: 0;
@@ -481,11 +501,17 @@ p {
 .settings .pin-value-range-outline-not-top {
     border-top-width: 0;
 }
+
 .settings .pin-value-in-range {
     position: absolute;
     left: 0;
     width: 100%;
+}
+.settings.sensor .pin-value-in-range {
     background: rgb(216, 192, 85);
+}
+.settings.actuator .pin-value-in-range {
+    background: $green;
 }
 .settings .pin-value-container-above-range,
 .settings .pin-value-container-below-range {
@@ -525,15 +551,15 @@ p {
     box-sizing: border-box;
     border-style: solid;
 }
-.settings.digital.actuator .pin-value-container:before,
-.settings.digital.actuator .pin-value:before {
-    color: $green;
-    background: rgb(232, 240, 232);
-}
 .settings.digital.sensor .pin-value-container:before,
 .settings.digital.sensor .pin-value:before {
     color: rgb(147, 106, 24);
     background: rgb(243, 235, 191);
+}
+.settings.digital.actuator .pin-value-container:before,
+.settings.digital.actuator .pin-value:before {
+    color: $green;
+    background: rgb(232, 240, 232);
 }
 .settings.digital .pin-value-container:before {
     content: "OFF";
@@ -546,11 +572,11 @@ p {
     border-width: 5px;
     line-height: 55px;
 }
-.settings.digital.actuator .pin-value:before {
-    border-color: rgb(180, 206, 184);
-}
 .settings.digital.sensor .pin-value:before {
     border-color: rgb(230, 222, 177);
+}
+.settings.digital.actuator .pin-value:before {
+    border-color: rgb(180, 206, 184);
 }
 
 /* SETTINGS FOR ANALOG INPUTS HAVE SLIDERS */
@@ -585,6 +611,7 @@ p {
 .pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb {
     width: 0;
     height: 0;
+    border-style: solid;
     border-left: 30px solid transparent;
     border-right: 30px solid transparent;
     background: transparent;
@@ -595,25 +622,40 @@ p {
     border-radius:0;
 }
 .pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
-    border-bottom: 50px solid $yellow;
+    border-bottom-width: 50px;
 }
 .pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
-    border-top: 50px solid $yellow;
+    border-top-width: 50px;
+}
+.settings.sensor .pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
+    border-bottom-color: $yellow;
+}
+.settings.sensor .pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
+    border-top-color: $yellow;
+}
+.settings.actuator .pin-value-display-settings .vertical-slider-container.triangle-point-left input[type=range].vertical-slider::-webkit-slider-thumb {
+    border-bottom-color: $green;
+}
+.settings.actuator .pin-value-display-settings .vertical-slider-container.triangle-point-right input[type=range].vertical-slider::-webkit-slider-thumb{
+    border-top-color: $green;
 }
 
-/* ACTUATOR SETTINGS ARE A LITTLE DIFFERENT */
-
-.settings.actuator .settings-inner {
-    border-color: $green;
-}
 input[type=number] {
-    width: 100px; 
+    width: 100px;
 }
 .pin-value-display-settings {
     margin: 0 auto;
 }
-.settings.actuator input[type=checkbox] {
+.settings input[type=checkbox] {
     background-color: white;
+}
+.settings.sensor input[type=checkbox] {
+    border-color: $yellow;
+}
+.settings.sensor input[type=checkbox]:checked:before {
+    color: rgb(147, 106, 24);
+}
+.settings.actuator input[type=checkbox] {
     border-color: rgb(93, 130, 99);
 }
 .settings.actuator input[type=checkbox]:checked:before {
@@ -644,7 +686,6 @@ input[type=checkbox]:checked {
 input[type=checkbox]:checked:before {
     content: "\e013";
     padding:0;
-    color: rgb(147, 106, 24);
     background: rgba(0,0,0,0);
     position: absolute;
     top: -8px;

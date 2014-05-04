@@ -59,7 +59,7 @@
                         'pin-value-display-settings': true,
                         'has-pin-invert': pin.is_input}"> <!-- TODO better class name than this --> <!-- NOTE the has-pin-invert gives an extra bottom margin so the pin invert div will show up. TODO better CSS -->
                         <div class="vertical-slider-container triangle-point-right"
-                          ng-show="pin.is_analog && !pin.is_input">
+                          ng-show="pin.is_analog && pin.is_input">
                             <input type="range"
                               class="vertical-slider min"
                               min="0"
@@ -103,17 +103,15 @@
 
                             <!-- PIN INVERT -->
                             <div class="pin-invert-container"
-                              ng-if="!pin.is_input">
+                              ng-if="pin.is_input">
                                 <input type="checkbox"
                                   ng-model="pin.is_inverted"
                                   ng-change="send_pin_update([pin.id], 'is_inverted')">
                                 <label for="checkbox">Invert</label>
                             </div>
                         </div>
-                        <div ng-class="{
-                          'vertical-slider-container': true,
-                          'triangle-point-left': true,
-                          'hide': !(pin.is_analog && pin.is_input)}">
+                        <div class="vertical-slider-container triangle-point-left"
+                          ng-show="pin.is_analog && pin.is_input">
                             <input type="range"
                               class="vertical-slider max"
                               min="0"
@@ -135,7 +133,7 @@
                             {{scaled_value()}}%
                         </div>
                     </div>
-                    <div ng-switch-when="false">
+                    <div ng-if="!pin.is_input">
                         <input type="checkbox"
                           ng-model="pin.is_timer_on"
                           ng-change="send_pin_update([pin.id], 'is_timer_on')">
