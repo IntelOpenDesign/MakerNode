@@ -84,7 +84,7 @@ function app() {
     };
 
     var launch_board_ctrl = function() {
-        netUtils.start_supplicant();
+        netUtils.start_supplicant(app_state.setup_state.ssid, app_state.setup_state.pwd);
         boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server);
         boardCtrl.start();
     };
