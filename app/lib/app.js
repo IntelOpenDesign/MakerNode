@@ -3,7 +3,7 @@
 function app() {
     var APP_CONF_FILE = 'appstate.conf';
     var BOARD_CONF_FILE = 'boardstate.conf';
-    var PORT = 8000;
+    var PORT = 80;
 
     var express = require('express');
     var path = require('path');
