@@ -19,6 +19,8 @@ module.exports = function() {
     sh(command, callback);
   }
 
+// TODO stop_supplicant does more than just stop the wifi connection.
+// it also resets us to setup mode! this is not a well named function
   function stop_supplicant(callback) {
     sh('./restore_factory_settings.sh', callback);
   }

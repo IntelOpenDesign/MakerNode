@@ -73,6 +73,7 @@ function board_controller(conf_filename, ws) {
                 return;
             }
             state.pins[idstr].value = val;
+            conf.write(conf_filename, state);
             broadcast_pin_updates([idstr], null);
         }, 100);
     };
@@ -89,12 +90,14 @@ function board_controller(conf_filename, ws) {
             }
             _.extend(state.pins[idstr], pin);
         });
+        conf.write(conf_filename, state);
         broadcast_pin_updates(_.keys(d.pins), d.msg_id);
     };
 
     var stop = function() {
         // TODO do we need to stop Galileo IO?
-        conf.write(conf_filename, state);
+        log.info('Stopping Board Controller');
+        return conf.write(conf_filename, state);
     };
 
     return {

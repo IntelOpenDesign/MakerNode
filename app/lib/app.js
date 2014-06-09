@@ -3,7 +3,7 @@
 function app() {
     var APP_CONF_FILE = 'appstate.conf';
     var BOARD_CONF_FILE = 'boardstate.conf';
-    var PORT = 8001; // for the static file server and the websocket server
+    var PORT = 80; // for the static file server and the websocket server
     var PING_PORT = 8000; // for the hacky http server that just responds with 'Hello...'
 
     var express = require('express');
@@ -84,19 +84,16 @@ function app() {
     };
 
     var stop = function() {
-        if (app_state.mode === 'setup') {
-            setupCtrl.stop();
-            netUtils.stop_access_point();
-        } else {
-            boardCtrl.stop();
-            netUtils.stop_supplicant();
-            netUtils.restore_factory_settings();
-        }
         conf.write(app_state);
-        // TODO make sure we are actually closing the websocket server
-        //socketio_server.close();
         express_server.close();
-        // TODO stop http ping server
+        // TODO close websocket
+        if (app_state.mode === 'setup') {
+            // TODO do we need to kill the access point here
+            setupCtrl.stop();
+        } else {
+            // TODO close ping http server if it is running
+            boardCtrl.stop();
+        }
     };
 
     var launch_setup_ctrl = function() {
@@ -148,6 +145,7 @@ function app() {
             ssid: app_state.setup_state.ssid,
             pwd: app_state.setup_state.pwd,
         }, function() { // callback
+            log.info('Done with start_supplicant');
             boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server);
             boardCtrl.start(cb);
         });
