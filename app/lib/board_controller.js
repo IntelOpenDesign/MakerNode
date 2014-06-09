@@ -9,7 +9,7 @@ function board_controller(conf_filename, ws) {
     var galileo; // communication with the actual Galileo using GPIO
 
     var start = function() {
-        log.debug('Start');
+        log.debug('Start Board Controller');
         conf.read(conf_filename).then(function(o) {
             state = o;
 
@@ -53,13 +53,14 @@ function board_controller(conf_filename, ws) {
     var broadcast_pin_updates = function(pin_idstrs, msg_id) {
         ws.emit('pins', {
             pins: _.pick(state.pins, pin_idstrs),
-            msg_id: msg_id,
+            msg_id_processed: msg_id,
         });
     };
 
     // update input pins when Galileo-IO reports they have changed value
     var pin_listener = function(id) {
         return _.throttle(function(id, val) {
+            log.debug('Update pins from Galileo IO info id', id, 'val', val);
             var idstr = id.toString();
             if (state.pins[idstr].value === val) {
                 return;

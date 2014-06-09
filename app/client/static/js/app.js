@@ -71,10 +71,10 @@ makernode.app.controller('AppCtrl', ['$scope', function($scope) {
 
     $scope.ws.on('redirect', function(data) {
         // TODO these timeouts are kind of sketchy, but they work.
-        console.log('server is telling us to get ready to REDIRECT');
+        console.log('Server is telling us to get ready to REDIRECT');
         // wait here to let the connecting page finish loading, images and all
         setTimeout(function(){
-            console.log('we are about to reply saying we are ready');
+            console.log('We are about to reply to the server saying we are ready to redirect');
             $scope.send_server_update('redirect', {});
             // wait here to give the server a chance to get the message and
             // take down its wifi hotspot. if we call makernode.rc.redirect
@@ -82,7 +82,7 @@ makernode.app.controller('AppCtrl', ['$scope', function($scope) {
             // to the server that way and then redirect prematurely and then lose
             // connection once the server actually does take down the hotspot
             setTimeout(function(){
-                console.log('we are about to call makernode.rc.redirect with url', data.url, 'port', data.port);
+                console.log('We are about to call makernode.rc.redirect with url', data.url, 'port', data.port);
                 makernode.rc.redirect(data.url, data.port);
             }, 1000);
         }, 1000);
@@ -97,11 +97,10 @@ makernode.app.controller('AppCtrl', ['$scope', function($scope) {
     };
 
     $scope.toggle_pin_value = function(id) {
-        console.log('toggle the value of pin', id);
+        console.log('$scope.toggle_pin_value of pin id', id);
         var pin = $scope.d.pins[id];
         if (pin.is_input) return;
         var new_val = pin.value === 100 ? 0 : 100;
-        console.log('\ttoggling pin value to', new_val);
         pinsync.set_pin_val(id, new_val);
     };
 }]);
@@ -117,7 +116,10 @@ makernode.app.controller('FormCtrl', ['$scope', function($scope) {
     var next_route_key = makernode.setup_steps[my_route_i + 1];
     var next_route = makernode.routes[next_route_key];
     $scope.submit = function() {
-        console.log('send server msg of type', my_route.socket_msg_type, ' with data', $scope.form);
+        console.log(
+            'We are about to go to the next route', next_route.hash,
+            'and send the server a msg of type', my_route.socket_msg_type,
+            'with data', JSON.stringify($scope.form, null, 2) );
         makernode.rc.goTo(next_route);
         $scope.send_server_update(my_route.socket_msg_type, $scope.form);
     };
@@ -209,7 +211,7 @@ makernode.ws_pin_sync = function($scope, ws, d) {
 
     $scope[ws].on('pins', function(server_msg) {
         $scope.$apply(function() {
-            console.log('SERVER PINS', server_msg);
+            console.log('SERVER MSG', JSON.stringify(server_msg, null, 2));
             var data = _.extend({}, server_msg);
             delete old_msgs[server_msg.msg_id_processed];
 
@@ -218,6 +220,10 @@ makernode.ws_pin_sync = function($scope, ws, d) {
             });
         
             _.each(old_updates, function(o) {
+                console.log(
+                    'The server has still not processed our update',
+                    JSON.stringify(o, null, 2),
+                    'and so we will overwrite the server info with this.' );
                 _.each(data.pins, function(pin, id) {
                     _.extend(pin, o.pins[id]);
                 });
@@ -234,7 +240,6 @@ makernode.ws_pin_sync = function($scope, ws, d) {
 
     // TODO just send pins if there are updates for them
     var send_pin_update = _.throttle(function() {
-        console.log('pinsync.send_pin_update');
         var now = Date.now();
         var msg_id = msg_id_prefix + '-' + (msg_id_count++) + '-' + now;
         var changed_pins = _.pick($scope.d.pins, _.keys(changed_pin_ids));        
@@ -248,7 +253,7 @@ makernode.ws_pin_sync = function($scope, ws, d) {
             pins: server_pins,
             msg_id: msg_id,
         };
-        console.log('sending this data to the server:', data);
+        console.log('sending this data to the server:', JSON.stringify(data, null, 2));
         $scope[ws].emit('pins', data);
         changed_pin_ids = {};
     }, 100);
@@ -294,6 +299,7 @@ makernode.server_pin_format = function(my_pins) {
         delete pins[id].name;
         pins[id].value = pin.value / 100;
         delete pins[id].id;
+        delete pins[id].$$hashKey; // angular puts this in
     });
 
     return pins;
@@ -326,22 +332,20 @@ makernode.rc = function routing_utility_functions() {
     };
 
     that.redirect = function(url, port) {
-        console.log('inside makernode.rc.redirect');
         // test for connection here:
         var test_url = 'http://' + url + ':' + port + '/';
-        console.log('test_url', test_url);
         // then go to here:
         var http_url = 'http://' + url;
-        console.log('http_url', http_url);
         var keep_trying = true;
 
-        console.log('Attempting to ping', test_url, '...');
+        console.log('makernode.rc.redirect is attempting to ping test_url',
+            test_url, 'and when it connects it will try to redirect to http_url',
+            http_url);
 
         // Yes, we are pessimists. Expect failure and prepare the error msg.
         var timeout_id = setTimeout(function() {
             keep_trying = false;
             console.log('Reconnecting to Galileo has failed.');
-            alert('Reconnecting to Galileo has failed.');
         }, 20 * 60 * 1000); // 20 minutes
 
         var count = 0;
