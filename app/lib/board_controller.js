@@ -64,15 +64,18 @@ function board_controller(conf_filename, ws) {
             var method = pin.is_analog ? 'analog' : 'digital';
             galileo[method+'Write'](id, data);
         }
-        socketio.emit('pins', {
+        log.info('Sending out updated pins to clients');
+        // TODO it WILL cause a bug to send this out every time we update a pin rather than waiting until we ahve updated all pins
+        ws.emit('pins', {
             pins: state.pins,
             msg_id_processed: msg_id,
         });
     };
 
     var update_pins = function(d) {
+        log.debug('update pins d', JSON.stringify(d, null, 2));
         _.each(d.pins, function(pin, idstr) {
-            update_pin(parseInt(id), pin.value, d.msg_id);
+            update_pin(parseInt(idstr), pin.value, d.msg_id);
         });
     };
 
