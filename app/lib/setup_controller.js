@@ -27,8 +27,8 @@ module.exports = function(state, wss) {
       conn.on('router_setup', function(d) { // STEP 3
         log.debug('got router info', JSON.stringify(d));
         if (_.has(d, 'ssid') && _.has(d, 'pwd')) {
-          state.router_ssid = d.wifi_ssid;
-          state.router_password = d.wifi_password;
+          state.ssid = d.ssid;
+          state.pwd = d.pwd;
           on_finished(state);
         }
       });
