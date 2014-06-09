@@ -64,19 +64,28 @@ makernode.app.controller('AppCtrl', ['$scope', function($scope) {
     $scope.ws = io();
     // sync pins with server
     var pinsync = makernode.ws_pin_sync($scope, 'ws', 'd');
-    // should we be trying to redirect to a new URL right now?
-    var redirect_url;
 
     $scope.ws.on('connect', function() {
         console.log('connected to websocket');
     });
 
     $scope.ws.on('redirect', function(data) {
+        // TODO these timeouts are kind of sketchy, but they work.
         console.log('server is telling us to get ready to REDIRECT');
-        console.log('we are about to reply saying we are ready');
-        $scope.send_server_update('redirect', {});
-        console.log('we are about to call makernode.rc.redirect with url', data.url, 'port', data.port);
-        makernode.rc.redirect(data.url, data.port);
+        // wait here to let the connecting page finish loading, images and all
+        setTimeout(function(){
+            console.log('we are about to reply saying we are ready');
+            $scope.send_server_update('redirect', {});
+            // wait here to give the server a chance to get the message and
+            // take down its wifi hotspot. if we call makernode.rc.redirect
+            // while the hotspot is still up and running, it might just connect
+            // to the server that way and then redirect prematurely and then lose
+            // connection once the server actually does take down the hotspot
+            setTimeout(function(){
+                console.log('we are about to call makernode.rc.redirect with url', data.url, 'port', data.port);
+                makernode.rc.redirect(data.url, data.port);
+            }, 1000);
+        }, 1000);
     });
 
     $scope.send_server_update = function(msg_type, d) {

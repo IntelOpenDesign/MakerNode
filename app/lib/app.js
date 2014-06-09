@@ -39,14 +39,6 @@ function app() {
         express_server = express_app.listen(PORT);
         socketio_server = socketio.listen(express_server);
 
-        http.createServer(function(req, res) {
-            res.writeHead(200, {
-                'Content-Type': 'text/plain',
-                'Access-Control-Allow-Origin': '*',
-            });
-            res.end('Hello from your friendly hacky Galileo webserver');
-        }).listen(PING_PORT);
-
         log.info('HTTP and WS servers listening on port', PORT);
 
         conf.read(APP_CONF_FILE).then(function(o) {
@@ -54,6 +46,20 @@ function app() {
             if (app_state.mode === 'setup') {
                 launch_setup_ctrl();
             } else {
+
+                // TODO only call this when needed
+                // only host this http server for when the client side is
+                // trying to ping the server side to see if it can redirect
+                // so we only need to do this when we boot up immediately after
+                // finishing setup, not every time we launch board controller
+                http.createServer(function(req, res) {
+                    res.writeHead(200, {
+                        'Content-Type': 'text/plain',
+                        'Access-Control-Allow-Origin': '*',
+                    });
+                    res.end('Hello from your friendly hacky Galileo webserver');
+                }).listen(PING_PORT);
+
                 launch_board_ctrl();
             }
         });
@@ -71,6 +77,7 @@ function app() {
         // TODO make sure we are actually closing the websocket server
         //socketio_server.close();
         express_server.close();
+        // TODO stop http ping server
     };
 
     var launch_setup_ctrl = function() {
