@@ -134,6 +134,8 @@ function app() {
             ssid: app_state.setup_state.ssid,
             pwd: app_state.setup_state.pwd,
         }, function() { // callback
+            sh('ifdown wlan0');
+            sh('ifup wlan0');
             boardCtrl = boardCtrlF(BOARD_CONF_FILE, servers.socketio_server);
             boardCtrl.start(cb);
             log.info('Done with start_supplicant');
