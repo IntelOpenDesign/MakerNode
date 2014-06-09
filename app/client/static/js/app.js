@@ -200,7 +200,7 @@ makernode.ws_pin_sync = function($scope, ws, d) {
     var old_msgs = {}; // messages not yet processed by the server
 
     $scope[ws].on('pins', function(server_msg) {
-        console.log('PINS', server_msg);
+        console.log('SERVER PINS', server_msg);
         var data = _.extend({}, server_msg);
         delete old_msgs[server_msg.msg_id_processed];
         _.each(old_msgs, function(o, msg_id) {
