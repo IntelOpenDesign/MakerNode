@@ -4,9 +4,8 @@ var sh = require('./command_queue').init().enqueue;
 var _ = require('underscore');
 var log = require('./log')('setup_controller');
 
-module.exports = function(state, wss) {
+module.exports = function(state, wss, on_finished, on_redirect) {
   var onUpdate;
-  var on_finished;
 
   function start(port) {
     log.info('Start');
@@ -33,6 +32,14 @@ module.exports = function(state, wss) {
         }
       });
 
+      // TODO I think it would be better to assign to this event in lib/app.js,
+      // but I am not sure if I can do that without blocking the other events
+      // that setup_controller.js needs to listen to
+      conn.on('redirect', function(d) {
+        log.debug('client says it is ready to redirect');
+        on_redirect();
+      });
+
       conn.on('disconnect', function(d) {
           log.debug('client disconnected');
       });
@@ -44,13 +51,8 @@ module.exports = function(state, wss) {
     log.info('STOPPED', state);
   };
 
-  function set_on_finished(callback) {
-    on_finished = callback;
-  };
-
   return {
     start: start,
     stop: stop,
-    set_on_finished: set_on_finished
   };
 }

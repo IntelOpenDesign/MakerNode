@@ -41,7 +41,7 @@ module.exports = function() {
        if (error !== null) {
             log.error('Error in get_hostname', error);
        }
-       cb(stdout);
+       cb(stdout.slice(0, -1));
     });
   }
 

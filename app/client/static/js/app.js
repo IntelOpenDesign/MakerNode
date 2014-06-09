@@ -72,9 +72,11 @@ makernode.app.controller('AppCtrl', ['$scope', function($scope) {
     });
 
     $scope.ws.on('redirect', function(data) {
-        console.log('REDIRECT');
-        redirect_url = data.url + ':' + data.port;
-        makernode.rc.redirect(redirect_url);
+        console.log('server is telling us to get ready to REDIRECT');
+        console.log('we are about to reply saying we are ready');
+        $scope.send_server_update('redirect', {});
+        console.log('we are about to call makernode.rc.redirect with url', data.url, 'port', data.port);
+        makernode.rc.redirect(data.url, data.port);
     });
 
     $scope.send_server_update = function(msg_type, d) {
@@ -271,11 +273,17 @@ makernode.rc = function routing_utility_functions() {
         window.history.go(-n);
     };
 
-    that.redirect = function(url) {
-        var ws_url = 'ws://' + url;
+    that.redirect = function(url, port) {
+        console.log('inside makernode.rc.redirect');
+        // test for connection here:
+        var test_url = 'http://' + url + ':' + port + '/';
+        console.log('test_url', test_url);
+        // then go to here:
         var http_url = 'http://' + url + '/#/' + makernode.routes.control_mode.hash;
+        console.log('http_url', http_url);
         var keep_trying = true;
-        var sockets = [];
+
+        console.log('Attempting to ping', test_url, '...');
 
         // Yes, we are pessimists. Expect failure and prepare the error msg.
         var timeout_id = setTimeout(function() {
@@ -284,19 +292,19 @@ makernode.rc = function routing_utility_functions() {
             alert('Reconnecting to Galileo has failed.');
         }, 20 * 60 * 1000); // 20 minutes
 
+        var count = 0;
         function attempt() {
             if (!keep_trying) {
                 return;
             }
-            var ws = new Websocket(ws_url);
-            sockets.push(ws);
-            ws.onopen = function() {
-                _.each(sockets, function(s) {
-                    s.close();
-                });
+            console.log('Attempt #', ++count);
+            $.get(test_url, {}, function() {
+                keep_trying = false;
                 window.location = http_url;
-            };
+            });
+            setTimeout(attempt, 5000);
         };
+        attempt();
     };
 
     return that;
