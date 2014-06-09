@@ -73,6 +73,7 @@ function board_controller(conf_filename, ws) {
                 return;
             }
             state.pins[idstr].value = val;
+            conf.write(conf_filename, state);
             broadcast_pin_updates([idstr], null);
         }, 100);
     };
