@@ -29,7 +29,17 @@ function board_controller(conf_filename, ws) {
             ws.on('connection', function(conn) {
                 log.debug('client connected');
                 conn.emit('pins', {pins: state.pins});
+
+                // client is sending us a pin update
                 conn.on('pins', update_pins);
+
+                // client is asking what mode we are in
+                conn.on('mode', function() {
+                    log.debug('client is asking what mode we are in');
+                    //TODO make this not hard coded
+                    conn.emit('mode', 'control');
+                });
+
                 conn.on('disconnect', function() {
                     log.debug('client disconnected');
                 });

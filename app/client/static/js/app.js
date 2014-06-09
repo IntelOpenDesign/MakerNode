@@ -5,7 +5,7 @@ makernode.app = angular.module('MakerNode', ['ngRoute']);
 makernode.routes = {
     init: {
         hash: '',
-        controller: 'EmptyCtrl',
+        controller: 'InitCtrl',
         template: 'empty',
     },
     // NOTE every route with controller FormCtrl must have a socket_msg_type
@@ -119,6 +119,20 @@ makernode.app.controller('FormCtrl', ['$scope', function($scope) {
         makernode.rc.goTo(next_route);
         $scope.send_server_update(my_route.socket_msg_type, $scope.form);
     };
+}]);
+
+makernode.app.controller('InitCtrl', ['$scope', function($scope) {
+    // when we get a reply about what mode we are in,
+    // go to the appropriate page
+    $scope.ws.on('mode', function(mode) {
+        if (mode === 'setup') {
+            makernode.rc.goTo(makernode.routes.confirm_mac);
+        } else {
+            makernode.rc.goTo(makernode.routes.control_mode);
+        }
+    });
+    // ask what mode we are in
+    $scope.ws.emit('mode', {});
 }]);
 
 makernode.app.directive('stepsPics', function($document) {
@@ -288,7 +302,7 @@ makernode.rc = function routing_utility_functions() {
         var test_url = 'http://' + url + ':' + port + '/';
         console.log('test_url', test_url);
         // then go to here:
-        var http_url = 'http://' + url + '/#/' + makernode.routes.control_mode.hash;
+        var http_url = 'http://' + url;
         console.log('http_url', http_url);
         var keep_trying = true;
 
