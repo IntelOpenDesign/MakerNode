@@ -3,7 +3,7 @@
 function app() {
     var APP_CONF_FILE = 'appstate.conf';
     var BOARD_CONF_FILE = 'boardstate.conf';
-    var PORT = 8001; // for the static file server and the websocket server
+    var PORT = 80; // for the static file server and the websocket server
     var PING_PORT = 8000; // for the hacky http server that just responds with 'Hello...'
 
     var express = require('express');
