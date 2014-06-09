@@ -78,13 +78,16 @@ function app() {
                 port: PORT,
             });
             netUtils.stop_access_point();
+            netUtils.start_supplicant(app_state.setup_state.ssid, 
+			              app_state.setup_state.pwd);
             launch_board_ctrl();
         });
         setupCtrl.start();
     };
 
     var launch_board_ctrl = function() {
-        netUtils.start_supplicant(app_state.setup_state.ssid, app_state.setup_state.pwd);
+        netUtils.start_supplicant(app_state.setup_state.ssid, 
+			  app_state.setup_state.pwd);
         boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server);
         boardCtrl.start();
     };

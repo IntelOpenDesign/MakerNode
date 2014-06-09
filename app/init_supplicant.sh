@@ -26,4 +26,5 @@ else
 fi
 echo Updated $INTERFACES_FILE
 
-/etc/init.d/networking restart
+ifdown wlan0
+ifup wlan0
