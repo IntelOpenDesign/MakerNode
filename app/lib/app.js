@@ -84,19 +84,16 @@ function app() {
     };
 
     var stop = function() {
-        if (app_state.mode === 'setup') {
-            setupCtrl.stop();
-            netUtils.stop_access_point();
-        } else {
-            boardCtrl.stop();
-            netUtils.stop_supplicant();
-            netUtils.restore_factory_settings();
-        }
         conf.write(app_state);
-        // TODO make sure we are actually closing the websocket server
-        //socketio_server.close();
         express_server.close();
-        // TODO stop http ping server
+        // TODO close websocket
+        if (app_state.mode === 'setup') {
+            // TODO do we need to kill the access point here
+            setupCtrl.stop();
+        } else {
+            // TODO close ping http server if it is running
+            boardCtrl.stop();
+        }
     };
 
     var launch_setup_ctrl = function() {
