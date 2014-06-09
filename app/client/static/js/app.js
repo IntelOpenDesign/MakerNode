@@ -199,7 +199,11 @@ makernode.d = function() {
 makernode.ws_pin_sync = function($scope, ws, d) {
 
     var got_data = false;
-    var old_msgs = {}; // messages not yet processed by the server
+    // which pins have changed, so we will send them to the server
+    var changed_pin_ids = {};
+    // messages not yet processed by the server
+    var old_msgs = {};
+    // the prefix and count make msg_id's more human readable
     var msg_id_prefix = parseInt(Math.random() * 100).toString();
     var msg_id_count = 0;
 
@@ -233,7 +237,8 @@ makernode.ws_pin_sync = function($scope, ws, d) {
         console.log('pinsync.send_pin_update');
         var now = Date.now();
         var msg_id = msg_id_prefix + '-' + (msg_id_count++) + '-' + now;
-        var server_pins =  makernode.server_pin_format($scope.d.pins);
+        var changed_pins = _.pick($scope.d.pins, _.keys(changed_pin_ids));        
+        var server_pins =  makernode.server_pin_format(changed_pins);
         old_msgs[msg_id] = {
             pins: server_pins,
             time: now,
@@ -245,11 +250,13 @@ makernode.ws_pin_sync = function($scope, ws, d) {
         };
         console.log('sending this data to the server:', data);
         $scope[ws].emit('pins', data);
+        changed_pin_ids = {};
     }, 100);
 
     var set_pin_val = function(id, val) {
         console.log('pinsync.set_pin_val id', id, 'val', val);
         $scope[d].pins[id].value = val;
+        changed_pin_ids[id] = true;
         send_pin_update();
     };
 

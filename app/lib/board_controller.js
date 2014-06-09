@@ -28,6 +28,8 @@ function board_controller(conf_filename, ws) {
 
             ws.on('connection', function(conn) {
                 log.debug('client connected');
+
+                // send client all the pin info
                 conn.emit('pins', {pins: state.pins});
 
                 // client is sending us a pin update
@@ -47,36 +49,39 @@ function board_controller(conf_filename, ws) {
         });
     };
 
+    // only broadcast pins that have changed
+    var broadcast_pin_updates = function(pin_idstrs, msg_id) {
+        ws.emit('pins', {
+            pins: _.pick(state.pins, pin_idstrs),
+            msg_id: msg_id,
+        });
+    };
+
+    // update input pins when Galileo-IO reports they have changed value
     var pin_listener = function(id) {
-        return _.throttle(function(id, data) {
-            update_pin(id, data, null);
+        return _.throttle(function(id, val) {
+            var idstr = id.toString();
+            if (state.pins[idstr].value === val) {
+                return;
+            }
+            state.pins[idstr].value = val;
+            broadcast_pin_updates([idstr], null);
         }, 100);
     };
 
-    var update_pin = function(id, data, msg_id) {
-        log.info('Update pin with id', id, 'data', data, 'msg_id', msg_id);
-        var pin = state.pins[id.toString()];
-        if (pin.value === data) {
-            return;
-        }
-        pin.value = data;
-        if (!pin.is_input) {
-            var method = pin.is_analog ? 'analog' : 'digital';
-            galileo[method+'Write'](id, data);
-        }
-        log.info('Sending out updated pins to clients');
-        // TODO it WILL cause a bug to send this out every time we update a pin rather than waiting until we ahve updated all pins
-        ws.emit('pins', {
-            pins: state.pins,
-            msg_id_processed: msg_id,
-        });
-    };
-
+    // update output pins when client has changed their values
     var update_pins = function(d) {
-        log.debug('update pins d', JSON.stringify(d, null, 2));
+        log.debug('update pins from client info', JSON.stringify(d, null, 2));
         _.each(d.pins, function(pin, idstr) {
-            update_pin(parseInt(idstr), pin.value, d.msg_id);
+            var id  = parseInt(idstr);
+            if ( state.pins[idstr].value !== pin.value
+                 && !pin.is_input ) {
+                var method = pin.is_analog ? 'analog' : 'digital';
+                galileo[method+'Write'](id, pin.value);
+            }
+            _.extend(state.pins[idstr], pin);
         });
+        broadcast_pin_updates(_.keys(d.pins), d.msg_id);
     };
 
     var stop = function() {
