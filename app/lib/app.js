@@ -148,6 +148,7 @@ function app() {
             ssid: app_state.setup_state.ssid,
             pwd: app_state.setup_state.pwd,
         }, function() { // callback
+            log.info('Done with start_supplicant');
             boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server);
             boardCtrl.start(cb);
         });
