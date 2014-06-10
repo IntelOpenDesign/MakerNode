@@ -1,0 +1,1 @@
+this test is for trying out jsPlumb with jQuery using tap and target to create connections instead of drag and drop. The touch events are not working too well, so I am going to try YUI to see if touch events really do work "out of the box" as it claims

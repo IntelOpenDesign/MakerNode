@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html ng-app="Experiment9">
+<head>
+    <title>T9 CAT</title>
+
+    <script src="jquery.min.js"></script>
+    <script src="angular.min.js"></script>
+    <script src="app.js"></script>
+
+    <link rel="stylesheet" href="app.css">
+</head>
+<body ng-controller="PathCtrl">
+    <svg>
+    <path ng-attr-d="M {{start.x}} {{start.y}} L {{end.x}} {{end.y}}"></path> 
+    </svg>
+    <label>startX</label><input type="number" ng-model="start.x">
+    <label>startY</label><input type="number" ng-model="start.y">
+    <label>endX</label><input type="number" ng-model="end.x">
+    <label>endY</label><input type="number" ng-model="end.y">
+</body>
+</html>

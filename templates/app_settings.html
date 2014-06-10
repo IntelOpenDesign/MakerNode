@@ -1,0 +1,63 @@
+<div class="container-fluid">
+    <div class="row">
+        <div id="settings-button"
+          class="col-xs-6 col-xs-offset-3"
+          ng-click="goTo('');">
+            <span class="glyphicon glyphicon-cog"></span>
+        </div>
+    </div>
+</div>
+
+<div id="app-settings" class="chatbox-container">
+    <div class="chatbox">
+        <div class="chatbox-inner">
+            <div class="row padded">
+                <div class="col-xs-10">
+                    <div class="column-title">
+                        App Settings
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="my-close"
+                      ng-click="goBack(1)">
+                        &times;
+                    </div>
+                </div>
+            </div>
+            <div class="row padded">
+                <div class="col-xs-5">
+                    <div class="button danger"
+                      ng-click="goTo('app_settings/reset_dialog');">
+                        Reset
+                    </div>
+                </div>
+                <div class="col-xs-7 droid-font">
+                    <p>Remove all pins and connections, restore all pin settings to defaults.</p>
+                </div>
+            </div>
+            <div class="row padded">
+                <div class="col-xs-5">
+                    <div class="button"
+                      ng-click="goTo('app_settings/ssid_dialog');">
+                        Change Network Name
+                    </div>
+                </div>
+                <div class="col-xs-7 droid-font">
+                    <p>Change the name of the wifi network ConnectAnything uses.<p>
+                </div>
+            </div>
+            <div class="row padded">
+                <div class="col-xs-3 col-xs-offset-9">
+                    <div class="button"
+                      ng-click="goBack(1);">
+                        OK
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="chatbox-triangle"></div>
+
+    <div class="chatbox-bg"></div>
+</div>
