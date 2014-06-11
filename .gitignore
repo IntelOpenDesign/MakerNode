@@ -1,4 +1,4 @@
 *.DS_Store
-.sass-cache/*
+app/client/.sass-cache/*
 app/node_modules
 app/boardstate.conf
