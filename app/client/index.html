@@ -10,8 +10,12 @@
         <script src="static/js/angular-route.min.js"></script>
         <script src="static/js/app.js"></script>
 
+        <link rel="stylesheet" href="static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="static/css/app.css">
     </head>
     <body>
-
+        <div id="app-container" ng-controller="AppCtrl">
+            <ng-view></ng-view>
+        </div>
     </body>
 </html>
