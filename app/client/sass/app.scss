@@ -31,6 +31,9 @@ $intel_blue: rgb(30, 96, 181);
     font-style: normal;
     src: url('../fonts/droid-sans/DroidSans.ttf');
 }
+.intel-font {
+    font-family: 'Neo Sans Intel';
+}
 .droid-font {
     font-family: 'Droid Sans';
 }
@@ -43,7 +46,12 @@ html, body {
     margin: 0;
     padding: 0;
     font-size: 42px;
-    font-family: 'Neo Sans Intel';
+    font-family: 'Droid Sans';
+}
+
+h1 {
+    font-size: 150%;
+    line-height: 1.5em;
 }
 
 p {
