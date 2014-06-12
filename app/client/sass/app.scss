@@ -4,6 +4,7 @@ $green: rgb(45, 104, 84);
 $black: rgb(44, 38, 33);
 $gray: rgb(135, 135, 135);
 $chatbox_color: rgb(198, 188, 175);
+$intel_blue: rgb(30, 96, 181);
 
 @mixin tap_feedback($color) {
     background-color: $color;
@@ -48,6 +49,11 @@ html, body {
 p {
     font-size: 95%;
     line-height: 1.2em;
+}
+
+.navbar {
+    background: $intel_blue;
+    color: white;
 }
 
 .hide {

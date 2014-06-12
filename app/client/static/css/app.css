@@ -25,6 +25,10 @@ p {
   font-size: 95%;
   line-height: 1.2em; }
 
+.navbar {
+  background: #1e60b5;
+  color: white; }
+
 .hide {
   display: none; }
 
