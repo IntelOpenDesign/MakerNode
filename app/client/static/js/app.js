@@ -67,7 +67,7 @@ makernode.app.controller('InitCtrl', ['$scope', function($scope) {
 }]);
 
 makernode.app.controller('FormCtrl', ['$scope', function($scope) {
-
+    $scope.form = {};
 }]);
 
 makernode.app.controller('HomeCtrl', ['$scope', function($scope) {
