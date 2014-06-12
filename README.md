@@ -2,7 +2,7 @@
 
 Dev repo. for Intel Labs projects
 
-### Downloading Node Modules ### 
+### Downloading Node Modules ###
 ```
 #!bash
 cd app
@@ -45,11 +45,11 @@ ps
 ```
 If everything is running correctly, the end of the list should look something like this:
 ```
- 1364 root      1856 S    {maker-node.sh} /bin/sh /home/maker/app/maker-node.s
- 1365 root     54116 R    node ./index.js
- 1371 root       848 S    /home/root/busybox_custom dnsd -i 192.168.0.10 -c /e
- 1373 root       856 S    /home/root/busybox_custom udhcpd /etc/udhcpd.conf
- 1376 root      3756 S    hostapd -B /etc/hostapd/hostapd.conf
+ 1364 root      1856 S    {maker-node.sh} /bin/sh /home/maker/app/maker-node.s 
+ 1365 root     54116 R    node ./index.js 
+ 1371 root       848 S    /home/root/busybox_custom dnsd -i 192.168.0.10 -c /e 
+ 1373 root       856 S    /home/root/busybox_custom udhcpd /etc/udhcpd.conf 
+ 1376 root      3756 S    hostapd -B /etc/hostapd/hostapd.conf 
  1379 root      1264 R    ps
  ```
 Congratulations! The node server is running.
