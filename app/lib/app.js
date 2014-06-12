@@ -31,8 +31,13 @@ function start() {
                                 gpio.refreshOutputs(model);
                                 conf.write(CONF_FILE, JSON.stringify(model)); //TODO: throttle writes
                             });
-                            socket.setMessage(pinModel);
-                            http.listen(80);
+                            if (typeof pinModel  === 'undefined') {
+                            //TODO: initiate setup flow?  
+                            }
+                            else {
+                              socket.setMessage(pinModel);
+                            }
+                            http.listen(HTTP_PORT);
                             console.log('CAT is ready.');
 
                         },
