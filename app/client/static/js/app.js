@@ -8,7 +8,7 @@ makernode.routes = {
     init: {
         hash: '',
         server_code: null,
-        controller: 'InitCtrl',
+        controller: 'EmptyCtrl',
         template: 'empty',
     },
     confirm_mac: {
@@ -108,8 +108,7 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
     Galileo.connect(makernode.websocket_url);
 }]);
 
-makernode.app.controller('InitCtrl', ['$scope', function($scope) {
-    //$scope.goTo($scope.routes.confirm_mac);
+makernode.app.controller('EmptyCtrl', ['$scope', function($scope) {
 }]);
 
 makernode.app.controller('FormCtrl', ['$scope', function($scope) {
