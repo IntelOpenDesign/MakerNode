@@ -15,7 +15,37 @@ module.exports.create = function(){
   return new Socket();
 }
 
-
+// TODO put this somewhere better
+// TODO make this based on real state variables
+var setup_tracker = function() {
+    var mac_address_confirmed = false;
+    var wifi_setup = false;
+    var user_created = false;
+    var confirm_mac_address = function(mac_address) {
+        mac_address_confirmed = true;
+    };
+    var setup_wifi = function(ssid, password) {
+        wifi_setup = true;
+    };
+    var create_user = function(username, password) {
+        user_created = true;
+    };
+    var get_current_step = function() {
+        if (!mac_address_confirmed)
+            return 'confirm_mac_address';
+        if (!wifi_setup)
+            return 'wifi_router_setup';
+        if (!user_created)
+            return 'create_user';
+        return 'home';
+    };
+    return {
+        confirm_mac_address: confirm_mac_address,
+        setup_wifi: setup_wifi,
+        create_user: create_user,
+        get_current_step: get_current_step,
+    };
+}();
 
 // initialize msg with pin defaults
 var digital_outs = ['1', '2', '3', '4', '7', '8', '12', '13'];
@@ -27,6 +57,7 @@ var all_pins = [].concat(digital_outs).concat(digital_ins).concat(analog_outs).c
 
 var msg = {
     status: 'OK', // TODO test client side with "error" status
+    step: setup_tracker.get_current_step(),
     pins: {},
     connections: [],
     count: 0, // TODO remove when done debugging
@@ -125,6 +156,7 @@ var onConnect = function(conn) {
         broadcast_interval_id = setInterval(function() {
             msg.count += 1;
             msg.message_ids_processed = _.keys(messages_dict);
+            msg.step = setup_tracker.get_current_step();
             try {
                 conn.send(JSON.stringify(msg));
             } catch (error) {
@@ -193,6 +225,16 @@ var onConnect = function(conn) {
                 // to reconnect to another wifi hotspot
                 msg.ssid = d.ssid;
                 var change_ssid_message_id = d.message_id;
+            }
+            if (_.has(d, 'mac_address')) {
+                setup_tracker.confirm_mac_address(d.mac_address);
+            }
+            if (_.has(d, 'wifi_ssid') && _.has(d, 'wifi_password')) {
+                setup_tracker.setup_wifi(d.wifi_ssid, d.wifi_password);
+            }
+            // TODO eventually need to distinguish between creating a user and logging in
+            if (_.has(d, 'username') && _.hash(d, 'user_password')) {
+                setup_tracker.create_user(d.username, d.user_password);
             }
             onUpdate();
         }, 0);
