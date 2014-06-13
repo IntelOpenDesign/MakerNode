@@ -1,5 +1,7 @@
 var makernode = {};
 
+makernode.websocket_url = 'ws://localhost:8001'; // test-server.js
+
 makernode.app = angular.module('MakerNode', ['ngRoute']);
 
 makernode.routes = {
@@ -103,7 +105,7 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
     Galileo.on('websocket-closed', function() {
         $scope.s.got_data = false;
     });
-    Galileo.connect('http://localhost:8001');
+    Galileo.connect('ws://localhost:8001');
 }]);
 
 makernode.app.controller('InitCtrl', ['$scope', function($scope) {

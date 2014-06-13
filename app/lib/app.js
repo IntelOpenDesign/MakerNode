@@ -5,6 +5,7 @@ var conf = require('./conf').create();
 var gpio = require('./gpio')();
 var http = require('./http')();
 var socket = require('./socket').create();
+var sh = require('./command_queue').init().enqueue;
 
 var CONF_FILE = 'boardstate.conf';
 var HTTP_PORT = 80;
@@ -17,7 +18,7 @@ module.exports = function() {
 
 function start() {
     console.log('Starting CAT...');
-
+    sh('./startAP.sh'); //TODO: I'd like this to be asynchronous...   
     gpio.init(onInput)
         .then(
             function(board) {
@@ -30,8 +31,13 @@ function start() {
                                 gpio.refreshOutputs(model);
                                 conf.write(CONF_FILE, JSON.stringify(model)); //TODO: throttle writes
                             });
-                            socket.setMessage(pinModel);
-                            http.listen(80);
+                            if (typeof pinModel  === 'undefined') {
+                            //TODO: initiate setup flow?  
+                            }
+                            else {
+                              socket.setMessage(pinModel);
+                            }
+                            http.listen(HTTP_PORT);
                             console.log('CAT is ready.');
 
                         },
