@@ -63,7 +63,7 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
     $scope.routes = makernode.routes;
     $scope.parseInt = parseInt;
 
-    $scope.d = cat.d();
+    $scope.d = makernode.d();
     $scope.s = {
         got_data: false,
         route_key: 'init',
@@ -122,7 +122,7 @@ makernode.app.controller('HomeCtrl', ['$scope', function($scope) {
 
 // SERVER COMMUNICATION
 
-cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
+makernode.app.factory('Galileo', ['$rootScope', function($rootScope) {
 
     //Settings:
     //  used in log statements, should match the module name
@@ -297,9 +297,9 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         // server is out of date. so, first we take the data from the server,
         // and then we update it based on our remaining messages and the batch
 
-        var pins = cat.my_pin_format(data.pins, data.connections);
+        var pins = makernode.my_pin_format(data.pins, data.connections);
         var conns = _.object(_.map(data.connections, function(c) {
-            return [cat.tokenize_connection_object(c), true];
+            return [makernode.tokenize_connection_object(c), true];
         }));
         var ssid = data.ssid;
         var route_server_code = data.step;
@@ -309,7 +309,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
                 pins[pin_id] = _.extend(pins[pin_id], pin_updates);
             });
             _.each(d.connections, function(c) {
-                conns[cat.tokenize_connection_object(c)] = c.connect;
+                conns[makernode.tokenize_connection_object(c)] = c.connect;
             });
             if (_.has(d, 'ssid'))
                 ssid = d.ssid;
@@ -329,7 +329,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
         var connections = [];
         _.each(conns, function(val, token) {
             if (val)
-                connections.push(cat.detokenize_connection(token));
+                connections.push(makernode.detokenize_connection(token));
         });
 
         do_callback('update', {
@@ -385,7 +385,7 @@ cat.app.factory('Galileo', ['$rootScope', function($rootScope) {
 
 // DATA THAT IS SYNCED WITH SERVER
 // pins, connections
-cat.d = function() {
+makernode.d = function() {
     var that = {};
     that.pins = {};
     that.connections = [];
@@ -445,12 +445,12 @@ cat.d = function() {
             });
         });
 
-        var my_tokens = _.map(that.connections, cat.tokenize_connection_object);
-        var new_tokens = _.map(data.connections, cat.tokenize_connection_object);
+        var my_tokens = _.map(that.connections, makernode.tokenize_connection_object);
+        var new_tokens = _.map(data.connections, makernode.tokenize_connection_object);
         var tokens_to_remove = _.difference(my_tokens, new_tokens);
         var tokens_to_add = _.difference(new_tokens, my_tokens);
-        var conns_to_remove = _.map(tokens_to_remove, cat.detokenize_connection);
-        var conns_to_add = _.map(tokens_to_add, cat.detokenize_connection);
+        var conns_to_remove = _.map(tokens_to_remove, makernode.detokenize_connection);
+        var conns_to_add = _.map(tokens_to_add, makernode.detokenize_connection);
 
         that.disconnect(conns_to_remove);
         that.connect(conns_to_add);
@@ -521,19 +521,19 @@ cat.d = function() {
 // UTILITY FUNCTIONS
 
 // tokenize connections
-cat.tokenize_connection_pins = function(sensor, actuator) {
+makernode.tokenize_connection_pins = function(sensor, actuator) {
     return sensor + '-' + actuator;
 };
-cat.tokenize_connection_object = function(c) {
-    return cat.tokenize_connection_pins(c.source, c.target);
+makernode.tokenize_connection_object = function(c) {
+    return makernode.tokenize_connection_pins(c.source, c.target);
 };
-cat.detokenize_connection = function(s) {
+makernode.detokenize_connection = function(s) {
     var pins = s.split('-');
     return {source: pins[0], target: pins[1]};
 };
 
 // translate the server's pin format into my pin format
-cat.my_pin_format = function(server_pins, server_connections) {
+makernode.my_pin_format = function(server_pins, server_connections) {
     var pins = {};
 
     _.each(server_pins, function(pin, id) {
@@ -576,7 +576,7 @@ cat.my_pin_format = function(server_pins, server_connections) {
 };
 
 // translate my pin format into the server's format
-cat.server_pin_format = function(my_pins, my_pin_ids) {
+makernode.server_pin_format = function(my_pins, my_pin_ids) {
     var pins = {};
 
     _.each(my_pin_ids, function(id) {
