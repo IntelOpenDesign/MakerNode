@@ -83,9 +83,6 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
     Galileo.set_all_pins_getter(function() {
         return $scope.d.pins;
     });
-    Galileo.on('websocket-opened', function() {
-        console.log('WEBSOCKET OPENED');
-    });
     Galileo.on('update', function(data) {
         if (!$scope.s.got_data) { // first time initialization
             $scope.s.got_data = true;
@@ -94,7 +91,7 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
             $scope.s.got_data = true;
             $scope.d.update(data);
         }
-        var server_route_key = makernode.get_route_key(data.route_server_code, 'server_code');
+        var server_route_key = makernode.get_route_key(data.step, 'server_code');
         if (server_route_key !== $scope.currentRouteKey()) {
             $scope.goTo(makernode.routes[server_route_key]);
         }
@@ -106,6 +103,13 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
         $scope.s.got_data = false;
     });
     Galileo.connect(makernode.websocket_url);
+
+    $scope.send_server_update = function(d) {
+        // This sends the object d to the server exactly as is.
+        // Only use this if you know the server is expecting this exact format.
+        // For modifying pins and connections, use specific helper functions.
+        Galileo.send_data(d);
+    };
 }]);
 
 makernode.app.controller('EmptyCtrl', ['$scope', function($scope) {
@@ -113,6 +117,10 @@ makernode.app.controller('EmptyCtrl', ['$scope', function($scope) {
 
 makernode.app.controller('FormCtrl', ['$scope', function($scope) {
     $scope.form = {};
+    $scope.submit = function() {
+        $scope.send_server_update($scope.form);
+    };
+    // TODO handle erroneous inputs
 }]);
 
 makernode.app.controller('HomeCtrl', ['$scope', function($scope) {
@@ -223,10 +231,14 @@ makernode.app.factory('Galileo', ['$rootScope', function($rootScope) {
         var msg_for_server = {
             status: 'OK',
             ssid: batch.ssid,
-            pins: cat.server_pin_format(get_all_pins(), _.keys(batch.pins)),
-            connections: batch.connections,
             message_id: message_id,
         };
+        // add pins to msg_for_server
+        msg_for_server.pins = makernode.server_pin_format(get_all_pins(), _.keys(batch.pins));
+        // all other attrs of batch (including connections) can just be added
+        // to msg_for_server directly
+        delete batch.pins;
+        msg_for_server = _.extend(msg_for_server, batch);
         ws.send(JSON.stringify(msg_for_server));
         batch = null;
     };
@@ -235,19 +247,22 @@ makernode.app.factory('Galileo', ['$rootScope', function($rootScope) {
 
     var add_to_batch = function(updates) {
         batch = _.extend({ pins: {}, connections: [] }, batch);
+        // add pin updates to batch
         _.each(updates.pins, function(pin, id) {
             batch.pins[id] = _.extend({}, batch.pins[id], pin);
         });
         // TODO remove redundant add/remove connection updates before sending out batch
+        // add connection updates to batch
         batch.connections.push.apply(batch.connections, updates.connections);
-        if (_.has(updates, 'ssid')) {
-            batch.ssid = updates.ssid;
-        }
+        // all other attrs of updates can just be added to batch directly
+        delete updates.pins;
+        delete updates.connections;
+        batch = _.extend(batch, updates);
         send();
     };
 
-    var update_ssid = function(ssid) {
-        add_to_batch({ssid: ssid});
+    var send_data = function(d) {
+        add_to_batch(d);
     };
 
     var update_pins = function(ids, attr) {
@@ -300,8 +315,9 @@ makernode.app.factory('Galileo', ['$rootScope', function($rootScope) {
         var conns = _.object(_.map(data.connections, function(c) {
             return [makernode.tokenize_connection_object(c), true];
         }));
-        var ssid = data.ssid;
-        var route_server_code = data.step;
+        delete data.pins;
+        delete data.connections;
+        var other_attrs = data;
 
         function update(d) {
             _.each(d.pins, function(pin_updates, pin_id) {
@@ -310,8 +326,9 @@ makernode.app.factory('Galileo', ['$rootScope', function($rootScope) {
             _.each(d.connections, function(c) {
                 conns[makernode.tokenize_connection_object(c)] = c.connect;
             });
-            if (_.has(d, 'ssid'))
-                ssid = d.ssid;
+            delete d.pins;
+            delete d.connections;
+            other_attrs = _.extend(other_attrs, d);
         }
 
         var messages_in_order = _.sortBy(_.values(messages), function(msg) {
@@ -331,12 +348,10 @@ makernode.app.factory('Galileo', ['$rootScope', function($rootScope) {
                 connections.push(makernode.detokenize_connection(token));
         });
 
-        do_callback('update', {
+        do_callback('update', _.extend({
             pins: pins,
             connections: connections,
-            ssid: ssid,
-            route_server_code: route_server_code,
-        });
+        }, other_attrs));
 
         //console.log('\n\n');
         start_waiting();
@@ -376,8 +391,8 @@ makernode.app.factory('Galileo', ['$rootScope', function($rootScope) {
         update_pins: update_pins,
         add_connections: add_connections,
         remove_connections: remove_connections,
-        update_ssid: update_ssid,
         set_all_pins_getter: set_all_pins_getter,
+        send_data: send_data,
     };
 
 }]);

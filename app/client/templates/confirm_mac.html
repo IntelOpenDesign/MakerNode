@@ -20,14 +20,17 @@
         </div>
         <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
             <span>
+                <!-- TODO get actual leading digits of MAC address from server -->
+                <!-- TODO if I got the whole MAC address from the server, I could separate out the leading digits and confirm the user entry of the rest of the digits on the client side rather than making another server request for that. would that be better? -->
                 123
             </span>
-            <input ng-model="form.mac_end_digits" placeholder="XXX">
+            <input ng-model="form.mac_address" placeholder="XXX">
         </div>
     </div>
 
     <div class="row">
-        <div class="button wide pull-right col-xs-12 col-sm-6 col-md-4 col-lg-4">
+        <div class="button wide pull-right col-xs-12 col-sm-6 col-md-4 col-lg-4"
+          ng-click="submit()">
             Next <span class="next-icon glyphicon glyphicon-circle-arrow-right"><span>
         </div>
     </div>
