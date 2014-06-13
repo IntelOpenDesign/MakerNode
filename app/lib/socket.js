@@ -233,7 +233,7 @@ var onConnect = function(conn) {
                 setup_tracker.setup_wifi(d.wifi_ssid, d.wifi_password);
             }
             // TODO eventually need to distinguish between creating a user and logging in
-            if (_.has(d, 'username') && _.hash(d, 'user_password')) {
+            if (_.has(d, 'username') && _.has(d, 'user_password')) {
                 setup_tracker.create_user(d.username, d.user_password);
             }
             onUpdate();
