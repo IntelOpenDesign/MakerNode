@@ -1,6 +1,6 @@
 var makernode = {};
 
-makernode.websocket_url = 'ws://localhost:8001'; // test-server.js
+makernode.websocket_url = 'ws://192.168.0.10:8001'; // test-server.js
 
 makernode.app = angular.module('MakerNode', ['ngRoute']);
 
