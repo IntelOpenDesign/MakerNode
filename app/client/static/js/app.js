@@ -105,7 +105,7 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
     Galileo.on('websocket-closed', function() {
         $scope.s.got_data = false;
     });
-    Galileo.connect('ws://localhost:8001');
+    Galileo.connect(makernode.websocket_url);
 }]);
 
 makernode.app.controller('InitCtrl', ['$scope', function($scope) {
