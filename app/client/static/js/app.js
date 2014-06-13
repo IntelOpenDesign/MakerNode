@@ -60,6 +60,15 @@ makernode.app.controller('AppCtrl', ['$scope', '$location', function($scope, $lo
     $scope.goBack = function(n) {
         window.history.go(-n);
     };
+
+    var ws = new WebSocket('ws://localhost:8001');
+    console.log('ws', ws);
+    ws.onopen = function() {
+        console.log('websocket open');
+    };
+    ws.onmessage = function(msg) {
+        console.log('got websocket message', msg);
+    };
 }]);
 
 makernode.app.controller('InitCtrl', ['$scope', function($scope) {
