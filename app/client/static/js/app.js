@@ -281,11 +281,11 @@ makernode.app.factory('Galileo', ['$rootScope', function($rootScope) {
     var onmessage = function(server_msg) {
         stop_waiting();
 
-        // TODO put these back in for deployment
-        console.log('websocket message', server_msg);
+        // TODO put these back in for deployment ?
+        //console.log('websocket message', server_msg);
         var data = JSON.parse(server_msg.data);
-        console.log('websocket data', data);
-        console.log('\tdata.message_ids_processed', JSON.stringify(data.message_ids_processed));
+        //console.log('websocket data', data);
+        //console.log('\tdata.message_ids_processed', JSON.stringify(data.message_ids_processed));
 
         // forget about the messages we created that the server has processed
         _.each(data.message_ids_processed, function(message_id) {
@@ -319,7 +319,7 @@ makernode.app.factory('Galileo', ['$rootScope', function($rootScope) {
             return msg.time;
         });
         _.each(messages_in_order, function(msg) {
-            console.log('updating server data with message_id', msg.message_id, 'update', msg.stringified_updates);
+            //console.log('updating server data with message_id', msg.message_id, 'update', msg.stringified_updates);
             update(JSON.parse(msg.stringified_updates));
         });
         if (batch !== null) {
@@ -339,7 +339,7 @@ makernode.app.factory('Galileo', ['$rootScope', function($rootScope) {
             route_server_code: route_server_code,
         });
 
-        console.log('\n\n');
+        //console.log('\n\n');
         start_waiting();
     };
 
