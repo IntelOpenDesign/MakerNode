@@ -1,1 +1,43 @@
-Wifi Setup
+<div class="container">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>Wifi Connection</h1>
+        </div>
+    </div>
+
+    <!--TODO put in the actual way to reconnect to Galileo here (actual IP address or domain.local -->
+
+    <div class="row padded">
+        <div class="col-xs-12">
+            <p>Galileo needs to be able to connect to your wifi router. Please provide your wifi network's name (SSID) and password.</p>
+            <p>After you submit this information, Galileo will shut down its own local wireless hotspot, the one you are currently connected to, and will connect to your wifi router instead. Connection with Galileo will be lost for a few minutes while it's working on this.</p>
+            <p>After a few minutes, reconnect to Galileo by connecting to your wifi network and navigating to 192.168.0.100 in your browser.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            Wifi Network:
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+            <input ng-model="form.wifi_ssid">
+        </div>
+    </div>
+    <div class="row padded">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            Wifi Password:
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+            <input ng-model="form.wifi_password">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="button wide pull-right col-xs-12 col-sm-6 col-md-4 col-lg-4"
+          ng-click="submit()">
+            Next <span class="next-icon glyphicon glyphicon-circle-arrow-right"><span>
+        </div>
+    </div>
+
+</div>
