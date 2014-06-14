@@ -1,14 +1,15 @@
 #!/bin/sh
 start() {
         echo "Starting MakerNode Server..."
-        pushd $MAKER_NODE_APP_DIR
+        pushd /home/maker/app 
         node ./index.js
         popd
 }
 
 stop() {
         echo "Stopping MakerNode Server..."
-        #need more graceful implementation. :)
+        #TODO: need more graceful implementation. :)
+		killall hostapd
         killall node
 }
 
