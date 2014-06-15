@@ -1029,6 +1029,11 @@ label {
   -webkit-background-clip: content-box;
   position: relative; }
 
+#play-pins .pin {
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: 0; }
+
 #play-pins .pin.digital {
   width: 100%;
   border-style: solid;

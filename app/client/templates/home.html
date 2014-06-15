@@ -1,1 +1,15 @@
-Home
+<div id="play-pins"
+  class="container-fluid">
+    <div class="row">
+        <div class="col-xs-6"
+          ng-repeat="pin in d.pins">
+            <div ng-if="!pin.is_analog"
+              class="pin-outer"
+              pin-button>
+            </div>
+            <div ng-if="pin.is_analog"
+              pin-slider>
+            </div>
+        </div>
+    </div>
+</div>

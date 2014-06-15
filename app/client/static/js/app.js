@@ -134,6 +134,14 @@ makernode.app.directive('stepsPics', function($document) {
     return { templateUrl: 'templates/steps_pics.html', link: link };
 });
 
+makernode.app.directive('pinButton', function($document) {
+    return { templateUrl: 'templates/pin_button.html' };
+});
+
+makernode.app.directive('pinSlider', function($document) {
+    return { templateUrl: 'templates/pin_slider.html' };
+});
+
 // SERVER COMMUNICATION
 
 makernode.app.factory('Galileo', ['$rootScope', function($rootScope) {
