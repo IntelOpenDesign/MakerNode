@@ -1,6 +1,7 @@
 "use strict";
 
 function App() {}
+var log = require('./log').create('App');
 var conf = require('./conf');
 var appConf = conf.create();
 var boardConf = conf.create();
@@ -19,19 +20,27 @@ module.exports = function() {
 }
 
 function start() {
-    console.log('Starting CAT...');
+    log.info('Starting CAT...');
     appConf.read(APP_CONF_FILE).then(
-        function(appModel) {
-            console.log(appModel);
-            if (true) {
+        function(appState) {
+            log.debug('App. state loaded.', appState);
+            if (typeof appState === 'undefined') {
+              log.error('fail');
+                throw "App state is not defined.";
+            } else if (appState.app_mode == 'setup') {
+                log.info('Starting AP.');
                 sh('./startAP.sh'); //TODO: I'd like this to be asynchronous...   
                 gpio.init(onInput)
                     .then(
                         onBoardReady,
                         function(reason) {
-                            console.log('could not init gpio: ' + reason);
+                            log.error('could not init gpio: ' + reason);
                         }
                 );
+            } else if (appState.app_mode == 'controller') {
+
+            } else {
+                throw "Invalid app. mode.";
             }
         }
     );
@@ -39,32 +48,32 @@ function start() {
     function onBoardReady(board) {
         boardConf.read(BOARD_CONF_FILE)
             .then(
-                function(pinModel) {
-                    console.log(pinModel);
+                function(pinState) {
+                    log.debug('Pin state loaded.', pinState);
                     socket.create(function() {
                         var model = socket.getMessage();
                         gpio.refreshOutputs(model);
                         boardConf.write(CONF_FILE, JSON.stringify(model)); //TODO: throttle writes
                     });
-                    if (typeof pinModel === 'undefined') {
+                    if (typeof pinState === 'undefined') {
                         //TODO: initiate setup flow?  
                     } else {
-                        socket.setMessage(pinModel);
+                        socket.setMessage(pinState);
                     }
                     http.listen(HTTP_PORT);
-                    console.log('CAT is ready.');
+                    log.info('CAT is ready.');
 
                 },
                 function(reason) {
-                    console.log('read error: ' + reason);
+                    log.error('read error: ' + reason);
                 }
         );
     }
 
     function onInput(pinIndex, value) {
-        var model = socket.getMessage();
-        model.pins[pinIndex].value = value / 1024;
-        gpio.refreshOutputs(model);
+        var boardState = socket.getMessage();
+        boardState.pins[pinIndex].value = value / 1024;
+        gpio.refreshOutputs(boardState);
     }
 }
 

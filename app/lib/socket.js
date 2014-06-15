@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var log = require('./log').create('Socket');
 var WebSocketServer = require('ws').Server;
 var onUpdate;
 
@@ -145,13 +146,13 @@ function update() {
     });
 }
 
-console.log('creating socket');
+log.info('creating socket');
 var broadcast_interval_id = 0;
 
 var onConnect = function(conn) {
 
     N_CLIENTS += 1;
-    console.log('new connection, N_CLIENTS', N_CLIENTS);
+    log.info('new connection, N_CLIENTS', N_CLIENTS);
     if (!broadcast_interval_id) {
         broadcast_interval_id = setInterval(function() {
             msg.count += 1;
@@ -160,10 +161,10 @@ var onConnect = function(conn) {
             try {
                 conn.send(JSON.stringify(msg));
             } catch (error) {
-                console.log(error);
+                log.info(error);
                 //TODO: do we need to recover here?
             }
-            //console.log('sent message: ' + JSON.stringify(msg));
+            //log.info('sent message: ' + JSON.stringify(msg));
             _.each(_.keys(messages_dict), function(id) {
                 messages_dict[id] += 1;
             });
@@ -175,16 +176,16 @@ var onConnect = function(conn) {
                 delete messages_dict[id];
                 if (id === change_ssid_message_id) {
                     clearInterval(broadcast_interval_id);
-                    console.log('clearing broadcast interval');
+                    log.info('clearing broadcast interval');
                 }
             });
         }, 33); //TODO: Figure out the optimal value here  
     }
 
     conn.on('message', function(str) {
-        console.log('received ' + str);
+        log.info('received ' + str);
         setTimeout(function() {
-            //console.log('processing ' + str);
+            //log.info('processing ' + str);
             var d = JSON.parse(str);
             _.each(d.connections, function(dc) {
                 var index = -1;
@@ -217,7 +218,7 @@ var onConnect = function(conn) {
                 msg.pins[id].is_timer_on = pin.is_timer_on;
                 msg.pins[id].timer_value = pin.timer_value;
             });
-            console.log('processing message ID', d.message_id);
+            log.info('processing message ID', d.message_id);
             messages_dict[d.message_id] = 0;
             if (_.has(d, 'ssid') && d.ssid !== msg.ssid) {
                 // a user has changed the SSID. we should notify all other
@@ -244,31 +245,31 @@ var onConnect = function(conn) {
         clearInterval(broadcast_interval_id);
         broadcast_interval_id = 0;
         try {
-            console.log('close - try');
+            log.info('close - try');
         } catch (e) {
-            console.log('close - catch');
+            log.info('close - catch');
         } finally {
-            console.log('close - finally');
+            log.info('close - finally');
         }
     });
     conn.on('end', function() {
         try {
-            console.log('end - try');
+            log.info('end - try');
         } catch (e) {
-            console.log('end - catch');
+            log.info('end - catch');
         } finally {
-            console.log('end - finally');
+            log.info('end - finally');
         }
     });
     conn.on('error', function() {
-        console.log('error');
+        log.info('error');
     });
 }
 
 function create(callback) {
     onUpdate = callback;
 
-    console.log("Creating web server");
+    log.info("Creating web server");
     wss = new WebSocketServer({
         port: 8001
     });
