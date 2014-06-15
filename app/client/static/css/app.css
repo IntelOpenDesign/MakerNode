@@ -46,9 +46,69 @@ p {
   position: relative;
   top: -20px; }
 
+/* APP CONTAINER AND HEADER */
 #app-container {
   position: relative;
   padding-bottom: 50px; }
+
+#header .navbar-header {
+  width: 100%; }
+
+#header table {
+  width: 100%; }
+
+/* SETUP FORM */
+.setup-form h1 {
+  color: #1e60b5;
+  text-align: center; }
+
+.setup-form input {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center; }
+
+.setup-form .button.submit {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 375px; }
+
+div[steps-pics] .step-pic[data-step="1"] {
+  background-image: url("/static/img/step_1_inactive.jpg");
+  background-position-x: center;
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 375px; }
+
+div[steps-pics] .step-pic[data-step="2"] {
+  background-image: url("/static/img/step_2_inactive.jpg");
+  background-position-x: center;
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 375px; }
+
+div[steps-pics] .step-pic[data-step="3"] {
+  background-image: url("/static/img/step_3_inactive.jpg");
+  background-position-x: center;
+  background-position-y: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 375px; }
+
+div[steps-pics][step="1"] .step-pic[data-step="1"] {
+  background-image: url("/static/img/step_1_active.jpg");
+  box-shadow: 15px 15px 5px #e6e6e6; }
+
+div[steps-pics][step="2"] .step-pic[data-step="2"] {
+  background-image: url("/static/img/step_2_active.jpg");
+  box-shadow: 15px 15px 5px #e6e6e6; }
+
+div[steps-pics][step="3"] .step-pic[data-step="3"] {
+  background-image: url("/static/img/step_3_active.jpg");
+  box-shadow: 15px 15px 5px #e6e6e6; }
 
 /* COLORS */
 .gray-text {
@@ -56,12 +116,17 @@ p {
 
 #settings-button {
   background-color: white;
+  box-shadow: 4px 4px 4px #878787;
   font-size: 60px;
   text-align: center;
   line-height: 70px;
   padding: 10px inherit; }
   #settings-button:active {
-    background-color: #e6e6e6; }
+    background-color: #e6e6e6;
+    box-shadow: 2px 2px 2px #878787;
+    position: relative;
+    top: 2px;
+    left: 2px; }
 
 #column-divider {
   position: fixed;
@@ -135,9 +200,14 @@ p {
   position: relative;
   height: 100%;
   width: 100%;
-  background-color: white; }
+  background-color: white;
+  box-shadow: 4px 4px 4px #878787; }
   .pin-box:active {
-    background-color: #e6e6e6; }
+    background-color: #e6e6e6;
+    box-shadow: 2px 2px 2px #878787;
+    position: relative;
+    top: 2px;
+    left: 2px; }
 
 .actuator .pin-box {
   float: right;
@@ -723,9 +793,14 @@ label {
   line-height: 60px;
   cursor: default;
   position: relative;
-  background-color: #2c2621; }
+  background-color: #1e60b5;
+  box-shadow: 4px 4px 4px #878787; }
   .button:active {
-    background-color: #493f37; }
+    background-color: #174989;
+    box-shadow: 2px 2px 2px #878787;
+    position: relative;
+    top: 2px;
+    left: 2px; }
 
 .button.square {
   max-width: 60px;
@@ -736,14 +811,24 @@ label {
   width: 100%; }
 
 .button.danger {
-  background-color: #bd2a2a; }
+  background-color: #bd2a2a;
+  box-shadow: 4px 4px 4px #878787; }
   .button.danger:active {
-    background-color: #932121; }
+    background-color: #932121;
+    box-shadow: 2px 2px 2px #878787;
+    position: relative;
+    top: 2px;
+    left: 2px; }
 
 .button.secondary {
-  background-color: #878787; }
+  background-color: #878787;
+  box-shadow: 4px 4px 4px #878787; }
   .button.secondary:active {
-    background-color: #6e6e6e; }
+    background-color: #6e6e6e;
+    box-shadow: 2px 2px 2px #878787;
+    position: relative;
+    top: 2px;
+    left: 2px; }
 
 #play-button,
 #connect-button {
@@ -766,15 +851,25 @@ label {
 
 #add-sensors-button {
   float: left;
-  background-color: #f7c128; }
+  background-color: #f7c128;
+  box-shadow: 4px 4px 4px #878787; }
   #add-sensors-button:active {
-    background-color: #e4aa08; }
+    background-color: #e4aa08;
+    box-shadow: 2px 2px 2px #878787;
+    position: relative;
+    top: 2px;
+    left: 2px; }
 
 #add-actuators-button {
   float: right;
-  background-color: #2d6854; }
+  background-color: #2d6854;
+  box-shadow: 4px 4px 4px #878787; }
   #add-actuators-button:active {
-    background-color: #1e4437; }
+    background-color: #1e4437;
+    box-shadow: 2px 2px 2px #878787;
+    position: relative;
+    top: 2px;
+    left: 2px; }
 
 /* SHOWING AND HIDING PINS */
 .dialog {
@@ -807,13 +902,18 @@ label {
   font-size: 200%;
   height: 100px;
   background-color: #c6bcaf;
+  box-shadow: 4px 4px 4px #878787;
   line-height: 60px;
   text-align: right;
   cursor: default;
   position: relative;
   top: -15px; }
   .chatbox .my-close:active {
-    background-color: #b1a391; }
+    background-color: #b1a391;
+    box-shadow: 2px 2px 2px #878787;
+    position: relative;
+    top: 2px;
+    left: 2px; }
 
 #app-settings .my-close {
   top: 0; }
@@ -955,9 +1055,14 @@ label {
   height: 145px;
   border-width: 15px;
   width: 100%;
-  background-color: #878787; }
+  background-color: #878787;
+  box-shadow: 4px 4px 4px #878787; }
   #play-pins .pin.digital .pin-box:active {
-    background-color: #6e6e6e; }
+    background-color: #6e6e6e;
+    box-shadow: 2px 2px 2px #878787;
+    position: relative;
+    top: 2px;
+    left: 2px; }
 
 #play-pins .pin.analog .pin-box {
   height: 65px;
@@ -967,9 +1072,14 @@ label {
 
 #play-pins .pin.pressed .pin-box {
   border-color: #b4ceb8;
-  background-color: #2d6854; }
+  background-color: #2d6854;
+  box-shadow: 4px 4px 4px #878787; }
   #play-pins .pin.pressed .pin-box:active {
-    background-color: #1e4437; }
+    background-color: #1e4437;
+    box-shadow: 2px 2px 2px #878787;
+    position: relative;
+    top: 2px;
+    left: 2px; }
 
 #play-pins .pin.pressed .pin-box:before {
   display: none; }

@@ -33,10 +33,10 @@ var setup_tracker = function() {
     var get_current_step = function() {
         if (!mac_address_confirmed)
             return 'confirm_mac_address';
-        if (!wifi_setup)
-            return 'wifi_router_setup';
         if (!user_created)
             return 'create_user';
+        if (!wifi_setup)
+            return 'wifi_router_setup';
         return 'home';
     };
     return {

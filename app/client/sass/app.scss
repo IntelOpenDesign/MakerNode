@@ -8,6 +8,7 @@ $intel_blue: rgb(30, 96, 181);
 
 @mixin tap_feedback($color) {
     background-color: $color;
+    box-shadow: 4px 4px 4px $gray;
 
     &:active {
         @if lightness($color) > 16 {
@@ -15,6 +16,10 @@ $intel_blue: rgb(30, 96, 181);
         } @else {
             background-color: lighten($color, 10%);
         }
+        box-shadow: 2px 2px 2px $gray;
+        position: relative;
+        top: 2px;
+        left: 2px;
     }
 }
 
@@ -76,9 +81,64 @@ p {
     top: -20px;
 }
 
+/* APP CONTAINER AND HEADER */
 #app-container {
     position: relative;
     padding-bottom: 50px;
+}
+#header .navbar-header {
+    width: 100%;
+}
+#header table {
+    width: 100%;
+}
+
+/* SETUP FORM */
+.setup-form h1 {
+    color: $intel_blue;
+    text-align: center;
+}
+.setup-form input {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+.setup-form .button.submit {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 375px;
+}
+@mixin step_inactive($n) {
+    background-image: url('/static/img/step_' + $n + '_inactive.jpg');
+    background-position-x: center;
+    background-position-y: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 375px;
+}
+@mixin step_active($n) {
+    background-image: url('/static/img/step_' + $n + '_active.jpg');
+    box-shadow: 15px 15px 5px rgb(230, 230, 230);
+}
+div[steps-pics] .step-pic[data-step="1"] {
+    @include step_inactive(1);
+}
+div[steps-pics] .step-pic[data-step="2"] {
+    @include step_inactive(2);
+}
+div[steps-pics] .step-pic[data-step="3"] {
+    @include step_inactive(3);
+}
+div[steps-pics][step="1"] .step-pic[data-step="1"] {
+    @include step_active(1);
+}
+div[steps-pics][step="2"] .step-pic[data-step="2"] {
+    @include step_active(2);
+}
+div[steps-pics][step="3"] .step-pic[data-step="3"] {
+    @include step_active(3);
 }
 
 /* COLORS */
@@ -780,7 +840,7 @@ label {
     line-height: 60px;
     cursor: default;
     position: relative;
-    @include tap_feedback($black);
+    @include tap_feedback($intel_blue);
 }
 .button.square {
     max-width: 60px;

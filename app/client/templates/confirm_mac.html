@@ -1,37 +1,34 @@
-<div class="container">
+<div class="container setup-form">
 
     <!--TODO use a directive to format all forms the same way-->
 
-    <div class="row">
+    <div step="1" steps-pics></div>
+
+    <div class="row padded">
         <div class="col-xs-12">
-            <h1>Confirm Device</h1>
+            <h1>Connect to your Galileo network</h1>
         </div>
     </div>
 
     <div class="row padded">
         <div class="col-xs-12">
-            <p>To confirm that you are connecting to your own device, please complete the MAC address below. The first three digits are provided for you. The rest of the MAC address can be found printed on the wifi card that is attached to the bottom of your Galileo.</p>
+            <input ng-model="form.mac_address"
+              placeholder="Galileo Network">
         </div>
     </div>
 
     <div class="row padded">
-        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-            MAC Address:
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-            <span>
-                <!-- TODO get actual leading digits of MAC address from server -->
-                <!-- TODO if I got the whole MAC address from the server, I could separate out the leading digits and confirm the user entry of the rest of the digits on the client side rather than making another server request for that. would that be better? -->
-                123
-            </span>
-            <input ng-model="form.mac_address" placeholder="XXX">
+        <div class="col-xs-12">
+            <input ng-model="form.default_password"
+              placeholder="Default Password"
+              type="password">
         </div>
     </div>
 
     <div class="row">
-        <div class="button wide pull-right col-xs-12 col-sm-6 col-md-4 col-lg-4"
+        <div class="button wide submit"
           ng-click="submit()">
-            Next <span class="next-icon glyphicon glyphicon-circle-arrow-right"><span>
+            Connect
         </div>
     </div>
 

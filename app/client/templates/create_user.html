@@ -1,40 +1,32 @@
-<div class="container">
+<div class="container setup-form">
 
-    <div class="row">
-        <div class="col-xs-12">
-            <h1>Create User</h1>
-        </div>
-    </div>
-
-    <!--TODO put in the actual way to reconnect to Galileo here (actual IP address or domain.local -->
+    <div step="2" steps-pics></div>
 
     <div class="row padded">
         <div class="col-xs-12">
-            <p>Please choose a username and password that you want to use to log in to Galileo in the future.</p>
+            <h1>Change your password</h1>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-            Username:
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-            <input ng-model="form.username">
+    <div class="row padded">
+        <div class="col-xs-12">
+            <input ng-model="form.username"
+              placeholder="New Password"
+              type="password">
         </div>
     </div>
     <div class="row padded">
-        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-            Password:
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-            <input ng-model="form.user_password" type="password">
+        <div class="col-xs-12">
+            <input ng-model="form.user_password"
+              placeholder="Confirm Password"
+              type="password">
         </div>
     </div>
 
     <div class="row">
-        <div class="button wide pull-right col-xs-12 col-sm-6 col-md-4 col-lg-4"
+        <div class="button wide submit"
           ng-click="submit()">
-            Next <span class="next-icon glyphicon glyphicon-circle-arrow-right"><span>
+            Change Password
         </div>
     </div>
 
