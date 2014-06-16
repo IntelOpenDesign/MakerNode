@@ -15,10 +15,8 @@ module.exports = function() {
 }
 
 http.prototype.listen = function(port) {
-
+    log.info('HTTP Server listening on port ' + port);
     server.listen(port);
-
-
 }
 
 http.prototype.close = function() {

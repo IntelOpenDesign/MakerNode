@@ -1,10 +1,27 @@
 var _ = require('underscore');
 var log = require('./log').create('Socket');
 var WebSocketServer = require('ws').Server;
-var onUpdate;
 
-function Socket(){
-  //TODO: Move initialization here...
+var onUpdate;
+var settings;
+var msg;
+
+function Socket(_settings){
+    //TODO: Move initialization here...
+    settings = _settings;
+    msg = {
+        status: 'OK', // TODO test client side with "error" status
+        step: undefined,
+        pins: {},
+        connections: [],
+        count: 0, // TODO remove when done debugging
+        message_ids_processed: [],
+        ssid: 'ConnectAnything',
+    };
+    _.each(digital_outs, pin_setter(false, false));
+    _.each(digital_ins, pin_setter(false, true));
+    _.each(analog_outs, pin_setter(true, false));
+    _.each(analog_ins, pin_setter(true, true));
 }
 
 Socket.prototype.create = create;
@@ -12,59 +29,17 @@ Socket.prototype.getMessage = getMessage;
 Socket.prototype.setMessage = setMessage;
 
 module.exports = Socket;
-module.exports.create = function(){
-  return new Socket();
+module.exports.create = function(_settings){
+    return new Socket(_settings);
 }
 
-// TODO put this somewhere better
-// TODO make this based on real state variables
-var setup_tracker = function() {
-    var mac_address_confirmed = false;
-    var wifi_setup = false;
-    var user_created = false;
-    var confirm_mac_address = function(mac_address) {
-        mac_address_confirmed = true;
-    };
-    var setup_wifi = function(ssid, password) {
-        wifi_setup = true;
-    };
-    var create_user = function(username, password) {
-        user_created = true;
-    };
-    var get_current_step = function() {
-        if (!mac_address_confirmed)
-            return 'confirm_mac_address';
-        if (!user_created)
-            return 'create_user';
-        if (!wifi_setup)
-            return 'wifi_router_setup';
-        return 'home';
-    };
-    return {
-        confirm_mac_address: confirm_mac_address,
-        setup_wifi: setup_wifi,
-        create_user: create_user,
-        get_current_step: get_current_step,
-    };
-}();
-
-// initialize msg with pin defaults
+// pin defaults
 var digital_outs = ['1', '2', '3', '4', '7', '8', '12', '13'];
 var digital_ins = ['0'];
 var analog_outs = ['3', '5', '6', '9', '10', '11'];
 var analog_ins = ['14', '15', '16', '17', '18', '19']; // A0 - A5
 
 var all_pins = [].concat(digital_outs).concat(digital_ins).concat(analog_outs).concat(analog_ins);
-
-var msg = {
-    status: 'OK', // TODO test client side with "error" status
-    step: setup_tracker.get_current_step(),
-    pins: {},
-    connections: [],
-    count: 0, // TODO remove when done debugging
-    message_ids_processed: [],
-    ssid: 'ConnectAnything',
-};
 
 function setMessage(state) {
     msg = state;
@@ -99,54 +74,6 @@ function pin_setter(is_analog, is_input) {
     }
 }
 
-_.each(digital_outs, pin_setter(false, false));
-_.each(digital_ins, pin_setter(false, true));
-_.each(analog_outs, pin_setter(true, false));
-_.each(analog_ins, pin_setter(true, true));
-
-// initialize a few random connections between visible pins
-function get_pin_ids_if(f) {
-    var oids = _.map(msg.pins, function(pin, id) {
-        return _.extend({
-            id: id
-        }, pin);
-    });
-    var pins = _.filter(oids, function(pin) {
-        return f(pin);
-    });
-    return _.pluck(pins, 'id');
-}
-var visible_sensors = get_pin_ids_if(function(pin) {
-    return pin.is_input && pin.is_visible;
-});
-var visible_actuators = get_pin_ids_if(function(pin) {
-    return !pin.is_input && pin.is_visible;
-});
-visible_actuators = _.shuffle(visible_actuators);
-var n_connections = 3;
-n_connections = Math.min(n_connections, visible_sensors.length);
-n_connections = Math.min(n_connections, visible_actuators.length);
-for (var i = 0; i < n_connections; i++) {
-    msg.connections.push({
-        source: visible_sensors[i],
-        target: visible_actuators[i]
-    });
-}
-
-// change state randomly to simulate other users and hardware
-function update() {
-    _.each(all_pins, function(id) {
-        if (!msg.pins[id].is_input)
-            return;
-        if (msg.pins[id].is_analog) {
-            msg.pins[id].value = Math.random();
-        } else {
-            msg.pins[id].value = Math.random() < 0.5 ? 0 : 1;
-        }
-    });
-}
-
-log.info('creating socket');
 var broadcast_interval_id = 0;
 
 var onConnect = function(conn) {
@@ -157,7 +84,7 @@ var onConnect = function(conn) {
         broadcast_interval_id = setInterval(function() {
             msg.count += 1;
             msg.message_ids_processed = _.keys(messages_dict);
-            msg.step = setup_tracker.get_current_step();
+            msg.step = settings.get_mode();
             try {
                 conn.send(JSON.stringify(msg));
             } catch (error) {
@@ -179,7 +106,7 @@ var onConnect = function(conn) {
                     log.info('clearing broadcast interval');
                 }
             });
-        }, 33); //TODO: Figure out the optimal value here  
+        }, 33); //TODO: Figure out the optimal value here
     }
 
     conn.on('message', function(str) {
@@ -228,14 +155,13 @@ var onConnect = function(conn) {
                 var change_ssid_message_id = d.message_id;
             }
             if (_.has(d, 'mac_address')) {
-                setup_tracker.confirm_mac_address(d.mac_address);
+                settings.confirm_network();
+            }
+            if (_.has(d, 'username') && _.has(d, 'user_password')) {
+                settings.set_user_password();
             }
             if (_.has(d, 'wifi_ssid') && _.has(d, 'wifi_password')) {
-                setup_tracker.setup_wifi(d.wifi_ssid, d.wifi_password);
-            }
-            // TODO eventually need to distinguish between creating a user and logging in
-            if (_.has(d, 'username') && _.has(d, 'user_password')) {
-                setup_tracker.create_user(d.username, d.user_password);
+                settings.set_router_info(d.wifi_ssid, d.wifi_password);
             }
             onUpdate();
         }, 0);
@@ -269,9 +195,10 @@ var onConnect = function(conn) {
 function create(callback) {
     onUpdate = callback;
 
-    log.info("Creating web server");
+    var port = 8001;
+    log.info('WebSockets Serving listening on port ' + port);
     wss = new WebSocketServer({
-        port: 8001
+        port: port,
     });
     wss.on('connection', onConnect);
     //for testing random data

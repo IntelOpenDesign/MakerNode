@@ -3,11 +3,11 @@
 function App() {}
 var log = require('./log').create('App');
 var conf = require('./conf');
-var appConf = conf.create();
+var settings = require('./settings')();
 var boardConf = conf.create();
 var gpio = require('./gpio')();
 var http = require('./http')();
-var socket = require('./socket').create();
+var socket = require('./socket').create(settings);
 var sh = require('./command_queue').init().enqueue;
 
 var BOARD_CONF_FILE = 'boardstate.conf';
@@ -20,30 +20,28 @@ module.exports = function() {
 }
 
 function start() {
-    log.info('Starting CAT...');
-    appConf.read(APP_CONF_FILE).then(
-        function(appState) {
-            log.debug('App. state loaded.', appState);
-            if (typeof appState === 'undefined') {
-              log.error('fail');
-                throw "App state is not defined.";
-            } else if (appState.app_mode == 'setup') {
-                log.info('Starting AP.');
-                sh('./startAP.sh'); //TODO: I'd like this to be asynchronous...   
-                gpio.init(onInput)
-                    .then(
-                        onBoardReady,
-                        function(reason) {
-                            log.error('could not init gpio: ' + reason);
-                        }
-                );
-            } else if (appState.app_mode == 'controller') {
+    log.info('Starting MakerNode...');
 
-            } else {
-                throw "Invalid app. mode.";
-            }
+    settings.init(APP_CONF_FILE).then(function() {
+        if (settings.be_access_point()) {
+            log.info('Starting Access Point');
+            // TODO put this back in to do stuff for REALZ
+            //sh('./startAP.sh'); //TODO: I'd like this to be asynchronous...
+
+        } else { // connect to router
+            log.info('Connecting to Router');
+
+        }
+    });
+
+    /* TODO put this back in to do stuff for REALZ
+    gpio.init(onInput).then(
+        onBoardReady,
+        function(reason) {
+            log.error('could not init gpio: ' + reason);
         }
     );
+    */
 
     function onBoardReady(board) {
         boardConf.read(BOARD_CONF_FILE)
