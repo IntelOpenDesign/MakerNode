@@ -69,3 +69,6 @@ http://192.168.0.10/#/
 
 * adampasz@gmail.com
 * carlos.montesinos@intel.com
+
+Probably also have to unplug and replug in the Galileo
+and then call /etc/init.d/networking restart
