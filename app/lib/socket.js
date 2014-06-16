@@ -84,7 +84,7 @@ var onConnect = function(conn) {
         broadcast_interval_id = setInterval(function() {
             msg.count += 1;
             msg.message_ids_processed = _.keys(messages_dict);
-            msg.step = settings.get_mode();
+            msg.step = settings.get_step();
             try {
                 conn.send(JSON.stringify(msg));
             } catch (error) {

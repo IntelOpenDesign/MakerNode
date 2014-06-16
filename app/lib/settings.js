@@ -30,7 +30,7 @@ function settings() {
         return fs.write(filename, JSON.stringify(state));
     };
 
-    var get_mode = function() {
+    var get_step = function() {
         if (!state.network_confirmed)
             return 'confirm_network';
         if (!state.user_password_set)
@@ -42,7 +42,7 @@ function settings() {
     };
 
     var be_access_point = function() {
-        return get_mode() !== "app";
+        return get_step() !== "app";
     };
 
     var confirm_network = function() {
@@ -64,7 +64,7 @@ function settings() {
     return {
         init: init,
         be_access_point: be_access_point,
-        get_mode: get_mode,
+        get_step: get_step,
         confirm_network: confirm_network,
         set_user_password: set_user_password,
         set_router_info: set_router_info,
