@@ -1,4 +1,5 @@
 "use strict;"
+var clc = require('cli-color');
 
 var namespace;
 
@@ -16,7 +17,7 @@ var infoFunction;
 var debugFunction;
 
 function error(msg) {
-    console.error('[' + namespace + ':ERROR] ' + msg);
+    console.error(clc.red.bold('[' + namespace + ':ERROR] ') + clc.red(msg));
     for (var i = 1; i < arguments.length; i++) {
         console.error(arguments[i]);
     }
@@ -24,14 +25,14 @@ function error(msg) {
 
 function info(msg) {
 
-    console.log('[' + namespace + ':INFO] ' + msg);
+    console.log(clc.blue.bold('[' + namespace + ':INFO] ') + msg);
     for (var i = 1; i < arguments.length; i++) {
         console.log(arguments[i]);
     }
 }
 
 function debug(msg) {
-    console.log('[' + namespace + ':DEBUG] ' + msg);
+    console.log(clc.blackBright.bold('[' + namespace + ':DEBUG] ') + clc.blackBright(msg));
     for (var i = 1; i < arguments.length; i++) {
         console.log(arguments[i]);
     }

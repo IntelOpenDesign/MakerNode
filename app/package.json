@@ -21,7 +21,8 @@
         "q-io": "1.11.1",
         "q": "1.0.1",
         "underscore": "1.6.0",
-        "http-server": "0.6.1" 
+        "http-server": "0.6.1", 
+        "cli-color": "0.3.2"
     },
     "licenses": {
         "type": "UNLICENSE",
