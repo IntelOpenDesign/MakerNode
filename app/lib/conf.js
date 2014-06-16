@@ -1,8 +1,9 @@
 "use strict";
 var fs = require('q-io/fs');
+var log = require('./log').create('Conf');
 
 function Conf() {
-    console.log('New Conf');
+    log.info('New Conf');
 }
 
 function create() {
@@ -10,24 +11,24 @@ function create() {
 }
 
 function read(path) {
-    console.log('Reading: ' + path);
+   log.info('Reading: ' + path);
     return fs.read(path).then(JSON.parse,
         function(reason) {
-            console.log('Could not read file. ' + reason);
+            log.error('Could not read file. ' + reason);
         }
     );
 }
 
 function write(path, content) {
-    console.log('Writing to: ' + path);
+    log.info('Writing to: ' + path);
 
     return fs.write(path, content)
         .then(
             function() {
-                console.log('Write successful.');
+                log.info('Write successful.');
             },
             function(reason) {
-                console.log('Write failed: ' + reason);
+                log.error('Write failed: ' + reason);
             }
     );
 }

@@ -2,3 +2,4 @@
 app/client/.sass-cache/*
 app/node_modules
 app/boardstate.conf
+app/appstate.conf

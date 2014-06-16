@@ -1,3 +1,4 @@
+var log = require('./log').create('GPIO');
 var Galileo = require("galileo-io");
 var Q = require('q');
 var _ = require('underscore');
@@ -14,11 +15,11 @@ module.exports = function(){
 }
 
 function init(onInput) {
-    console.log('init gpio');
+    log.debug('init gpio');
     var deferred = Q.defer();
     board = new Galileo();
     board.on("ready", function() {
-        console.log("BOARD READY");
+        log.info("BOARD READY");
         var byte = 0;
         this.pinMode(9, this.MODES.OUTPUT);
         board.analogRead('A0', function(data) {
@@ -76,7 +77,7 @@ function refreshOutputs(model) {
               scaledValue = 255 - scaledValue;
             }
             if (!pin.is_input && cachedPinValues[i] != scaledValue) {
-                console.log("Changed pin=" + i + " oldValue=" + cachedPinValues[i] + " newValue=" + scaledValue);
+                log.debug("Changed pin=" + i + " oldValue=" + cachedPinValues[i] + " newValue=" + scaledValue);
                 write(pin, i, scaledValue);
             }
             cachedPinValues[i] = scaledValue;
