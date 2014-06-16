@@ -32,7 +32,7 @@ makernode.routes = {
     app_home: {
         hash: 'home',
         server_code: 'home',
-        controller: 'HomeCtrl',
+        controller: 'EmptyCtrl',
         template: 'home',
     },
 };
@@ -59,6 +59,9 @@ makernode.app.config(['$routeProvider', function($routeProvider) {
 
 // the highest level app controller from which all others inherit
 makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
+
+
+    window.$scope = $scope;
 
     $scope.routes = makernode.routes;
     $scope.parseInt = parseInt;
@@ -104,11 +107,27 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
     });
     Galileo.connect(makernode.websocket_url);
 
+    // This sends the object d to the server exactly as is.
+    // Only use this if you know the server is expecting this exact format.
+    // For modifying pins and connections, use specific helper functions.
     $scope.send_server_update = function(d) {
-        // This sends the object d to the server exactly as is.
-        // Only use this if you know the server is expecting this exact format.
-        // For modifying pins and connections, use specific helper functions.
         Galileo.send_data(d);
+    };
+
+    // general purpose pin update
+    // NOTE do not use for showing or hiding pins
+    $scope.send_pin_update = function(pin_ids, attr, val) {
+        if (arguments.length >= 3) {
+            _.each(pin_ids, function(id) {
+                $scope.d.pins[id][attr] = val;
+            });
+        }
+        Galileo.update_pins(pin_ids, attr);
+    };
+
+    $scope.toggle_pin_value = function(id) {
+        var new_val = $scope.d.pins[id].value === 100 ? 0 : 100;
+        $scope.send_pin_update([id], 'value', new_val);
     };
 }]);
 
@@ -120,11 +139,6 @@ makernode.app.controller('FormCtrl', ['$scope', function($scope) {
     $scope.submit = function() {
         $scope.send_server_update($scope.form);
     };
-    // TODO handle erroneous inputs
-}]);
-
-makernode.app.controller('HomeCtrl', ['$scope', function($scope) {
-
 }]);
 
 makernode.app.directive('stepsPics', function($document) {
@@ -245,7 +259,6 @@ makernode.app.factory('Galileo', ['$rootScope', function($rootScope) {
         // TODO i think i used to just send connections or pins if there were updates for them.
         var msg_for_server = {
             status: 'OK',
-            ssid: batch.ssid,
             message_id: message_id,
         };
         // add pins to msg_for_server
@@ -334,7 +347,8 @@ makernode.app.factory('Galileo', ['$rootScope', function($rootScope) {
         delete data.connections;
         var other_attrs = data;
 
-        function update(d) {
+        function update(JSON_d) {
+            var d = JSON.parse(JSON_d);
             _.each(d.pins, function(pin_updates, pin_id) {
                 pins[pin_id] = _.extend(pins[pin_id], pin_updates);
             });
@@ -351,10 +365,10 @@ makernode.app.factory('Galileo', ['$rootScope', function($rootScope) {
         });
         _.each(messages_in_order, function(msg) {
             //console.log('updating server data with message_id', msg.message_id, 'update', msg.stringified_updates);
-            update(JSON.parse(msg.stringified_updates));
+            update(msg.stringified_updates);
         });
         if (batch !== null) {
-            update(batch);
+            update(JSON.stringify(batch));
         }
 
         var connections = [];

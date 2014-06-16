@@ -1,10 +1,16 @@
-<div id="play-pins"
+<div id="control-mode"
   class="container-fluid">
     <div class="row">
-        <div class="col-xs-6"
+        <div ng-class="{
+            'col-xs-6': true,
+            'pin': true,
+            'analog': pin.is_analog,
+            'digital': !pin.is_analog,
+            'sensor': pin.is_input,
+            'actuator': !pin.is_input,
+            'pressed': pin.value === 100}"
           ng-repeat="pin in d.pins">
             <div ng-if="!pin.is_analog"
-              class="pin-outer"
               pin-button>
             </div>
             <div ng-if="pin.is_analog"
