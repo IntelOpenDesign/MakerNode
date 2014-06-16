@@ -12,6 +12,9 @@ npm install
 ### Configuring the Galileo to run the node js server on boot. ###
 Copy this repo to the Galileo into a new directory called /home/maker.
 
+""" A noob wouldn't know how to copy over SSH or serial. An example SCP terminal command could be helpful """
+""" When I copied over the files, my interpetation of the instructions got me to having /home/maker/makernode-dev/app but luckily I was paying attention and saw this didn't match the instructions lower down about mkr:5:.... so I reorganized my files to make it match that """
+
 Connect to the Galileo via a serial cable, and open a terminal with Putty, Screen or your tool of choice.
 IMPORTANT: Do not try this without a serial connection! If you accidentally take down the access point, 
 you will no longer be able to ssh into the Galileo.
@@ -36,6 +39,8 @@ Restart the board.
 ```
 /sbin/reboot
 ```
+
+""" Is it supposed to take a long time to reboot? I think mine might be frozen.... """
 
 After reboot has completed, you should be able to connect to the Acess Point.   
 
