@@ -43,6 +43,7 @@ Restart the board.
 ```
 
 """ Is it supposed to take a long time to reboot? I think mine might be frozen.... """
+""" Eventually I pulled the plug on the Galileo and restarted my computer. I reconnected over serial to the Galileo. I did ps but did not see any of the desired processes. Maybe the /sbin/reboot didn't go too well. Also I realized I forgot to do npm install at the very beginning. I just did it for the repo on my computer, but now the Galileo is not broadcasting a wifi hotspot anymore and I don't know how to transfer files over a serial connection.... """
 
 After reboot has completed, you should be able to connect to the Acess Point.   
 
