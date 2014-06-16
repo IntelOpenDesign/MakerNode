@@ -9,6 +9,8 @@ cd app
 npm install
 ```
 
+"" What image am I supposed to have on the Galileo? Where can I find that? """
+
 ### Configuring the Galileo to run the node js server on boot. ###
 Copy this repo to the Galileo into a new directory called /home/maker.
 
