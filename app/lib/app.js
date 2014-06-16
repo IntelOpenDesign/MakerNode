@@ -25,23 +25,25 @@ function start() {
     settings.init(APP_CONF_FILE).then(function() {
         if (settings.be_access_point()) {
             log.info('Starting Access Point');
-            // TODO put this back in to do stuff for REALZ
-            //sh('./startAP.sh'); //TODO: I'd like this to be asynchronous...
+            sh('./startAP.sh'); //TODO: I'd like this to be asynchronous...
 
         } else { // connect to router
             log.info('Connecting to Router');
+            // TODO
+            // do this when you are entering wifi router info (form submit):
+            //sh('./wpa_supplicant.conf ' + ssid + wifi_password );
+            //
+            // TODO do we need to call /etc/init.d/networking restart every time we want to connect to wifi or is it only after the first time we connect to a new network after restarting?
 
         }
     });
 
-    /* TODO put this back in to do stuff for REALZ
     gpio.init(onInput).then(
         onBoardReady,
         function(reason) {
             log.error('could not init gpio: ' + reason);
         }
     );
-    */
 
     function onBoardReady(board) {
         boardConf.read(BOARD_CONF_FILE)
