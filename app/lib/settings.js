@@ -42,7 +42,7 @@ function settings() {
     };
 
     var be_access_point = function() {
-        return get_step() !== "app";
+        return state.app_mode !== "control";
     };
 
     var confirm_network = function() {
@@ -58,6 +58,7 @@ function settings() {
     var set_router_info = function(ssid, pw) {
         state.router_ssid = ssid;
         state.router_password = pw;
+        state.app_mode = "control";
         return write();
     };
 

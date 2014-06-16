@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var log = require('./log').create('Socket');
 var WebSocketServer = require('ws').Server;
+var exec = require('child_process').exec;
 
 var onUpdate;
 var settings;
@@ -161,7 +162,20 @@ var onConnect = function(conn) {
                 settings.set_user_password();
             }
             if (_.has(d, 'wifi_ssid') && _.has(d, 'wifi_password')) {
-                settings.set_router_info(d.wifi_ssid, d.wifi_password);
+                settings.set_router_info(d.wifi_ssid, d.wifi_password).then(function() {
+                   // TODO app.js should really be the one to call this
+                   var our_command = './init_supplicant.sh ' + d.wifi_ssid + ' ' + d.wifi_password;
+                   exec(our_command, function(error, stdout, stderr) {
+                       // TODO clean this up
+                       if (error === null) return;
+                       log.error('INIT_SUPPLICANT.SH ERROR CALLBACK has error ', error,
+                                 ' stdout ', stdout, ' stderr ', stderr, 'we gave it command ',
+                                 our_command);
+                   });
+                }, function(error) {
+                    log.error('problem with wifi_ssid ' + d.wifi_ssid + ' wifi_password ' + d.wifi_password);
+                });
+
             }
             onUpdate();
         }, 0);

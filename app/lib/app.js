@@ -50,10 +50,11 @@ function start() {
             .then(
                 function(pinState) {
                     log.debug('Pin state loaded.', pinState);
+                    sh('/etc/init.d/networking restart');
                     socket.create(function() {
                         var model = socket.getMessage();
                         gpio.refreshOutputs(model);
-                        boardConf.write(CONF_FILE, JSON.stringify(model)); //TODO: throttle writes
+                        boardConf.write(BOARD_CONF_FILE, JSON.stringify(model)); //TODO: throttle writes
                     });
                     if (typeof pinState === 'undefined') {
                         //TODO: initiate setup flow?  
