@@ -1,7 +1,14 @@
 var makernode = {};
 
-makernode.websocket_url = 'ws://localhost:8001'; // test-server.js
-makernode.websocket_url = "ws" + window.location.origin.slice("http".length) + ":8001";
+makernode.websocket_url = function() {
+    var s = window.location.origin.slice("http://".length);
+    var i = s.indexOf(":");
+    if (i > 0) {
+        s = s.slice(0, i);
+    }
+    s = "ws://" + s + ":8001";
+    return s;
+}();
 
 makernode.app = angular.module('MakerNode', ['ngRoute']);
 
