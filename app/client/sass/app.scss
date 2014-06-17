@@ -1,10 +1,13 @@
 $yellow: rgb(247, 193, 40);
+$bright_yellow: rgb(255, 238, 40);
 $dark_yellow: rgb(159, 122, 35);
 $green: rgb(45, 104, 84);
 $black: rgb(44, 38, 33);
-$gray: rgb(135, 135, 135);
+$gray: rgb(157, 160, 173);
 $chatbox_color: rgb(198, 188, 175);
 $intel_blue: rgb(30, 96, 181);
+$bright_blue: rgb(58, 158, 233);
+$light_blue: rgb(240, 245, 250);
 
 @mixin tap_feedback($color) {
     background-color: $color;
@@ -42,6 +45,13 @@ $intel_blue: rgb(30, 96, 181);
 .droid-font {
     font-family: 'Droid Sans';
 }
+.pin-name {
+    font-family: 'Neo Sans Intel';
+}
+.pin-label {
+    font-family: 'Droid Sans';
+}
+
 
 html, body {
     height: 100%;
@@ -223,14 +233,15 @@ $pin_border_w: 15px;
 // digital sensors
 #control-mode .pin.sensor.digital div[pin-button] {
     border-width: $pin_border_w;
-    border-color: black;
+    border-color: $gray;
     border-style: solid;
-}
-#control-mode .pin.sensor.digital.pressed div[pin-button] {
-    background-color: green;
 }
 #control-mode .pin.sensor.digital .pin-box {
     height: 100%;
+    background-color: $light_blue;
+}
+#control-mode .pin.sensor.digital.pressed .pin-box {
+    background-color: $bright_yellow;
 }
 
 // analog sensors
@@ -240,7 +251,7 @@ $pin_border_w: 15px;
 #control-mode .pin.sensor.analog .pin-box {
     border-width: $pin_border_w;
     border-style: solid;
-    border-color: black;
+    border-color: $gray;
     height: $pin_slider_h;
     box-sizing: border-box;
     position: relative;
@@ -253,12 +264,12 @@ $pin_border_w: 15px;
     border-color: transparent;
 }
 #control-mode .pin.digital.actuator .pin-box {
-    background: gray;
+    background: $bright_blue;
     height: 100%;
     box-shadow: 4px 4px 4px black;
 }
 #control-mode .pin.digital.actuator.pressed .pin-box {
-    background: green;
+    background: $bright_yellow;
 }
 
 // analog actuators
@@ -269,7 +280,7 @@ $pin_border_w: 15px;
     position: relative;
     top: 55px;
     height: $pin_slider_h;
-    background-color: gray;
+    background-color: $bright_blue;
 }
 
 
@@ -288,7 +299,7 @@ $pin_border_w: 15px;
     position: absolute;
     left: 0;
     bottom: 0;
-    background: $green;
+    background: $bright_yellow;
     z-index: 0;
     border-width: 0;
     height: 100%;
@@ -321,7 +332,7 @@ $pin_slider_thumb_w: 35px;
 #control-mode .pin-slider-container input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
     display: block;
-    background: green;
+    background: transparent;
     width: 0;
     height: 0;
     border-left: 35px solid transparent;
@@ -338,7 +349,7 @@ $pin_slider_thumb_w: 35px;
     content: "\A";
     border-left: 30px solid transparent;
     border-right: 30px solid transparent;
-    border-bottom: 50px solid $green;
+    border-bottom: 50px solid $bright_blue;
     position: absolute;
     top: 3px;
     left: -30px;
