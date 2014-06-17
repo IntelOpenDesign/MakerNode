@@ -258,12 +258,11 @@ $pin_border_w: 15px;
 
 // digital actuators
 #control-mode .pin.digital.actuator .pin-box {
-    background: $bright_blue;
     height: 100%;
-    box-shadow: 4px 4px 4px black;
+    @include tap_feedback($bright_blue);
 }
 #control-mode .pin.digital.actuator.pressed .pin-box {
-    background: $bright_yellow;
+    @include tap_feedback($bright_yellow);
 }
 
 // analog actuators

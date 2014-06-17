@@ -226,12 +226,25 @@ div[steps-pics][step="3"] .step-pic[data-step="3"] {
   position: relative; }
 
 #control-mode .pin.digital.actuator .pin-box {
-  background: #3a9ee9;
   height: 100%;
-  box-shadow: 4px 4px 4px black; }
+  background-color: #3a9ee9;
+  box-shadow: 4px 4px 4px #9da0ad; }
+  #control-mode .pin.digital.actuator .pin-box:active {
+    background-color: #1886d8;
+    box-shadow: 2px 2px 2px #9da0ad;
+    position: relative;
+    top: 2px;
+    left: 2px; }
 
 #control-mode .pin.digital.actuator.pressed .pin-box {
-  background: #ffee28; }
+  background-color: #ffee28;
+  box-shadow: 4px 4px 4px #9da0ad; }
+  #control-mode .pin.digital.actuator.pressed .pin-box:active {
+    background-color: #f4e100;
+    box-shadow: 2px 2px 2px #9da0ad;
+    position: relative;
+    top: 2px;
+    left: 2px; }
 
 #control-mode .pin.analog.actuator div[pin-slider] {
   position: relative; }
