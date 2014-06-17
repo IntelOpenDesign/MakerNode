@@ -195,6 +195,30 @@ $pin_border_w: 15px;
     height: $pin_button_h + (2 * $pin_border_w);
     box-sizing: border-box;
 }
+#control-mode div[pin-button] .pin-name,
+#control-mode div[pin-button] .pin-label {
+    height: 100%;
+    line-height: $pin_button_h;
+    text-align: center;
+}
+#control-mode div[pin-slider] .pin-name,
+#control-mode div[pin-slider] .pin-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    text-align: center;
+}
+#control-mode .pin.analog.sensor div[pin-slider] .pin-name,
+#control-mode .pin.analog.sensor div[pin-slider] .pin-label {
+    line-height: $pin_slider_h - (2 * $pin_border_w);
+}
+#control-mode .pin.analog.actuator div[pin-slider] .pin-name,
+#control-mode .pin.analog.actuator div[pin-slider] .pin-label {
+    line-height: $pin_slider_h;
+}
 
 // digital sensors
 #control-mode .pin.sensor.digital div[pin-button] {
@@ -208,12 +232,6 @@ $pin_border_w: 15px;
 #control-mode .pin.sensor.digital .pin-box {
     height: 100%;
 }
-#control-mode .pin.sensor.digital .pin-name,
-#control-mode .pin.sensor.digital .pin-label {
-    height: 100%;
-    line-height: $pin_button_h;
-    text-align: center;
-}
 
 // analog sensors
 #control-mode .pin.sensor.analog div[pin-slider] {
@@ -226,17 +244,6 @@ $pin_border_w: 15px;
     height: $pin_slider_h;
     box-sizing: border-box;
     position: relative;
-}
-#control-mode .pin.sensor.analog .pin-name,
-#control-mode .pin.sensor.analog .pin-label {
-    line-height: $pin_slider_h - (2 * $pin_border_w);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 5;
-    text-align: center;
 }
 
 // digital actuators
@@ -253,12 +260,6 @@ $pin_border_w: 15px;
 #control-mode .pin.digital.actuator.pressed .pin-box {
     background: green;
 }
-#control-mode .pin.digital.actuator .pin-name,
-#control-mode .pin.digital.actuator .pin-label {
-    line-height: $pin_button_h;
-    height: 100%;
-    text-align: center;
-}
 
 // analog actuators
 #control-mode .pin.analog.actuator div[pin-slider] {
@@ -269,16 +270,6 @@ $pin_border_w: 15px;
     top: 55px;
     height: $pin_slider_h;
     background-color: gray;
-}
-#control-mode .pin.analog.actuator .pin-name,
-#control-mode .pin.analog.actuator .pin-label {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    line-height: $pin_slider_h;
-    text-align: center;
 }
 
 
