@@ -134,7 +134,9 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
     };
 
     $scope.toggle_pin_value = function(id) {
-        var new_val = $scope.d.pins[id].value === 100 ? 0 : 100;
+        var pin = $scope.d.pins[id];
+        if (pin.is_input) return;
+        var new_val = pin.value === 100 ? 0 : 100;
         $scope.send_pin_update([id], 'value', new_val);
     };
 }]);
