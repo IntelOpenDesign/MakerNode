@@ -1,20 +1,46 @@
 <div id="control-mode"
   class="container-fluid">
     <div class="row">
-        <div ng-class="{
-            'col-xs-6': true,
-            'pin': true,
-            'analog': pin.is_analog,
-            'digital': !pin.is_analog,
-            'sensor': pin.is_input,
-            'actuator': !pin.is_input,
-            'pressed': pin.value === 100}"
-          ng-repeat="pin in d.pins">
-            <div ng-if="!pin.is_analog"
-              pin-button>
+        <div class="col-xs-6">
+            Input Pins
+        </div>
+        <div class="col-xs-6">
+            Output Pins
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <div ng-class="{
+                'pin': true,
+                'analog': pin.is_analog,
+                'digital': !pin.is_analog,
+                'sensor': pin.is_input,
+                'actuator': !pin.is_input,
+                'pressed': pin.value === 100}"
+              ng-repeat="pin in d.sensors">
+                <div ng-if="!pin.is_analog"
+                  pin-button>
+                </div>
+                <div ng-if="pin.is_analog"
+                  pin-slider>
+                </div>
             </div>
-            <div ng-if="pin.is_analog"
-              pin-slider>
+        </div>
+        <div class="col-xs-6">
+            <div ng-class="{
+                'pin': true,
+                'analog': pin.is_analog,
+                'digital': !pin.is_analog,
+                'sensor': pin.is_input,
+                'actuator': !pin.is_input,
+                'pressed': pin.value === 100}"
+              ng-repeat="pin in d.actuators">
+                <div ng-if="!pin.is_analog"
+                  pin-button>
+                </div>
+                <div ng-if="pin.is_analog"
+                  pin-slider>
+                </div>
             </div>
         </div>
     </div>
