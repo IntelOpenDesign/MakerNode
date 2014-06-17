@@ -320,7 +320,7 @@ div[steps-pics][step="3"] .step-pic[data-step="3"] {
   position: absolute;
   top: 3px;
   left: -30px;
-  box-shadow: 0 8px 4px -4px; }
+  box-shadow: 0 8px 4px -4px #9da0ad; }
 
 /* SMALL DEVICES */
 @media (max-device-width: 4in) and (min-resolution: 100dpi) {
