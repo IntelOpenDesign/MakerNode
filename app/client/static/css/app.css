@@ -174,15 +174,19 @@ div[steps-pics][step="3"] .step-pic[data-step="3"] {
 /* CONTROL MODE */
 #control-mode div[pin-button],
 #control-mode div[pin-slider] {
-  margin: 30px 5%;
-  height: 180px;
+  margin: 30px 5% 60px;
+  height: 70px;
   box-sizing: border-box; }
 
 #control-mode div[pin-button] .pin-name,
 #control-mode div[pin-button] .pin-label {
   height: 100%;
-  line-height: 150px;
+  line-height: 70px;
   text-align: center; }
+
+#control-mode .pin.digital.sensor div[pin-button] .pin-name,
+#control-mode .pin.digital.sensor div[pin-button] .pin-label {
+  line-height: 40px; }
 
 #control-mode div[pin-slider] .pin-name,
 #control-mode div[pin-slider] .pin-label {
@@ -202,20 +206,16 @@ div[steps-pics][step="3"] .step-pic[data-step="3"] {
 #control-mode .pin.analog.actuator div[pin-slider] .pin-label {
   line-height: 70px; }
 
-#control-mode .pin.sensor.digital div[pin-button] {
+#control-mode .pin.sensor.digital .pin-box {
   border-width: 15px;
   border-color: #9da0ad;
-  border-style: solid; }
-
-#control-mode .pin.sensor.digital .pin-box {
+  border-style: solid;
   height: 100%;
-  background-color: #f0f5fa; }
+  background-color: white;
+  box-sizing: border-box; }
 
 #control-mode .pin.sensor.digital.pressed .pin-box {
   background-color: #ffee28; }
-
-#control-mode .pin.sensor.analog div[pin-slider] {
-  padding-top: 55px; }
 
 #control-mode .pin.sensor.analog .pin-box {
   border-width: 15px;
@@ -224,11 +224,6 @@ div[steps-pics][step="3"] .step-pic[data-step="3"] {
   height: 70px;
   box-sizing: border-box;
   position: relative; }
-
-#control-mode .pin.digital.actuator div[pin-button] {
-  border-width: 15px;
-  border-style: solid;
-  border-color: transparent; }
 
 #control-mode .pin.digital.actuator .pin-box {
   background: #3a9ee9;
@@ -243,7 +238,7 @@ div[steps-pics][step="3"] .step-pic[data-step="3"] {
 
 #control-mode .pin.analog.actuator .pin-box {
   position: relative;
-  top: 55px;
+  top: 0;
   height: 70px;
   background-color: #3a9ee9; }
 

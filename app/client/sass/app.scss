@@ -7,7 +7,6 @@ $gray: rgb(157, 160, 173);
 $chatbox_color: rgb(198, 188, 175);
 $intel_blue: rgb(30, 96, 181);
 $bright_blue: rgb(58, 158, 233);
-$light_blue: rgb(240, 245, 250);
 
 @mixin tap_feedback($color) {
     background-color: $color;
@@ -195,14 +194,14 @@ div[steps-pics][step="3"] .step-pic[data-step="3"] {
 // TODO colors
 // TODO real tap feedback for digital pin buttons
 
-$pin_button_h: 150px;
+$pin_button_h: 70px;
 $pin_slider_h: 70px;
 $pin_border_w: 15px;
 
 #control-mode div[pin-button],
 #control-mode div[pin-slider] {
-    margin: (2 * $pin_border_w) 5%;
-    height: $pin_button_h + (2 * $pin_border_w);
+    margin: 30px 5% 60px;
+    height: $pin_button_h;
     box-sizing: border-box;
 }
 #control-mode div[pin-button] .pin-name,
@@ -210,6 +209,10 @@ $pin_border_w: 15px;
     height: 100%;
     line-height: $pin_button_h;
     text-align: center;
+}
+#control-mode .pin.digital.sensor div[pin-button] .pin-name,
+#control-mode .pin.digital.sensor div[pin-button] .pin-label {
+    line-height: $pin_button_h - (2 * $pin_border_w);
 }
 #control-mode div[pin-slider] .pin-name,
 #control-mode div[pin-slider] .pin-label {
@@ -231,23 +234,19 @@ $pin_border_w: 15px;
 }
 
 // digital sensors
-#control-mode .pin.sensor.digital div[pin-button] {
+#control-mode .pin.sensor.digital .pin-box {
     border-width: $pin_border_w;
     border-color: $gray;
     border-style: solid;
-}
-#control-mode .pin.sensor.digital .pin-box {
     height: 100%;
-    background-color: $light_blue;
+    background-color: white;
+    box-sizing: border-box;
 }
 #control-mode .pin.sensor.digital.pressed .pin-box {
     background-color: $bright_yellow;
 }
 
 // analog sensors
-#control-mode .pin.sensor.analog div[pin-slider] {
-    padding-top: 55px; // TODO where does this magic number come from
-}
 #control-mode .pin.sensor.analog .pin-box {
     border-width: $pin_border_w;
     border-style: solid;
@@ -258,11 +257,6 @@ $pin_border_w: 15px;
 }
 
 // digital actuators
-#control-mode .pin.digital.actuator div[pin-button] {
-    border-width: $pin_border_w;
-    border-style: solid;
-    border-color: transparent;
-}
 #control-mode .pin.digital.actuator .pin-box {
     background: $bright_blue;
     height: 100%;
@@ -278,7 +272,7 @@ $pin_border_w: 15px;
 }
 #control-mode .pin.analog.actuator .pin-box {
     position: relative;
-    top: 55px;
+    top: 0;
     height: $pin_slider_h;
     background-color: $bright_blue;
 }
