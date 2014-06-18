@@ -1,15 +1,5 @@
 var makernode = {};
 
-makernode.websocket_url = function() {
-    var s = window.location.origin.slice("http://".length);
-    var i = s.indexOf(":");
-    if (i > 0) {
-        s = s.slice(0, i);
-    }
-    s = "ws://" + s + ":8001";
-    return s;
-}();
-
 makernode.app = angular.module('MakerNode', ['ngRoute']);
 
 makernode.routes = {
@@ -113,7 +103,7 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
     Galileo.on('websocket-closed', function() {
         $scope.s.got_data = false;
     });
-    Galileo.connect(makernode.websocket_url);
+    Galileo.connect(makernode.get_websocket_url());
 
     // This sends the object d to the server exactly as is.
     // Only use this if you know the server is expecting this exact format.
@@ -651,3 +641,16 @@ makernode.server_pin_format = function(my_pins, my_pin_ids) {
 
     return pins;
 };
+
+// URL SETTINGS
+
+makernode.get_websocket_url = function() {
+    var s = window.location.origin.slice("http://".length);
+    var i = s.indexOf(":");
+    if (i > 0) {
+        s = s.slice(0, i);
+    }
+    s = "ws://" + s + ":8001";
+    return s;
+};
+
