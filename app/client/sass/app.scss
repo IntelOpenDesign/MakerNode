@@ -130,37 +130,16 @@ p {
     margin-right: auto;
     max-width: 375px;
 }
-@mixin step_inactive($n) {
-    background-image: url('/static/img/step_' + $n + '_inactive.jpg');
-    background-position-x: center;
-    background-position-y: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 375px;
+.steps-pics-container {
+    margin-left: auto;
+    margin-right: auto;
 }
-@mixin step_active($n) {
-    background-image: url('/static/img/step_' + $n + '_active.jpg');
+.step-pic {
+    margin-right: 50px;
+}
+.step-pic.active {
     box-shadow: 15px 15px 5px rgb(230, 230, 230);
 }
-div[steps-pics] .step-pic[data-step="1"] {
-    @include step_inactive(1);
-}
-div[steps-pics] .step-pic[data-step="2"] {
-    @include step_inactive(2);
-}
-div[steps-pics] .step-pic[data-step="3"] {
-    @include step_inactive(3);
-}
-div[steps-pics][step="1"] .step-pic[data-step="1"] {
-    @include step_active(1);
-}
-div[steps-pics][step="2"] .step-pic[data-step="2"] {
-    @include step_active(2);
-}
-div[steps-pics][step="3"] .step-pic[data-step="3"] {
-    @include step_active(3);
-}
-
 
 .pin-label {
     white-space: nowrap;

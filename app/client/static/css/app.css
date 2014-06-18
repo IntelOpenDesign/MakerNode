@@ -89,40 +89,14 @@ p {
   margin-right: auto;
   max-width: 375px; }
 
-div[steps-pics] .step-pic[data-step="1"] {
-  background-image: url("/static/img/step_1_inactive.jpg");
-  background-position-x: center;
-  background-position-y: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 375px; }
+.steps-pics-container {
+  margin-left: auto;
+  margin-right: auto; }
 
-div[steps-pics] .step-pic[data-step="2"] {
-  background-image: url("/static/img/step_2_inactive.jpg");
-  background-position-x: center;
-  background-position-y: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 375px; }
+.step-pic {
+  margin-right: 50px; }
 
-div[steps-pics] .step-pic[data-step="3"] {
-  background-image: url("/static/img/step_3_inactive.jpg");
-  background-position-x: center;
-  background-position-y: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 375px; }
-
-div[steps-pics][step="1"] .step-pic[data-step="1"] {
-  background-image: url("/static/img/step_1_active.jpg");
-  box-shadow: 15px 15px 5px #e6e6e6; }
-
-div[steps-pics][step="2"] .step-pic[data-step="2"] {
-  background-image: url("/static/img/step_2_active.jpg");
-  box-shadow: 15px 15px 5px #e6e6e6; }
-
-div[steps-pics][step="3"] .step-pic[data-step="3"] {
-  background-image: url("/static/img/step_3_active.jpg");
+.step-pic.active {
   box-shadow: 15px 15px 5px #e6e6e6; }
 
 .pin-label {

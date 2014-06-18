@@ -193,6 +193,7 @@ makernode.app.controller('FormCtrl', ['$scope', function($scope) {
 makernode.app.directive('stepsPics', function($document) {
     function link($scope, $el, attrs) {
         $scope.attrs = attrs; // TODO is this necessary?
+        $scope.attrs.step = parseInt(attrs.step);
     }
     return { templateUrl: 'templates/steps_pics.html', link: link };
 });

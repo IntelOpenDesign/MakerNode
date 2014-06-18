@@ -1,23 +1,15 @@
 <div class="row padded steps-pics">
-    <div class="col-xs-4">
-        <div data-step="1"
-          ng-class="{
-            'step-pic': true,
-            'active': attrs.step === '1'}">
-        </div>
-    </div>
-    <div class="col-xs-4">
-        <div data-step="2"
-          ng-class="{
-            'step-pic': true,
-            'active': attrs.step === '2'}">
-        </div>
-    </div>
-    <div class="col-xs-4">
-        <div data-step="3"
-          ng-class="{
-            'step-pic': true,
-            'active': attrs.step === '3'}">
-        </div>
+    <div class="col-xs-12">
+        <table class="steps-pics-container"
+            <tr>
+                <td class="step-pic-container"
+                  ng-repeat="n in [1, 2, 3]">
+                    <img ng-class="{
+                        'step-pic': true,
+                        'active': attrs.step === n}"
+                      src="/static/img/step_{{n}}_{{attrs.step === n ? 'active' : 'inactive'}}.jpg">
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
