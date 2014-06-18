@@ -75,10 +75,10 @@ function pin_setter(is_analog, is_input) {
     }
 }
 
-var broadcast_interval_id = 0;
 
 var onConnect = function(conn) {
 
+    var broadcast_interval_id = 0;
     N_CLIENTS += 1;
     log.info('new connection, N_CLIENTS', N_CLIENTS);
     if (!broadcast_interval_id) {
