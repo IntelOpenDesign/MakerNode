@@ -27,11 +27,11 @@ makernode.routes = {
         controller: 'FormCtrl',
         template: 'create_user',
     },
-    app_home: {
-        hash: 'controller_mode',
+    app: {
+        hash: 'app',
         server_code: 'app',
         controller: 'EmptyCtrl',
-        template: 'home',
+        template: 'empty',
     },
 };
 
@@ -68,19 +68,41 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
     $scope.s = {
         got_data: false,
         route_key: 'init',
+        error_state: false,
     };
 
     $scope.currentRouteKey = function() {
         return makernode.get_route_key(window.location.hash.substring(2), 'hash');
     };
     $scope.goTo = function(route) {
-        if (route.hash === 'controller_mode') {
-            makernode.connect_via_router();
+        if (route.hash === makernode.routes.app.hash) {
+            $scope.connect_via_router();
         }
         window.location.hash = '#/' + route.hash;
     };
     $scope.goBack = function(n) {
         window.history.go(-n);
+    };
+    $scope.connect_via_router = function() {
+        if (window.location.origin === makernode.static_IP) {
+            // we are already connected via router
+            return;
+        }
+        var ws_url = makernode.get_websocket_url(makernode.static_IP);
+        setTimeout(function() {
+            $scope.s.error_state = true;
+        }, 5 * 60 * 1000000); // five minutes
+        function try_websocket_connection() {
+            var ws = new WebSocket(ws_url);
+            ws.onmessage = function(msg) {
+                var d = JSON.parse(msg.data);
+                if (_.has(d, 'pins') && _.has(d, 'connections')) {
+                    window.location.href = makernode.static_IP;
+                }
+            };
+            setTimeout(try_websocket_connection, 1000);
+        };
+        try_websocket_connection();
     };
 
     // set up connection with server
@@ -664,8 +686,3 @@ makernode.get_websocket_url = function(url) {
 makernode.static_IP = 'http://127.0.0.1:8000'; // test server
 //makernode.static_IP = 'http://192.168.15.53'; // real server
 
-makernode.connect_via_router = function() {
-    if (window.location.origin !== makernode.static_IP) {
-        window.location.href = makernode.static_IP;
-    }
-};
