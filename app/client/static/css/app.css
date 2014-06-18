@@ -40,7 +40,8 @@ p {
 
 .navbar {
   background: #1e60b5;
-  color: white; }
+  color: white;
+  border-bottom: 5px solid #0f3c81; }
 
 .hide {
   display: none; }
