@@ -74,6 +74,9 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
         return makernode.get_route_key(window.location.hash.substring(2), 'hash');
     };
     $scope.goTo = function(route) {
+        if (route.hash === 'controller_mode') {
+            makernode.connect_via_router();
+        }
         window.location.hash = '#/' + route.hash;
     };
     $scope.goBack = function(n) {
@@ -654,3 +657,11 @@ makernode.get_websocket_url = function() {
     return s;
 };
 
+makernode.static_IP = 'http://127.0.0.1:8000'; // test server
+//makernode.static_IP = 'http://192.168.15.53'; // real server
+
+makernode.connect_via_router = function() {
+    if (window.location.origin !== makernode.static_IP) {
+        window.location.href = makernode.static_IP;
+    }
+};
