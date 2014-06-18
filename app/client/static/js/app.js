@@ -1,5 +1,9 @@
 var makernode = {};
 
+// SETTINGS you might want to edit
+makernode.static_IP = 'http://127.0.0.1:8000';
+//
+
 makernode.app = angular.module('MakerNode', ['ngRoute']);
 
 makernode.routes = {
@@ -74,7 +78,7 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
 
     $scope.routes = makernode.routes;
     $scope.parseInt = parseInt;
-    $scope.static_IP = makernode.static_IP; // so templates can access it
+    $scope.static_IP = makernode.static_IP;
 
     $scope.d = makernode.d();
     $scope.s = {
@@ -116,19 +120,20 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
             }
             return;
         }
-        if (current_route_key === 'connecting_via_router') {
-            if (!makernode.is_connecting_to_router()) {
-                makernode.connect_via_router(function(){
-                    $scope.s.error_state = true;
-                }, makernode.routes.control_mode.hash);
-            }
-            return;
-        }
         if (data.step === 'app') {
-            if (makernode.is_connected_via_router()) {
+            if (makernode.rc.is_connected()) {
                 $scope.goTo(makernode.routes.control_mode);
             } else {
                 $scope.goTo(makernode.routes.connecting_via_router);
+            }
+        }
+        if (current_route_key === 'connecting_via_router') {
+            console.log('at route connecting_via_router, makernode.rc.is_connected()', makernode.rc.is_connected(), 'makernode.rc.is_connecting()', makernode.rc.is_connecting());
+            if (!makernode.rc.is_connected() &&
+                !makernode.rc.is_connecting()) {
+                makernode.rc.connect(function error_callback() {
+                    $scope.s.error_state = true;
+                }, makernode.routes.control_mode.hash);
             }
             return;
         }
@@ -679,7 +684,6 @@ makernode.server_pin_format = function(my_pins, my_pin_ids) {
 };
 
 // URL SETTINGS
-// TODO make these a function/object
 
 makernode.get_websocket_url = function(url) {
     var s = url ? url : window.location.origin;
@@ -695,42 +699,49 @@ makernode.get_websocket_url = function(url) {
     return s;
 };
 
-makernode.static_IP = 'http://127.0.0.1:8000'; // test server
-//makernode.static_IP = 'http://192.168.15.53'; // real server
+makernode.rc = function router_connection_manager() {
 
-makernode.is_connected_via_router = function() {
-    return window.location.origin === makernode.static_IP;
-};
+    var that = {};
 
-makernode.connection_to_router_in_process = false;
-makernode.is_connecting_to_router = function() {
-    return makernode.connection_to_router_in_process;
-};
-makernode.connect_via_router = function(onerror, hash) {
-    makernode.connection_to_router_in_process = true;
-    var ws_url = makernode.get_websocket_url(makernode.static_IP);
-    console.log('To test whether Galileo has gotten onto the wifi network yet, we are trying to connect to the Galileo websocket at ', ws_url);
+    that.connecting = false;
 
-    var keep_trying = true;
-    // Yes, we are pessimists. Expect failure and prepare the error msg.
-    setTimeout(function() {
-        console.log('Connecting to the Galileo websocket at', ws_url, 'failed');
-        keep_trying = false;
-        onerror();
-    }, 5 * 60 * 1000); // five minutes
-
-    function try_websocket_connection() {
-        if (keep_trying) {
-            console.log('Attempting to establish a websockets connection with Galileo at', ws_url);
-            var ws = new WebSocket(ws_url);
-            ws.onmessage = function(msg) {
-                var d = JSON.parse(msg.data);
-                if (_.has(d, 'pins') && _.has(d, 'connections')) {
-                    window.location.href = makernode.static_IP + '/#/' + hash;
-                }
-            };
-            setTimeout(try_websocket_connection, 1000);
-        }
+    that.is_connected = function() {
+        return window.location.origin === makernode.static_IP;
     };
-    try_websocket_connection();
-};
+
+    that.is_connecting = function() {
+        return that.connecting;
+    };
+
+    that.connect = function(onerror, hash) {
+        that.connecting = true;
+        var ws_url = makernode.get_websocket_url(makernode.static_IP);
+        console.log('To test whether Galileo has gotten onto the wifi network yet, we are trying to connect to the Galileo websocket at ', ws_url);
+
+        var keep_trying = true;
+        // Yes, we are pessimists. Expect failure and prepare the error msg.
+        setTimeout(function() {
+            console.log('Connecting to the Galileo websocket at', ws_url, 'failed');
+            keep_trying = false;
+            onerror();
+        }, 5 * 60 * 1000); // five minutes
+
+        function try_websocket_connection() {
+            if (keep_trying) {
+                console.log('Attempting to establish a websockets connection with Galileo at', ws_url);
+                var ws = new WebSocket(ws_url);
+                ws.onmessage = function(msg) {
+                    var d = JSON.parse(msg.data);
+                    if (_.has(d, 'pins') && _.has(d, 'connections')) {
+                        window.location.href = makernode.static_IP + '/#/' + hash;
+                    }
+                };
+                setTimeout(try_websocket_connection, 1000);
+            }
+        };
+        try_websocket_connection();
+    };
+
+    return that;
+}();
+
