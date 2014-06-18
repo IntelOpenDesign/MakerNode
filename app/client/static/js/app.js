@@ -71,7 +71,7 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
     };
 
     $scope.currentRouteKey = function() {
-        return makernode.get_route_key(window.location.hash.substring(1), 'hash');
+        return makernode.get_route_key(window.location.hash.substring(2), 'hash');
     };
     $scope.goTo = function(route) {
         window.location.hash = '#/' + route.hash;
