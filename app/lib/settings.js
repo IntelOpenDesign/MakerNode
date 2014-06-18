@@ -62,6 +62,14 @@ function settings() {
         return write();
     };
 
+	var get_router_gateway_ip = function() {
+		return state.router_gateway_ip;
+	};
+
+	var get_galileo_static_ip = function() {
+		return state.galileo_static_ip;
+	}
+
     return {
         init: init,
         be_access_point: be_access_point,
@@ -69,6 +77,8 @@ function settings() {
         confirm_network: confirm_network,
         set_user_password: set_user_password,
         set_router_info: set_router_info,
+		get_router_gateway_ip: get_router_gateway_ip,
+	    get_galileo_static_ip: get_galileo_static_ip,
     };
 }
 

@@ -165,12 +165,15 @@ var onConnect = function(conn) {
                 settings.set_router_info(d.wifi_ssid, d.wifi_password).then(function() {
                    // TODO app.js should really be the one to call this
                    var our_command = './init_supplicant.sh ' + d.wifi_ssid + ' ' + d.wifi_password;
-                   exec(our_command, function(error, stdout, stderr) {
+				   if (settings.get_galileo_static_ip !== "") {
+				     our_command += ' ' + settings.get_galileo_static_ip() + ' ' + settings.get_router_gateway_ip();
+				   }
+				   log.info('Attempting to init wlan0 with command: ' + our_command);
+				   exec(our_command, function(error, stdout, stderr) {
                        // TODO clean this up
                        if (error === null) return;
                        log.error('INIT_SUPPLICANT.SH ERROR CALLBACK has error ', error,
-                                 ' stdout ', stdout, ' stderr ', stderr, 'we gave it command ',
-                                 our_command);
+                                 ' stdout ', stdout, ' stderr ', stderr);
                    });
                 }, function(error) {
                     log.error('problem with wifi_ssid ' + d.wifi_ssid + ' wifi_password ' + d.wifi_password);

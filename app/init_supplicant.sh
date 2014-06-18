@@ -1,8 +1,9 @@
 #!/bin/sh
 
 # killall hostapd
-FILE=/etc/wpa_supplicant.conf
-wpa_passphrase $1 $2 > $FILE
+SUPPLICANT_FILE=/etc/wpa_supplicant.conf
+INTERFACES_FILE=/etc/network/interfaces
+wpa_passphrase $1 $2 > $SUPPLICANT_FILE
 
 sed -i "4 i\\
         scan_ssid=1\\
@@ -10,9 +11,20 @@ sed -i "4 i\\
         key_mgmt=WPA-PSK\\
         pairwise=CCMP TKIP\\
         group=CCMP TKIP\\
-" $FILE
-echo Updated $FILE
-more $FILE
+" $SUPPLICANT_FILE
+echo Updated $SUPPLICANT_FILE
+more $SUPPLICANT_FILE
 
-# /etc/init.d/networking restart
+if (( $# > 3 )); then
+	cp ./conf/static_wlan.conf $INTERFACES_FILE
+	sed -i "15 i\\
+		address $3\\
+		gateway $4\\
+	" $INTERFACES_FILE
+else
+	cp ./conf/dynamic_wlan.conf $INTERFACES_FILE	
+fi
+echo Updated $INTERFACES_FILE
+
+/etc/init.d/networking restart
 # TODO: /sbin/reboot
