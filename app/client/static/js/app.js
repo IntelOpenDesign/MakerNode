@@ -124,8 +124,12 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
             }
             return;
         }
-        if (data.step === 'app' && !makernode.is_connected_via_router()) {
-            $scope.goTo(makernode.routes.connecting_via_router);
+        if (data.step === 'app') {
+            if (makernode.is_connected_via_router()) {
+                $scope.goTo(makernode.routes.control_mode);
+            } else {
+                $scope.goTo(makernode.routes.connecting_via_router);
+            }
             return;
         }
     });
