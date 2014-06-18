@@ -1,0 +1,25 @@
+<div id="loading">
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <p>
+            Galileo is connecting to your home wifi network... Please wait.
+            </p>
+        </div>
+    </div>
+    <div class="row bg-danger" ng-show="s.error_state">
+        <div class="col-xs-12">
+            <p>
+                Sorry, something didn't work. Please try these steps:
+            </p>
+            <ol>
+                <li>Make sure you are connected to your home network</li>
+                <li>Go to {{static_IP}}</li>
+            </ol>
+            <p>
+                If that still doesn't work, we're very sorry. You might try contacting carlos.montesinos@intel.com for support.
+            </p>
+        </div>
+    </div>
+</div>
