@@ -647,8 +647,12 @@ makernode.server_pin_format = function(my_pins, my_pin_ids) {
 
 // URL SETTINGS
 
-makernode.get_websocket_url = function() {
-    var s = window.location.origin.slice("http://".length);
+makernode.get_websocket_url = function(url) {
+    var s = url ? url : window.location.origin;
+    var prefix = "http://";
+    if (s.slice(0, prefix.length) === prefix) {
+        var s = s.slice(prefix.length);
+    }
     var i = s.indexOf(":");
     if (i > 0) {
         s = s.slice(0, i);
