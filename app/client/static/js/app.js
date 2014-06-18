@@ -73,7 +73,6 @@ makernode.app.config(['$routeProvider', function($routeProvider) {
 // the highest level app controller from which all others inherit
 makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
 
-
     window.$scope = $scope;
 
     $scope.routes = makernode.routes;
@@ -169,6 +168,15 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
         if (pin.is_input) return;
         var new_val = pin.value === 100 ? 0 : 100;
         $scope.send_pin_update([id], 'value', new_val);
+    };
+
+    $scope.confirmation = function(msg, f) {
+        if (confirm(msg)) {
+            f();
+        }
+    };
+    $scope.send_server_reset = function() {
+        alert('TODO: actually send server reset');
     };
 }]);
 

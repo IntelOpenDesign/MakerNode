@@ -44,6 +44,9 @@ $bright_blue: rgb(58, 158, 233);
 .droid-font {
     font-family: 'Droid Sans';
 }
+.text-muted {
+    font-size: 40%;
+}
 .pin-name {
     font-family: 'Neo Sans Intel';
 }
@@ -95,7 +98,7 @@ p {
 }
 
 
-/* APP CONTAINER AND HEADER */
+/* APP CONTAINER, HEADER, FOOTER */
 #app-container {
     position: relative;
     padding-bottom: 50px;
@@ -105,6 +108,9 @@ p {
 }
 #header table {
     width: 100%;
+}
+#footer {
+    padding-top: 2em;
 }
 
 /* SETUP FORM */
