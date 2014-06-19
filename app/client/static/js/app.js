@@ -85,7 +85,10 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
     Galileo.on('websocket-closed', function() {
         $scope.s.got_data = false;
     });
-    Galileo.connect(makernode.get_websocket_url());
+    var ws_url = 'ws://';
+    ws_url += window.location.origin.slice('http://'.length);
+    ws_url += ':8001';
+    Galileo.connect(ws_url);
 
     // This sends the object d to the server exactly as is.
     // Only use this if you know the server is expecting this exact format.
@@ -643,7 +646,7 @@ makernode.rc = function routing_control() {
     var url_root = null; // ex. http://www.makernode.com/, http://172.20.10.8
 
     that.reset = function(s) {
-        url_root = currentURLRoot();
+        url_root = that.currentURLRoot();
         that.update(s);
     };
 
@@ -658,10 +661,10 @@ makernode.rc = function routing_control() {
     };
     that.currentRouteKey = function() {
         var current_hash = window.location.hash.substring("/#".length);
-        return makernode.get_route_key(that.currentHash(), 'hash');
+        return that.get_route_key(current_hash, 'hash');
     };
     that.currentURLRoot = function() {
-        return window.location.origin.splice("http://".length);
+        return window.location.origin.slice("http://".length);
     };
 
     that.goTo = function(route) {
@@ -684,7 +687,7 @@ makernode.rc = function routing_control() {
             that.goTo(makernode.routes.control_mode);
         }
         if (serRouteKey && curRouteKey !== serRouteKey) {
-            that.goTo(serRouteKey);
+            that.goTo(makernode.routes[serRouteKey]);
         }
     };
 
@@ -705,7 +708,8 @@ makernode.rc = function routing_control() {
                 var ws = new WebSocket(ws_url);
                 ws.onmessage = function(msg) {
                     var d = JSON.parse(msg.data);
-                    if (_.has(d, 'pins') && _.has(d, 'connections')) {
+                    if (_.has(d, 'pins') && _.has(d, 'connections') &&
+                        that.currentURLRoot() !== url_root) {
                         window.location.href = 'http://' + url_root + '/#/' + makernode.routes.connecting.hash;
                     }
                 };

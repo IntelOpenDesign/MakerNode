@@ -116,8 +116,8 @@ var onConnect = function(conn) {
     conn.on('message', function(str) {
         log.info('received ' + str);
         setTimeout(function() {
-            log.info('processing message ID', d.message_id);
             var d = JSON.parse(str);
+            log.info('processing message ID', d.message_id);
             _.each(d.connections, function(dc) {
                 var index = -1;
                 _.each(msg.connections, function(mc, i) {
