@@ -27,4 +27,3 @@ fi
 echo Updated $INTERFACES_FILE
 
 /etc/init.d/networking restart
-# TODO: /sbin/reboot
