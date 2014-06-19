@@ -182,7 +182,7 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
         }
     };
     $scope.send_server_reset = function() {
-        alert('TODO: actually send server reset');
+	$scope.send_server_update({reset: true});
     };
 }]);
 

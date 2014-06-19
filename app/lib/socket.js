@@ -2,6 +2,7 @@ var _ = require('underscore');
 var log = require('./log').create('Socket');
 var WebSocketServer = require('ws').Server;
 var exec = require('child_process').exec;
+var sh = require('./command_queue').init().enqueue;
 
 var onUpdate;
 var settings;
@@ -179,6 +180,9 @@ var onConnect = function(conn) {
                     log.error('problem with wifi_ssid ' + d.wifi_ssid + ' wifi_password ' + d.wifi_password);
                 });
 
+            }
+            if (_.has(d, 'reset') && d.reset === true) {
+                sh('./restore_factory_settings.sh');
             }
             onUpdate();
         }, 0);
