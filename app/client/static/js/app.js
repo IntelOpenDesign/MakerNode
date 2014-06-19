@@ -1,9 +1,5 @@
 var makernode = {};
 
-// SETTINGS you might want to edit
-makernode.static_IP = '172.20.10.8';
-//
-
 makernode.app = angular.module('MakerNode', ['ngRoute']);
 
 makernode.routes = {
@@ -12,53 +8,37 @@ makernode.routes = {
         server_code: null,
         controller: 'EmptyCtrl',
         template: 'empty',
-        is_setup_step: true,
     },
     confirm_mac: {
         hash: 'confirm_network',
         server_code: 'confirm_network',
         controller: 'FormCtrl',
         template: 'confirm_mac',
-        is_setup_step: true,
     },
     wifi_setup: {
         hash: 'wifi_router_setup',
         server_code: 'set_router_info',
         controller: 'FormCtrl',
         template: 'wifi_setup',
-        is_setup_step: true,
     },
     create_user: {
         hash: 'create_password',
         server_code: 'set_user_password',
         controller: 'FormCtrl',
         template: 'create_user',
-        is_setup_step: true,
     },
-    connecting_via_router: {
-        hash: 'connecting_via_router',
-        server_code: 'app',
+    connecting: {
+        hash: 'connecting',
+        server_code: '',
         controller: 'EmptyCtrl',
         template: 'connecting_to_router',
-        is_setup_step: false,
     },
     control_mode: {
         hash: 'controller',
-        server_code: null,
+        server_code: '',
         controller: 'EmptyCtrl',
         template: 'home',
-        is_setup_step: false,
     },
-};
-
-makernode.get_route_key = function(val, attr) {
-    var route_key = 'init';
-    _.each(makernode.routes, function(o, key) {
-        if (o[attr] === val) {
-            route_key = key;
-        }
-    });
-    return route_key;
 };
 
 makernode.app.config(['$routeProvider', function($routeProvider) {
@@ -85,15 +65,6 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
         error_state: false,
     };
 
-    $scope.currentRouteKey = function() {
-        return makernode.get_route_key(window.location.hash.substring(2), 'hash');
-    };
-    $scope.goTo = function(route) {
-        window.location.hash = '#/' + route.hash;
-    };
-    $scope.goBack = function(n) {
-        window.history.go(-n);
-    };
 
     // set up connection with server
     Galileo.set_all_pins_getter(function() {
@@ -103,9 +74,15 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
         if (!$scope.s.got_data) { // first time initialization
             $scope.s.got_data = true;
             $scope.d.reset(data);
+            makernode.rc.reset(data);
         } else {
             $scope.s.got_data = true;
             $scope.d.update(data);
+            makernode.rc.update(data);
+        }
+
+        if (window.location.origin !== data.url_root) {
+            makernode.rc.connect_to(
         }
 
 
@@ -700,37 +677,55 @@ makernode.server_pin_format = function(my_pins, my_pin_ids) {
 
 // URL SETTINGS
 
-makernode.get_websocket_url = function(url) {
-    var s = url ? url : window.location.origin;
-    var prefix = "http://";
-    if (s.slice(0, prefix.length) === prefix) {
-        var s = s.slice(prefix.length);
-    }
-    var i = s.indexOf(":");
-    if (i > 0) {
-        s = s.slice(0, i);
-    }
-    s = "ws://" + s + ":8001";
-    return s;
-};
-
-makernode.rc = function router_connection_manager() {
+makernode.rc = function routing_control() {
 
     var that = {};
 
-    that.connecting = false;
+    var url_root = null; // ex. http://www.makernode.com/, http://172.20.10.8
+    var server_hash = null; // ex. confirm_network, ''
 
-    that.is_connected = function() {
-        return window.location.origin === makernode.static_IP;
+    that.reset = function(s) {
+        url_root = s.url_root;
+        server_hash = s.hash_code;
     };
 
-    that.is_connecting = function() {
-        return that.connecting;
+    that.get_route_key = function(val, attr) {
+        var route_key;
+        _.each(makernode.routes, function(o, key) {
+            if (o[attr] === val) {
+                route_key = key;
+            }
+        });
+        return route_key;
+    };
+    that.currentRouteKey = function() {
+        return makernode.get_route_key(window.location.hash.substring(2), 'hash');
+    };
+
+    that.goTo = function(route) {
+        window.location.hash = '#/' + route.hash;
+    };
+    that.goBack = function(n) {
+        window.history.go(-n);
+    };
+
+    that.update = function(s) {
+        if (s.url_root !== url_root) {
+            url_root = s.url_root;
+            that.goTo(makernode.routes.connecting);
+            that.connect();
+        }
+        if (window.location.origin === url_root &&
+            that.currentRouteKey() === 'connecting') {
+            that.goTo(makernode.routes.control_mode);
+        }
+        if (s.hash_code.length > 0 && s.hash_code !== server_hash) {
+            that.goTo(makernode.routes[makenode.get_route_key(server_hash, 'hash')]);
+        }
     };
 
     that.connect = function(onerror, hash) {
-        that.connecting = true;
-        var ws_url = makernode.get_websocket_url(makernode.static_IP);
+        var ws_url = 'ws://' + url_root + ':8001';
         console.log('To test whether Galileo has gotten onto the wifi network yet, we are trying to connect to the Galileo websocket at ', ws_url);
 
         var keep_trying = true;
@@ -748,7 +743,7 @@ makernode.rc = function router_connection_manager() {
                 ws.onmessage = function(msg) {
                     var d = JSON.parse(msg.data);
                     if (_.has(d, 'pins') && _.has(d, 'connections')) {
-                        window.location.href = makernode.static_IP + '/#/' + hash;
+                        window.location.href = url_root;
                     }
                 };
                 setTimeout(try_websocket_connection, 1000);

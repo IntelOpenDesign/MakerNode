@@ -30,7 +30,7 @@ function settings() {
         return fs.write(filename, JSON.stringify(state));
     };
 
-    var get_step = function() {
+    var get_hash_code = function() {
         if (!state.network_confirmed)
             return 'confirm_network';
         if (!state.user_password_set)
@@ -38,7 +38,7 @@ function settings() {
         if (!state.router_ssid || state.router_ssid.length === 0 ||
             !state.router_password || state.router_password.length === 0)
             return 'set_router_info';
-        return 'app';
+        return '';
     };
 
     var be_access_point = function() {
@@ -73,7 +73,7 @@ function settings() {
     return {
         init: init,
         be_access_point: be_access_point,
-        get_step: get_step,
+        get_hash_code: get_hash_code,
         confirm_network: confirm_network,
         set_user_password: set_user_password,
         set_router_info: set_router_info,
