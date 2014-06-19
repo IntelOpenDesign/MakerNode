@@ -1,7 +1,7 @@
 var makernode = {};
 
 // SETTINGS you might want to edit
-makernode.static_IP = 'http://127.0.0.1:8000';
+makernode.static_IP = '172.20.10.8';
 //
 
 makernode.app = angular.module('MakerNode', ['ngRoute']);
@@ -108,6 +108,8 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
             $scope.d.update(data);
         }
 
+
+
         // server can suggest routes but does not specify all routes
         var route_key_from_server = makernode.get_route_key(data.step, 'server_code');
         var current_route_key = $scope.currentRouteKey();
@@ -121,7 +123,11 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
         }
         if (data.step === 'app') {
             if (makernode.rc.is_connected()) {
-                $scope.goTo(makernode.routes.control_mode);
+                if (current_route_key !== 'control_mode') {
+                    $scope.goTo(makernode.routes.control_mode);
+                } else {
+                    return;
+                }
             } else {
                 $scope.goTo(makernode.routes.connecting_via_router);
             }
