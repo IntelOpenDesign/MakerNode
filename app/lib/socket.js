@@ -12,12 +12,13 @@ function Socket(_settings){
     settings = _settings;
     msg = {
         status: 'OK', // TODO test client side with "error" status
-        step: undefined,
+        url_root: null,
+        hash_code: null,
         pins: {},
         connections: [],
         count: 0, // TODO remove when done debugging
         message_ids_processed: [],
-        ssid: 'ConnectAnything',
+        ssid: null,
     };
     _.each(digital_outs, pin_setter(false, false));
     _.each(digital_ins, pin_setter(false, true));
@@ -54,8 +55,6 @@ var messages_dict = {};
 
 var N_CLIENTS = 0;
 
-var change_ssid_message_id = null;
-
 function pin_setter(is_analog, is_input) {
     return function(id) {
         msg.pins[id] = {
@@ -85,7 +84,14 @@ var onConnect = function(conn) {
         broadcast_interval_id = setInterval(function() {
             msg.count += 1;
             msg.message_ids_processed = _.keys(messages_dict);
-            msg.step = settings.get_step();
+            msg.hash_code = settings.get_hash_code();
+            // either we have a static ip address to connect to or we assume
+            // Galileo is broadcasting a wifi hotspot and just connect to that
+            if (settings.be_access_point()) {
+                msg.url_root = 'www.makernode.com';
+            } else {
+                msg.url_root = settings.get_galileo_static_ip();
+            }
             try {
                 conn.send(JSON.stringify(msg));
             } catch (error) {
@@ -102,10 +108,6 @@ var onConnect = function(conn) {
                 });
             _.each(message_ids_to_delete, function(id) {
                 delete messages_dict[id];
-                if (id === change_ssid_message_id) {
-                    clearInterval(broadcast_interval_id);
-                    log.info('clearing broadcast interval');
-                }
             });
         }, 33); //TODO: Figure out the optimal value here
     }
@@ -113,7 +115,7 @@ var onConnect = function(conn) {
     conn.on('message', function(str) {
         log.info('received ' + str);
         setTimeout(function() {
-            //log.info('processing ' + str);
+            log.info('processing message ID', d.message_id);
             var d = JSON.parse(str);
             _.each(d.connections, function(dc) {
                 var index = -1;
@@ -146,15 +148,7 @@ var onConnect = function(conn) {
                 msg.pins[id].is_timer_on = pin.is_timer_on;
                 msg.pins[id].timer_value = pin.timer_value;
             });
-            log.info('processing message ID', d.message_id);
             messages_dict[d.message_id] = 0;
-            if (_.has(d, 'ssid') && d.ssid !== msg.ssid) {
-                // a user has changed the SSID. we should notify all other
-                // users and then stop broadcasting, to mimic the users having
-                // to reconnect to another wifi hotspot
-                msg.ssid = d.ssid;
-                var change_ssid_message_id = d.message_id;
-            }
             if (_.has(d, 'mac_address')) {
                 settings.confirm_network();
             }
@@ -165,7 +159,7 @@ var onConnect = function(conn) {
                 settings.set_router_info(d.wifi_ssid, d.wifi_password).then(function() {
                    // TODO app.js should really be the one to call this
                    var our_command = './init_supplicant.sh ' + d.wifi_ssid + ' ' + d.wifi_password;
-				   if (settings.get_galileo_static_ip !== "") {
+				   if (settings.get_galileo_static_ip() !== "") {
 				     our_command += ' ' + settings.get_galileo_static_ip() + ' ' + settings.get_router_gateway_ip();
 				   }
 				   log.info('Attempting to init wlan0 with command: ' + our_command);
