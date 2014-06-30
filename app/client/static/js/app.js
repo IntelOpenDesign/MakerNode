@@ -702,15 +702,21 @@ makernode.rc = function routing_control() {
             keep_trying = false;
         }, 5 * 60 * 1000); // five minutes
 
+        var websockets = [];
         function try_websocket_connection() {
             if (keep_trying) {
                 console.log('Attempting to establish a websockets connection with Galileo at', ws_url);
                 var ws = new WebSocket(ws_url);
+                websockets.push(ws);
                 ws.onmessage = function(msg) {
                     var d = JSON.parse(msg.data);
                     if (_.has(d, 'pins') && _.has(d, 'connections') &&
                         that.currentURLRoot() !== url_root) {
-                        window.location.href = 'http://' + url_root + '/#/' + makernode.routes.connecting.hash;
+                        keep_trying = false;
+                        _.each(websockets, function(one_ws) {
+                            one_ws.close();
+                        });
+                        window.location = 'http://' + url_root + '/#/' + makernode.routes.connecting.hash;
                     }
                 };
                 setTimeout(try_websocket_connection, 1000);
