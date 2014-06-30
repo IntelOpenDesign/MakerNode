@@ -215,6 +215,8 @@ $pin_border_w: 15px;
     height: 100%;
     z-index: 5;
     text-align: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 #control-mode .pin.analog.sensor div[pin-slider] .pin-name,
 #control-mode .pin.analog.sensor div[pin-slider] .pin-label {
