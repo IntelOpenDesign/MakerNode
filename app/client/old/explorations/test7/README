@@ -1,7 +1,0 @@
-can we do dragging, and even better would be drag and drop, on a mobile device
-
-maybe i should try touchpunch instead of jqueryui mobile
-
-pretty sure i can't use jquery ui mobile AND touchpunch because touchpunch kills touch events and fires translated mouse events (ex. mousedown), whereas jquery ui mobile needs those touch events too and translates them into nicer touch events (ex. tap, taphold)
-
-but i just tried touch punch's sortable demo on my android phone and it felt jerky and buggy. like as soon as i touch an element it jumps to the middle of the list and then i have to drag it to where i want it-- does not feel like a good user experience. feels jank. maybe i should look at what he did and map touch events on my sortable divs to things that jqueryui's sortable will respond to

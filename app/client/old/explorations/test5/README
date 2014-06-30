@@ -1,1 +1,0 @@
-logging a few of the events provided by jquery mobile. vmousedown works on phone and in browser I think. tap happens on phone. taphold happens for slower taps, but is followed by a tap event too.
