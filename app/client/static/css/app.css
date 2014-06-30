@@ -166,6 +166,10 @@ p {
   line-height: 70px;
   text-align: center; }
 
+#control-mode .pin-name,
+#control-mode .pin-label {
+  font-size: 30px; }
+
 #control-mode .pin.digital.sensor div[pin-button] .pin-name,
 #control-mode .pin.digital.sensor div[pin-button] .pin-label {
   line-height: 40px; }

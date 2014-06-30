@@ -198,6 +198,10 @@ $pin_border_w: 15px;
     line-height: $pin_button_h;
     text-align: center;
 }
+#control-mode .pin-name,
+#control-mode .pin-label {
+    font-size: $pin_button_h - (2 * $pin_border_w) - 10px;
+}
 #control-mode .pin.digital.sensor div[pin-button] .pin-name,
 #control-mode .pin.digital.sensor div[pin-button] .pin-label {
     line-height: $pin_button_h - (2 * $pin_border_w);
