@@ -158,13 +158,13 @@ If you aren't a member of the repo, contact us so we can add you. It's private r
 
     git config --global http.sslVerify false
     cd
-    git clone https://<username>@bitbucket.org/adampasz/makernode-dev.git maker
+    git clone https://<username>@bitbucket.org/adampasz/makernode-dev.git mn_setup
 
 If you can figure out a better way than to do that sketchy git config step, that would be awesome and please let us know.
 
 ## Step 8 - System Configuration ##
 
-    cd /home/maker/app
+    cd /home/root/mn_setup/app
 
 Our conf files for hosting the access point, udhcp, and dns
     cp conf/hostapd.conf /etc/hostapd.conf
@@ -177,7 +177,7 @@ So that sketch.elf won't run on startup:
 So that our node server will run on startup:
     vi /etc/inittab
 Add this line to the end:
-    mkr:5:once:/home/maker/app/maker-node.sh start
+    mkr:5:once:/home/root/mn_setup/app/maker-node.sh start
 
 So that you will have a unique SSID for the wifi hotspot,
     vi /etc/hostapd.conf
@@ -185,14 +185,14 @@ Change the line ssid=MakerNode to have the ssid name of your choice
 
 ## Step 9 - Download Node Modules ##
 
-    cd /home/maker/app
+    cd /home/root/mn_setup/app
     npm install
 
 This could take a while because Galileo is slow and you are installing a lot.
 
 ## Step 10 - Start our Code ##
 
-    cd /home/maker/app
+    cd /home/root/mn_setup/app
     chmod u+x *.sh
     ./restore_factory_settings
     reboot
