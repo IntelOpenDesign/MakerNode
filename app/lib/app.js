@@ -14,7 +14,7 @@ function app() {
     var conf = require('./conf')();
     var setupCtrlF = require('./setup_controller');
     var boardCtrlF = require('./board_controller');
-    var netUtils = require('./network_utils')();
+    var utils = require('./galileo_utils')();
 
     var servers;
     var app_state;
@@ -23,7 +23,7 @@ function app() {
 
     var start = function(cb) {
         log.info('Starting MakerNode...');
-        servers = netUtils.create_servers(PORT, path.join(__dirname, '../client'));
+        servers = utils.create_servers(PORT, path.join(__dirname, '../client'));
         log.info('HTTP and WS servers listening on port', PORT);
         servers.socketio_server.on('connect', function(conn) {
             log.debug('client connected');
@@ -86,7 +86,7 @@ function app() {
     };
 
     var launch_setup_ctrl = function() {
-        netUtils.start_access_point();
+        utils.start_access_point();
         setupCtrl = setupCtrlF(app_state.setup_state, servers.socketio_server,
                 function on_finished(setup_state) {
                     log.debug('finished with setup');
@@ -94,7 +94,7 @@ function app() {
                     app_state.setup_state = setup_state;
                     log.debug('app_state', JSON.stringify(app_state, null, 2));
                     conf.write(APP_CONF_FILE, app_state).then(function() {
-                        netUtils.get_hostname(function(error, stdout, stderr) {
+                        utils.get_hostname(function(error, stdout, stderr) {
                             // take newline off the end of stdout
                             var hostname = stdout.slice(0, -1);
                             // make sure hostname ends in .local
@@ -116,7 +116,7 @@ function app() {
                 // when the client says it is ready to redirect 
                 function on_redirect() {
                     log.debug('on_redirect, about to stop access point');
-                    netUtils.stop_access_point(function() {
+                    utils.stop_access_point(function() {
                         log.debug('finished stopping access point');
                         setupCtrl.stop();
                         sh('reboot');
@@ -130,7 +130,7 @@ function app() {
     };
 
     var launch_board_ctrl = function(cb) {
-        netUtils.start_supplicant({
+        utils.start_supplicant({
             ssid: app_state.setup_state.ssid,
             pwd: app_state.setup_state.pwd,
         }, function() { // callback

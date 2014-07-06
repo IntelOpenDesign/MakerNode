@@ -2,6 +2,7 @@
 var io = require('socket.io');
 var _ = require('underscore');
 var log = require('./log')('setup_controller');
+var utils = require('./galileo_utils')();
 
 module.exports = function(state, wss, on_finished, on_redirect) {
   var onUpdate;
@@ -12,12 +13,16 @@ module.exports = function(state, wss, on_finished, on_redirect) {
     wss.on('connect', function(conn) {
       conn.on('set_hostname', function(d) { // STEP 1
         log.debug('got set_hostname info', JSON.stringify(d));
-        state.set_hostname = true;
+        utils.set_hostname(d.hostname, function() {
+          state.set_hostname = true;
+        });
       });
 
       conn.on('set_root_password', function(d) { // STEP 2
         log.debug('got set_root_password info', JSON.stringify(d));
-        state.set_root_password = true;
+        utils.set_root_password(d.root_password, function() {
+          state.set_root_password = true;
+        });
       });
 
       conn.on('router_setup', function(d) { // STEP 3

@@ -2,7 +2,7 @@ var io = require('socket.io-client');
 var exec = require('child_process').exec;
 var should = require('chai').should();
 
-var network_utils = require('../lib/network_utils')();
+var utils = require('../lib/galileo_utils')();
 var state = {
   "setup_state": {
     "network_confirmed": false,
@@ -19,7 +19,7 @@ var HOST = 'localhost';
 var PORT = 8001;
 var NETSTAT = "netstat -a -n | egrep '" + PORT + ".* LISTEN'"; //TODO: Make this a util method
 
-var servers = network_utils.create_servers(PORT);
+var servers = utils.create_servers(PORT);
 var setup_controller = require('../lib/setup_controller')(state, servers.socketio_server, on_finished, on_redirect);
 
 describe('setup_controller.start()', function() {

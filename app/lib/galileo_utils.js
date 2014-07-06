@@ -3,7 +3,7 @@ var sh = require('./command_queue')();
 var express = require('express');
 var socketio = require('socket.io');
 
-var log = require('./log')('network_utils');
+var log = require('./log')('galileo_utils');
 
 module.exports = function() {
   function start_access_point(callback) {
@@ -32,6 +32,18 @@ module.exports = function() {
     sh('hostname', callback);
   }
 
+  function set_hostname(name, callback) {
+    sh('./set_hostname.sh ' + name, callback);
+  }
+
+  function set_root_password(pwd, callback) {
+    // Steve's configure_edison.py commands for changing the password
+    // def changePassword(newPass):
+    //   os.popen('echo "root":"%s" | chpasswd' % newPass)
+    //   os.popen("sed -i 's/^wpa_passphrase=.*/wpa_passphrase=%s/' /etc/hostapd/hostapd.conf" % (newPass))
+    sh('echo root:' + pwd + ' | chpasswd', callback);
+  }
+
   function create_servers(port, client_path) {
     var express_app = express();
     if (client_path) {
@@ -53,6 +65,8 @@ module.exports = function() {
     start_supplicant: start_supplicant,
     stop_supplicant: stop_supplicant,
     get_hostname: get_hostname,
+    set_hostname: set_hostname,
+    set_root_password: set_root_password,
     create_servers: create_servers
   };
 }
