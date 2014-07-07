@@ -5,4 +5,6 @@ client/.sass-cache/*
 node_modules
 conf/boardstate.conf
 conf/appstate.conf
-docs
+client/docs
+coverage
+client/coverage

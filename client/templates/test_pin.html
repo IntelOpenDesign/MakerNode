@@ -1,35 +1,28 @@
-<div id="control-mode"
-  class="container-fluid setup-form">
+<div id="control-mode" class="container-fluid setup-form">
 
     <div step="3" steps-pics></div>
-
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>Connected to Your Wireless Network!</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="button wide submit" ng-click="submit()">
+            Next Steps &nbsp; >>
+        </div>
+    </div>
     <div class="row padded">
         <div class="col-xs-12">
-            <h1>Connection Test</h1>
+            <p>
+                Your Galileo is connected via a nodejs websocket to the button below. Use
+                it to confirm the device is properly configured.
+            </p>
         </div>
     </div>
-
     <div class="row padded">
-        <div class="col-xs-12">
-            <p>Try turning Pin 13 on and off using this button, and you should see an LED go on and off on your board. This LED is labeled "L" on the Galileo and is indicated with a red arrow below. It comes automatically hooked up to Pin 13.</p>
-        </div>
-    </div>
-
-    <div class="row padded test-pin">
-        <div class="col-xs-12"
-          ng-if="d.pins.13.value === 100">
-            <img src="/static/img/galileo_pin13_led_on.png">
-        </div>
-        <div class="col-xs-12"
-          ng-if="d.pins.13.value === 0">
-            <img src="/static/img/galileo_pin13_led_off.png">
-        </div>
-    </div>
-
-    <div class="row padded">
-        <div class="col-xs-12"
-          ng-repeat="pin in [d.pins.13]">
-            <div ng-class="{
+        <div class="center-and-shrink">
+            <div class="col-xs-12" ng-repeat="pin in [d.pins.13]">
+                <div ng-class="{
                 'pin': true,
                 'analog': pin.is_analog,
                 'digital': !pin.is_analog,
@@ -39,20 +32,21 @@
                 'off': pin.value === 0,
                 'big': true,
                 'testing': true}">
-                <div ng-if="pin.is_analog"
-                  pin-slider>
-                </div>
-                <div ng-if="!pin.is_analog"
-                  pin-button>
+                    <div ng-if="pin.is_analog" pin-slider>
+                    </div>
+                    <div ng-if="!pin.is_analog" pin-button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="row">
-        <div class="button wide submit"
-          ng-click="submit()">
-            Done Testing
+    <div class="row padded test-pin">
+        <br/>
+        <div class="col-xs-12" ng-if="d.pins.13.value === 100">
+            <img src="/static/img/galileo_pin13_led_on.png">
+        </div>
+        <div class="col-xs-12" ng-if="d.pins.13.value === 0">
+            <img src="/static/img/galileo_pin13_led_off.png">
         </div>
     </div>
 

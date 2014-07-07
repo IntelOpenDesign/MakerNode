@@ -226,6 +226,12 @@ img {
     background-color: $bg_gray;
 }
 
+.center-and-shrink {
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+}
+
 $pin_h: 75px;
 $pin_button_h: 0.8 * $pin_h;
 $pin_button_w: 150px;
