@@ -1,4 +1,7 @@
-node_modules/*
 *.DS_Store
-conf/appstate.conf
+todo.md
+test/coverage
+client/.sass-cache/*
+node_modules
 conf/boardstate.conf
+conf/appstate.conf
