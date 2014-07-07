@@ -90,6 +90,8 @@ makernode.app.controller('AppCtrl', ['$scope', function($scope) {
         // TODO these timeouts are kind of sketchy, but they work.
         console.log('Server is telling us to get ready to REDIRECT');
         // wait here to let the connecting page finish loading, images and all
+        // TODO instead of guessing how long it will take to load the connecting
+        // page, do it on the jQuery "onload" event or something
         setTimeout(function(){
             console.log('We are about to reply to the server saying we are ready to redirect');
             $scope.send_server_update('redirect', {});
