@@ -1,38 +1,27 @@
 <div id="control-mode" class="container-fluid setup-form">
 
     <div step="3" steps-pics></div>
-
-    <div class="row padded">
+    <div class="row">
         <div class="col-xs-12">
-            <h1>Connection Test</h1>
+            <h1>Connected to Your Wireless Network!</h1>
         </div>
     </div>
-
+    <div class="row">
+        <div class="button wide submit" ng-click="submit()">
+            Next Steps &nbsp; >>
+        </div>
+    </div>
     <div class="row padded">
         <div class="col-xs-12">
             <p>
-                You have successfully connected your Galileo to your wireless network!
-            </p>
-            <p>
-                Your Galileo is connected via a nodejs websocket to the test button below. Use
-                thto test that you have successfully configured the device.
+                Your Galileo is connected via a nodejs websocket to the button below. Use
+                it to confirm the device is properly configured.
             </p>
         </div>
     </div>
-
-    <div class="row padded test-pin">
-        <div class="col-xs-12" ng-if="d.pins.13.value === 100">
-            <img src="/static/img/galileo_pin13_led_on.png">
-        </div>
-        <div class="col-xs-12" ng-if="d.pins.13.value === 0">
-            <img src="/static/img/galileo_pin13_led_off.png">
-        </div>
-    </div>
-
     <div class="row padded">
         <div class="center-and-shrink">
-            <div class="col-xs-12"
-            ng-repeat="pin in [d.pins.13]">
+            <div class="col-xs-12" ng-repeat="pin in [d.pins.13]">
                 <div ng-class="{
                 'pin': true,
                 'analog': pin.is_analog,
@@ -51,10 +40,13 @@
             </div>
         </div>
     </div>
-
-    <div class="row">
-        <div class="button wide submit" ng-click="submit()">
-            Done Testing
+    <div class="row padded test-pin">
+        <br/>
+        <div class="col-xs-12" ng-if="d.pins.13.value === 100">
+            <img src="/static/img/galileo_pin13_led_on.png">
+        </div>
+        <div class="col-xs-12" ng-if="d.pins.13.value === 0">
+            <img src="/static/img/galileo_pin13_led_off.png">
         </div>
     </div>
 
