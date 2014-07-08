@@ -37,11 +37,13 @@ describe('setup_controller.start()', function() {
     var message_count = 0;
     client = io('http://' + HOST + ':' + PORT);
     client.on('connect', function() {
-      client.emit('set_hostname', {hostname: utils.get_hostname()});
-      setTimeout(function() {
-        client.emit('router_setup', {ssid:'cat', pwd:'meow'});
-      }, 500);
-      setTimeout(done, 1000); //HACK
+      utils.get_hostname(function(err, name){     
+        client.emit('set_hostname', {hostname: name});
+        setTimeout(function() {
+          client.emit('router_setup', {ssid:'cat', pwd:'meow'});
+        }, 500);
+        setTimeout(done, 1000); //HACK
+      });
     });
     
     client.on('disconnect', function() {
