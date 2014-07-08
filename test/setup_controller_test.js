@@ -3,7 +3,6 @@ var exec = require('child_process').exec;
 var should = require('chai').should();
 
 var utils = require('mnutils/galileo')();
-var sh = require('mnutils/command_queue');
 
 var state = {
   "setup_state": {
@@ -23,8 +22,6 @@ var NETSTAT = "netstat -a -n | egrep '" + PORT + ".* LISTEN'"; //TODO: Make this
 
 var servers = utils.create_servers(PORT);
 var setup_controller = require('../lib/setup_controller')(state, servers.socketio_server, on_finished, on_redirect);
-
-sh('cp /etc/wpa_supplicant.conf /etc/wpa_supplicant.bak');
 
 describe('setup_controller.start()', function() {
 
@@ -65,9 +62,6 @@ describe('setup_controller.start()', function() {
 
 function on_finished(state) {
   describe('setup_controller.on_finished()', function() {
-    
-sh('cp /etc/wpa_supplicant.conf .');
-sh('mv /etc/wpa_supplicant.bak /etc/wpa_supplicant.conf');
     it('* Messages should update state correctly', function(done) {
 		console.log(state.set_hostname + "=state.set_hostname");
       state.set_hostname.should.equal(true);
