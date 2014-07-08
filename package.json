@@ -20,15 +20,10 @@
     "arduino"
   ],
   "dependencies": {
-    "cli-color": "0.3.2",
-    "express": "^4.7.0",
     "galileo-io": "0.0.18",
     "q": "1.0.1",
     "q-io": "1.11.1",
-    "socket.io": "1.0.6",
     "underscore": "1.6.0",
-    "ws": "0.4.31",
-    "http-server": "~0.6.1",
     "mnutils": "git+https://github.com/adampasz/MakerNodeUtils.git"
   },
   "licenses": {
@@ -39,8 +34,6 @@
     "node": ">=0.8.18"
   },
   "devDependencies": {
-    "gulp": "~3.8.5",
-    "gulp-todo": "~0.3.6",
     "mocha": "~1.20.1",
     "chai": "~1.9.1",
     "mocha-better-spec-reporter": "0.0.2",
