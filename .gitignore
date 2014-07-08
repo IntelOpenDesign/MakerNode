@@ -6,3 +6,5 @@ node_modules
 conf/boardstate.conf
 conf/appstate.conf
 client/docs
+coverage
+client/coverage
