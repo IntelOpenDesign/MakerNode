@@ -39,7 +39,7 @@ p {
   line-height: 1.2em; }
 
 .navbar {
-  background: #1e60b5;
+  background: #0071c5;
   color: white;
   border-bottom: 5px solid #0f3c81; }
 
@@ -75,7 +75,7 @@ p {
 
 /* SETUP FORM */
 .setup-form h1 {
-  color: #1e60b5;
+  color: #0071c5;
   text-align: center; }
 
 .setup-form input {
@@ -116,10 +116,10 @@ p {
   line-height: 60px;
   cursor: default;
   position: relative;
-  background-color: #1e60b5;
+  background-color: #0071c5;
   box-shadow: 4px 4px 4px #9da0ad; }
   .button:active {
-    background-color: #174989;
+    background-color: #005492;
     box-shadow: 2px 2px 2px #9da0ad;
     position: relative;
     top: 2px;
