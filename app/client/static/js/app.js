@@ -85,9 +85,14 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
     Galileo.on('websocket-closed', function() {
         $scope.s.got_data = false;
     });
-    var ws_url = 'ws://';
-    ws_url += window.location.origin.slice('http://'.length);
-    ws_url += ':8001';
+
+    // figure out the websocket URL
+    var prefix = 'ws://';
+    var domain = window.location.origin.slice('http://'.length);
+    if (window.location.port)
+        domain = domain.slice(0, -(window.location.port.length+1));
+    var port = ':8001';
+    var ws_url = prefix + domain + port;
     Galileo.connect(ws_url);
 
     // This sends the object d to the server exactly as is.
@@ -677,6 +682,7 @@ makernode.rc = function routing_control() {
     that.update = function(s) {
         var curRouteKey = that.currentRouteKey();
         var serRouteKey = s.hash_code.length > 0 ? that.get_route_key(s.hash_code, 'server_code') : null;
+        console.log('curRouteKey', curRouteKey, 'serRouteKey', serRouteKey);
         if (s.url_root !== url_root) {
             url_root = s.url_root;
             that.goTo(makernode.routes.connecting);
