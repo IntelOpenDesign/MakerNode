@@ -6,6 +6,7 @@ function settings() {
 
     var filename;
     var state;
+    var hardware = true;
 
     var init = function(_filename) {
         filename = _filename;
@@ -68,7 +69,15 @@ function settings() {
 
 	var get_galileo_static_ip = function() {
 		return state.galileo_static_ip;
-	}
+	};
+
+    var on_hardware = function(val) {
+        if (val === undefined) {
+            return hardware;
+        } else if (val === true || val === false) {
+            hardware = val;
+        }
+    };
 
     return {
         init: init,
@@ -79,6 +88,7 @@ function settings() {
         set_router_info: set_router_info,
 		get_router_gateway_ip: get_router_gateway_ip,
 	    get_galileo_static_ip: get_galileo_static_ip,
+        on_hardware: on_hardware,
     };
 }
 

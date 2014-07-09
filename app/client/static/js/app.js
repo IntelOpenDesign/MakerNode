@@ -86,14 +86,7 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
         $scope.s.got_data = false;
     });
 
-    // figure out the websocket URL
-    var prefix = 'ws://';
-    var domain = window.location.origin.slice('http://'.length);
-    if (window.location.port)
-        domain = domain.slice(0, -(window.location.port.length+1));
-    var port = ':8001';
-    var ws_url = prefix + domain + port;
-    Galileo.connect(ws_url);
+    Galileo.connect(makernode.rc.wsURL());
 
     // This sends the object d to the server exactly as is.
     // Only use this if you know the server is expecting this exact format.
@@ -321,11 +314,13 @@ makernode.app.factory('Galileo', ['$rootScope', function($rootScope) {
 
     // Processing Updates from Server
     var onmessage = function(server_msg) {
+
         stop_waiting();
 
         // TODO put these back in for deployment ?
         //console.log('websocket message', server_msg);
         var data = JSON.parse(server_msg.data);
+        window.server_msg = data;
         //console.log('websocket data', data);
         //console.log('\tdata.message_ids_processed', JSON.stringify(data.message_ids_processed));
 
@@ -648,10 +643,7 @@ makernode.rc = function routing_control() {
 
     var that = {};
 
-    var url_root = null; // ex. http://www.makernode.com/, http://172.20.10.8
-
     that.reset = function(s) {
-        url_root = that.currentURLRoot();
         that.update(s);
     };
 
@@ -668,8 +660,20 @@ makernode.rc = function routing_control() {
         var current_hash = window.location.hash.substring("/#".length);
         return that.get_route_key(current_hash, 'hash');
     };
-    that.currentURLRoot = function() {
-        return window.location.origin.slice("http://".length);
+    that.currentURLRoot = function(o) {
+        options = _.extend({}, o);
+        var s = window.location.origin.slice('http://'.length);
+        if (window.location.port && !options.include_port)
+            s = s.slice(0, -(window.location.port.length+1));
+        return s;
+    };
+    that.wsURL = function(url_root) {
+        var prefix = 'ws://';
+        var domain = url_root ? url_root : that.currentURLRoot();
+        if (domain.indexOf(':') >= 0)
+            domain = domain.slice(0, domain.indexOf(':'));
+        var port = ':8001';
+        return prefix + domain + port;
     };
 
     that.goTo = function(route) {
@@ -680,25 +684,35 @@ makernode.rc = function routing_control() {
     };
 
     that.update = function(s) {
+        // TODO this routing stuff is still really confusing
         var curRouteKey = that.currentRouteKey();
         var serRouteKey = s.hash_code.length > 0 ? that.get_route_key(s.hash_code, 'server_code') : null;
-        console.log('curRouteKey', curRouteKey, 'serRouteKey', serRouteKey);
-        if (s.url_root !== url_root) {
-            url_root = s.url_root;
-            that.goTo(makernode.routes.connecting);
-            that.connect();
+        if (s.url_root !== that.currentURLRoot({include_port: true})) {
+            if (curRouteKey !== 'connecting') {
+                console.log('GOING TO CONNECT TO NEW WS');
+                console.log('\tbecause s.url_root', s.url_root, 'current url root', that.currentURLRoot({include_port: true}), 'curRouteKey', curRouteKey, 'serRouteKey', serRouteKey);
+                that.goTo(makernode.routes.connecting);
+                that.connect(s.url_root);
+            }
+            return;
         }
-        if (that.currentURLRoot() === url_root &&
+        if (s.url_root === that.currentURLRoot({include_port: true}) &&
             curRouteKey === 'connecting') {
+            console.log('GOING TO CONTROL MODE');
+            console.log('\tbecause s.url_root', s.url_root, 'current url root', that.currentURLRoot({include_port: true}), 'curRouteKey', curRouteKey, 'serRouteKey', serRouteKey);
             that.goTo(makernode.routes.control_mode);
+            return;
         }
         if (serRouteKey && curRouteKey !== serRouteKey) {
+            console.log('GOING TO SERVER ROUTE KEY', serRouteKey);
+            console.log('\tbecause s.url_root', s.url_root, 'current url root', that.currentURLRoot({include_port: true}), 'curRouteKey', curRouteKey, 'serRouteKey', serRouteKey);
             that.goTo(makernode.routes[serRouteKey]);
+            return;
         }
     };
 
-    that.connect = function() {
-        var ws_url = 'ws://' + url_root + ':8001';
+    that.connect = function(url_root) {
+        var ws_url = that.wsURL(url_root);
         console.log('To test whether Galileo has gotten onto the wifi network yet, we are trying to connect to the Galileo websocket at ', ws_url);
 
         var keep_trying = true;
