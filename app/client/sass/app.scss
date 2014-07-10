@@ -242,6 +242,7 @@ $pin_button_shadow: 4px;
     width: 100%;
     background-color: $gray;
     border-radius: $pin_slider_h/2;
+    overflow: hidden;
 }
 #control-mode .pin.sensor .pin-value {
     position: absolute;
@@ -276,6 +277,7 @@ $pin_button_shadow: 4px;
     width: 100%;
     background-color: $gray;
     border-radius: $pin_aa_h/2;
+    overflow: hidden;
 }
 #control-mode .pin.actuator .pin-value {
     position: absolute;

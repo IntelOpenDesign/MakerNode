@@ -200,7 +200,8 @@ p {
   height: 37.5px;
   width: 100%;
   background-color: #9da0ad;
-  border-radius: 18.75px; }
+  border-radius: 18.75px;
+  overflow: hidden; }
 
 #control-mode .pin.sensor .pin-value {
   position: absolute;
@@ -232,7 +233,8 @@ p {
   height: 45px;
   width: 100%;
   background-color: #9da0ad;
-  border-radius: 22.5px; }
+  border-radius: 22.5px;
+  overflow: hidden; }
 
 #control-mode .pin.actuator .pin-value {
   position: absolute;
