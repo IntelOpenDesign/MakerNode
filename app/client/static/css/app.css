@@ -184,6 +184,13 @@ p {
   border-left: 50px solid transparent;
   box-sizing: border-box; }
 
+#control-mode .pin.sensor .pin-value-container-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; }
+
 #control-mode .pin.sensor .pin-value-container {
   position: absolute;
   top: 18.75px;
@@ -206,6 +213,33 @@ p {
 #control-mode .pin.sensor.off .pin-value {
   border-right-width: 0; }
 
+#control-mode .pin.actuator .pin-value-container-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  box-sizing: border-box; }
+
+#control-mode .pin.actuator .pin-value-container {
+  position: absolute;
+  top: 15px;
+  left: 0;
+  height: 45px;
+  width: 100%;
+  background-color: #9da0ad;
+  border-radius: 22.5px; }
+
+#control-mode .pin.actuator .pin-value {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 22.5px;
+  background-color: #12448d; }
+
 /*
 // digital actuators
 #control-mode .pin.digital.actuator .pin-box {
@@ -214,91 +248,37 @@ p {
 }
 #control-mode .pin.digital.actuator.pressed .pin-box {
     @include tap_feedback($bright_yellow);
-}
-
-// analog actuators
-#control-mode .pin.analog.actuator div[pin-slider] {
-    position: relative;
-}
-#control-mode .pin.analog.actuator .pin-box {
-    position: relative;
-    top: 0;
-    height: $pin_slider_h;
-    background-color: $bright_blue;
-}
-
-
-
-
-#control-mode .pin-value-container {
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: transparent;
-    position: absolute;
-    z-index: 0;
-}
-#control-mode .pin-value {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    background: $bright_yellow;
-    z-index: 0;
-    border-width: 0;
-    height: 100%;
-}
-
-$pin_slider_thumb_w: 35px;
+}*/
 #control-mode .pin-slider-container {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: -$pin_slider_thumb_w;
-    padding: 0 $pin_slider_thumb_w;
-    box-sizing: content-box;
-}
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0; }
+
 #control-mode .pin-slider-container input[type=range] {
-    z-index: 4;
-    position: absolute;
-    top: 0;
-    left: 0;
-    -webkit-appearance: none;
-    background: transparent;
-    height: 100%;
-    width: 100%;
-}
+  -webkit-appearance: none;
+  z-index: 4;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  height: 45px;
+  width: 100%;
+  background: transparent;
+  border-radius: 22.5px; }
+
 #control-mode .pin-slider-container input[type=range]:focus {
-    box-shadow: 0 0 0 transparent;
-    outline: 0 none;
-}
+  box-shadow: 0 0 0 transparent;
+  outline: 0 none; }
+
 #control-mode .pin-slider-container input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    display: block;
-    background: transparent;
-    width: 0;
-    height: 0;
-    border-left: 35px solid transparent;
-    border-right: 35px solid transparent;
-    border-bottom: 56px solid white;
-    -webkit-background-clip: content-box;
-    position: relative;
-    top: 50px;
-}
-#control-mode .pin-slider-container input[type=range]::-webkit-slider-thumb:before {
-    width: 0;
-    height: 0;
-    display: block;
-    content: "\A";
-    border-left: 30px solid transparent;
-    border-right: 30px solid transparent;
-    border-bottom: 50px solid $bright_blue;
-    position: absolute;
-    top: 3px;
-    left: -30px;
-    box-shadow: 0 8px 4px -4px $gray;
-}
+  -webkit-appearance: none;
+  display: block;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  background: #399ceb;
+  box-shadow: 2px 2px 0 0 #195cbb; }
 
 /* SMALL DEVICES */
 @media (max-device-width: 4in) and (min-resolution: 100dpi) {

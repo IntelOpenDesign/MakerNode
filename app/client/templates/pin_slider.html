@@ -2,10 +2,11 @@
     {{pin.name}}
 </div>
 <div class="pin-inner">
-    <div ng-if="pin.is_input"
-      class="pin-value-container">
-        <div class="pin-value"
-          style="width: {{pin.value}}%;">
+    <div class="pin-value-container-container">
+        <div class="pin-value-container">
+            <div class="pin-value"
+              style="width: {{pin.value}}%;">
+            </div>
         </div>
     </div>
     <div ng-if="!pin.is_input"
