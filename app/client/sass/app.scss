@@ -288,8 +288,8 @@ $pin_button_shadow: 4px;
     left: 0;
     width: 100%;
     height: 100%;
-    border-left: $pin_slider_thumb_h/2 solid transparent;
-    border-right: $pin_slider_thumb_h/2 solid transparent;
+    //border-left: $pin_slider_thumb_h/2 solid transparent;
+    //border-right: $pin_slider_thumb_h/2 solid transparent;
     box-sizing: border-box;
 }
 #control-mode .pin.actuator .pin-value-container {
@@ -301,14 +301,18 @@ $pin_button_shadow: 4px;
     background-color: $gray;
     border-radius: $pin_aa_h/2;
     overflow: hidden;
+    border-right: $pin_slider_thumb_h/2 solid $gray;
 }
 #control-mode .pin.actuator .pin-value {
     position: absolute;
     top: 0;
     left: 0;
     height: 100%;
-    border-radius: $pin_aa_h/2;
+    border-top-left-radius: $pin_aa_h/2;
+    border-bottom-left-radius: $pin_aa_h/2;
     background-color: $dark_blue;
+    border-right: $pin_slider_thumb_h/3 solid $dark_blue;
+    box-sizing: content-box;
 }
 
 // digital actuators

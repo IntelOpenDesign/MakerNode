@@ -245,8 +245,6 @@ p {
   left: 0;
   width: 100%;
   height: 100%;
-  border-left: 30px solid transparent;
-  border-right: 30px solid transparent;
   box-sizing: border-box; }
 
 #control-mode .pin.actuator .pin-value-container {
@@ -257,15 +255,19 @@ p {
   width: 100%;
   background-color: #9da0ad;
   border-radius: 22.5px;
-  overflow: hidden; }
+  overflow: hidden;
+  border-right: 30px solid #9da0ad; }
 
 #control-mode .pin.actuator .pin-value {
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
-  border-radius: 22.5px;
-  background-color: #12448d; }
+  border-top-left-radius: 22.5px;
+  border-bottom-left-radius: 22.5px;
+  background-color: #12448d;
+  border-right: 20px solid #12448d;
+  box-sizing: content-box; }
 
 #control-mode .pin-switch {
   position: absolute;
