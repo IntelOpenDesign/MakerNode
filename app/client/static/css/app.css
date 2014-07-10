@@ -48,7 +48,7 @@ p {
 .hide {
   display: none; }
 
-.row.padded {
+.padded {
   padding-bottom: .5em; }
 
 #loading {
@@ -160,12 +160,12 @@ p {
   height: 75px;
   position: relative; }
 
-#control-mode div.pin-name {
+#control-mode .pin-name {
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
-  width: 50px;
+  width: 100px;
   line-height: 75px;
   text-align: right;
   padding-right: 1em;
@@ -174,14 +174,17 @@ p {
   font-weight: 600;
   color: #0071c5; }
 
-#control-mode div.pin-inner {
+#control-mode .pin-inner {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  border-left: 50px solid transparent;
+  border-left: 100px solid transparent;
   box-sizing: border-box; }
+
+#control-mode .pin.sensor .pin-inner {
+  border-right: 100px solid transparent; }
 
 #control-mode .pin.sensor .pin-value-container-container {
   position: absolute;

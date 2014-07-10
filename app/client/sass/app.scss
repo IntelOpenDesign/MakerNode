@@ -88,7 +88,7 @@ p {
     display: none;
 }
 
-.row.padded {
+.padded {
     padding-bottom: .5em;
 }
 
@@ -188,7 +188,7 @@ $pin_h: 75px;
 $pin_button_h: 0.8 * $pin_h;
 $pin_button_w: 150px;
 $pin_slider_h: 0.5 * $pin_h; // sensors slider height
-$pin_name_w: 50px;
+$pin_name_w: 100px;
 $pin_aa_h: 0.6 * $pin_h; // analog actuators slider height
 $pin_slider_thumb_h: 0.8 * $pin_h;
 $pin_button_shadow: 4px;
@@ -199,7 +199,7 @@ $pin_button_shadow: 4px;
     position: relative;
 }
 // all pins
-#control-mode div.pin-name {
+#control-mode .pin-name {
     position: absolute;
     top: 0;
     left: 0;
@@ -213,7 +213,7 @@ $pin_button_shadow: 4px;
     font-weight: 600;
     color: $intel_blue;
 }
-#control-mode div.pin-inner {
+#control-mode .pin-inner {
     position: absolute;
     top: 0;
     left: 0;
@@ -224,6 +224,9 @@ $pin_button_shadow: 4px;
 }
 
 // sensors
+#control-mode .pin.sensor .pin-inner {
+    border-right: $pin_name_w solid transparent;
+}
 #control-mode .pin.sensor .pin-value-container-container {
     position: absolute;
     top: 0;

@@ -31,16 +31,19 @@
                 <div pin-slider></div>
             </div>
         </div>
+        <div class="col-xs-12 padded">
+        </div>
     </div>
 
     <div class="row actuators">
         <div class="col-xs-12">
             <h1>Outputs</h1>
         </div>
-        <div class="col-xs-12">
+        <div class="col-xs-12 padded">
             <p class="text-center">Drag slider to test analog pins and press of or on to test digital pins</p>
         </div>
-        <div class="col-xs-12">
+        <div class="col-xs-6"
+          ng-repeat="pin in d.actuators">
             <div ng-class="{
                 'pin': true,
                 'analog': pin.is_analog,
@@ -48,8 +51,7 @@
                 'sensor': pin.is_input,
                 'actuator': !pin.is_input,
                 'on': pin.value === 100,
-                'off': pin.value === 0}"
-              ng-repeat="pin in d.actuators">
+                'off': pin.value === 0}">
                 <div ng-if="pin.is_analog"
                   pin-slider>
                 </div>
