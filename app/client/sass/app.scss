@@ -184,21 +184,19 @@ p {
     background-color: $bg_gray;
 }
 
-// TODO colors
-// TODO real tap feedback for digital pin buttons
-
 $pin_h: 75px;
-$pin_button_h: $pin_h;
+$pin_button_h: 0.8 * $pin_h;
+$pin_button_w: 150px;
 $pin_slider_h: 0.5 * $pin_h; // sensors slider height
 $pin_name_w: 50px;
 $pin_aa_h: 0.6 * $pin_h; // analog actuators slider height
 $pin_slider_thumb_h: 0.8 * $pin_h;
+$pin_button_shadow: 4px;
 
 #control-mode div[pin-button],
 #control-mode div[pin-slider] {
     height: $pin_h;
     position: relative;
-    border: 1px solid black;
 }
 // all pins
 #control-mode div.pin-name {
@@ -285,15 +283,59 @@ $pin_slider_thumb_h: 0.8 * $pin_h;
     background-color: $dark_blue;
 }
 
-/*
 // digital actuators
-#control-mode .pin.digital.actuator .pin-box {
-    height: 100%;
-    @include tap_feedback($bright_blue);
+// TODO tap feedback would be nice here, but I'm not sure of the on/off stuff
+// it's weird to have the "ON" button be pressed down when the pin is "OFF"
+// and vice versa
+#control-mode .pin-switch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: $pin_button_h;
+    width: $pin_button_w;
 }
-#control-mode .pin.digital.actuator.pressed .pin-box {
-    @include tap_feedback($bright_yellow);
-}*/
+#control-mode .pin-switch [class$="container"] {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50%;
+}
+#control-mode .pin-switch .on-container {
+    left: 0;
+}
+#control-mode .pin-switch .off-container {
+    left: 50%;
+}
+#control-mode .pin-switch [class$="box"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    font-size: 25px;
+    text-align: center;
+    line-height: $pin_button_h;
+}
+#control-mode .pin.on .pin-switch .on-box {
+    top: -$pin_button_shadow;
+    left: -$pin_button_shadow;
+    background-color: $bright_blue;
+    box-shadow: $pin_button_shadow $pin_button_shadow $medium_blue;
+    color: white;
+}
+#control-mode .pin.off .pin-switch .off-box {
+    top: -$pin_button_shadow;
+    left: $pin_button_shadow;
+    background-color: rgb(190, 190, 190);
+    box-shadow: -$pin_button_shadow $pin_button_shadow rgb(133, 133, 133);
+    color: white;
+}
+#control-mode .pin.off .pin-switch .on-box,
+#control-mode .pin.on .pin-switch .off-box {
+    top: 0;
+    left: 0;
+    background-color: rgb(221, 221, 221);
+    color: rgb(190, 190, 190);
+}
+
 
 // analog actuators
 #control-mode .pin-slider-container {

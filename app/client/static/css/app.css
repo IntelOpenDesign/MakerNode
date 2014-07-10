@@ -158,8 +158,7 @@ p {
 #control-mode div[pin-button],
 #control-mode div[pin-slider] {
   height: 75px;
-  position: relative;
-  border: 1px solid black; }
+  position: relative; }
 
 #control-mode div.pin-name {
   position: absolute;
@@ -240,15 +239,54 @@ p {
   border-radius: 22.5px;
   background-color: #12448d; }
 
-/*
-// digital actuators
-#control-mode .pin.digital.actuator .pin-box {
-    height: 100%;
-    @include tap_feedback($bright_blue);
-}
-#control-mode .pin.digital.actuator.pressed .pin-box {
-    @include tap_feedback($bright_yellow);
-}*/
+#control-mode .pin-switch {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 60px;
+  width: 150px; }
+
+#control-mode .pin-switch [class$="container"] {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%; }
+
+#control-mode .pin-switch .on-container {
+  left: 0; }
+
+#control-mode .pin-switch .off-container {
+  left: 50%; }
+
+#control-mode .pin-switch [class$="box"] {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  font-size: 25px;
+  text-align: center;
+  line-height: 60px; }
+
+#control-mode .pin.on .pin-switch .on-box {
+  top: -4px;
+  left: -4px;
+  background-color: #399ceb;
+  box-shadow: 4px 4px #195cbb;
+  color: white; }
+
+#control-mode .pin.off .pin-switch .off-box {
+  top: -4px;
+  left: 4px;
+  background-color: #bebebe;
+  box-shadow: -4px 4px #858585;
+  color: white; }
+
+#control-mode .pin.off .pin-switch .on-box,
+#control-mode .pin.on .pin-switch .off-box {
+  top: 0;
+  left: 0;
+  background-color: #dddddd;
+  color: #bebebe; }
+
 #control-mode .pin-slider-container {
   width: 100%;
   height: 100%;
