@@ -244,7 +244,7 @@ p {
 
 #control-mode .pin-switch {
   position: absolute;
-  top: 0;
+  top: 7.5px;
   left: 0;
   height: 60px;
   width: 150px; }

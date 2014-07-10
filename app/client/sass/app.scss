@@ -292,7 +292,7 @@ $pin_button_shadow: 4px;
 // and vice versa
 #control-mode .pin-switch {
     position: absolute;
-    top: 0;
+    top: ($pin_h - $pin_button_h)/2;
     left: 0;
     height: $pin_button_h;
     width: $pin_button_w;
