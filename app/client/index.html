@@ -18,17 +18,14 @@
             <nav id="header" class="navbar navbar-static-top intel-font" role="navigation">
                 <div class="container">
                     <div class="navbar-header">
-                        <!-- TODO tables suck, change this -->
-                        <table>
-                            <tr>
-                                <td>
-                                    <h1>Galileo</h1>
-                                </td>
-                                <td>
-                                    <img class="pull-right" src="/static/img/intel_logo.png">
-                                </td>
-                            </tr>
-                        </table>
+                        <div class="row">
+                            <div class="col-xs-8">
+                                <h1>Galileo</h1>
+                            </div>
+                            <div class="col-xs-4">
+                                <h1><img id="logo" class="pull-right" src="/static/img/intel_logo.jpg"></h1> <!-- putting the img inside h1 makes it so we can specify the height of the logo in em to match up with the lettering height of the title in the header bar -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </nav>

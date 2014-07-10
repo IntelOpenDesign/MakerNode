@@ -73,8 +73,10 @@ p {
 #header .navbar-header {
   width: 100%; }
 
-#header table {
-  width: 100%; }
+#logo {
+  height: 2em;
+  position: relative;
+  top: -0.2em; }
 
 #footer {
   padding-top: 2em; }
