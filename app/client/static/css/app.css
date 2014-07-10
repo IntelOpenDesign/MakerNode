@@ -45,6 +45,10 @@ p {
   color: white;
   border-bottom: 5px solid #0f3c81; }
 
+.navbar h1 {
+  color: white;
+  text-align: left; }
+
 .hide {
   display: none; }
 
