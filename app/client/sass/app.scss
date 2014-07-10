@@ -247,9 +247,6 @@ $pin_button_shadow: 4px;
 }
 
 // sensors
-#control-mode .pin.sensor .pin-inner {
-    border-right: $pin_name_w solid transparent;
-}
 #control-mode .pin.sensor .pin-value-container-container {
     position: absolute;
     top: 0;

@@ -206,9 +206,6 @@ p {
   border-left: 100px solid transparent;
   box-sizing: border-box; }
 
-#control-mode .pin.sensor .pin-inner {
-  border-right: 100px solid transparent; }
-
 #control-mode .pin.sensor .pin-value-container-container {
   position: absolute;
   top: 0;
