@@ -89,7 +89,7 @@ var onConnect = function(conn) {
             if (settings.on_hardware()) {
                 // this is when we are doing stuff on the Galileo, for real
                 if (settings.be_access_point()) {
-                    msg.url_root = 'www.makernode.com';
+                    msg.url_root = ''; // '' means any URL is fine here
                 } else {
                     msg.url_root = settings.get_galileo_static_ip();
                 }

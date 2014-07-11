@@ -684,28 +684,43 @@ makernode.rc = function routing_control() {
     };
 
     that.update = function(s) {
+        // s is the server msg
         // TODO this routing stuff is still really confusing
         var curRouteKey = that.currentRouteKey();
         var serRouteKey = s.hash_code.length > 0 ? that.get_route_key(s.hash_code, 'server_code') : null;
-        if (s.url_root !== that.currentURLRoot({include_port: true})) {
-            if (curRouteKey !== 'connecting') {
+        // if the server cares what URL we are at and we are not there,
+        if ( s.url_root !== '' &&
+             s.url_root !== that.currentURLRoot({include_port: true}) ) {
+            // and we are not already trying to connect,
+            if ( curRouteKey !== 'connecting' ) {
+                // then start trying to connect to the new URL
                 console.log('GOING TO CONNECT TO NEW WS');
-                console.log('\tbecause s.url_root', s.url_root, 'current url root', that.currentURLRoot({include_port: true}), 'curRouteKey', curRouteKey, 'serRouteKey', serRouteKey);
+                console.log('\tbecause server wants url_root:', s.url_root, ', current url root:', that.currentURLRoot({include_port: true}), ', current Route Key:', curRouteKey, ', server wants Route Key:', serRouteKey);
                 that.goTo(makernode.routes.connecting);
                 that.connect(s.url_root);
             }
+            // if we are already trying to connect, don't do anything new here
             return;
         }
-        if (s.url_root === that.currentURLRoot({include_port: true}) &&
-            curRouteKey === 'connecting') {
+        // if the server does not care what URL root we are at or we are
+        // already at the right URL, and we are still showing the 'connecting'
+        // page,
+        if ( ( s.url_root === '' ||
+               s.url_root === that.currentURLRoot({include_port: true}) )
+            && curRouteKey === 'connecting') {
+            // then we have actually already finished connecting, and so we
+            // should just go to the home page which is control_mode
             console.log('GOING TO CONTROL MODE');
-            console.log('\tbecause s.url_root', s.url_root, 'current url root', that.currentURLRoot({include_port: true}), 'curRouteKey', curRouteKey, 'serRouteKey', serRouteKey);
+            console.log('\tbecause server wants url_root:', s.url_root, ', current url root:', that.currentURLRoot({include_port: true}), ', current Route Key:', curRouteKey, ', server wants Route Key:', serRouteKey);
             that.goTo(makernode.routes.control_mode);
             return;
         }
+        // at this point we are all good with the URL ////////////////
+        // if the server wants us to be at a different route
         if (serRouteKey && curRouteKey !== serRouteKey) {
+            // then we'll go there
             console.log('GOING TO SERVER ROUTE KEY', serRouteKey);
-            console.log('\tbecause s.url_root', s.url_root, 'current url root', that.currentURLRoot({include_port: true}), 'curRouteKey', curRouteKey, 'serRouteKey', serRouteKey);
+            console.log('\tbecause server wants url_root:', s.url_root, ', current url root:', that.currentURLRoot({include_port: true}), ', current Route Key:', curRouteKey, ', server wants Route Key:', serRouteKey);
             that.goTo(makernode.routes[serRouteKey]);
             return;
         }
