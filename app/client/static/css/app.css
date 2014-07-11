@@ -40,6 +40,10 @@ p {
   font-size: 95%;
   line-height: 1.2em; }
 
+p.narrow {
+  padding-left: 100px;
+  padding-right: 100px; }
+
 .navbar {
   background: #0071c5;
   color: white;
@@ -188,7 +192,7 @@ p {
   top: 0;
   left: 0;
   height: 100%;
-  width: 100px;
+  width: 70px;
   line-height: 75px;
   text-align: right;
   padding-right: 1em;
@@ -203,7 +207,7 @@ p {
   left: 0;
   width: 100%;
   height: 100%;
-  border-left: 100px solid transparent;
+  border-left: 70px solid transparent;
   box-sizing: border-box; }
 
 #control-mode .pin.sensor .pin-value-container-container {
@@ -361,3 +365,7 @@ p {
 
   .button.wide {
     max-width: 500px; } }
+/* BOOTSTRAP OVERRIDES */
+.container-fluid .row {
+  padding-left: 50px;
+  padding-right: 50px; }

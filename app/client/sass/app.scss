@@ -77,6 +77,10 @@ p {
     font-size: 95%;
     line-height: 1.2em;
 }
+p.narrow {
+    padding-left: 100px;
+    padding-right: 100px;
+}
 
 .navbar {
     background: $intel_blue;
@@ -211,7 +215,7 @@ $pin_h: 75px;
 $pin_button_h: 0.8 * $pin_h;
 $pin_button_w: 150px;
 $pin_slider_h: 0.5 * $pin_h; // sensors slider height
-$pin_name_w: 100px;
+$pin_name_w: 70px;
 $pin_aa_h: 0.6 * $pin_h; // analog actuators slider height
 $pin_slider_thumb_h: 0.8 * $pin_h;
 $pin_button_shadow: 4px;
@@ -422,4 +426,10 @@ $pin_button_shadow: 4px;
         max-width: 500px;
     }
 
+}
+
+/* BOOTSTRAP OVERRIDES */
+.container-fluid .row {
+    padding-left: 50px;
+    padding-right: 50px;
 }
