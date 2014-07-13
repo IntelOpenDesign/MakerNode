@@ -4,9 +4,12 @@ $dark_yellow: rgb(159, 122, 35);
 $green: rgb(45, 104, 84);
 $black: rgb(44, 38, 33);
 $gray: rgb(157, 160, 173);
+$bg_gray: rgb(236, 236, 236);
 $chatbox_color: rgb(198, 188, 175);
-$intel_blue: rgb(30, 96, 181);
-$bright_blue: rgb(58, 158, 233);
+$intel_blue: rgb(0, 113, 197);
+$bright_blue: rgb(57, 156, 235);
+$medium_blue: rgb(25, 92, 187);
+$dark_blue: rgb(18, 68, 141);
 
 @mixin tap_feedback($color) {
     background-color: $color;
@@ -66,11 +69,17 @@ html, body {
 h1 {
     font-size: 150%;
     line-height: 1.5em;
+    color: $intel_blue;
+    text-align: center;
 }
 
 p {
     font-size: 95%;
     line-height: 1.2em;
+}
+p.narrow {
+    padding-left: 100px;
+    padding-right: 100px;
 }
 
 .navbar {
@@ -78,12 +87,16 @@ p {
     color: white;
     border-bottom: 5px solid rgb(15, 60, 129);
 }
+.navbar h1 {
+    color: white;
+    text-align: left;
+}
 
 .hide {
     display: none;
 }
 
-.row.padded {
+.padded {
     padding-bottom: .5em;
 }
 
@@ -107,18 +120,33 @@ p {
 #header .navbar-header {
     width: 100%;
 }
-#header table {
-    width: 100%;
+#logo-container {
+    padding-bottom: 0;
+    padding-top: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+#logo {
+    height: 2em;
+    position: relative;
+    float: none;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+#labs {
+    font-size: 60%;
+    line-height: 1em;
+    position: relative;
+    top: -.75em;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 #footer {
     padding-top: 2em;
 }
 
 /* SETUP FORM */
-.setup-form h1 {
-    color: $intel_blue;
-    text-align: center;
-}
 .setup-form input {
     display: block;
     margin-left: auto;
@@ -136,7 +164,7 @@ p {
     margin-right: auto;
 }
 .step-pic {
-    margin-right: 50px;
+    max-width: 100%;
 }
 .step-pic.active {
     box-shadow: 15px 15px 5px rgb(230, 230, 230);
@@ -179,138 +207,187 @@ p {
 
 /* CONTROL MODE */
 
-// TODO colors
-// TODO real tap feedback for digital pin buttons
+#control-mode .sensors {
+    background-color: $bg_gray;
+}
 
-$pin_button_h: 70px;
-$pin_slider_h: 70px;
-$pin_border_w: 15px;
+$pin_h: 75px;
+$pin_button_h: 0.8 * $pin_h;
+$pin_button_w: 150px;
+$pin_slider_h: 0.5 * $pin_h; // sensors slider height
+$pin_name_w: 70px;
+$pin_aa_h: 0.6 * $pin_h; // analog actuators slider height
+$pin_slider_thumb_h: 0.8 * $pin_h;
+$pin_button_shadow: 4px;
 
 #control-mode div[pin-button],
 #control-mode div[pin-slider] {
-    margin: 30px 5% 60px;
-    height: $pin_button_h;
-    box-sizing: border-box;
+    height: $pin_h;
+    position: relative;
 }
-#control-mode div[pin-button] .pin-name,
-#control-mode div[pin-button] .pin-label {
+// all pins
+#control-mode .pin-name {
+    position: absolute;
+    top: 0;
+    left: 0;
     height: 100%;
-    line-height: $pin_button_h;
-    text-align: center;
+    width: $pin_name_w;
+    line-height: $pin_h;
+    text-align: right;
+    padding-right: 1em;
+    box-sizing: border-box;
+    font-size: 25px;
+    font-weight: 600;
+    color: $intel_blue;
 }
-#control-mode .pin-name,
-#control-mode .pin-label {
-    font-size: $pin_button_h - (2 * $pin_border_w) - 10px;
-}
-#control-mode .pin.digital.sensor div[pin-button] .pin-name,
-#control-mode .pin.digital.sensor div[pin-button] .pin-label {
-    line-height: $pin_button_h - (2 * $pin_border_w);
-}
-#control-mode div[pin-slider] .pin-name,
-#control-mode div[pin-slider] .pin-label {
+#control-mode .pin-inner {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 5;
-    text-align: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-#control-mode .pin.analog.sensor div[pin-slider] .pin-name,
-#control-mode .pin.analog.sensor div[pin-slider] .pin-label {
-    line-height: $pin_slider_h - (2 * $pin_border_w);
-}
-#control-mode .pin.analog.actuator div[pin-slider] .pin-name,
-#control-mode .pin.analog.actuator div[pin-slider] .pin-label {
-    line-height: $pin_slider_h;
-}
-
-// digital sensors
-#control-mode .pin.sensor.digital .pin-box {
-    border-width: $pin_border_w;
-    border-color: $gray;
-    border-style: solid;
-    height: 100%;
-    background-color: white;
+    border-left: $pin_name_w solid transparent;
     box-sizing: border-box;
 }
-#control-mode .pin.sensor.digital.pressed .pin-box {
-    background-color: $bright_yellow;
-}
 
-// analog sensors
-#control-mode .pin.sensor.analog .pin-box {
-    border-width: $pin_border_w;
-    border-style: solid;
-    border-color: $gray;
+// sensors
+#control-mode .pin.sensor .pin-value-container-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+#control-mode .pin.sensor .pin-value-container {
+    position: absolute;
+    top: ($pin_h - $pin_slider_h)/2;
+    left: 0;
     height: $pin_slider_h;
-    box-sizing: border-box;
-    position: relative;
+    width: 100%;
+    background-color: $gray;
+    border-radius: $pin_slider_h/2;
+    overflow: hidden;
 }
-
-// digital actuators
-#control-mode .pin.digital.actuator .pin-box {
+#control-mode .pin.sensor .pin-value {
+    position: absolute;
+    top: 0;
+    left: 0;
     height: 100%;
-    @include tap_feedback($bright_blue);
+    border-radius: $pin_slider_h/2;
+    background-color: $bright_blue;
+    border-right: 5px solid $dark_blue;
+    box-sizing: border-box;
 }
-#control-mode .pin.digital.actuator.pressed .pin-box {
-    @include tap_feedback($bright_yellow);
+#control-mode .pin.sensor.off .pin-value {
+    border-right-width: 0;
 }
 
 // analog actuators
-#control-mode .pin.analog.actuator div[pin-slider] {
-    position: relative;
-}
-#control-mode .pin.analog.actuator .pin-box {
-    position: relative;
+#control-mode .pin.actuator .pin-value-container-container {
+    position: absolute;
     top: 0;
-    height: $pin_slider_h;
-    background-color: $bright_blue;
-}
-
-
-
-
-#control-mode .pin-value-container {
+    left: 0;
     width: 100%;
     height: 100%;
+    //border-left: $pin_slider_thumb_h/2 solid transparent;
+    //border-right: $pin_slider_thumb_h/2 solid transparent;
+    box-sizing: border-box;
+}
+#control-mode .pin.actuator .pin-value-container {
+    position: absolute;
+    top: ($pin_h - $pin_aa_h)/2;
+    left: 0;
+    height: $pin_aa_h;
+    width: 100%;
+    background-color: $gray;
+    border-radius: $pin_aa_h/2;
+    overflow: hidden;
+    border-right: $pin_slider_thumb_h/2 solid $gray;
+}
+#control-mode .pin.actuator .pin-value {
+    position: absolute;
     top: 0;
     left: 0;
-    background: transparent;
-    position: absolute;
-    z-index: 0;
-}
-#control-mode .pin-value {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    background: $bright_yellow;
-    z-index: 0;
-    border-width: 0;
     height: 100%;
+    border-top-left-radius: $pin_aa_h/2;
+    border-bottom-left-radius: $pin_aa_h/2;
+    background-color: $dark_blue;
+    border-right: $pin_slider_thumb_h/3 solid $dark_blue;
+    box-sizing: content-box;
 }
 
-$pin_slider_thumb_w: 35px;
+// digital actuators
+// TODO tap feedback would be nice here, but I'm not sure of the on/off stuff
+// it's weird to have the "ON" button be pressed down when the pin is "OFF"
+// and vice versa
+#control-mode .pin-switch {
+    position: absolute;
+    top: ($pin_h - $pin_button_h)/2;
+    left: 0;
+    height: $pin_button_h;
+    width: $pin_button_w;
+}
+#control-mode .pin-switch [class$="container"] {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50%;
+}
+#control-mode .pin-switch .on-container {
+    left: 0;
+}
+#control-mode .pin-switch .off-container {
+    left: 50%;
+}
+#control-mode .pin-switch [class$="box"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    font-size: 25px;
+    text-align: center;
+    line-height: $pin_button_h;
+}
+#control-mode .pin.on .pin-switch .on-box {
+    top: -$pin_button_shadow;
+    left: -$pin_button_shadow;
+    background-color: $bright_blue;
+    box-shadow: $pin_button_shadow $pin_button_shadow $medium_blue;
+    color: white;
+}
+#control-mode .pin.off .pin-switch .off-box {
+    top: -$pin_button_shadow;
+    left: $pin_button_shadow;
+    background-color: rgb(190, 190, 190);
+    box-shadow: -$pin_button_shadow $pin_button_shadow rgb(133, 133, 133);
+    color: white;
+}
+#control-mode .pin.off .pin-switch .on-box,
+#control-mode .pin.on .pin-switch .off-box {
+    top: 0;
+    left: 0;
+    background-color: rgb(221, 221, 221);
+    color: rgb(190, 190, 190);
+}
+
+
+// analog actuators
 #control-mode .pin-slider-container {
     width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
-    left: -$pin_slider_thumb_w;
-    padding: 0 $pin_slider_thumb_w;
-    box-sizing: content-box;
+    left: 0;
 }
 #control-mode .pin-slider-container input[type=range] {
+    -webkit-appearance: none;
     z-index: 4;
     position: absolute;
-    top: 0;
+    top: ($pin_h - $pin_aa_h)/2;
     left: 0;
-    -webkit-appearance: none;
-    background: transparent;
-    height: 100%;
+    height: $pin_aa_h;
     width: 100%;
+    background: transparent;
+    border-radius: $pin_aa_h/2;
 }
 #control-mode .pin-slider-container input[type=range]:focus {
     box-shadow: 0 0 0 transparent;
@@ -319,28 +396,11 @@ $pin_slider_thumb_w: 35px;
 #control-mode .pin-slider-container input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
     display: block;
-    background: transparent;
-    width: 0;
-    height: 0;
-    border-left: 35px solid transparent;
-    border-right: 35px solid transparent;
-    border-bottom: 56px solid white;
-    -webkit-background-clip: content-box;
-    position: relative;
-    top: 50px;
-}
-#control-mode .pin-slider-container input[type=range]::-webkit-slider-thumb:before {
-    width: 0;
-    height: 0;
-    display: block;
-    content: "\A";
-    border-left: 30px solid transparent;
-    border-right: 30px solid transparent;
-    border-bottom: 50px solid $bright_blue;
-    position: absolute;
-    top: 3px;
-    left: -30px;
-    box-shadow: 0 8px 4px -4px $gray;
+    width: $pin_slider_thumb_h;
+    height: $pin_slider_thumb_h;
+    border-radius: $pin_slider_thumb_h/2;
+    background: $bright_blue;
+    box-shadow: 2px 2px 0 0 $medium_blue;
 }
 
 /* SMALL DEVICES */
@@ -366,4 +426,10 @@ $pin_slider_thumb_w: 35px;
         max-width: 500px;
     }
 
+}
+
+/* BOOTSTRAP OVERRIDES */
+.container-fluid .row {
+    padding-left: 50px;
+    padding-right: 50px;
 }

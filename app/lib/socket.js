@@ -86,12 +86,20 @@ var onConnect = function(conn) {
             msg.count += 1;
             msg.message_ids_processed = _.keys(messages_dict);
             msg.hash_code = settings.get_hash_code();
-            // either we have a static ip address to connect to or we assume
-            // Galileo is broadcasting a wifi hotspot and just connect to that
-            if (settings.be_access_point()) {
-                msg.url_root = 'www.makernode.com';
+            if (settings.on_hardware()) {
+                // this is when we are doing stuff on the Galileo, for real
+                if (settings.be_access_point()) {
+                    msg.url_root = ''; // '' means any URL is fine here
+                } else {
+                    msg.url_root = settings.get_galileo_static_ip();
+                }
             } else {
-                msg.url_root = settings.get_galileo_static_ip();
+                // this is  when we are doing stuff on localhost, for testing
+                if (settings.be_access_point()) {
+                    msg.url_root = 'localhost:8000';
+                } else {
+                    msg.url_root = '127.0.0.1:8000';
+                }
             }
             try {
                 conn.send(JSON.stringify(msg));

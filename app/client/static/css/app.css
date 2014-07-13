@@ -32,21 +32,31 @@ html, body {
 
 h1 {
   font-size: 150%;
-  line-height: 1.5em; }
+  line-height: 1.5em;
+  color: #0071c5;
+  text-align: center; }
 
 p {
   font-size: 95%;
   line-height: 1.2em; }
 
+p.narrow {
+  padding-left: 100px;
+  padding-right: 100px; }
+
 .navbar {
-  background: #1e60b5;
+  background: #0071c5;
   color: white;
   border-bottom: 5px solid #0f3c81; }
+
+.navbar h1 {
+  color: white;
+  text-align: left; }
 
 .hide {
   display: none; }
 
-.row.padded {
+.padded {
   padding-bottom: .5em; }
 
 #loading {
@@ -67,17 +77,32 @@ p {
 #header .navbar-header {
   width: 100%; }
 
-#header table {
-  width: 100%; }
+#logo-container {
+  padding-bottom: 0;
+  padding-top: 0;
+  margin-bottom: 0;
+  margin-top: 0; }
+
+#logo {
+  height: 2em;
+  position: relative;
+  float: none;
+  display: block;
+  margin-left: auto;
+  margin-right: auto; }
+
+#labs {
+  font-size: 60%;
+  line-height: 1em;
+  position: relative;
+  top: -.75em;
+  padding-bottom: 0;
+  margin-bottom: 0; }
 
 #footer {
   padding-top: 2em; }
 
 /* SETUP FORM */
-.setup-form h1 {
-  color: #1e60b5;
-  text-align: center; }
-
 .setup-form input {
   display: block;
   margin-left: auto;
@@ -95,7 +120,7 @@ p {
   margin-right: auto; }
 
 .step-pic {
-  margin-right: 50px; }
+  max-width: 100%; }
 
 .step-pic.active {
   box-shadow: 15px 15px 5px #e6e6e6; }
@@ -116,10 +141,10 @@ p {
   line-height: 60px;
   cursor: default;
   position: relative;
-  background-color: #1e60b5;
+  background-color: #0071c5;
   box-shadow: 4px 4px 4px #9da0ad; }
   .button:active {
-    background-color: #174989;
+    background-color: #005492;
     box-shadow: 2px 2px 2px #9da0ad;
     position: relative;
     top: 2px;
@@ -154,129 +179,162 @@ p {
     left: 2px; }
 
 /* CONTROL MODE */
+#control-mode .sensors {
+  background-color: #ececec; }
+
 #control-mode div[pin-button],
 #control-mode div[pin-slider] {
-  margin: 30px 5% 60px;
-  height: 70px;
-  box-sizing: border-box; }
+  height: 75px;
+  position: relative; }
 
-#control-mode div[pin-button] .pin-name,
-#control-mode div[pin-button] .pin-label {
-  height: 100%;
-  line-height: 70px;
-  text-align: center; }
-
-#control-mode .pin-name,
-#control-mode .pin-label {
-  font-size: 30px; }
-
-#control-mode .pin.digital.sensor div[pin-button] .pin-name,
-#control-mode .pin.digital.sensor div[pin-button] .pin-label {
-  line-height: 40px; }
-
-#control-mode div[pin-slider] .pin-name,
-#control-mode div[pin-slider] .pin-label {
+#control-mode .pin-name {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
   height: 100%;
-  z-index: 5;
-  text-align: center; }
-
-#control-mode .pin.analog.sensor div[pin-slider] .pin-name,
-#control-mode .pin.analog.sensor div[pin-slider] .pin-label {
-  line-height: 40px; }
-
-#control-mode .pin.analog.actuator div[pin-slider] .pin-name,
-#control-mode .pin.analog.actuator div[pin-slider] .pin-label {
-  line-height: 70px; }
-
-#control-mode .pin.sensor.digital .pin-box {
-  border-width: 15px;
-  border-color: #9da0ad;
-  border-style: solid;
-  height: 100%;
-  background-color: white;
-  box-sizing: border-box; }
-
-#control-mode .pin.sensor.digital.pressed .pin-box {
-  background-color: #ffee28; }
-
-#control-mode .pin.sensor.analog .pin-box {
-  border-width: 15px;
-  border-style: solid;
-  border-color: #9da0ad;
-  height: 70px;
+  width: 70px;
+  line-height: 75px;
+  text-align: right;
+  padding-right: 1em;
   box-sizing: border-box;
-  position: relative; }
+  font-size: 25px;
+  font-weight: 600;
+  color: #0071c5; }
 
-#control-mode .pin.digital.actuator .pin-box {
-  height: 100%;
-  background-color: #3a9ee9;
-  box-shadow: 4px 4px 4px #9da0ad; }
-  #control-mode .pin.digital.actuator .pin-box:active {
-    background-color: #1886d8;
-    box-shadow: 2px 2px 2px #9da0ad;
-    position: relative;
-    top: 2px;
-    left: 2px; }
-
-#control-mode .pin.digital.actuator.pressed .pin-box {
-  background-color: #ffee28;
-  box-shadow: 4px 4px 4px #9da0ad; }
-  #control-mode .pin.digital.actuator.pressed .pin-box:active {
-    background-color: #f4e100;
-    box-shadow: 2px 2px 2px #9da0ad;
-    position: relative;
-    top: 2px;
-    left: 2px; }
-
-#control-mode .pin.analog.actuator div[pin-slider] {
-  position: relative; }
-
-#control-mode .pin.analog.actuator .pin-box {
-  position: relative;
+#control-mode .pin-inner {
+  position: absolute;
   top: 0;
-  height: 70px;
-  background-color: #3a9ee9; }
-
-#control-mode .pin-value-container {
+  left: 0;
   width: 100%;
   height: 100%;
+  border-left: 70px solid transparent;
+  box-sizing: border-box; }
+
+#control-mode .pin.sensor .pin-value-container-container {
+  position: absolute;
   top: 0;
   left: 0;
-  background: transparent;
-  position: absolute;
-  z-index: 0; }
-
-#control-mode .pin-value {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  background: #ffee28;
-  z-index: 0;
-  border-width: 0;
+  width: 100%;
   height: 100%; }
+
+#control-mode .pin.sensor .pin-value-container {
+  position: absolute;
+  top: 18.75px;
+  left: 0;
+  height: 37.5px;
+  width: 100%;
+  background-color: #9da0ad;
+  border-radius: 18.75px;
+  overflow: hidden; }
+
+#control-mode .pin.sensor .pin-value {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 18.75px;
+  background-color: #399ceb;
+  border-right: 5px solid #12448d;
+  box-sizing: border-box; }
+
+#control-mode .pin.sensor.off .pin-value {
+  border-right-width: 0; }
+
+#control-mode .pin.actuator .pin-value-container-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box; }
+
+#control-mode .pin.actuator .pin-value-container {
+  position: absolute;
+  top: 15px;
+  left: 0;
+  height: 45px;
+  width: 100%;
+  background-color: #9da0ad;
+  border-radius: 22.5px;
+  overflow: hidden;
+  border-right: 30px solid #9da0ad; }
+
+#control-mode .pin.actuator .pin-value {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-top-left-radius: 22.5px;
+  border-bottom-left-radius: 22.5px;
+  background-color: #12448d;
+  border-right: 20px solid #12448d;
+  box-sizing: content-box; }
+
+#control-mode .pin-switch {
+  position: absolute;
+  top: 7.5px;
+  left: 0;
+  height: 60px;
+  width: 150px; }
+
+#control-mode .pin-switch [class$="container"] {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%; }
+
+#control-mode .pin-switch .on-container {
+  left: 0; }
+
+#control-mode .pin-switch .off-container {
+  left: 50%; }
+
+#control-mode .pin-switch [class$="box"] {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  font-size: 25px;
+  text-align: center;
+  line-height: 60px; }
+
+#control-mode .pin.on .pin-switch .on-box {
+  top: -4px;
+  left: -4px;
+  background-color: #399ceb;
+  box-shadow: 4px 4px #195cbb;
+  color: white; }
+
+#control-mode .pin.off .pin-switch .off-box {
+  top: -4px;
+  left: 4px;
+  background-color: #bebebe;
+  box-shadow: -4px 4px #858585;
+  color: white; }
+
+#control-mode .pin.off .pin-switch .on-box,
+#control-mode .pin.on .pin-switch .off-box {
+  top: 0;
+  left: 0;
+  background-color: #dddddd;
+  color: #bebebe; }
 
 #control-mode .pin-slider-container {
   width: 100%;
   height: 100%;
   position: absolute;
   top: 0;
-  left: -35px;
-  padding: 0 35px;
-  box-sizing: content-box; }
+  left: 0; }
 
 #control-mode .pin-slider-container input[type=range] {
+  -webkit-appearance: none;
   z-index: 4;
   position: absolute;
-  top: 0;
+  top: 15px;
   left: 0;
-  -webkit-appearance: none;
+  height: 45px;
+  width: 100%;
   background: transparent;
-  height: 100%;
-  width: 100%; }
+  border-radius: 22.5px; }
 
 #control-mode .pin-slider-container input[type=range]:focus {
   box-shadow: 0 0 0 transparent;
@@ -285,28 +343,11 @@ p {
 #control-mode .pin-slider-container input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   display: block;
-  background: transparent;
-  width: 0;
-  height: 0;
-  border-left: 35px solid transparent;
-  border-right: 35px solid transparent;
-  border-bottom: 56px solid white;
-  -webkit-background-clip: content-box;
-  position: relative;
-  top: 50px; }
-
-#control-mode .pin-slider-container input[type=range]::-webkit-slider-thumb:before {
-  width: 0;
-  height: 0;
-  display: block;
-  content: "\A";
-  border-left: 30px solid transparent;
-  border-right: 30px solid transparent;
-  border-bottom: 50px solid #3a9ee9;
-  position: absolute;
-  top: 3px;
-  left: -30px;
-  box-shadow: 0 8px 4px -4px #9da0ad; }
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  background: #399ceb;
+  box-shadow: 2px 2px 0 0 #195cbb; }
 
 /* SMALL DEVICES */
 @media (max-device-width: 4in) and (min-resolution: 100dpi) {
@@ -324,3 +365,7 @@ p {
 
   .button.wide {
     max-width: 500px; } }
+/* BOOTSTRAP OVERRIDES */
+.container-fluid .row {
+  padding-left: 50px;
+  padding-right: 50px; }

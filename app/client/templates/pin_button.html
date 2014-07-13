@@ -1,11 +1,14 @@
-<div class="pin-box"
-    ng-click="toggle_pin_value(pin.id);">
-    <div class="pin-label droid-font"
-      ng-if="pin.label.length > 0">
-        {{pin.label}}
-    </div>
-    <div class="pin-name"
-      ng-if="pin.label.length === 0">
-        {{pin.name}}
+<div class="pin-name intel-font">
+    {{pin.name}}
+</div>
+<div class="pin-inner intel-font">
+    <div class="pin-switch"
+      ng-click="toggle_pin_value(pin.id);">
+        <div class="on-container">
+            <div class="on-box">ON</div>
+        </div>
+        <div class="off-container">
+            <div class="off-box">OFF</div>
+        </div>
     </div>
 </div>

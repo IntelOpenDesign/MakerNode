@@ -85,10 +85,8 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
     Galileo.on('websocket-closed', function() {
         $scope.s.got_data = false;
     });
-    var ws_url = 'ws://';
-    ws_url += window.location.origin.slice('http://'.length);
-    ws_url += ':8001';
-    Galileo.connect(ws_url);
+
+    Galileo.connect(makernode.rc.wsURL());
 
     // This sends the object d to the server exactly as is.
     // Only use this if you know the server is expecting this exact format.
@@ -316,11 +314,13 @@ makernode.app.factory('Galileo', ['$rootScope', function($rootScope) {
 
     // Processing Updates from Server
     var onmessage = function(server_msg) {
+
         stop_waiting();
 
         // TODO put these back in for deployment ?
         //console.log('websocket message', server_msg);
         var data = JSON.parse(server_msg.data);
+        window.server_msg = data;
         //console.log('websocket data', data);
         //console.log('\tdata.message_ids_processed', JSON.stringify(data.message_ids_processed));
 
@@ -643,10 +643,7 @@ makernode.rc = function routing_control() {
 
     var that = {};
 
-    var url_root = null; // ex. http://www.makernode.com/, http://172.20.10.8
-
     that.reset = function(s) {
-        url_root = that.currentURLRoot();
         that.update(s);
     };
 
@@ -663,8 +660,20 @@ makernode.rc = function routing_control() {
         var current_hash = window.location.hash.substring("/#".length);
         return that.get_route_key(current_hash, 'hash');
     };
-    that.currentURLRoot = function() {
-        return window.location.origin.slice("http://".length);
+    that.currentURLRoot = function(o) {
+        options = _.extend({}, o);
+        var s = window.location.origin.slice('http://'.length);
+        if (window.location.port && !options.include_port)
+            s = s.slice(0, -(window.location.port.length+1));
+        return s;
+    };
+    that.wsURL = function(url_root) {
+        var prefix = 'ws://';
+        var domain = url_root ? url_root : that.currentURLRoot();
+        if (domain.indexOf(':') >= 0)
+            domain = domain.slice(0, domain.indexOf(':'));
+        var port = ':8001';
+        return prefix + domain + port;
     };
 
     that.goTo = function(route) {
@@ -675,24 +684,50 @@ makernode.rc = function routing_control() {
     };
 
     that.update = function(s) {
+        // s is the server msg
+        // TODO this routing stuff is still really confusing
         var curRouteKey = that.currentRouteKey();
         var serRouteKey = s.hash_code.length > 0 ? that.get_route_key(s.hash_code, 'server_code') : null;
-        if (s.url_root !== url_root) {
-            url_root = s.url_root;
-            that.goTo(makernode.routes.connecting);
-            that.connect();
+        // if the server cares what URL we are at and we are not there,
+        if ( s.url_root !== '' &&
+             s.url_root !== that.currentURLRoot({include_port: true}) ) {
+            // and we are not already trying to connect,
+            if ( curRouteKey !== 'connecting' ) {
+                // then start trying to connect to the new URL
+                console.log('GOING TO CONNECT TO NEW WS');
+                console.log('\tbecause server wants url_root:', s.url_root, ', current url root:', that.currentURLRoot({include_port: true}), ', current Route Key:', curRouteKey, ', server wants Route Key:', serRouteKey);
+                that.goTo(makernode.routes.connecting);
+                that.connect(s.url_root);
+            }
+            // if we are already trying to connect, don't do anything new here
+            return;
         }
-        if (that.currentURLRoot() === url_root &&
-            curRouteKey === 'connecting') {
+        // if the server does not care what URL root we are at or we are
+        // already at the right URL, and we are still showing the 'connecting'
+        // page,
+        if ( ( s.url_root === '' ||
+               s.url_root === that.currentURLRoot({include_port: true}) )
+            && curRouteKey === 'connecting') {
+            // then we have actually already finished connecting, and so we
+            // should just go to the home page which is control_mode
+            console.log('GOING TO CONTROL MODE');
+            console.log('\tbecause server wants url_root:', s.url_root, ', current url root:', that.currentURLRoot({include_port: true}), ', current Route Key:', curRouteKey, ', server wants Route Key:', serRouteKey);
             that.goTo(makernode.routes.control_mode);
+            return;
         }
+        // at this point we are all good with the URL ////////////////
+        // if the server wants us to be at a different route
         if (serRouteKey && curRouteKey !== serRouteKey) {
+            // then we'll go there
+            console.log('GOING TO SERVER ROUTE KEY', serRouteKey);
+            console.log('\tbecause server wants url_root:', s.url_root, ', current url root:', that.currentURLRoot({include_port: true}), ', current Route Key:', curRouteKey, ', server wants Route Key:', serRouteKey);
             that.goTo(makernode.routes[serRouteKey]);
+            return;
         }
     };
 
-    that.connect = function() {
-        var ws_url = 'ws://' + url_root + ':8001';
+    that.connect = function(url_root) {
+        var ws_url = that.wsURL(url_root);
         console.log('To test whether Galileo has gotten onto the wifi network yet, we are trying to connect to the Galileo websocket at ', ws_url);
 
         var keep_trying = true;

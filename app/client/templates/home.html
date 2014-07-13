@@ -1,47 +1,65 @@
 <div id="control-mode"
   class="container-fluid">
-    <div class="row">
-        <div class="col-xs-6">
-            Input Pins
-        </div>
-        <div class="col-xs-6">
-            Output Pins
+
+    <div class="row padded">
+        <div class="col-xs-12">
+            <h1>Galileo Controller</h1>
         </div>
     </div>
-    <div class="row">
-        <div class="col-xs-6">
+
+    <div class="row padded">
+        <div class="col-xs-12">
+            <p class="text-center narrow">Test all of the inputs and outputs on your Galileo without writing code</p>
+        </div>
+    </div>
+
+    <!-- TODO internally rename sensors to inputs and actuators to outputs -->
+    <div class="row sensors">
+        <div class="col-xs-12">
+            <h1>Inputs</h1>
+        </div>
+        <div class="col-xs-12">
             <div ng-class="{
                 'pin': true,
                 'analog': pin.is_analog,
                 'digital': !pin.is_analog,
                 'sensor': pin.is_input,
                 'actuator': !pin.is_input,
-                'pressed': pin.value === 100}"
+                'on': pin.value === 100,
+                'off': pin.value === 0}"
               ng-repeat="pin in d.sensors">
-                <div ng-if="!pin.is_analog"
-                  pin-button>
-                </div>
-                <div ng-if="pin.is_analog"
-                  pin-slider>
-                </div>
+                <div pin-slider></div>
             </div>
         </div>
-        <div class="col-xs-6">
+        <div class="col-xs-12 padded">
+        </div>
+    </div>
+
+    <div class="row actuators">
+        <div class="col-xs-12">
+            <h1>Outputs</h1>
+        </div>
+        <div class="col-xs-12 padded">
+            <p class="text-center narrow">Drag slider to test analog pins and press off or on to test digital pins</p>
+        </div>
+        <div class="col-xs-6"
+          ng-repeat="pin in d.actuators">
             <div ng-class="{
                 'pin': true,
                 'analog': pin.is_analog,
                 'digital': !pin.is_analog,
                 'sensor': pin.is_input,
                 'actuator': !pin.is_input,
-                'pressed': pin.value === 100}"
-              ng-repeat="pin in d.actuators">
-                <div ng-if="!pin.is_analog"
-                  pin-button>
-                </div>
+                'on': pin.value === 100,
+                'off': pin.value === 0}">
                 <div ng-if="pin.is_analog"
                   pin-slider>
+                </div>
+                <div ng-if="!pin.is_analog"
+                  pin-button>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
