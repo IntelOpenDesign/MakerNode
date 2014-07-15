@@ -6,7 +6,8 @@ $black: rgb(44, 38, 33);
 $gray: rgb(157, 160, 173);
 $bg_gray: rgb(236, 236, 236);
 $chatbox_color: rgb(198, 188, 175);
-$intel_blue: rgb(0, 113, 197);
+//$intel_blue: rgb(0, 113, 197);
+$intel_blue: rgb(8, 96, 168);
 $bright_blue: rgb(57, 156, 235);
 $medium_blue: rgb(25, 92, 187);
 $dark_blue: rgb(18, 68, 141);
@@ -85,7 +86,7 @@ p.narrow {
 .navbar {
     background: $intel_blue;
     color: white;
-    border-bottom: 5px solid rgb(15, 60, 129);
+    border-bottom: 5px solid #184c9c;
 }
 .navbar h1 {
     color: white;

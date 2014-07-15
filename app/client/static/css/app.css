@@ -33,7 +33,7 @@ html, body {
 h1 {
   font-size: 150%;
   line-height: 1.5em;
-  color: #0071c5;
+  color: #0860a8;
   text-align: center; }
 
 p {
@@ -45,9 +45,9 @@ p.narrow {
   padding-right: 100px; }
 
 .navbar {
-  background: #0071c5;
+  background: #0860a8;
   color: white;
-  border-bottom: 5px solid #0f3c81; }
+  border-bottom: 5px solid #184c9c; }
 
 .navbar h1 {
   color: white;
@@ -141,10 +141,10 @@ p.narrow {
   line-height: 60px;
   cursor: default;
   position: relative;
-  background-color: #0071c5;
+  background-color: #0860a8;
   box-shadow: 4px 4px 4px #9da0ad; }
   .button:active {
-    background-color: #005492;
+    background-color: #064477;
     box-shadow: 2px 2px 2px #9da0ad;
     position: relative;
     top: 2px;
@@ -199,7 +199,7 @@ p.narrow {
   box-sizing: border-box;
   font-size: 25px;
   font-weight: 600;
-  color: #0071c5; }
+  color: #0860a8; }
 
 #control-mode .pin-inner {
   position: absolute;
