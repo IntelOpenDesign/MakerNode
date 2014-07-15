@@ -5,6 +5,8 @@ var _ = require('underscore');
 var board;
 var OUTPUT_SCALE = 255;
 
+// REFACTOR_IDEA put reading and writing boardstate.conf in this file too, then it's OK to have some application-specific logic in here, then we can rename this from gpio (which sounds like a minimal wrapper to me) to something like BoardState
+
 function GPIO() {}
 
 GPIO.prototype.init = init;
@@ -21,6 +23,7 @@ function init(onInput) {
     board.on("ready", function() {
         log.info("BOARD READY");
         var byte = 0;
+        // REFACTOR_IDEA why do we only do this for pin 9?
         this.pinMode(9, this.MODES.OUTPUT);
         board.analogRead('A0', function(data) {
             onInput(14, data);
@@ -51,7 +54,10 @@ function init(onInput) {
 
 var cachedPinValues = [];
 
+// REFACTOR_IDEA the name of this function makes me think it is for output pins only, when really it is for all pins
 function refreshOutputs(model) {
+    // REFACTOR_IDEA right now we don't have connections in MakerNode. so let's just take out all the connections stuff
+    // REFACTOR_IDEA right nowe we don't have the feature of scaling values in MakerNode. so let's take all that out
     _.each(model.connections,
         function(connection) {
             var source = connection.source;
