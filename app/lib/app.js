@@ -29,6 +29,7 @@ function start() {
 
         } else { // connect to router
             log.info('Connecting to Router');
+            // REFACTOR_IDEA wait so we don't need to do anything here? it defaults to connecting to the router?
             // TODO
             // do this when you are entering wifi router info (form submit):
             //sh('./wpa_supplicant.conf ' + ssid + wifi_password );
@@ -46,10 +47,14 @@ function start() {
     );
 
     function onBoardReady(board) {
+        // REFACTOR_IDEA so the conf little wrapper library will read the file and give us JSON, but when we write to a file we have to do the JSON.stringify ourselves... seems inconsistent...
+        // REFACTOR_IDEA overall I feel like more code = more places for bugs to hide. This makes me dislike wrapper modules. But I get that for conf.js the consistent logging of success / failure around reading files is nice.
+        // REFACTOR_IDEA having a consistent way of writing our own node modules would be nice, at least the interface for them.
         boardConf.read(BOARD_CONF_FILE)
             .then(
                 function(pinState) {
                     log.debug('Pin state loaded.', pinState);
+                    // REFACTOR_IDEA why do we restart networking here? isn't this deprecated anyway?
                     sh('/etc/init.d/networking restart');
                     socket.create(function() {
                         var model = socket.getMessage();
