@@ -89,6 +89,8 @@ function start() {
         boardState.pins[pinIndex].value = value / 1024;
         gpio.refreshOutputs(boardState);
     }
+
+    // REFACTOR_IDEA passing in the "then" part of a promise makes sense, but other than that all these callbacks make this code feel like spaghetti. can we just move the callbacks into the module that is using them?
 }
 
 function stop() {

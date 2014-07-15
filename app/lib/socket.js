@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var log = require('./log').create('Socket');
+// REFACTOR_IDEA what was the status on using ws again instead of something better? what else were we considering? will it be available on the next build of Galileo?
 var WebSocketServer = require('ws').Server;
 var exec = require('child_process').exec;
 var sh = require('./command_queue').init().enqueue;
@@ -36,6 +37,7 @@ module.exports.create = function(_settings){
     return new Socket(_settings);
 }
 
+// REFACTOR_IDEA pin states should come from boardstate.conf, not this file
 // pin defaults
 var digital_outs = ['1', '2', '3', '4', '7', '8', '12', '13'];
 var digital_ins = ['0'];
@@ -44,6 +46,7 @@ var analog_ins = ['14', '15', '16', '17', '18', '19']; // A0 - A5
 
 var all_pins = [].concat(digital_outs).concat(digital_ins).concat(analog_outs).concat(analog_ins);
 
+// REFACTOR_IDEA I'd like to have more of an interface between the different modules. There is no reason for boardstate.conf or app.js to care about certain things that belong in msg. Rather than setMessage, how about a method like "initPins" which sets the pin attributes?
 function setMessage(state) {
     msg = state;
 }
@@ -56,6 +59,7 @@ var messages_dict = {};
 
 var N_CLIENTS = 0;
 
+// REFACTOR_IDEA we should not be using this anymore. boardstate.conf should determine this
 function pin_setter(is_analog, is_input) {
     return function(id) {
         msg.pins[id] = {
@@ -75,6 +79,9 @@ function pin_setter(is_analog, is_input) {
     }
 }
 
+// REFACTOR_IDEA less hacky way of making sure clients know their message has been processed by the server would be great. with a new websockets module maybe client tracking would be easy!
+
+// REFACTOR_IDEA do we even need to sync across multiple clients? it seems like the idea of MakerNode is just using it from one person's computer. It adds a fair amount of complexity.
 
 var onConnect = function(conn) {
 
