@@ -36,6 +36,13 @@
   "devDependencies": {
     "gulp": "~3.8.5",
     "gulp-todo": "~0.3.6",
-    "docopt-js-shim": "git+https://github.com/adampasz/docopt-js-shim.git"
+    "docopt-js-shim": "git+https://github.com/adampasz/docopt-js-shim.git",
+    "mocha": "~1.20.1",
+    "chai": "~1.9.1",
+    "mocha-better-spec-reporter": "0.0.2",
+    "mocha-unfunk-reporter": "~0.4.0"
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha --reporter mocha-unfunk-reporter"
   }
 }
