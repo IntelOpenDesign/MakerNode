@@ -35,7 +35,6 @@
   },
   "devDependencies": {
     "gulp": "~3.8.5",
-    "gulp-todo": "~0.3.6",
-    "docopt-js-shim": "git+https://github.com/adampasz/docopt-js-shim.git"
+    "gulp-todo": "~0.3.6"
   }
 }
