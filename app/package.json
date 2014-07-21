@@ -45,5 +45,6 @@
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --reporter mocha-unfunk-reporter",
     "coverage": "./node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R mocha-unfunk-reporter"
+    "gulp-todo": "~0.3.6"
   }
 }
