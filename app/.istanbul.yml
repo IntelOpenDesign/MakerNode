@@ -9,12 +9,12 @@ instrumentation:
     preserve-comments: false
     complete-copy: false
     save-baseline: false
-    baseline-file: ./coverage/coverage-baseline.json
+    baseline-file: ./test/coverage/coverage-baseline.json
 reporting:
     print: summary
     reports:
         - lcov
-    dir: ./coverage
+    dir: ./test/coverage
     watermarks:
         statements: [50, 80]
         lines: [50, 80]
