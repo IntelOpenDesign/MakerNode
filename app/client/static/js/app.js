@@ -683,6 +683,7 @@ makernode.rc = function routing_control() {
         window.history.go(-n);
     };
 
+    //REFACTOR_IDEA client side routing needs MAJOR IMPROVEMENT
     that.update = function(s) {
         // s is the server msg
         // TODO this routing stuff is still really confusing

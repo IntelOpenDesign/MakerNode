@@ -151,6 +151,7 @@ var onConnect = function(conn) {
                     msg.connections.splice(index, 1);
                 }
             });
+            // REFACTOR_IDEA can't we dynamically get all attributes of each pin?
             _.each(d.pins, function(pin, id) {
                 msg.pins[id].value = pin.value;
                 msg.pins[id].label = pin.label;
@@ -197,6 +198,7 @@ var onConnect = function(conn) {
         }, 0);
     });
 
+    // REFACTOR_IDEA these are pointless
     conn.on('close', function(code, reason) {
         clearInterval(broadcast_interval_id);
         broadcast_interval_id = 0;

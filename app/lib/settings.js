@@ -1,7 +1,6 @@
 "use strict";
 var _ = require('underscore');
 var fs = require('q-io/fs');
-// REFACTOR_IDEA don't have conf.js be a wrapper for q-io/fs and then have setting.js just use q-io/fs directly. either get rid of conf.js or have settings.js use it too
 
 // REFACTOR_IDEA along the lines of wanting to write modules in a consistent fashion, this would be my vote for how to write functions and modules
 function settings() {
