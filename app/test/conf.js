@@ -3,13 +3,13 @@ var conf = require('../lib/conf').create();
 var chai = require('chai'),
   should = chai.should(),
   expect = chai.expect;
-var READ_FILE = 'foo.temp';
+var FILE = 'foo.temp';
 var WRITE_FILE = '';
 var rand = Math.random();
 
 //First, delete file.
 function deleteFile() {
-fs.unlink(READ_FILE, function(err) {
+fs.unlink(FILE, function(err) {
   if (err) throw err;
 });
 }
@@ -17,8 +17,8 @@ fs.unlink(READ_FILE, function(err) {
 describe('Conf.write()', function() {
   deleteFile();
   it('* Writes  ' + WRITE_FILE, function(done) {
-    // fs.createReadStream(READ_FILE).pipe(fs.createWriteStream(READ_FILE + '.temp'));
-    conf.write('foo.txt', JSON.stringify({
+    // fs.createReadStream(FILE).pipe(fs.createWriteStream(FILE + '.temp'));
+    conf.write(FILE, JSON.stringify({
       test: 'pass'
     }))
       .then(
@@ -26,8 +26,8 @@ describe('Conf.write()', function() {
           done();
 
           describe('Conf.read()', function() {
-            it('* Reads valid JSON from ' + READ_FILE, function(done) {
-              conf.read(READ_FILE)
+            it('* Reads valid JSON from ' + FILE, function(done) {
+              conf.read(FILE)
                 .then(
                   function(state) {
                     state.should.have.property('test', 'pass');
