@@ -19,6 +19,7 @@ function Socket(_settings){
         count: 0, // TODO remove when done debugging
         message_ids_processed: [],
         ssid: null,
+        ws_port: '8001', // TODO get this from server app.js
     };
     _.each(digital_outs, pin_setter(false, false));
     _.each(digital_ins, pin_setter(false, true));
@@ -95,16 +96,17 @@ var onConnect = function(conn) {
             if (settings.on_hardware()) {
                 // this is when we are doing stuff on the Galileo, for real
                 if (settings.be_access_point()) {
-                    delete msg.url;
+                    msg.url_root = ''; // anything is fine
                 } else {
-                    msg.url = { url_root: settings.get_galileo_static_ip(), ws_port: '8001' };
+                    msg.url_root = settings.get_galileo_static_ip();
                 }
             } else {
                 // this is  when we are doing stuff on localhost, for testing
                 if (settings.be_access_point()) {
-                    delete msg.url;
+                    msg.url_root = ''; // for testing assume client started at localhost:8000
                 } else {
-                    msg.url = { url_root: '127.0.0.1', ws_port: '8001' };
+                    msg.url_root = '127.0.0.1';
+                    msg.http_port = '8000';
                 }
             }
             try {

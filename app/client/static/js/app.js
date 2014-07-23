@@ -126,7 +126,7 @@ makernode.app.controller('FormCtrl', ['$scope', function($scope) {
     $scope.form = {};
     var my_route = makernode.rc.currentRouteKey();
     var my_route_i = makernode.setup_steps.indexOf(my_route);
-    var next_route = makernode_setup_steps[i + 1];
+    var next_route = makernode.setup_steps[my_route_i + 1];
     $scope.submit = function() {
         $scope.send_server_update($scope.form);
         makernode.rc.goTo(makernode.routes[next_route]);
@@ -135,16 +135,23 @@ makernode.app.controller('FormCtrl', ['$scope', function($scope) {
 
 makernode.app.controller('RedirectCtrl', ['$scope', function($scope) {
 
+    console.log('RedirectCtrl has $scope', $scope);
     var connecting = false;
     $scope.$watch('msg', function(msg, old_msg) {
-        if (_.has(msg, 'url') && !connecting) {
+        if (msg.url_root !== '' && !connecting) {
+            console.log('going to redirect now b/c msg', msg);
             connecting = true;
             connect();
         }
     });
 
     var connect = function() {
-        var ws_url = 'ws://' + $scope.msg.url.url_root + ':' + $scope.msg.url.ws_port;
+        var ws_url = 'ws://' + $scope.msg.url_root + ':' + $scope.msg.ws_port;
+        var http_url = 'http://' + $scope.msg.url_root;
+        if ($scope.msg.http_port) {
+            http_url += ':' + $scope.msg.http_port;
+        }
+        http_url += '/#/' + makernode.routes.control_mode.hash;
         console.log('To test whether Galileo has gotten onto the wifi network yet, we are trying to connect to the Galileo websocket at ', ws_url);
 
         var keep_trying = true;
@@ -152,8 +159,8 @@ makernode.app.controller('RedirectCtrl', ['$scope', function($scope) {
         // Error message
         setTimeout(function() {
             // TODO helpful error message
-            alert('Connecting to Galileo at', ws_url, 'failed.');
-            console.log('Connecting to Galileo at', ws_url, 'failed.');
+            alert('Connecting to Galileo at failed.');
+            console.log('Connecting to Galileo at failed.');
             keep_trying = false;
         }, 5 * 60 * 1000); // five minutes
 
@@ -170,7 +177,7 @@ makernode.app.controller('RedirectCtrl', ['$scope', function($scope) {
                         _.each(websockets, function(w) {
                             w.close();
                         });
-                        window.location = 'http://' + $scope.msg.url.url_root + '/#/' + makernode.routes.control_mode.hash;
+                        window.location = http_url;
                     }
                 };
                 setTimeout(try_websocket_connection, 1000);
@@ -709,6 +716,16 @@ makernode.rc = function routing_utility_functions() {
     that.goBack = function(n) {
         window.history.go(-n);
     };
+
+    that.wsURL = function() {
+        var host = window.location.host;
+        var colon_i = host.indexOf(':');
+        if (colon_i >= 0) {
+            host = host.slice(0, colon_i);
+        }
+        return 'ws://' + host + ':' + '8001';
+    };
+
     return that;
 }();
 
