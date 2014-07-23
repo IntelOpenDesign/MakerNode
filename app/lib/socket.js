@@ -14,8 +14,6 @@ function Socket(_settings){
     settings = _settings;
     msg = {
         status: 'OK', // TODO test client side with "error" status
-        url_root: null,
-        hash_code: null,
         pins: {},
         connections: [],
         count: 0, // TODO remove when done debugging
@@ -93,19 +91,20 @@ var onConnect = function(conn) {
             msg.count += 1;
             msg.message_ids_processed = _.keys(messages_dict);
             msg.hash_code = settings.get_hash_code();
+
             if (settings.on_hardware()) {
                 // this is when we are doing stuff on the Galileo, for real
                 if (settings.be_access_point()) {
-                    msg.url_root = ''; // '' means any URL is fine here
+                    delete msg.url;
                 } else {
-                    msg.url_root = settings.get_galileo_static_ip();
+                    msg.url = { url_root: settings.get_galileo_static_ip(), ws_port: '8001' };
                 }
             } else {
                 // this is  when we are doing stuff on localhost, for testing
                 if (settings.be_access_point()) {
-                    msg.url_root = 'localhost:8000';
+                    delete msg.url;
                 } else {
-                    msg.url_root = '127.0.0.1:8000';
+                    msg.url = { url_root: '127.0.0.1', ws_port: '8001' };
                 }
             }
             try {

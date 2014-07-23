@@ -5,37 +5,31 @@ makernode.app = angular.module('MakerNode', ['ngRoute']);
 makernode.routes = {
     init: {
         hash: '',
-        server_code: null,
         controller: 'EmptyCtrl',
         template: 'empty',
     },
     confirm_mac: {
         hash: 'confirm_network',
-        server_code: 'confirm_network',
         controller: 'FormCtrl',
         template: 'confirm_mac',
     },
     wifi_setup: {
         hash: 'wifi_router_setup',
-        server_code: 'set_router_info',
         controller: 'FormCtrl',
         template: 'wifi_setup',
     },
     create_user: {
         hash: 'create_password',
-        server_code: 'set_user_password',
         controller: 'FormCtrl',
         template: 'create_user',
     },
     connecting: {
         hash: 'connecting',
-        server_code: '',
-        controller: 'EmptyCtrl',
+        controller: 'RedirectCtrl',
         template: 'connecting_to_router',
     },
     control_mode: {
         hash: 'controller',
-        server_code: '',
         controller: 'EmptyCtrl',
         template: 'home',
     },
@@ -50,6 +44,8 @@ makernode.app.config(['$routeProvider', function($routeProvider) {
     });
 }]);
 
+makernode.setup_steps = ['confirm_mac', 'create_user', 'wifi_setup', 'connecting', 'control_mode'];
+
 // the highest level app controller from which all others inherit
 makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
 
@@ -63,20 +59,20 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
         got_data: false,
         error_state: false,
     };
+    $scope.msg = {}; // latest server msg
 
     // set up connection with server
     Galileo.set_all_pins_getter(function() {
         return $scope.d.pins;
     });
     Galileo.on('update', function(data) {
+        $scope.msg = data;
         if (!$scope.s.got_data) { // first time initialization
             $scope.s.got_data = true;
             $scope.d.reset(data);
-            makernode.rc.reset(data);
         } else {
             $scope.s.got_data = true;
             $scope.d.update(data);
-            makernode.rc.update(data);
         }
     });
     Galileo.on('slowness', function() {
@@ -128,9 +124,61 @@ makernode.app.controller('EmptyCtrl', ['$scope', function($scope) {
 
 makernode.app.controller('FormCtrl', ['$scope', function($scope) {
     $scope.form = {};
+    var my_route = makernode.rc.currentRouteKey();
+    var my_route_i = makernode.setup_steps.indexOf(my_route);
+    var next_route = makernode_setup_steps[i + 1];
     $scope.submit = function() {
         $scope.send_server_update($scope.form);
+        makernode.rc.goTo(makernode.routes[next_route]);
     };
+}]);
+
+makernode.app.controller('RedirectCtrl', ['$scope', function($scope) {
+
+    var connecting = false;
+    $scope.$watch('msg', function(msg, old_msg) {
+        if (_.has(msg, 'url') && !connecting) {
+            connecting = true;
+            connect();
+        }
+    });
+
+    var connect = function() {
+        var ws_url = 'ws://' + $scope.msg.url.url_root + ':' + $scope.msg.url.ws_port;
+        console.log('To test whether Galileo has gotten onto the wifi network yet, we are trying to connect to the Galileo websocket at ', ws_url);
+
+        var keep_trying = true;
+
+        // Error message
+        setTimeout(function() {
+            // TODO helpful error message
+            alert('Connecting to Galileo at', ws_url, 'failed.');
+            console.log('Connecting to Galileo at', ws_url, 'failed.');
+            keep_trying = false;
+        }, 5 * 60 * 1000); // five minutes
+
+        var websockets = [];
+        function try_websocket_connection() {
+            if (keep_trying) {
+                console.log('Attempt #' + (websockets.length+1) + ' to establish a connection with Galileo at', ws_url);
+                var ws = new WebSocket(ws_url);
+                websockets.push(ws);
+                ws.onmessage = function(msg) {
+                    var d = JSON.parse(msg.data);
+                    if (_.has(d, 'pins')) {
+                        keep_trying = false;
+                        _.each(websockets, function(w) {
+                            w.close();
+                        });
+                        window.location = 'http://' + $scope.msg.url.url_root + '/#/' + makernode.routes.control_mode.hash;
+                    }
+                };
+                setTimeout(try_websocket_connection, 1000);
+            }
+        };
+        try_websocket_connection();
+    };
+
 }]);
 
 makernode.app.directive('stepsPics', function($document) {
@@ -637,15 +685,9 @@ makernode.server_pin_format = function(my_pins, my_pin_ids) {
     return pins;
 };
 
-// URL SETTINGS
-
-makernode.rc = function routing_control() {
+makernode.rc = function routing_utility_functions() {
 
     var that = {};
-
-    that.reset = function(s) {
-        that.update(s);
-    };
 
     that.get_route_key = function(val, attr) {
         var route_key;
@@ -657,23 +699,8 @@ makernode.rc = function routing_control() {
         return route_key;
     };
     that.currentRouteKey = function() {
-        var current_hash = window.location.hash.substring("/#".length);
+        var current_hash = window.location.hash.substring('#/'.length);
         return that.get_route_key(current_hash, 'hash');
-    };
-    that.currentURLRoot = function(o) {
-        options = _.extend({}, o);
-        var s = window.location.origin.slice('http://'.length);
-        if (window.location.port && !options.include_port)
-            s = s.slice(0, -(window.location.port.length+1));
-        return s;
-    };
-    that.wsURL = function(url_root) {
-        var prefix = 'ws://';
-        var domain = url_root ? url_root : that.currentURLRoot();
-        if (domain.indexOf(':') >= 0)
-            domain = domain.slice(0, domain.indexOf(':'));
-        var port = ':8001';
-        return prefix + domain + port;
     };
 
     that.goTo = function(route) {
@@ -682,85 +709,6 @@ makernode.rc = function routing_control() {
     that.goBack = function(n) {
         window.history.go(-n);
     };
-
-    //REFACTOR_IDEA client side routing needs MAJOR IMPROVEMENT
-    that.update = function(s) {
-        // s is the server msg
-        // TODO this routing stuff is still really confusing
-        var curRouteKey = that.currentRouteKey();
-        var serRouteKey = s.hash_code.length > 0 ? that.get_route_key(s.hash_code, 'server_code') : null;
-        // if the server cares what URL we are at and we are not there,
-        if ( s.url_root !== '' &&
-             s.url_root !== that.currentURLRoot({include_port: true}) ) {
-            // and we are not already trying to connect,
-            if ( curRouteKey !== 'connecting' ) {
-                // then start trying to connect to the new URL
-                console.log('GOING TO CONNECT TO NEW WS');
-                console.log('\tbecause server wants url_root:', s.url_root, ', current url root:', that.currentURLRoot({include_port: true}), ', current Route Key:', curRouteKey, ', server wants Route Key:', serRouteKey);
-                that.goTo(makernode.routes.connecting);
-                that.connect(s.url_root);
-            }
-            // if we are already trying to connect, don't do anything new here
-            return;
-        }
-        // if the server does not care what URL root we are at or we are
-        // already at the right URL, and we are still showing the 'connecting'
-        // page,
-        if ( ( s.url_root === '' ||
-               s.url_root === that.currentURLRoot({include_port: true}) )
-            && curRouteKey === 'connecting') {
-            // then we have actually already finished connecting, and so we
-            // should just go to the home page which is control_mode
-            console.log('GOING TO CONTROL MODE');
-            console.log('\tbecause server wants url_root:', s.url_root, ', current url root:', that.currentURLRoot({include_port: true}), ', current Route Key:', curRouteKey, ', server wants Route Key:', serRouteKey);
-            that.goTo(makernode.routes.control_mode);
-            return;
-        }
-        // at this point we are all good with the URL ////////////////
-        // if the server wants us to be at a different route
-        if (serRouteKey && curRouteKey !== serRouteKey) {
-            // then we'll go there
-            console.log('GOING TO SERVER ROUTE KEY', serRouteKey);
-            console.log('\tbecause server wants url_root:', s.url_root, ', current url root:', that.currentURLRoot({include_port: true}), ', current Route Key:', curRouteKey, ', server wants Route Key:', serRouteKey);
-            that.goTo(makernode.routes[serRouteKey]);
-            return;
-        }
-    };
-
-    that.connect = function(url_root) {
-        var ws_url = that.wsURL(url_root);
-        console.log('To test whether Galileo has gotten onto the wifi network yet, we are trying to connect to the Galileo websocket at ', ws_url);
-
-        var keep_trying = true;
-        // Yes, we are pessimists. Expect failure and prepare the error msg.
-        setTimeout(function() {
-            console.log('Connecting to the Galileo websocket at', ws_url, 'failed');
-            keep_trying = false;
-        }, 5 * 60 * 1000); // five minutes
-
-        var websockets = [];
-        function try_websocket_connection() {
-            if (keep_trying) {
-                console.log('Attempting to establish a websockets connection with Galileo at', ws_url);
-                var ws = new WebSocket(ws_url);
-                websockets.push(ws);
-                ws.onmessage = function(msg) {
-                    var d = JSON.parse(msg.data);
-                    if (_.has(d, 'pins') && _.has(d, 'connections') &&
-                        that.currentURLRoot() !== url_root) {
-                        keep_trying = false;
-                        _.each(websockets, function(one_ws) {
-                            one_ws.close();
-                        });
-                        window.location = 'http://' + url_root + '/#/' + makernode.routes.connecting.hash;
-                    }
-                };
-                setTimeout(try_websocket_connection, 1000);
-            }
-        };
-        try_websocket_connection();
-    };
-
     return that;
 }();
 
