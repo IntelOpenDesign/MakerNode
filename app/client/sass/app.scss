@@ -6,7 +6,8 @@ $black: rgb(44, 38, 33);
 $gray: rgb(157, 160, 173);
 $bg_gray: rgb(236, 236, 236);
 $chatbox_color: rgb(198, 188, 175);
-$intel_blue: rgb(0, 113, 197);
+//$intel_blue: rgb(0, 113, 197);
+$intel_blue: rgb(8, 96, 168);
 $bright_blue: rgb(57, 156, 235);
 $medium_blue: rgb(25, 92, 187);
 $dark_blue: rgb(18, 68, 141);
@@ -48,7 +49,11 @@ $dark_blue: rgb(18, 68, 141);
     font-family: 'Droid Sans';
 }
 .text-muted {
-    font-size: 40%;
+    font-size: 12px;
+    line-height: 1em;
+    display: inherit;
+    color: $gray;
+    word-wrap: break-word;
 }
 .pin-name {
     font-family: 'Neo Sans Intel';
@@ -82,10 +87,14 @@ p.narrow {
     padding-right: 100px;
 }
 
+img {
+    max-width: 100%;
+}
+
 .navbar {
     background: $intel_blue;
     color: white;
-    border-bottom: 5px solid rgb(15, 60, 129);
+    border-bottom: 5px solid #184c9c;
 }
 .navbar h1 {
     color: white;
@@ -219,6 +228,7 @@ $pin_name_w: 70px;
 $pin_aa_h: 0.6 * $pin_h; // analog actuators slider height
 $pin_slider_thumb_h: 0.8 * $pin_h;
 $pin_button_shadow: 4px;
+$pin_font_size: 25px;
 
 #control-mode div[pin-button],
 #control-mode div[pin-slider] {
@@ -236,7 +246,7 @@ $pin_button_shadow: 4px;
     text-align: right;
     padding-right: 1em;
     box-sizing: border-box;
-    font-size: 25px;
+    font-size: $pin_font_size;
     font-weight: 600;
     color: $intel_blue;
 }
@@ -343,7 +353,7 @@ $pin_button_shadow: 4px;
     position: absolute;
     width: 100%;
     height: 100%;
-    font-size: 25px;
+    font-size: $pin_font_size;
     text-align: center;
     line-height: $pin_button_h;
 }
@@ -401,6 +411,44 @@ $pin_button_shadow: 4px;
     border-radius: $pin_slider_thumb_h/2;
     background: $bright_blue;
     box-shadow: 2px 2px 0 0 $medium_blue;
+}
+
+// big digital actuator
+#control-mode .big div[pin-button] {
+    height: 300px;
+}
+#control-mode .big .pin-name {
+    width: 100%;
+    height: 50px;
+    line-height: 1em;
+    font-size: 50px;
+    text-align: center;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-width: 0 !important;
+}
+#control-mode .testing .pin-name:before {
+    content: "Test Pin";
+}
+#control-mode .big .pin-inner {
+    top: 50px;
+    border-width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    top: 50px;
+}
+#control-mode .big .pin-switch {
+    top: 30px;
+    height: 240px;
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-width: $pin_button_shadow;
+    box-sizing: border-box;
+}
+#control-mode .big .pin-switch [class$="box"] {
+    font-size: 50px;
+    line-height: 240px - 2 * $pin_button_shadow;
 }
 
 /* SMALL DEVICES */

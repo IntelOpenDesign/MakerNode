@@ -15,7 +15,11 @@
   font-family: 'Droid Sans'; }
 
 .text-muted {
-  font-size: 40%; }
+  font-size: 12px;
+  line-height: 1em;
+  display: inherit;
+  color: #9da0ad;
+  word-wrap: break-word; }
 
 .pin-name {
   font-family: 'Neo Sans Intel'; }
@@ -33,7 +37,7 @@ html, body {
 h1 {
   font-size: 150%;
   line-height: 1.5em;
-  color: #0071c5;
+  color: #0860a8;
   text-align: center; }
 
 p {
@@ -44,10 +48,13 @@ p.narrow {
   padding-left: 100px;
   padding-right: 100px; }
 
+img {
+  max-width: 100%; }
+
 .navbar {
-  background: #0071c5;
+  background: #0860a8;
   color: white;
-  border-bottom: 5px solid #0f3c81; }
+  border-bottom: 5px solid #184c9c; }
 
 .navbar h1 {
   color: white;
@@ -141,10 +148,10 @@ p.narrow {
   line-height: 60px;
   cursor: default;
   position: relative;
-  background-color: #0071c5;
+  background-color: #0860a8;
   box-shadow: 4px 4px 4px #9da0ad; }
   .button:active {
-    background-color: #005492;
+    background-color: #064477;
     box-shadow: 2px 2px 2px #9da0ad;
     position: relative;
     top: 2px;
@@ -199,7 +206,7 @@ p.narrow {
   box-sizing: border-box;
   font-size: 25px;
   font-weight: 600;
-  color: #0071c5; }
+  color: #0860a8; }
 
 #control-mode .pin-inner {
   position: absolute;
@@ -348,6 +355,42 @@ p.narrow {
   border-radius: 30px;
   background: #399ceb;
   box-shadow: 2px 2px 0 0 #195cbb; }
+
+#control-mode .big div[pin-button] {
+  height: 300px; }
+
+#control-mode .big .pin-name {
+  width: 100%;
+  height: 50px;
+  line-height: 1em;
+  font-size: 50px;
+  text-align: center;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-width: 0 !important; }
+
+#control-mode .testing .pin-name:before {
+  content: "Test Pin"; }
+
+#control-mode .big .pin-inner {
+  top: 50px;
+  border-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  top: 50px; }
+
+#control-mode .big .pin-switch {
+  top: 30px;
+  height: 240px;
+  width: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-width: 4px;
+  box-sizing: border-box; }
+
+#control-mode .big .pin-switch [class$="box"] {
+  font-size: 50px;
+  line-height: 232px; }
 
 /* SMALL DEVICES */
 @media (max-device-width: 4in) and (min-resolution: 100dpi) {

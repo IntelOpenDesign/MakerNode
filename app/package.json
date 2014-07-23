@@ -4,9 +4,7 @@
   "version": "0.0.1",
   "author": "adampasz <adampasz@yahoo.com>",
   "description": "NodeJS backend for Intel Connect Anything",
-  "contributors": [
-    {}
-  ],
+  "contributors": [{}],
   "main": "./index",
   "repository": {
     "type": "git",
@@ -36,6 +34,14 @@
   "devDependencies": {
     "gulp": "~3.8.5",
     "gulp-todo": "~0.3.6",
-    "docopt-js-shim": "git+https://github.com/adampasz/docopt-js-shim.git"
+    "mocha": "~1.20.1",
+    "chai": "~1.9.1",
+    "mocha-better-spec-reporter": "0.0.2",
+    "mocha-unfunk-reporter": "~0.4.0",
+    "istanbul": "~0.3.0"
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha --reporter mocha-unfunk-reporter",
+    "coverage": "./node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R mocha-unfunk-reporter"
   }
 }

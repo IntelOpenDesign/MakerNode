@@ -4,7 +4,7 @@ var log = require('./log').create('Socket');
 var WebSocketServer = require('ws').Server;
 var exec = require('child_process').exec;
 var sh = require('./command_queue').init().enqueue;
-
+var wss;
 var onUpdate;
 var settings;
 var msg;
@@ -222,7 +222,7 @@ var onConnect = function(conn) {
         log.info('error');
     });
 }
-
+//TODO: Rename this method to avoid confusion with the other .create
 function create(callback) {
     onUpdate = callback;
 
@@ -234,5 +234,8 @@ function create(callback) {
     wss.on('connection', onConnect);
     //for testing random data
     //setInterval(update, 6000);
+    
+    return wss;
 }
+
 
