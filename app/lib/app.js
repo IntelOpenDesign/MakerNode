@@ -10,6 +10,8 @@ var http = require('./http')();
 var socket = require('./socket').create(settings);
 var sh = require('./command_queue').init().enqueue;
 
+var setupController = require('./setupController)();
+
 var BOARD_CONF_FILE = 'boardstate.conf';
 var APP_CONF_FILE = 'appstate.conf';
 var HTTP_PORT = 80;
@@ -23,19 +25,7 @@ function start() {
     log.info('Starting MakerNode...');
 
     settings.init(APP_CONF_FILE).then(function() {
-        if (settings.be_access_point()) {
-            log.info('Starting Access Point');
-            sh('./startAP.sh'); //TODO: I'd like this to be asynchronous...
-
-        } else { // connect to router
-            log.info('Connecting to Router');
-            // TODO
-            // do this when you are entering wifi router info (form submit):
-            //sh('./wpa_supplicant.conf ' + ssid + wifi_password );
-            //
-            // TODO do we need to call /etc/init.d/networking restart every time we want to connect to wifi or is it only after the first time we connect to a new network after restarting?
-
-        }
+      setupController.configureWlan0(settings.be_access_point);        
     });
 
     gpio.init(onInput).then(
