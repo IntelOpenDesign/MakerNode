@@ -28,7 +28,7 @@ function settings() {
     };
 
     var write = function() {
-        return fs.write(filename, JSON.stringify(state));
+        return fs.write(filename, JSON.stringify(state, null, 2));
     };
 
     var get_hash_code = function() {

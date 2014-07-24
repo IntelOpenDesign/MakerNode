@@ -44,7 +44,7 @@ function start() {
                     socket.create(function() {
                         var model = socket.getMessage();
                         gpio.refreshOutputs(model);
-                        boardConf.write(BOARD_CONF_FILE, JSON.stringify(model)); //TODO: throttle writes
+                        boardConf.write(BOARD_CONF_FILE, JSON.stringify(model, null, 2)); //TODO: throttle writes
                     });
                     if (typeof pinState === 'undefined') {
                         //TODO: initiate setup flow?  
