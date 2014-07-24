@@ -10,7 +10,7 @@ var http = require('./http')();
 var socket = require('./socket').create(settings);
 var sh = require('./command_queue').init().enqueue;
 
-var setupController = require('./setupController)();
+var setupController = require('./setupController')();
 
 var BOARD_CONF_FILE = 'boardstate.conf';
 var APP_CONF_FILE = 'appstate.conf';
