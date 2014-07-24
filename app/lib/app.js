@@ -24,6 +24,9 @@ function app() {
         http.listen(HTTP_PORT);
         log.info('HTTP server is ready.');
 
+        // TODO according to our interface defn, conf should take the filename
+        // in its constructor, but then how do we make sure not to read from
+        // it before it's ready?
         conf.init(APP_CONF_FILE).then(function() {
             app_state = conf.read();
             if (app_state.mode === 'setup') {
@@ -47,6 +50,9 @@ function app() {
 
     var launch_setup_ctrl = function() {
         netUtils.start_access_point();
+        // TODO since app and setupCtrl are sharing data from the same file,
+        // how do we make sure that when they write to the file they do not
+        // overwrite each other's changes?
         setupCtrl = setupCtrlF(app_state.setup_state);
         setupCtrl.on_setup_finished(function() {
             app_state.mode = 'control';
