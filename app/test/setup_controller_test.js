@@ -31,15 +31,16 @@ describe('setup_controller.start()', function() {
     client.on('close', function() {
       describe('setup_controller.stop()', function() {
         it('* Socket should close', function(done) {
-          setup_controller.on_finished(function() {
-            exec(NETSTAT, function(error, stdout, stderr) {
+          
+          setup_controller.close();
+          exec(NETSTAT, function(error, stdout, stderr) {
               stdout.should.have.length(0);
               done();
             });
-          });
-          setup_controller.close();
         });
       });
     });
   });
 });
+
+//TODO: test on_finished
