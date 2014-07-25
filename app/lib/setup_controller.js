@@ -4,7 +4,6 @@ var log = require('./log').create('setup_controller');
 var sh = require('./command_queue').init().enqueue;
 
 var _ = require('underscore');
-var log = require('./log').create('Socket');
 // REFACTOR_IDEA what was the status on using ws again instead of something better? what else were we considering? will it be available on the next build of Galileo?
 var WebSocketServer = require('ws').Server;
 var exec = require('child_process').exec;
@@ -14,17 +13,17 @@ var onUpdate;
 var msg;
 var N_CLIENTS = 0;
 var on_finished;
+var messages_dict = {};
 
 function setup_controller(state) {
   var start = function(port) {
     log.info('WebSockets Serving listening on port ' + port);
     wss = new WebSocketServer({
-      port: port,
+      port: port
     });
-
-    wss.on('connection', function() {
+    wss.on('connection', function(conn) {
       var broadcast_interval_id = 0;
-      N_CLIENTS += 1;
+      N_CLIENTS ++;
       log.info('new connection, N_CLIENTS', N_CLIENTS);
       if (!broadcast_interval_id) {
         broadcast_interval_id = setInterval(function() {
@@ -91,22 +90,22 @@ function setup_controller(state) {
           if (_.has(d, 'reset') && d.reset === true) {
             sh('./restore_factory_settings.sh');
           }
-          onUpdate();
         }, 0);
-      });
 
-      conn.on('close', function(code, reason) {
-        log.info('close')
-        clearInterval(broadcast_interval_id);
-        broadcast_interval_id = 0;
-      });
-      conn.on('end', function() {
-        log.info('end');
-      });
-      conn.on('error', function() {
-        log.info('error');
+        conn.on('close', function(code, reason) {
+          log.info('close')
+          clearInterval(broadcast_interval_id);
+          broadcast_interval_id = 0;
+        });
+        conn.on('end', function() {
+          log.info('end');
+        });
+        conn.on('error', function() {
+          log.info('error');
+        });
       });
     });
+
   }
   //stops server and terminates clients
   var stop = function() {
