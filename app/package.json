@@ -16,6 +16,7 @@
     "arduino"
   ],
   "dependencies": {
+    "socket.io": "1.0.6",
     "galileo-io": "0.0.18",
     "ws": "0.4.31",
     "q-io": "1.11.1",
