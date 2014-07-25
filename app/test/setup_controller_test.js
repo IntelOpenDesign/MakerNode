@@ -15,8 +15,8 @@ describe('setup_controller.start()', function() {
       it('* Messages should update state correctly', function(done) {
         state.network_confirmed.should.equal(true);
         done();
+        client.close();
       });
-      client.close();
     });
   });
 
@@ -29,16 +29,24 @@ describe('setup_controller.start()', function() {
     });
   });
 
-  it('* Client should open', function(done) {
+  it('* Client should open and send messages', function(done) {
+    var message_count = 0;
     client = new WebSocket('ws://' + HOST + ':' + PORT);
     client.on('open', function() {
       client.send('{"mac_address":"12345"}');
-      client.send('{"user_password":"boo", "username":"who"}');
-      client.send('{"wifi_ssid":"cat", "wifi_password":"meow"}');
-      done();
+      message_count++;
     });
-    client.on('message', function(data) {
-      //TODO
+
+
+    client.on('message', function(data, flags) {
+      if (message_count == 1) {
+        client.send('{"user_password":"boo", "username":"who"}');
+      }
+      if (message_count == 2) {
+        client.send('{"wifi_ssid":"cat", "wifi_password":"meow"}');
+        done();
+      }
+      message_count++;
       console.log('DATA: ' + data);
     });
 
