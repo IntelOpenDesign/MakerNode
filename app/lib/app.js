@@ -4,12 +4,12 @@ function app() {
 
     var APP_CONF_FILE = 'appstate.conf';
     var BOARD_CONF_FILE = 'boardstate.conf';
-    var HTTP_PORT = 80;
+    var HTTP_PORT = 8000;
     var WS_PORT = 8001;
 
-    var log = require('./log')('App');
+    var log = require('./log').create('App');
     var http = require('./http')();
-    var conf = require('./conf')(APP_CONF_FILE);
+    var conf = require('./conf').create();
     var setupCtrlF = require('./setup_controller');
     var boardCtrlF = require('./board_controller');
     //var netUtils = require('./network_utils')();
@@ -24,7 +24,7 @@ function app() {
         http.listen(HTTP_PORT);
         log.info('HTTP server is ready.');
 
-        conf.read().then(function(o) {
+        conf.read(APP_CONF_FILE).then(function(o) {
             app_state = o;
             if (app_state.mode === 'setup') {
                 launch_setup_ctrl();

@@ -1,7 +1,7 @@
-function board_controller = function(conf_filename) {
+function board_controller(conf_filename) {
 
-    var log = require('./log')('BoardCtrl');
-    var conf = require('./conf')(conf_filename);
+    var log = require('./log').create('BoardCtrl');
+    var conf = require('./conf').create();
     var socketio = require('./socket.io');
     var _ = require('underscore');
 
@@ -9,7 +9,7 @@ function board_controller = function(conf_filename) {
     var board;
 
     var start = function(ws_port) {
-        conf.read().then(function(o) {
+        conf.read(conf_filename).then(function(o) {
             board = o;
 
             ws = socketio(ws_port);
