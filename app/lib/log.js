@@ -1,6 +1,9 @@
 "use strict;"
 var clc = require('cli-color');
 
+// REFACTOR_IDEA log to a file instead of (or in addition to) the console
+// REFACTOR_IDEA support different levels of logging
+
 var namespace;
 
 function Log(name) {
@@ -15,6 +18,8 @@ function create(namespace) {
 var errorFunction;
 var infoFunction;
 var debugFunction;
+
+// REFACTOR_IDEA these logging functions are all pretty much the same function so just use a dictionary lookup to choose between clc.red.bold, clc.blue.bold, and clc.blackBright.bold, ie clc['color'].bold, and instead of console.log or console.error just do console['type']
 
 function error(msg) {
     console.error(clc.red.bold('[' + namespace + ':ERROR] ') + clc.red(msg));

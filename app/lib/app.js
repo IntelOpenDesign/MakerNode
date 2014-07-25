@@ -1,73 +1,73 @@
 "use strict";
 
-function App() {}
-var log = require('./log').create('App');
-var conf = require('./conf');
-var settings = require('./settings')();
-var boardConf = conf.create();
-var gpio = require('./gpio')();
-var http = require('./http')();
-var socket = require('./socket').create(settings);
-var sh = require('./command_queue').init().enqueue;
+function app() {
+    var APP_CONF_FILE = 'appstate.conf';
+    var BOARD_CONF_FILE = 'boardstate.conf';
+    var HTTP_PORT = 80;
+    var WS_PORT = 8001;
 
-var setupController = require('./setupController')();
+    var log = require('./log')('App');
+    var http = require('./http')();
+    var conf = require('./conf')(APP_CONF_FILE);
+    var setupCtrlF = require('./setup_controller');
+    var boardCtrlF = require('./board_controller');
+    var netUtils = require('./network_utils')();
 
-var BOARD_CONF_FILE = 'boardstate.conf';
-var APP_CONF_FILE = 'appstate.conf';
-var HTTP_PORT = 80;
+    var app_state;
+    var setupCtrl;
+    var boardCtrl;
 
-App.prototype.start = start;
-module.exports = function() {
-    return new App();
-}
+    var start = function() {
+        log.info('Starting MakerNode...');
 
-function start() {
-    log.info('Starting MakerNode...');
+        http.listen(HTTP_PORT);
+        log.info('HTTP server is ready.');
 
-    settings.init(APP_CONF_FILE).then(function() {
-      setupController.configureWlan0(settings.be_access_point);        
-    });
+        conf.read().then(function(o) {
+            app_state = o;
+            if (app_state.mode === 'setup') {
+                launch_setup_ctrl();
+            } else {
+                launch_board_ctrl();
+            }
+        });
+    };
 
-    gpio.init(onInput).then(
-        onBoardReady,
-        function(reason) {
-            log.error('could not init gpio: ' + reason);
+    var stop = function() {
+        if (app_state.mode === 'setup') {
+            setupCtrl.stop();
+            netUtils.stop_access_point();
+        } else {
+            boardCtrl.stop();
+            netUtils.stop_supplicant();
         }
-    );
+        conf.write(app_state);
+    };
 
-    function onBoardReady(board) {
-        boardConf.read(BOARD_CONF_FILE)
-            .then(
-                function(pinState) {
-                    log.debug('Pin state loaded.', pinState);
-                    sh('/etc/init.d/networking restart');
-                    socket.create(function() {
-                        var model = socket.getMessage();
-                        gpio.refreshOutputs(model);
-                        boardConf.write(BOARD_CONF_FILE, JSON.stringify(model, null, 2)); //TODO: throttle writes
-                    });
-                    if (typeof pinState === 'undefined') {
-                        //TODO: initiate setup flow?  
-                    } else {
-                        socket.setMessage(pinState);
-                    }
-                    http.listen(HTTP_PORT);
-                    log.info('CAT is ready.');
+    var launch_setup_ctrl = function() {
+        netUtils.start_access_point();
+        setupCtrl = setupCtrlF(app_state.setup_state);
+        setupCtrl.on_setup_finished(function(setup_state) {
+            app_state.mode = 'control';
+            app_state.setup_state = setup_state;
+            conf.write();
+            setupCtrl.stop();
+            netUtils.stop_access_point();
+            launch_board_ctrl();
+        });
+        setupCtrl.start(WS_PORT);
+    };
 
-                },
-                function(reason) {
-                    log.error('read error: ' + reason);
-                }
-        );
-    }
+    var launch_board_ctrl = function() {
+        netUtils.start_supplicant();
+        boardCtrl = boardCtrlF(BOARD_CONF_FILE);
+        boardCtrl.start(WS_PORT);
+    };
 
-    function onInput(pinIndex, value) {
-        var boardState = socket.getMessage();
-        boardState.pins[pinIndex].value = value / 1024;
-        gpio.refreshOutputs(boardState);
-    }
-}
+    return {
+        start: start,
+        stop: stop,
+    };
+};
 
-function stop() {
-    http.close();
-}
+module.exports = app;

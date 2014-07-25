@@ -2,6 +2,7 @@
 var _ = require('underscore');
 var fs = require('q-io/fs');
 
+// REFACTOR_IDEA along the lines of wanting to write modules in a consistent fashion, this would be my vote for how to write functions and modules
 function settings() {
 
     var filename;
@@ -18,6 +19,7 @@ function settings() {
             try {
                 state = JSON.parse(value);
             } catch(e) {
+                // REFACTOR_IDEA use the logging system for this not console.log
                 console.log('\nERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n' +
                     e + '\n' +
                     'when doing JSON.parse on file ' + filename + '\n' +
@@ -31,6 +33,7 @@ function settings() {
         return fs.write(filename, JSON.stringify(state, null, 2));
     };
 
+    // REFACTOR_IDEA sync up the 'server code' names for different pages with the client side route and template names, after things are a bit more finalized in the user flow. discrepancies won't cause bugs because the client side handles that, but it is a little weird
     var get_hash_code = function() {
         if (!state.network_confirmed)
             return 'confirm_network';
@@ -42,6 +45,7 @@ function settings() {
         return '';
     };
 
+    // REFACTOR_IDEA in general I like hiding the internal module logic, even if it means having a bunch of long winded getter/setter/checker functions. If the application logic were more finalized, clear cut, and could provide a nice consistent abstract understanding throughout all components, then I think directly exposing attributes in settings would be fine. But for right now I think this is safer.
     var be_access_point = function() {
         return state.app_mode !== "control";
     };
@@ -79,6 +83,7 @@ function settings() {
         }
     };
 
+    // REFACTOR_IDEA for writing functions in JavaScript, I usually return an object like this at the end or just return a "that" object to which I have attached all the public methods. This way makes it easier for the coder to change which methods are public, and it makes it so someone using this class can't change the original function
     return {
         init: init,
         be_access_point: be_access_point,
