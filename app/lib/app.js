@@ -2,17 +2,17 @@
 
 function app() {
 
-    var log = require('./log')('App');
-    var http = require('./http')();
-    var conf = require('./conf')();
-    var setupCtrlF = require('./setup_controller');
-    var boardCtrlF = require('./board_controller');
-    var netUtils = require('./network_utils')();
-
     var APP_CONF_FILE = 'appstate.conf';
     var BOARD_CONF_FILE = 'boardstate.conf';
     var HTTP_PORT = 80;
     var WS_PORT = 8001;
+
+    var log = require('./log')('App');
+    var http = require('./http')();
+    var conf = require('./conf')(APP_CONF_FILE);
+    var setupCtrlF = require('./setup_controller');
+    var boardCtrlF = require('./board_controller');
+    var netUtils = require('./network_utils')();
 
     var app_state;
     var setupCtrl;
@@ -24,11 +24,8 @@ function app() {
         http.listen(HTTP_PORT);
         log.info('HTTP server is ready.');
 
-        // TODO according to our interface defn, conf should take the filename
-        // in its constructor, but then how do we make sure not to read from
-        // it before it's ready?
-        conf.init(APP_CONF_FILE).then(function() {
-            app_state = conf.read();
+        conf.read().then(function(o) {
+            app_state = o;
             if (app_state.mode === 'setup') {
                 launch_setup_ctrl();
             } else {
@@ -50,12 +47,10 @@ function app() {
 
     var launch_setup_ctrl = function() {
         netUtils.start_access_point();
-        // TODO since app and setupCtrl are sharing data from the same file,
-        // how do we make sure that when they write to the file they do not
-        // overwrite each other's changes?
         setupCtrl = setupCtrlF(app_state.setup_state);
-        setupCtrl.on_setup_finished(function() {
+        setupCtrl.on_setup_finished(function(setup_state) {
             app_state.mode = 'control';
+            app_state.setup_state = setup_state;
             conf.write();
             setupCtrl.stop();
             netUtils.stop_access_point();
