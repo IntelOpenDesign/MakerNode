@@ -66,7 +66,9 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
     var pinsync = makernode.ws_pin_sync($scope, 'ws', 'd');
 
     $scope.ws.on('redirect', function(d) {
-        makernode.rc.redirect(d.url, d.ws_port);
+        // TODO fix this hacky way of accommodating localhost and hardware modes
+        var http_port_w_colon = d.url === '127.0.0.1' ? ':8000' : '';
+        makernode.rc.redirect(d.url, ':' + d.ws_port, http_port_w_colon);
     });
 
     $scope.send_server_update = function(msg_type, d) {
@@ -256,9 +258,9 @@ makernode.rc = function routing_utility_functions() {
         window.history.go(-n);
     };
 
-    that.redirect = function(url, ws_port) {
-        var ws_url = 'ws://' + url + ':' + ws_port;
-        var http_url = 'http://' + url + '/#/' + makernode.routes.control_mode.hash;
+    that.redirect = function(url, ws_port_w_colon, http_port_w_colon) {
+        var ws_url = 'ws://' + url + ws_port_w_colon;
+        var http_url = 'http://' + url + http_port_w_colon + '/#/' + makernode.routes.control_mode.hash;
         console.log('To test whether Galileo has gotten onto the wifi network yet, we are trying to connect to the Galileo websocket at ', ws_url);
 
         var keep_trying = true;
