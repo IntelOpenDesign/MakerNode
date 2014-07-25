@@ -59,33 +59,15 @@ function setup_controller(state) {
 
           messages_dict[d.message_id] = 0;
           if (_.has(d, 'mac_address')) { //STEP 1
-            console.log('confirm_network()');
             state.network_confirmed = true;
           }
           if (_.has(d, 'username') && _.has(d, 'user_password')) { //STEP 2
             state.user_password_set = true;
-
           }
           if (_.has(d, 'wifi_ssid') && _.has(d, 'wifi_password')) { //STEP 3
-            set_router_info(d.wifi_ssid, d.wifi_password).then(function() {
-              // TODO app.js should really be the one to call this
-              var our_command = './init_supplicant.sh ' + d.wifi_ssid + ' ' + d.wifi_password;
-              if (state.galileo_static_ip !== "") {
-                our_command += ' ' + state.galileo_static_ip + ' ' + state.router_gateway_ip;
-              }
-              log.info('Attempting to init wlan0 with command: ' + our_command);
-              exec(our_command, function(error, stdout, stderr) {
-                if (error === null) {
-                  on_finished();
-                  return;
-                }
-                log.error('INIT_SUPPLICANT.SH ERROR CALLBACK has error ', error,
-                  ' stdout ', stdout, ' stderr ', stderr);
-              });
-            }, function(error) {
-              log.error('problem with wifi_ssid ' + d.wifi_ssid + ' wifi_password ' + d.wifi_password);
-            });
-
+            state.router_ssid = d.wifi_ssid;
+            state.router_password = d.wifi_password;
+            on_finished(state); 
           }
           if (_.has(d, 'reset') && d.reset === true) {
             sh('./restore_factory_settings.sh');
@@ -93,7 +75,6 @@ function setup_controller(state) {
         }, 0);
 
         conn.on('close', function(code, reason) {
-          log.info('close')
           clearInterval(broadcast_interval_id);
           broadcast_interval_id = 0;
         });
@@ -109,6 +90,8 @@ function setup_controller(state) {
   }
   //stops server and terminates clients
   var stop = function() {
+    log.info('STOPPED', state);
+
     wss.close();
   };
 
@@ -119,7 +102,7 @@ function setup_controller(state) {
   return {
     start: start,
     stop: stop,
-    on_finished: set_on_finished
+    set_on_finished: set_on_finished
   };
 }
 
