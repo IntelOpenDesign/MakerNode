@@ -2,17 +2,13 @@ function board_controller(conf_filename, ws) {
 
     //var log = require('./log').create('BoardCtrl');
     var conf = require('./conf').create();
-    var socketio = require('./socket.io');
     var _ = require('underscore');
 
-    var ws;
     var board;
 
-    var start = function(ws_port) {
+    var start = function() {
         conf.read(conf_filename).then(function(o) {
             board = o;
-
-            ws = socketio(ws_port);
 
             ws.on('connection', function(socket) {
                 console.log('board_controller.js client connected');
@@ -36,7 +32,6 @@ function board_controller(conf_filename, ws) {
 
     var stop = function() {
         conf.write();
-        socketio.close();
     };
 
     return {
