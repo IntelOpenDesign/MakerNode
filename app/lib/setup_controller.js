@@ -1,8 +1,9 @@
 "use strict";
-var WebSocketServer = require('ws').Server,
-  sh = require('./command_queue').init().enqueue,
-  _ = require('underscore'),
-  log = require('./log').create('setup_controller');
+var WebSocketServer = require('ws').Server;
+//var Server = require('socket.io');
+var sh = require('./command_queue').init().enqueue;
+var _ = require('underscore');
+var log = require('./log').create('setup_controller');
 
 module.exports = function(state) {
   var wss;

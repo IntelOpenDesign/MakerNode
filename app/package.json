@@ -25,7 +25,8 @@
     "q-io": "1.11.1",
     "socket.io": "1.0.6",
     "underscore": "1.6.0",
-    "ws": "0.4.31"
+    "ws": "0.4.31",
+    "http-server": "~0.6.1"
   },
   "licenses": {
     "type": "UNLICENSE",

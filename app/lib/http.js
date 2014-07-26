@@ -1,5 +1,5 @@
 var log = require('./log').create('HTTP');
-var httpServer = require("http-server");
+var httpServer = require('http-server');
 var server;
 
 function http() {
