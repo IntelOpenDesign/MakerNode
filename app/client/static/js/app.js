@@ -52,7 +52,7 @@ makernode.app.config(['$routeProvider', function($routeProvider) {
 makernode.setup_steps = ['confirm_mac', 'create_user', 'wifi_setup', 'connecting', 'control_mode'];
 
 // The highest level app controller from which all others inherit
-makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galileo) {
+makernode.app.controller('AppCtrl', ['$scope', function($scope) {
 
     window.$scope = $scope;
 
@@ -61,12 +61,26 @@ makernode.app.controller('AppCtrl', ['$scope', 'Galileo', function($scope, Galil
     // pins data structure
     $scope.d = makernode.d();
     // websocket connection with server
-    $scope.ws = io(8001);
+    $scope.ws = io();
     // sync pins with server
     var pinsync = makernode.ws_pin_sync($scope, 'ws', 'd');
+    // should we be trying to redirect to a new URL right now?
+    var redirecting = false;
+    var redirect_url;
 
-    $scope.ws.on('redirect', function(d) {
-        makernode.rc.redirect(d.url, d.ws_port);
+    $scope.ws.on('connect', function() {
+        console.log('connected to websocket');
+        if (redirecting) {
+            redirecting = false;
+            window.location = 'http://' + redirect_url + '/#/' + makernode.routes.control_mode.hash;
+        }
+    });
+
+    $scope.ws.on('redirect', function(data) {
+        console.log('REDIRECT');
+        redirecting = true;
+        redirect_url = data.url + ':' + data.port;
+        $scope.ws = io(redirect_url);
     });
 
     $scope.send_server_update = function(msg_type, d) {
@@ -254,43 +268,6 @@ makernode.rc = function routing_utility_functions() {
     };
     that.goBack = function(n) {
         window.history.go(-n);
-    };
-
-    that.redirect = function(url, ws_port) {
-        var ws_url = 'ws://' + url + ':' + ws_port;
-        var http_url = 'http://' + url + '/#/' + makernode.routes.control_mode.hash;
-        console.log('To test whether Galileo has gotten onto the wifi network yet, we are trying to connect to the Galileo websocket at ', ws_url);
-
-        var keep_trying = true;
-
-        // Error message
-        setTimeout(function() {
-            // TODO helpful error message
-            alert('Connecting to Galileo at failed.');
-            console.log('Connecting to Galileo at failed.');
-            keep_trying = false;
-        }, 5 * 60 * 1000); // five minutes
-
-        var websockets = [];
-        function try_websocket_connection() {
-            if (keep_trying) {
-                console.log('Attempt #' + (websockets.length+1) + ' to establish a connection with Galileo at', ws_url);
-                var ws = new WebSocket(ws_url);
-                websockets.push(ws);
-                ws.onmessage = function(msg) {
-                    var d = JSON.parse(msg.data);
-                    if (_.has(d, 'pins')) {
-                        keep_trying = false;
-                        _.each(websockets, function(w) {
-                            w.close();
-                        });
-                        window.location = http_url;
-                    }
-                };
-                setTimeout(try_websocket_connection, 1000);
-            }
-        };
-        try_websocket_connection();
     };
 
     return that;

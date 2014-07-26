@@ -3,27 +3,39 @@
 function app() {
     var APP_CONF_FILE = 'appstate.conf';
     var BOARD_CONF_FILE = 'boardstate.conf';
-    var HTTP_PORT = 80;
-    var WS_PORT = 8001;
+    var PORT = 8000;
 
-    var log = require('./log')('App');
-    var http = require('./http')();
-    var conf = require('./conf')(APP_CONF_FILE);
-    var setupCtrlF = require('./setup_controller');
+    var express = require('express');
+    var path = require('path');
+    var socketio = require('socket.io');
+
+    //var log = require('./log').create('App');
+    var conf = require('./conf').create();
+    var setupCtrlF = require('./fake_setup_controller');
     var boardCtrlF = require('./board_controller');
-    var netUtils = require('./network_utils')();
+    //var netUtils = require('./network_utils')();
+
+    var express_app;
+    var express_server;
+    var socketio_server;
 
     var app_state;
     var setupCtrl;
     var boardCtrl;
 
     var start = function() {
-        log.info('Starting MakerNode...');
+        console.log('app.js Starting MakerNode...');
 
-        http.listen(HTTP_PORT);
-        log.info('HTTP server is ready.');
+        express_app = express();
+        express_app.use(express.static(path.join(__dirname, '../client')));
+        express_server = express_app.listen(PORT);
+        socketio_server = socketio.listen(express_server);
 
-        conf.read().then(function(o) {
+        socketio_server.on('connect', function() {
+            console.log('app.js client connected');
+        });
+
+        conf.read(APP_CONF_FILE).then(function(o) {
             app_state = o;
             if (app_state.mode === 'setup') {
                 launch_setup_ctrl();
@@ -36,32 +48,34 @@ function app() {
     var stop = function() {
         if (app_state.mode === 'setup') {
             setupCtrl.stop();
-            netUtils.stop_access_point();
+            //netUtils.stop_access_point();
         } else {
             boardCtrl.stop();
-            netUtils.stop_supplicant();
+            //netUtils.stop_supplicant();
         }
         conf.write(app_state);
     };
 
     var launch_setup_ctrl = function() {
-        netUtils.start_access_point();
-        setupCtrl = setupCtrlF(app_state.setup_state);
-        setupCtrl.on_setup_finished(function(setup_state) {
+        console.log('app.js launch setup control');
+        //netUtils.start_access_point();
+        setupCtrl = setupCtrlF(app_state.setup_state, socketio_server, PORT);
+        console.log('app.js instantiated setup control');
+        setupCtrl.set_on_finished(function(setup_state) {
             app_state.mode = 'control';
             app_state.setup_state = setup_state;
             conf.write();
             setupCtrl.stop();
-            netUtils.stop_access_point();
+            //netUtils.stop_access_point();
             launch_board_ctrl();
         });
-        setupCtrl.start(WS_PORT);
+        setupCtrl.start();
     };
 
     var launch_board_ctrl = function() {
-        netUtils.start_supplicant();
-        boardCtrl = boardCtrlF(BOARD_CONF_FILE);
-        boardCtrl.start(WS_PORT);
+        //netUtils.start_supplicant();
+        boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server, PORT);
+        boardCtrl.start();
     };
 
     return {
