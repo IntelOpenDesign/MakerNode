@@ -19,7 +19,7 @@ function board_controller(conf_filename, ws) {
                     var mode = pin.is_input ? 'INPUT': 'OUTPUT';
                     this.pinMode(id, this.modes[mode]);
                     if (pin.is_input) {
-                        var method = pin.is_analog ? 'analog': 'digital':
+                        var method = pin.is_analog ? 'analog': 'digital';
                         galileo[method+'Read'](id, pin_listener(id));
                     }
                 });
