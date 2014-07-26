@@ -12,7 +12,7 @@ module.exports = function() {
 
   }
 
-  function start_spplicant(ssid, password, gateway_ip, static_ip) {
+  function start_supplicant(ssid, password, gateway_ip, static_ip) {
 
   }
 
