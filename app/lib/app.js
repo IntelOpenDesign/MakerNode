@@ -48,8 +48,8 @@ function app() {
         console.log('app.js launch setup control');
         //netUtils.start_access_point();
         setupCtrl = setupCtrlF(app_state.setup_state);
-        setupCtrl.on_setup_finished(function(setup_state) {
         console.log('app.js instantiated setup control');
+        setupCtrl.set_on_finished(function(setup_state) {
             app_state.mode = 'control';
             app_state.setup_state = setup_state;
             conf.write();
