@@ -7,8 +7,8 @@ function app() {
     var HTTP_PORT = 8000;
     var WS_PORT = 8001;
 
-    var log = require('./log').create('App');
     var http = require('./http')();
+    //var log = require('./log').create('App');
     var conf = require('./conf').create();
     var setupCtrlF = require('./fake_setup_controller');
     var boardCtrlF = require('./board_controller');
@@ -19,10 +19,9 @@ function app() {
     var boardCtrl;
 
     var start = function() {
-        log.info('Starting MakerNode...');
+        console.log('app.js Starting MakerNode...');
 
         http.listen(HTTP_PORT);
-        log.info('HTTP server is ready.');
 
         conf.read(APP_CONF_FILE).then(function(o) {
             app_state = o;
@@ -46,9 +45,11 @@ function app() {
     };
 
     var launch_setup_ctrl = function() {
+        console.log('app.js launch setup control');
         //netUtils.start_access_point();
         setupCtrl = setupCtrlF(app_state.setup_state);
         setupCtrl.on_setup_finished(function(setup_state) {
+        console.log('app.js instantiated setup control');
             app_state.mode = 'control';
             app_state.setup_state = setup_state;
             conf.write();

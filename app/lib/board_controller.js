@@ -1,6 +1,6 @@
-function board_controller(conf_filename) {
+function board_controller(conf_filename, ws) {
 
-    var log = require('./log').create('BoardCtrl');
+    //var log = require('./log').create('BoardCtrl');
     var conf = require('./conf').create();
     var socketio = require('./socket.io');
     var _ = require('underscore');
@@ -15,7 +15,7 @@ function board_controller(conf_filename) {
             ws = socketio(ws_port);
 
             ws.on('connection', function(socket) {
-                log.info('client connected');
+                console.log('board_controller.js client connected');
 
                 socket.on('pins', function(d) {
                     _.each(d.pins, function(pin, id) {
@@ -28,7 +28,7 @@ function board_controller(conf_filename) {
                 });
 
                 socket.on('disconnect', function() {
-                    log.info('client disconnected');
+                    console.log('board_controller.js client connected');
                 });
             });
         });
