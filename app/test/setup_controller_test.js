@@ -1,21 +1,26 @@
-var WebSocket = require('ws');
+//var WebSocket = require('ws');
+var io = require('socket.io-client');
 var exec = require('child_process').exec;
 var should = require('chai').should();
 
 var setup_state = {};
 var setup_controller = require('../lib/setup_controller')(setup_state);
 var client;
-var HOST = '0.0.0.0';
+var HOST = 'localhost';
 var PORT = 8001;
 var NETSTAT = "netstat -a -n | egrep '" + PORT + ".* LISTEN'"; //TODO: Make this a util method
 
+/*socketOptions = {
+  transports: ['websocket'],
+  'force new connection': true
+  }*/
 describe('setup_controller.start()', function() {
   setup_controller.set_on_finished(function(state) {
     describe('setup_controller.on_finished()', function() {
       it('* Messages should update state correctly', function(done) {
         state.network_confirmed.should.equal(true);
         done();
-        client.close();
+      client.close();
       });
     });
   });
@@ -29,28 +34,28 @@ describe('setup_controller.start()', function() {
     });
   });
 
-  it('* Client should open and send messages', function(done) {
+  it('* Client should open and.emit messages', function(done) {
     var message_count = 0;
-    client = new WebSocket('ws://' + HOST + ':' + PORT);
-    client.on('open', function() {
-      client.send('{"mac_address":"12345"}');
+    client = io('http://' + HOST + ':' + PORT);
+    client.on('connect', function() {
+      client.emit('event', '{"mac_address":"12345"}');
       message_count++;
     });
 
 
-    client.on('message', function(data, flags) {
+    client.on('event', function(data, flags) {
       if (message_count == 1) {
-        client.send('{"user_password":"boo", "username":"who"}');
+        client.emit('event', '{"user_password":"boo", "username":"who"}');
       }
       if (message_count == 2) {
-        client.send('{"wifi_ssid":"cat", "wifi_password":"meow"}');
+        client.emit('event', '{"wifi_ssid":"cat", "wifi_password":"meow"}');
         done();
       }
       message_count++;
       console.log('DATA: ' + data);
     });
 
-    client.on('close', function() {
+    client.on('disconnect', function() {
       describe('setup_controller.stop()', function() {
         it('* Socket should close', function(done) {
 

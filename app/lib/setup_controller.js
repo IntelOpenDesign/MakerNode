@@ -1,6 +1,5 @@
 "use strict";
-var WebSocketServer = require('ws').Server;
-//var Server = require('socket.io');
+var io = require('socket.io');
 var sh = require('./command_queue').init().enqueue;
 var _ = require('underscore');
 var log = require('./log').create('setup_controller');
@@ -11,22 +10,22 @@ module.exports = function(state) {
   var num_clients = 0;
   var on_finished;
   var messages_dict = {};
+  var connection = null;
 
   function start(port) {
     log.info('WebSockets Serving listening on port ' + port);
-    wss = new WebSocketServer({
-      port: port
-    });
+    wss = new io(port);
 
     var msg = {
-        status: 'OK', // TODO test client side with "error" status
-        count: 0, // TODO remove when done debugging
-        message_ids_processed: [],
-        ssid: null,
-        ws_port: port, // TODO get this from server app.js
+      status: 'OK', // TODO test client side with "error" status
+      count: 0, // TODO remove when done debugging
+      message_ids_processed: [],
+      ssid: null,
+      ws_port: port, // TODO get this from server app.js
     };
 
-    wss.on('connection', function(conn) {
+    wss.on('connect', function(conn) {
+      connection = conn;
       var broadcast_interval_id = 0;
       num_clients++;
       if (broadcast_interval_id === 0) {
@@ -36,8 +35,8 @@ module.exports = function(state) {
           msg.message_ids_processed = _.keys(messages_dict);
           msg.hash_code = get_hash_code();
           msg.url_root = '';
-          conn.send(JSON.stringify(msg));
-          log.info("SENT MESSAGE", msg);
+          conn.emit('event', JSON.stringify(msg));
+          log.info("SENT MESSAGE", state);
           _.each(_.keys(messages_dict), function(id) {
             messages_dict[id] += 1;
           });
@@ -61,7 +60,7 @@ module.exports = function(state) {
         return '';
       };
 
-      conn.on('message', function(str) {
+      conn.on('event', function(str) {
         log.info('received ' + str);
         setTimeout(function() {
           var d = JSON.parse(str);
@@ -83,15 +82,9 @@ module.exports = function(state) {
             sh('./restore_factory_settings.sh');
           }
         }, 0);
-        conn.on('close', function(code, reason) {
+        conn.on('disconnect', function(code, reason) {
           clearInterval(broadcast_interval_id);
           broadcast_interval_id = 0;
-        });
-        conn.on('end', function() {
-          log.info('end');
-        });
-        conn.on('error', function() {
-          log.info('error');
         });
       });
     });
@@ -99,7 +92,7 @@ module.exports = function(state) {
 
   function stop() {
     log.info('STOPPED', state);
-    wss.close();
+    wss.disconnect();
   };
 
   function set_on_finished(callback) {
