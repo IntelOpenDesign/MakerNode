@@ -10,7 +10,7 @@ function app() {
     var log = require('./log').create('App');
     var http = require('./http')();
     var conf = require('./conf').create();
-    var setupCtrlF = require('./setup_controller');
+    var setupCtrlF = require('./fake_setup_controller');
     var boardCtrlF = require('./board_controller');
     //var netUtils = require('./network_utils')();
 
