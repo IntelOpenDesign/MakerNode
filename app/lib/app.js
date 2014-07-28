@@ -27,6 +27,10 @@ function app() {
     var start = function() {
         log.info('Starting MakerNode...');
 
+        // TODO move starting express and socketio server to network_utils
+        // var o = netUtils.create_servers(PORT);
+        // express_server = o.express_server;
+        // socketio_server = o.socketio_server;
         express_app = express();
         express_app.use(express.static(path.join(__dirname, '../client')));
         express_server = express_app.listen(PORT);
