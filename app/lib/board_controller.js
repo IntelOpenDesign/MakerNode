@@ -26,9 +26,13 @@ function board_controller(conf_filename, ws) {
                 });
             });
 
-            ws.on('connection', function(socket) {
-                socket.emit('pins', {pins: state.pins});
-                socket.on('pins', update_pins);
+            ws.on('connection', function(conn) {
+                log.debug('client connected');
+                conn.emit('pins', {pins: state.pins});
+                conn.on('pins', update_pins);
+                conn.on('disconnect', function() {
+                    log.debug('client disconnected');
+                });
             });
         });
     };
