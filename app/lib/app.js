@@ -79,6 +79,7 @@ function app() {
     };
 
     var launch_board_ctrl = function() {
+        log.info('Launch Board Control');
         //netUtils.start_supplicant();
         boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server, PORT);
         boardCtrl.start();
