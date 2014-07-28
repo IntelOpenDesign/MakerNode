@@ -35,14 +35,6 @@ function app() {
         express_server = express_app.listen(PORT);
         socketio_server = socketio.listen(express_server);
 
-        socketio_server.on('connection', function() {
-            log.info('Client connected');
-
-            socketio_server.on('disconnect', function() {
-                log.info('Client disconnected');
-            });
-        });
-
         conf.read(APP_CONF_FILE).then(function(o) {
             app_state = o;
             if (app_state.mode === 'setup') {
