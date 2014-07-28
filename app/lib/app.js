@@ -71,7 +71,7 @@ function app() {
             app_state.mode = 'control';
             app_state.setup_state = setup_state;
             log.debug('app_state', JSON.stringify(app_state, null, 2));
-            conf.write(app_state);
+            conf.write(APP_CONF_FILE, app_state);
             setupCtrl.stop();
             socketio_server.emit('redirect', {
                 url: 'clanton.local',
