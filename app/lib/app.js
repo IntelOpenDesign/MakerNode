@@ -70,13 +70,17 @@ function app() {
     var launch_setup_ctrl = function() {
         log.info('Launch Setup Control');
         netUtils.start_access_point();
-        setupCtrl = setupCtrlF(app_state.setup_state, socketio_server, PORT);
+        setupCtrl = setupCtrlF(app_state.setup_state, socketio_server);
         // TODO error callback
         setupCtrl.set_on_finished(function(setup_state) {
             app_state.mode = 'control';
             app_state.setup_state = setup_state;
             conf.write();
             setupCtrl.stop();
+            socketio_server.emit('redirect', {
+                url: 'clanton.local',
+                port: port,
+            });
             netUtils.stop_access_point();
             launch_board_ctrl();
         });
