@@ -26,6 +26,7 @@ function board_controller(conf_filename, ws) {
             });
 
             ws.on('connection', function(socket) {
+                socket.emit('pins', {pins: state.pins});
                 socket.on('pins', update_pins);
             });
         });
