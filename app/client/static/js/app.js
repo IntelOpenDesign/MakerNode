@@ -180,11 +180,13 @@ makernode.ws_pin_sync = function($scope, ws, d) {
     var old_msgs = {}; // messages not yet processed by the server
 
     $scope[ws].on('pins', function(server_msg) {
+        console.log('PINS', server_msg);
         var data = _.extend({}, server_msg);
         delete old_msgs[server_msg.msg_id_processed];
         _.each(old_msgs, function(o, msg_id) {
             _.extend(data, o);
         });
+        data.pins = makernode.my_pin_format(data.pins);
         if (!got_data) {
             $scope[d].reset(data);
         } else {
@@ -193,6 +195,8 @@ makernode.ws_pin_sync = function($scope, ws, d) {
         got_data = true;
     });
 
+
+    // TODO just send pins if there are updates for them
     var send_pin_update = _.throttle(function() {
         var data = {
             server_pins: makernode.server_pin_format($scope.d.pins),
@@ -226,6 +230,7 @@ makernode.my_pin_format = function(server_pins) {
         pins[id] = _.extend({}, pin);
         pins[id].name = name;
         pins[id].value = pin.value * 100;
+        pins[id].id = id;
     });
 
     return pins;
@@ -239,6 +244,7 @@ makernode.server_pin_format = function(my_pins) {
         pins[id] = _.extend({}, pin);
         delete pins[id].name;
         pins[id].value = pin.value / 100;
+        delete pins[id].id;
     });
 
     return pins;

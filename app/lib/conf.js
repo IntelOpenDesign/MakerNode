@@ -1,6 +1,6 @@
 "use strict";
 var fs = require('q-io/fs');
-var log = require('./log').create('Conf');
+var log = require('./log')('Conf');
 
 function Conf() {
     log.info('New Conf');
@@ -22,7 +22,7 @@ function read(path) {
 function write(path, content) {
     log.info('Writing to: ' + path);
 
-    return fs.write(path, content)
+    return fs.write(path, JSON.stringify(content))
         .then(
             function() {
                 log.info('Write successful.');
