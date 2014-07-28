@@ -63,7 +63,7 @@ function board_controller(conf_filename, ws) {
 
     var stop = function() {
         // TODO do we need to stop Galileo IO?
-        conf.write();
+        conf.write(state);
     };
 
     return {
