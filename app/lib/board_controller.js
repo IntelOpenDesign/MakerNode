@@ -70,3 +70,5 @@ function board_controller(conf_filename, ws) {
         stop: stop,
     };
 };
+
+module.exports = board_controller;
