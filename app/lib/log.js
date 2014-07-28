@@ -21,6 +21,7 @@ var log_types = {
 
 function log(name) {
     var logger = function(type) {
+        // TODO make sure this prints JSON nicely
         var t = log_types[type];
         return function() {
             var prefix = '[' + name + ':' + t.prefix + ']';
