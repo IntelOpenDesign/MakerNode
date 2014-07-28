@@ -110,6 +110,7 @@ makernode.app.controller('FormCtrl', ['$scope', function($scope) {
     var next_route_key = makernode.setup_steps[my_route_i + 1];
     var next_route = makernode.routes[next_route_key];
     $scope.submit = function() {
+        console.log('send server msg of type', my_route.socket_msg_type, ' with data', $scope.form);
         $scope.send_server_update(my_route.socket_msg_type, $scope.form);
         makernode.rc.goTo(next_route);
     };
