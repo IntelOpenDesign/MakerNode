@@ -1,9 +1,9 @@
-function board_controller(conf_filename, ws) {
+var log = require('./log')('BoardCtrl');
+var conf = require('./conf').create();
+var _ = require('underscore');
+var GalileoF = require('galileo-io');
 
-    var log = require('./log')('BoardCtrl');
-    var conf = require('./conf').create();
-    var _ = require('underscore');
-    var GalileoF = require('galileo-io');
+function board_controller(conf_filename, ws) {
 
     var state;   // board state JSON object, recorded in conf file
     var galileo; // communication with the actual Galileo using GPIO
