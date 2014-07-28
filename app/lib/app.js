@@ -10,7 +10,7 @@ function app() {
     var path = require('path');
     var socketio = require('socket.io');
 
-    //var log = require('./log').create('App');
+    var log = require('./log')('App');
     var conf = require('./conf').create();
     var setupCtrlF = require('./fake_setup_controller');
     var boardCtrlF = require('./board_controller');
@@ -25,15 +25,19 @@ function app() {
     var boardCtrl;
 
     var start = function() {
-        console.log('app.js Starting MakerNode...');
+        log.info('Starting MakerNode...');
 
         express_app = express();
         express_app.use(express.static(path.join(__dirname, '../client')));
         express_server = express_app.listen(PORT);
         socketio_server = socketio.listen(express_server);
 
-        socketio_server.on('connect', function() {
-            console.log('app.js client connected');
+        socketio_server.on('connection', function() {
+            log.info('Client connected');
+
+            socketio_server.on('disconnect', function() {
+                log.info('Client disconnected');
+            });
         });
 
         conf.read(APP_CONF_FILE).then(function(o) {
@@ -55,13 +59,14 @@ function app() {
             //netUtils.stop_supplicant();
         }
         conf.write(app_state);
+        //socketio_server.close();
+        express_server.close();
     };
 
     var launch_setup_ctrl = function() {
-        console.log('app.js launch setup control');
+        log.info('Launch Setup Control');
         //netUtils.start_access_point();
         setupCtrl = setupCtrlF(app_state.setup_state, socketio_server, PORT);
-        console.log('app.js instantiated setup control');
         setupCtrl.set_on_finished(function(setup_state) {
             app_state.mode = 'control';
             app_state.setup_state = setup_state;

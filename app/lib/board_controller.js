@@ -1,6 +1,6 @@
 function board_controller(conf_filename, ws) {
 
-    //var log = require('./log').create('BoardCtrl');
+    var log = require('./log')('BoardCtrl');
     var conf = require('./conf').create();
     var _ = require('underscore');
     var GalileoF = require('galileo-io');
@@ -26,13 +26,7 @@ function board_controller(conf_filename, ws) {
             });
 
             ws.on('connection', function(socket) {
-                console.log('board_controller.js client connected');
-
                 socket.on('pins', update_pins);
-
-                socket.on('disconnect', function() {
-                    console.log('board_controller.js client connected');
-                });
             });
         });
     };
@@ -44,7 +38,7 @@ function board_controller(conf_filename, ws) {
     };
 
     var update_pin = function(id, data, msg_id) {
-        console.log('board_controller.js update pin ' + id + ' with value ' + data.toString());
+        log.info('Update pin with id', id, 'data', data, 'msg_id', msg_id);
         var pin = state.pins[id.toString()];
         if (pin.value === data) {
             return;

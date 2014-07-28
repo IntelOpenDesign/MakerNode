@@ -1,17 +1,9 @@
 function setup_controller(state, ws, ws_port) {
 
-    console.log('setup_controller.js init');
-
-    //var log = require('./log').create('SetupCtrl');
-
-    console.log('setup_controller.js about to try to require socket.io');
-    console.log('setup_controller.js just finished require socket.io');
+    var log = require('./log')('SetupCtrl');
 
     var start = function() {
-        console.log('inside setupCtrl.start');
         ws.on('connection', function(socket) {
-            console.log('setup_controller.js client connected');
-
             socket.on('confirm_mac', function() {});
 
             socket.on('create_user', function() {});
@@ -21,10 +13,6 @@ function setup_controller(state, ws, ws_port) {
                     url: '127.0.0.1',
                     port: ws_port
                 });
-            });
-
-            socket.on('disconnect', function() {
-                console.log('setup_controller.js client disconnected');
             });
         });
     };
@@ -36,8 +24,6 @@ function setup_controller(state, ws, ws_port) {
     var set_on_finished = function(cb) {
 
     };
-
-    console.log('setup_controller.js finish init');
 
     return {
         start: start,
