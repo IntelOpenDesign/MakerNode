@@ -1,6 +1,7 @@
 "use strict";
 var sh = require('./command_queue').init().enqueue;
 var log = require('./log')('network_utils');
+var exec = require('child_process').exec;
 
 module.exports = function() {
   function start_access_point() {
