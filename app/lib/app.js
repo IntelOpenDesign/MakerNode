@@ -14,7 +14,7 @@ function app() {
     var conf = require('./conf').create();
     var setupCtrlF = require('./fake_setup_controller');
     var boardCtrlF = require('./board_controller');
-    //var netUtils = require('./network_utils')();
+    var netUtils = require('./network_utils')();
 
     var express_app;
     var express_server;
@@ -53,26 +53,28 @@ function app() {
     var stop = function() {
         if (app_state.mode === 'setup') {
             setupCtrl.stop();
-            //netUtils.stop_access_point();
+            netUtils.stop_access_point();
         } else {
             boardCtrl.stop();
-            //netUtils.stop_supplicant();
+            netUtils.restore_factory_settings();
         }
         conf.write(app_state);
+        // TODO make sure we are actually closing the websocket server
         //socketio_server.close();
         express_server.close();
     };
 
     var launch_setup_ctrl = function() {
         log.info('Launch Setup Control');
-        //netUtils.start_access_point();
+        netUtils.start_access_point();
         setupCtrl = setupCtrlF(app_state.setup_state, socketio_server, PORT);
+        // TODO error callback
         setupCtrl.set_on_finished(function(setup_state) {
             app_state.mode = 'control';
             app_state.setup_state = setup_state;
             conf.write();
             setupCtrl.stop();
-            //netUtils.stop_access_point();
+            netUtils.stop_access_point();
             launch_board_ctrl();
         });
         setupCtrl.start();
@@ -80,8 +82,8 @@ function app() {
 
     var launch_board_ctrl = function() {
         log.info('Launch Board Control');
-        //netUtils.start_supplicant();
-        boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server, PORT);
+        netUtils.start_supplicant();
+        boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server);
         boardCtrl.start();
     };
 
