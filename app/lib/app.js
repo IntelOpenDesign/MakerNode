@@ -60,7 +60,6 @@ function app() {
     };
 
     var launch_setup_ctrl = function() {
-        log.info('Launch Setup Control');
         netUtils.start_access_point();
         setupCtrl = setupCtrlF(app_state.setup_state, socketio_server);
         // TODO error callback
@@ -68,13 +67,15 @@ function app() {
         // setup_state instead of modify it. then we copy it back onto the
         // app_state here
         setupCtrl.set_on_finished(function(setup_state) {
+            log.debug('finished with setup');
             app_state.mode = 'control';
             app_state.setup_state = setup_state;
+            log.debug('app_state', JSON.stringify(app_state, null, 2));
             conf.write(app_state);
             setupCtrl.stop();
             socketio_server.emit('redirect', {
                 url: 'clanton.local',
-                port: port,
+                port: PORT,
             });
             netUtils.stop_access_point();
             launch_board_ctrl();
@@ -83,7 +84,6 @@ function app() {
     };
 
     var launch_board_ctrl = function() {
-        log.info('Launch Board Control');
         netUtils.start_supplicant();
         boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server);
         boardCtrl.start();
