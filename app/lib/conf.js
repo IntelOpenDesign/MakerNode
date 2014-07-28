@@ -22,7 +22,7 @@ function read(path) {
 function write(path, content) {
     log.info('Writing to: ' + path);
 
-    return fs.write(path, JSON.stringify(content))
+    return fs.write(path, JSON.stringify(content, null, 2))
         .then(
             function() {
                 log.info('Write successful.');
