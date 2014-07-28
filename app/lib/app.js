@@ -72,6 +72,9 @@ function app() {
         netUtils.start_access_point();
         setupCtrl = setupCtrlF(app_state.setup_state, socketio_server);
         // TODO error callback
+        // TODO have setup_controller _.extend({}, setup_state) to clone
+        // setup_state instead of modify it. then we copy it back onto the
+        // app_state here
         setupCtrl.set_on_finished(function(setup_state) {
             app_state.mode = 'control';
             app_state.setup_state = setup_state;
