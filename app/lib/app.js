@@ -3,7 +3,7 @@
 function app() {
     var APP_CONF_FILE = 'appstate.conf';
     var BOARD_CONF_FILE = 'boardstate.conf';
-    var PORT = 80;
+    var PORT = 8000;
 
     var express = require('express');
     var path = require('path');
@@ -34,6 +34,8 @@ function app() {
         express_app.use(express.static(path.join(__dirname, '../client')));
         express_server = express_app.listen(PORT);
         socketio_server = socketio.listen(express_server);
+
+        log.info('HTTP and WS servers listening on port', PORT);
 
         conf.read(APP_CONF_FILE).then(function(o) {
             app_state = o;
