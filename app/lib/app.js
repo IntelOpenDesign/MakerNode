@@ -3,7 +3,7 @@
 function app() {
     var APP_CONF_FILE = 'appstate.conf';
     var BOARD_CONF_FILE = 'boardstate.conf';
-    var PORT = 8000;
+    var PORT = 80;
 
     var express = require('express');
     var path = require('path');
@@ -75,20 +75,22 @@ function app() {
             log.debug('app_state', JSON.stringify(app_state, null, 2));
             conf.write(APP_CONF_FILE, app_state);
             setupCtrl.stop();
-            socketio_server.emit('redirect', {
-                url: 'clanton.local',
-                port: PORT,
+            netUtils.get_hostname(function(hostname) {
+                socketio_server.emit('redirect', {
+                    url: hostname,
+                    port: PORT,
+                });
+                netUtils.stop_access_point();
+                netUtils.start_supplicant(app_state.setup_state.ssid,
+                              app_state.setup_state.pwd);
+                launch_board_ctrl();
             });
-            netUtils.stop_access_point();
-            netUtils.start_supplicant(app_state.setup_state.ssid, 
-			              app_state.setup_state.pwd);
-            launch_board_ctrl();
         });
         setupCtrl.start();
     };
 
     var launch_board_ctrl = function() {
-        netUtils.start_supplicant(app_state.setup_state.ssid, 
+        netUtils.start_supplicant(app_state.setup_state.ssid,
 			  app_state.setup_state.pwd);
         boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server);
         boardCtrl.start();

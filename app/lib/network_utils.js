@@ -31,11 +31,22 @@ module.exports = function() {
     sh('./restore_factory_settings.sh');
   }
 
+  function get_hostname(cb) {
+    exec('hostname', function(error, stdout, stderr) {
+       log.info('stdout', stdout);
+       if (error !== null) {
+            log.error('Error in get_hostname', error);
+       }
+       cb(stdout);
+    });
+  }
+
   return {
     start_access_point: start_access_point,
     stop_access_point: stop_access_point,
     start_supplicant: start_supplicant,
-    stop_supplicant: stop_supplicant
+    stop_supplicant: stop_supplicant,
+    get_hostname: get_hostname,
   };
 }
 
