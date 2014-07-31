@@ -9,6 +9,7 @@ function app() {
     var path = require('path');
     var socketio = require('socket.io');
 
+    var sh = require('./command_queue').init().enqueue;
     var log = require('./log')('App');
     var conf = require('./conf').create();
     var setupCtrlF = require('./setup_controller');
