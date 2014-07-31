@@ -73,27 +73,31 @@ function app() {
             app_state.mode = 'control';
             app_state.setup_state = setup_state;
             log.debug('app_state', JSON.stringify(app_state, null, 2));
-            conf.write(APP_CONF_FILE, app_state);
-            setupCtrl.stop();
-            netUtils.get_hostname(function(hostname) {
-                socketio_server.emit('redirect', {
-                    url: hostname,
-                    port: PORT,
+            conf.write(APP_CONF_FILE, app_state).then(function() {
+                setupCtrl.stop();
+                netUtils.get_hostname(function(hostname) {
+                    socketio_server.emit('redirect', {
+                        url: hostname,
+                        port: PORT,
+                    });
+                    netUtils.stop_access_point(function() {
+                        sh('reboot');
+                    });
                 });
-                netUtils.stop_access_point();
-                netUtils.start_supplicant(app_state.setup_state.ssid,
-                              app_state.setup_state.pwd);
-                launch_board_ctrl();
             });
         });
         setupCtrl.start();
     };
 
     var launch_board_ctrl = function() {
-        netUtils.start_supplicant(app_state.setup_state.ssid,
-			  app_state.setup_state.pwd);
-        boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server);
-        boardCtrl.start();
+        netUtils.start_supplicant({
+            ssid: app_state.setup_state.ssid,
+            pwd: app_state.setup_state.pwd,
+            cb: function() { // callback
+                boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server);
+                boardCtrl.start();
+            },
+        });
     };
 
     return {

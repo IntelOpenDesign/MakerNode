@@ -65,22 +65,16 @@ makernode.app.controller('AppCtrl', ['$scope', function($scope) {
     // sync pins with server
     var pinsync = makernode.ws_pin_sync($scope, 'ws', 'd');
     // should we be trying to redirect to a new URL right now?
-    var redirecting = false;
     var redirect_url;
 
     $scope.ws.on('connect', function() {
         console.log('connected to websocket');
-        if (redirecting) {
-            redirecting = false;
-            window.location = 'http://' + redirect_url + '/#/' + makernode.routes.control_mode.hash;
-        }
     });
 
     $scope.ws.on('redirect', function(data) {
         console.log('REDIRECT');
-        redirecting = true;
         redirect_url = data.url + ':' + data.port;
-        $scope.ws = io(redirect_url);
+        makernode.rc.redirect(redirect_url);
     });
 
     $scope.send_server_update = function(msg_type, d) {
@@ -111,8 +105,8 @@ makernode.app.controller('FormCtrl', ['$scope', function($scope) {
     var next_route = makernode.routes[next_route_key];
     $scope.submit = function() {
         console.log('send server msg of type', my_route.socket_msg_type, ' with data', $scope.form);
-        $scope.send_server_update(my_route.socket_msg_type, $scope.form);
         makernode.rc.goTo(next_route);
+        $scope.send_server_update(my_route.socket_msg_type, $scope.form);
     };
 }]);
 
@@ -275,6 +269,34 @@ makernode.rc = function routing_utility_functions() {
     };
     that.goBack = function(n) {
         window.history.go(-n);
+    };
+
+    that.redirect = function(url) {
+        var ws_url = 'ws://' + url;
+        var http_url = 'http://' + url + '/#/' + makernode.routes.control_mode.hash;
+        var keep_trying = true;
+        var sockets = [];
+
+        // Yes, we are pessimists. Expect failure and prepare the error msg.
+        var timeout_id = setTimeout(function() {
+            keep_trying = false;
+            console.log('Reconnecting to Galileo has failed.');
+            alert('Reconnecting to Galileo has failed.');
+        }, 20 * 60 * 1000); // 20 minutes
+
+        function attempt() {
+            if (!keep_trying) {
+                return;
+            }
+            var ws = new Websocket(ws_url);
+            sockets.push(ws);
+            ws.onopen = function() {
+                _.each(sockets, function(s) {
+                    s.close();
+                });
+                window.location = http_url;
+            };
+        };
     };
 
     return that;
