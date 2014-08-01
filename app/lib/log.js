@@ -1,5 +1,6 @@
 "use strict;"
 var clc = require('cli-color');
+var fs = require('fs');
 
 var log_types = {
     info : {
@@ -19,14 +20,23 @@ var log_types = {
     },
 };
 
-function log(name) {
+function log(name, dest) {
     var have_written_prefix = false;
 
     var write_msg = function(t, msg) {
         if (msg !== '') {
             var prefix = '[' + name + ':' + t.prefix + ']';
-            console[t.console](clc[t.color].bold(prefix) + clc[t.color](msg));
-            have_written_prefix = true;
+            if (dest) {
+              fs.appendFile(dest, prefix + msg + '\n', function(err) {
+                if (err) {
+                  throw err;
+                }
+              }); 
+            }
+            else { 
+                console[t.console](clc[t.color].bold(prefix) + clc[t.color](msg));
+                have_written_prefix = true;
+            }
         }
     };
 
