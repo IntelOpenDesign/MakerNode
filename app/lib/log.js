@@ -25,18 +25,16 @@ function log(name, dest) {
 
     var write_msg = function(t, msg) {
         if (msg !== '') {
-            var prefix = '[' + name + ':' + t.prefix + ']';
+            var timestamp = new Date().toTimeString();
+
+            var prefix = '[' + timestamp.substring(0, timestamp.indexOf(' ')) + " " + name + ':' + t.prefix + ']';
             if (dest) {
-              fs.appendFile(dest, prefix + msg + '\n', function(err) {
-                if (err) {
-                  throw err;
-                }
-              }); 
+              write_to_file(prefix + msg);
             }
             else { 
                 console[t.console](clc[t.color].bold(prefix) + clc[t.color](msg));
-                have_written_prefix = true;
             }
+            have_written_prefix = true;
         }
     };
 
@@ -44,8 +42,21 @@ function log(name, dest) {
         if (!have_written_prefix) {
             write_msg(t, ' ');
         }
-        console[t.console](obj);
+        if (dest) {
+          write_to_file(JSON.stringify(obj));
+        }
+        else {
+          console[t.console](obj);
+        }
     };
+
+    var write_to_file = function(line) {
+            fs.appendFile(dest, line + '\n', function(err) {
+         if (err) {
+             throw err;
+         }
+      }); 
+    }
 
     var logger = function(type) {
         // TODO make sure this prints JSON nicely
