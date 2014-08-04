@@ -32,7 +32,9 @@ module.exports = function() {
 
   function create_servers(port, client_path) {
     var express_app = express();
-    express_app.use(express.static(client_path));
+    if (client_path) {
+      express_app.use(express.static(client_path));
+    }
     var express_server = express_app.listen(port);
     var socketio_server = socketio.listen(express_server);
 

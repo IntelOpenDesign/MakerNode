@@ -6,7 +6,7 @@ var log = require('./log')('setup_controller');
 module.exports = function(state, wss, on_finished, on_redirect) {
   var onUpdate;
 
-  function start(port) {
+  function start() {
     log.info('Start');
 
     wss.on('connect', function(conn) {
@@ -21,8 +21,8 @@ module.exports = function(state, wss, on_finished, on_redirect) {
       });
 
       conn.on('router_setup', function(d) { // STEP 3
-        log.debug('got router info', JSON.stringify(d));
         if (_.has(d, 'ssid') && _.has(d, 'pwd')) {
+        log.debug('got router info', JSON.stringify(d));
           state.ssid = d.ssid;
           state.pwd = d.pwd;
           on_finished(state);
