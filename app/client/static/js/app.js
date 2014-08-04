@@ -108,6 +108,16 @@ makernode.app.controller('AppCtrl', ['$scope', function($scope) {
         var new_val = pin.value === 100 ? 0 : 100;
         pinsync.set_pin_val(id, new_val);
     };
+
+    $scope.confirm_dialog = function(text, f) {
+        if (confirm(text)) {
+            f();
+        };
+    };
+
+    $scope.send_server_reset = function() {
+        $scope.send_server_update('reset', null);
+    };
 }]);
 
 makernode.app.controller('EmptyCtrl', ['$scope', function($scope) {

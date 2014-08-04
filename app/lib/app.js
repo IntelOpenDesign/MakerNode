@@ -49,6 +49,12 @@ function app() {
                 log.debug('client is asking what mode we are in:', app_state.mode);
                 conn.emit('mode', app_state.mode);
             });
+
+            conn.on('reset', function() {
+                log.info('client has requested a server reset');
+                sh('./restore_factory_settings.sh');
+                sh('reboot');
+            });
         });
 
         conf.read(APP_CONF_FILE).then(function(o) {
