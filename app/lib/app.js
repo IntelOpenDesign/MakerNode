@@ -1,8 +1,8 @@
 "use strict";
 
 function app() {
-    var APP_CONF_FILE = 'appstate.conf';
-    var BOARD_CONF_FILE = 'boardstate.conf';
+    var APP_CONF_FILE = 'conf/appstate.conf';
+    var BOARD_CONF_FILE = 'conf/boardstate.conf';
     var PORT = 80; // for the static file server and the websocket server
     var PING_PORT = 8000; // for the hacky http server that just responds with 'Hello...'
 
