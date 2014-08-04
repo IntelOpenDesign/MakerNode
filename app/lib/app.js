@@ -6,9 +6,7 @@ function app() {
     var PORT = 80; // for the static file server and the websocket server
     var PING_PORT = 8000; // for the hacky http server that just responds with 'Hello...'
 
-    var express = require('express');
     var path = require('path');
-    var socketio = require('socket.io');
     var http = require('http');
 
     var sh = require('./command_queue')();
@@ -18,10 +16,7 @@ function app() {
     var boardCtrlF = require('./board_controller');
     var netUtils = require('./network_utils')();
 
-    var express_app;
-    var express_server;
-    var socketio_server;
-    var http_server;
+    var servers;
 
     var app_state;
     var setupCtrl;
@@ -29,19 +24,9 @@ function app() {
 
     var start = function() {
         log.info('Starting MakerNode...');
-
-        // TODO move starting express and socketio server to network_utils
-        // var o = netUtils.create_servers(PORT);
-        // express_server = o.express_server;
-        // socketio_server = o.socketio_server;
-        express_app = express();
-        express_app.use(express.static(path.join(__dirname, '../client')));
-        express_server = express_app.listen(PORT);
-        socketio_server = socketio.listen(express_server);
-
+        servers = netUtils.create_servers(PORT, path.join(__dirname, '../client'));
         log.info('HTTP and WS servers listening on port', PORT);
-
-        socketio_server.on('connect', function(conn) {
+        servers.socketio_server.on('connect', function(conn) {
             log.debug('client connected');
 
             // client is asking what mode we are in
@@ -93,13 +78,13 @@ function app() {
         conf.write(app_state);
         // TODO make sure we are actually closing the websocket server
         //socketio_server.close();
-        express_server.close();
+        servers.express_server.close();
         // TODO stop http ping server
     };
 
     var launch_setup_ctrl = function() {
         netUtils.start_access_point();
-        setupCtrl = setupCtrlF(app_state.setup_state, socketio_server,
+        setupCtrl = setupCtrlF(app_state.setup_state, servers.socketio_server,
                 function on_finished(setup_state) {
                     log.debug('finished with setup');
                     app_state.mode = 'control';
@@ -117,7 +102,7 @@ function app() {
                             }
                             log.debug('about to ask the client to redirect with hostname', hostname);
                             // ask the client to redirect
-                            socketio_server.emit('redirect', {
+                            servers.socketio_server.emit('redirect', {
                                 url: hostname,
                                 ping_port: PING_PORT,
                                 port: PORT,
@@ -146,7 +131,7 @@ function app() {
             ssid: app_state.setup_state.ssid,
             pwd: app_state.setup_state.pwd,
         }, function() { // callback
-            boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server);
+            boardCtrl = boardCtrlF(BOARD_CONF_FILE, servers.socketio_server);
             boardCtrl.start();
         });
     };
