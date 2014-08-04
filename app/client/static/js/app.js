@@ -38,6 +38,11 @@ makernode.routes = {
         controller: 'EmptyCtrl',
         template: 'test_pin',
     },
+    controller: {
+        hash: 'pin_monitor',
+        controller: 'EmptyCtrl',
+        template: 'controller',
+    },
 };
 
 makernode.app.config(['$routeProvider', function($routeProvider) {
