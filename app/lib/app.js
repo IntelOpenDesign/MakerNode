@@ -103,7 +103,8 @@ function app() {
                         // ask the client to redirect
                         socketio_server.emit('redirect', {
                             url: hostname,
-                            port: PING_PORT,
+                            ping_port: PING_PORT,
+                            port: PORT,
                         });
                     });
                 });

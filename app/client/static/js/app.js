@@ -77,13 +77,13 @@ makernode.app.controller('AppCtrl', ['$scope', function($scope) {
             console.log('We are about to reply to the server saying we are ready to redirect');
             $scope.send_server_update('redirect', {});
             // wait here to give the server a chance to get the message and
-            // take down its wifi hotspot. if we call makernode.rc.redirect
-            // while the hotspot is still up and running, it might just connect
-            // to the server that way and then redirect prematurely and then lose
-            // connection once the server actually does take down the hotspot
+            // take down its wifi hotspot.
+            // TODO I do not think this wait here is necessary, but in any case
+            // the server is going to take like 2 minutes to do its thing so
+            // waiting one extra second here does not really matter.
             setTimeout(function(){
                 console.log('We are about to call makernode.rc.redirect with url', data.url, 'port', data.port);
-                makernode.rc.redirect(data.url, data.port);
+                makernode.rc.redirect(data.url, data.ping_port, data.port);
             }, 1000);
         }, 1000);
     });
@@ -331,11 +331,11 @@ makernode.rc = function routing_utility_functions() {
         window.history.go(-n);
     };
 
-    that.redirect = function(url, port) {
+    that.redirect = function(url, ping_port, port) {
         // test for connection here:
-        var test_url = 'http://' + url + ':' + port + '/';
+        var test_url = 'http://' + url + ':' + ping_port + '/';
         // then go to here:
-        var http_url = 'http://' + url;
+        var http_url = 'http://' + url + ':' + port + '/';
         var keep_trying = true;
 
         console.log('makernode.rc.redirect is attempting to ping test_url',
