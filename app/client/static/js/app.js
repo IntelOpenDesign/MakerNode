@@ -10,33 +10,33 @@ makernode.routes = {
     },
     // NOTE every route with controller FormCtrl must have a socket_msg_type
     // which is used to submit its form contents to the server
-    confirm_mac: {
+    confirm_network: {
         hash: 'confirm_network',
         controller: 'FormCtrl',
-        template: 'confirm_mac',
+        template: 'confirm_network',
         socket_msg_type: 'confirm_mac',
     },
-    wifi_setup: {
-        hash: 'wifi_router_setup',
-        controller: 'FormCtrl',
-        template: 'wifi_setup',
-        socket_msg_type: 'router_setup',
-    },
     create_user: {
-        hash: 'create_password',
+        hash: 'create_user',
         controller: 'FormCtrl',
         template: 'create_user',
         socket_msg_type: 'create_user',
+    },
+    wifi_setup: {
+        hash: 'wifi_setup',
+        controller: 'FormCtrl',
+        template: 'wifi_setup',
+        socket_msg_type: 'router_setup',
     },
     connecting: {
         hash: 'connecting',
         controller: 'EmptyCtrl',
         template: 'connecting_to_router',
     },
-    control_mode: {
-        hash: 'controller',
+    test_pin: {
+        hash: 'test_pin',
         controller: 'EmptyCtrl',
-        template: 'home',
+        template: 'test_pin',
     },
 };
 
@@ -49,7 +49,7 @@ makernode.app.config(['$routeProvider', function($routeProvider) {
     });
 }]);
 
-makernode.setup_steps = ['confirm_mac', 'create_user', 'wifi_setup', 'connecting', 'control_mode'];
+makernode.setup_steps = ['confirm_network', 'create_user', 'wifi_setup', 'connecting', 'test_pin'];
 
 // The highest level app controller from which all others inherit
 makernode.app.controller('AppCtrl', ['$scope', function($scope) {
@@ -130,9 +130,9 @@ makernode.app.controller('InitCtrl', ['$scope', function($scope) {
     // go to the appropriate page
     $scope.ws.on('mode', function(mode) {
         if (mode === 'setup') {
-            makernode.rc.goTo(makernode.routes.confirm_mac);
+            makernode.rc.goTo(makernode.routes.confirm_network);
         } else {
-            makernode.rc.goTo(makernode.routes.control_mode);
+            makernode.rc.goTo(makernode.routes.test_pin);
         }
     });
     // ask what mode we are in
