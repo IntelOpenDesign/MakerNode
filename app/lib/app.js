@@ -11,7 +11,7 @@ function app() {
     var socketio = require('socket.io');
     var http = require('http');
 
-    var sh = require('./command_queue').init().enqueue;
+    var sh = require('./command_queue')();
     var log = require('./log')('App');
     var conf = require('./conf').create();
     var setupCtrlF = require('./setup_controller');
@@ -40,6 +40,22 @@ function app() {
         socketio_server = socketio.listen(express_server);
 
         log.info('HTTP and WS servers listening on port', PORT);
+
+        socketio_server.on('connect', function(conn) {
+            log.debug('client connected');
+
+            // client is asking what mode we are in
+            conn.on('mode', function() {
+                log.debug('client is asking what mode we are in:', app_state.mode);
+                conn.emit('mode', app_state.mode);
+            });
+
+            conn.on('reset', function() {
+                log.info('client has requested a server reset');
+                sh('./restore_factory_settings.sh');
+                sh('reboot');
+            });
+        });
 
         conf.read(APP_CONF_FILE).then(function(o) {
             app_state = o;
@@ -71,6 +87,7 @@ function app() {
             netUtils.stop_access_point();
         } else {
             boardCtrl.stop();
+            netUtils.stop_supplicant();
             netUtils.restore_factory_settings();
         }
         conf.write(app_state);
@@ -83,32 +100,40 @@ function app() {
     var launch_setup_ctrl = function() {
         netUtils.start_access_point();
         setupCtrl = setupCtrlF(app_state.setup_state, socketio_server,
-            function on_finished(setup_state) {
-                log.debug('finished with setup');
-                app_state.mode = 'control';
-                app_state.setup_state = setup_state;
-                log.debug('app_state', JSON.stringify(app_state, null, 2));
-                conf.write(APP_CONF_FILE, app_state).then(function() {
-                    netUtils.get_hostname(function(hostname) {
-                        log.debug('about to ask the client to redirect with hostname', hostname);
-                        // ask the client to redirect
-                        socketio_server.emit('redirect', {
-                            url: hostname + '.local',
-                            port: PING_PORT,
+                function on_finished(setup_state) {
+                    log.debug('finished with setup');
+                    app_state.mode = 'control';
+                    app_state.setup_state = setup_state;
+                    log.debug('app_state', JSON.stringify(app_state, null, 2));
+                    conf.write(APP_CONF_FILE, app_state).then(function() {
+                        netUtils.get_hostname(function(error, stdout, stderr) {
+                            // take newline off the end of stdout
+                            var hostname = stdout.slice(0, -1);
+                            // make sure hostname ends in .local
+                            var suffix = ".local";
+                            var suffix_len = suffix.length;
+                            if (hostname.slice(-suffix_len) !== suffix) {
+                                hostname = hostname + suffix;
+                            }
+                            log.debug('about to ask the client to redirect with hostname', hostname);
+                            // ask the client to redirect
+                            socketio_server.emit('redirect', {
+                                url: hostname,
+                                ping_port: PING_PORT,
+                                port: PORT,
+                            });
                         });
                     });
+                },
+                // when the client says it is ready to redirect 
+                function on_redirect() {
+                    log.debug('on_redirect, about to stop access point');
+                    netUtils.stop_access_point(function() {
+                        log.debug('finished stopping access point');
+                        setupCtrl.stop();
+                        sh('reboot');
+                    });            
                 });
-            },
-            // when the client says it is ready to redirect 
-            function on_redirect() {
-                log.debug('on_redirect, about to stop access point');
-                netUtils.stop_access_point(function() {
-                    log.debug('finished stopping access point');
-                    setupCtrl.stop();
-                    log.debug('the next step is to reboot');
-                    sh('reboot');
-                });            
-            });
         // TODO error callback
         // TODO have setup_controller _.extend({}, setup_state) to clone
         // setup_state instead of modify it. then we copy it back onto the
@@ -120,16 +145,15 @@ function app() {
         netUtils.start_supplicant({
             ssid: app_state.setup_state.ssid,
             pwd: app_state.setup_state.pwd,
-            cb: function() { // callback
-                boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server);
-                boardCtrl.start();
-            },
+        }, function() { // callback
+            boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server);
+            boardCtrl.start();
         });
     };
 
     return {
         start: start,
-        stop: stop,
+            stop: stop,
     };
 };
 
