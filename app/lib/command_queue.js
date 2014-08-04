@@ -3,30 +3,34 @@
 var sys = require('sys');
 var exec = require('child_process').exec;
 var util = require('util');
-var self = this;
+var log = require('./log')('Command Queue');
 
-exports.init = function() {
-    self.queue = [];
-    return self;
-}
+module.exports = function() {
+    var queue = [];
 
-exports.enqueue = function(command) {
-    self.queue.push(command);
-    if (self.queue.length == 1) {
-        exports.dequeue();
-    }
-}
+    var dequeue = function() {
+        if (queue.length) {
+            log.info(queue[0].cmd);
+            var cp = exec(queue[0].cmd, function(error, stdout, stderr) {
+                sys.print('[out] ' + stdout);
+                if (error) {
+                    log.error('exec error:', error);
+                }
+                if (queue[0].cb) {
+                    queue[0].cb(error, stdout, stderr);
+                }
+                queue.shift();
+                dequeue();
+            });
+        };
+    };
 
-exports.dequeue = function() {
-    if (self.queue.length) {
-        console.log('[exec] ' + self.queue[0]);
-        var cp = exec(self.queue[0], function(error, stdout, stderr) {
-            self.queue.shift();
-            sys.print('[out] ' + stdout);
-            if (error !== null) {
-                console.log('exec error: ' + error);
-            }
-            exports.dequeue();
-        });
-    }
-}
+    var enqueue = function(command, callback) {
+        queue.push({cmd: command, cb: callback});
+        if (queue.length == 1) {
+            dequeue();
+        }
+    };
+
+    return enqueue;
+};

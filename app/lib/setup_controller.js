@@ -1,6 +1,5 @@
 "use strict";
 var io = require('socket.io');
-var sh = require('./command_queue').init().enqueue;
 var _ = require('underscore');
 var log = require('./log')('setup_controller');
 

@@ -9,7 +9,7 @@ function board_controller(conf_filename, ws) {
     var galileo; // communication with the actual Galileo using GPIO
 
     var start = function() {
-        log.debug('Start Board Controller');
+        log.info('Start Board Controller');
         conf.read(conf_filename).then(function(o) {
             state = o;
 

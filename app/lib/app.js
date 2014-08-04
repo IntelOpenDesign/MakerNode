@@ -11,7 +11,7 @@ function app() {
     var socketio = require('socket.io');
     var http = require('http');
 
-    var sh = require('./command_queue').init().enqueue;
+    var sh = require('./command_queue')();
     var log = require('./log')('App');
     var conf = require('./conf').create();
     var setupCtrlF = require('./setup_controller');
@@ -71,6 +71,7 @@ function app() {
             netUtils.stop_access_point();
         } else {
             boardCtrl.stop();
+            netUtils.stop_supplicant();
             netUtils.restore_factory_settings();
         }
         conf.write(app_state);
@@ -89,11 +90,19 @@ function app() {
                 app_state.setup_state = setup_state;
                 log.debug('app_state', JSON.stringify(app_state, null, 2));
                 conf.write(APP_CONF_FILE, app_state).then(function() {
-                    netUtils.get_hostname(function(hostname) {
+                    netUtils.get_hostname(function(error, stdout, stderr) {
+                        // take newline off the end of stdout
+                        var hostname = stdout.slice(0, -1);
+                        // make sure hostname ends in .local
+                        var suffix = ".local";
+                        var suffix_len = suffix.length;
+                        if (hostname.slice(-suffix_len) !== suffix) {
+                            hostname = hostname + suffix;
+                        }
                         log.debug('about to ask the client to redirect with hostname', hostname);
                         // ask the client to redirect
                         socketio_server.emit('redirect', {
-                            url: hostname + '.local',
+                            url: hostname,
                             port: PING_PORT,
                         });
                     });
@@ -120,10 +129,9 @@ function app() {
         netUtils.start_supplicant({
             ssid: app_state.setup_state.ssid,
             pwd: app_state.setup_state.pwd,
-            cb: function() { // callback
-                boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server);
-                boardCtrl.start();
-            },
+        }, function() { // callback
+            boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server);
+            boardCtrl.start();
         });
     };
 
