@@ -115,7 +115,6 @@ function app() {
                 netUtils.stop_access_point(function() {
                     log.debug('finished stopping access point');
                     setupCtrl.stop();
-                    log.debug('the next step is to reboot');
                     sh('reboot');
                 });            
             });
