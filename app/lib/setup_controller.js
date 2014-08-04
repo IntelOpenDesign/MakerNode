@@ -10,14 +10,6 @@ module.exports = function(state, wss, on_finished, on_redirect) {
     log.info('Start');
 
     wss.on('connect', function(conn) {
-      log.debug('client connected');
-
-      // client is asking what mode we are in
-      conn.on('mode', function() {
-          // TODO make this not hard coded
-          conn.emit('mode', 'setup');
-      });
-
       conn.on('confirm_mac', function(d) { // STEP 1
         log.debug('got confirm_mac info', JSON.stringify(d));
         state.network_confirmed = true;
