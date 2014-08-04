@@ -8,8 +8,8 @@ makernode.routes = {
         controller: 'InitCtrl',
         template: 'empty',
     },
-    // NOTE every route with controller FormCtrl must have a socket_msg_type
-    // which is used to submit its form contents to the server
+    // NOTE if you want a route with controller FormCtrl to be able to send its
+    // data to the server, you must give it a socket_msg_type
     confirm_network: {
         hash: 'confirm_network',
         controller: 'FormCtrl',
@@ -35,8 +35,13 @@ makernode.routes = {
     },
     test_pin: {
         hash: 'test_pin',
-        controller: 'EmptyCtrl',
+        controller: 'FormCtrl',
         template: 'test_pin',
+    },
+    next_steps: {
+        hash: 'next_steps',
+        controller: 'EmptyCtrl',
+        template: 'next_steps',
     },
     controller: {
         hash: 'pin_monitor',
@@ -54,7 +59,15 @@ makernode.app.config(['$routeProvider', function($routeProvider) {
     });
 }]);
 
-makernode.setup_steps = ['confirm_network', 'create_user', 'wifi_setup', 'connecting', 'test_pin'];
+// steps order
+makernode.setup_steps = [
+    'confirm_network',
+    'create_user',
+    'wifi_setup',
+    'connecting',
+    'test_pin',
+    'next_steps',
+];
 
 // The highest level app controller from which all others inherit
 makernode.app.controller('AppCtrl', ['$scope', function($scope) {
@@ -131,12 +144,14 @@ makernode.app.controller('FormCtrl', ['$scope', function($scope) {
     var next_route_key = makernode.setup_steps[my_route_i + 1];
     var next_route = makernode.routes[next_route_key];
     $scope.submit = function() {
-        console.log(
-            'We are about to go to the next route', next_route.hash,
-            'and send the server a msg of type', my_route.socket_msg_type,
-            'with data', JSON.stringify($scope.form, null, 2) );
+        console.log('We are about to go to the next route', next_route.hash);
         makernode.rc.goTo(next_route);
-        $scope.send_server_update(my_route.socket_msg_type, $scope.form);
+        if (my_route.socket_msg_type) {
+            console.log('We are about to send the server a msg of type',
+                my_route.socket_msg_type, 'with data',
+                JSON.stringify($scope.form, null, 2) );
+            $scope.send_server_update(my_route.socket_msg_type, $scope.form);
+        }
     };
 }]);
 
