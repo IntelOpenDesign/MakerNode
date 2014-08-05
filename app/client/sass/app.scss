@@ -216,6 +216,12 @@ img {
 
 /* CONTROL MODE */
 
+.test-pin img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 #control-mode .sensors {
     background-color: $bg_gray;
 }
