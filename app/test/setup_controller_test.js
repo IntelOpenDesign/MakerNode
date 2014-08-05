@@ -1,4 +1,3 @@
-//var WebSocket = require('ws');
 var io = require('socket.io-client');
 var exec = require('child_process').exec;
 var should = require('chai').should();
@@ -43,8 +42,8 @@ describe('setup_controller.start()', function() {
       }, 400);
       setTimeout(function() {
         client.emit('router_setup', {ssid:"cat", pwd:"meow"});
-      }, 400);
-      g_done = done; //HACK
+      }, 800);
+      setTimeout(done, 1200); //HACK
     });
     
     client.on('disconnect', function() {
@@ -52,6 +51,7 @@ describe('setup_controller.start()', function() {
         it('* Socket should close', function(done) {
 
           setup_controller.stop();
+		  servers.express_server.close();
           exec(NETSTAT, function(error, stdout, stderr) {
             stdout.should.have.length(0);
             done();
@@ -62,14 +62,13 @@ describe('setup_controller.start()', function() {
   });
 });
 
-var g_done;
 function on_finished(state) {
-  console.log("on_finished");
-  g_done();
   describe('setup_controller.on_finished()', function() {
     it('* Messages should update state correctly', function(done) {
+		console.log(state.network_confirmed + "=state.network_confirmed");
       state.network_confirmed.should.equal(true);
       client.close();
+	  done();
     });
   });
 }

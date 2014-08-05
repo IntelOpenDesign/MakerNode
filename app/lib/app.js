@@ -17,7 +17,6 @@ function app() {
     var netUtils = require('./network_utils')();
 
     var servers;
-
     var app_state;
     var setupCtrl;
     var boardCtrl;
