@@ -8,11 +8,14 @@ function board_controller(conf_filename, ws) {
     var state;   // board state JSON object, recorded in conf file
     var galileo; // communication with the actual Galileo using GPIO
 
-    var start = function() {
+    var start = function(cb) {
         log.info('Start Board Controller');
+        // first read the conf file
         conf.read(conf_filename).then(function(o) {
             state = o;
+            log.debug('done reading board state conf file');
 
+            // second initialize Galileo IO
             galileo = new GalileoF();
             galileo.on('ready', function() {
                 _.each(state.pins, function(pin, idstr) {
@@ -24,8 +27,15 @@ function board_controller(conf_filename, ws) {
                         galileo[method+'Read'](id, pin_listener(id));
                     }
                 });
+                log.debug('set up Galileo-IO');
             });
 
+            // TODO put this in the galileo on ready callback so it happens
+            // after we are able to update the galileo board based on client
+            // updates (right now galileo io is broken so that callback never
+            // happens, it seems)
+            // third start handling websocket stuff that might require
+            // updating pins
             ws.on('connection', function(conn) {
                 // send client all the pin info
                 conn.emit('pins', {pins: state.pins});
@@ -37,8 +47,14 @@ function board_controller(conf_filename, ws) {
                     log.debug('client disconnected');
                 });
             });
-        });
-    };
+            log.debug('set up board controller websocket stuff');
+
+            // fourth do the callback from app.js
+            log.debug('about to do the on-done-starting callback');
+            cb();
+
+        }); // end of conf read then
+    }; // end of start
 
     // only broadcast pins that have changed
     var broadcast_pin_updates = function(pin_idstrs, msg_id) {
