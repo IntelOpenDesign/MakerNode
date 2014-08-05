@@ -3,7 +3,7 @@
 function app() {
     var APP_CONF_FILE = 'appstate.conf';
     var BOARD_CONF_FILE = 'boardstate.conf';
-    var PORT = 80; // for the static file server and the websocket server
+    var PORT = 8001; // for the static file server and the websocket server
     var PING_PORT = 8000; // for the hacky http server that just responds with 'Hello...'
 
     var express = require('express');
@@ -27,7 +27,7 @@ function app() {
     var setupCtrl;
     var boardCtrl;
 
-    var start = function() {
+    var start = function(cb) {
         log.info('Starting MakerNode...');
 
         // TODO move starting express and socketio server to network_utils
@@ -63,20 +63,22 @@ function app() {
                 launch_setup_ctrl();
             } else {
 
-                // TODO only call this when needed
-                // only host this http server for when the client side is
-                // trying to ping the server side to see if it can redirect
-                // so we only need to do this when we boot up immediately after
-                // finishing setup, not every time we launch board controller
-                http.createServer(function(req, res) {
-                    res.writeHead(200, {
-                        'Content-Type': 'text/plain',
-                        'Access-Control-Allow-Origin': '*',
-                    });
-                    res.end('Hello from your friendly hacky Galileo webserver');
-                }).listen(PING_PORT);
-
-                launch_board_ctrl();
+                launch_board_ctrl(function() { // callback for when board controller is ready
+                    // TODO only call this when needed
+                    // only host this http server for when the client side is
+                    // trying to ping the server side to see if it can redirect
+                    // so we only need to do this when we boot up immediately after
+                    // finishing setup, not every time we launch board controller
+                    log.debug('Setting up ping HTTP server');
+                    http.createServer(function(req, res) {
+                        res.writeHead(200, {
+                            'Content-Type': 'text/plain',
+                            'Access-Control-Allow-Origin': '*',
+                        });
+                        res.end('Hello from your friendly hacky Galileo webserver');
+                    }).listen(PING_PORT);
+                    log.info('Ping HTTP server is listening on port', PING_PORT);
+		});
             }
         });
     };
@@ -141,13 +143,13 @@ function app() {
         setupCtrl.start();
     };
 
-    var launch_board_ctrl = function() {
+    var launch_board_ctrl = function(cb) {
         netUtils.start_supplicant({
             ssid: app_state.setup_state.ssid,
             pwd: app_state.setup_state.pwd,
         }, function() { // callback
             boardCtrl = boardCtrlF(BOARD_CONF_FILE, socketio_server);
-            boardCtrl.start();
+            boardCtrl.start(cb);
         });
     };
 

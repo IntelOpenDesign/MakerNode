@@ -11,21 +11,18 @@
 
     <div class="row padded">
         <div class="col-xs-12">
-            <p>Try turning Pin 13 on and off using this button, and you should see an LED go on and off on your board. This LED is labeled "GP" and is circled in red below. It comes automatically hooked up to Pin 13.</p>
+            <p>Try turning Pin 13 on and off using this button, and you should see an LED go on and off on your board. This LED is labeled "L" on the Galileo and is indicated with a red arrow below. It comes automatically hooked up to Pin 13.</p>
         </div>
     </div>
 
-    <div class="row padded">
+    <div class="row padded test-pin">
         <div class="col-xs-12"
           ng-if="d.pins.13.value === 100">
-            <img src="/static/img/galileo_pin13_led_on.jpg">
+            <img src="/static/img/galileo_pin13_led_on.png">
         </div>
         <div class="col-xs-12"
           ng-if="d.pins.13.value === 0">
-            <img src="/static/img/galileo_pin13_led_off.jpg">
-        </div>
-        <div class="col-xs-12">
-            <span class="text-muted text-center">Image credit: http://upload.wikimedia.org/wikipedia/commons/1/15/Embedded_World_2014_Intel_Galileo_01.jpg.</span>
+            <img src="/static/img/galileo_pin13_led_off.png">
         </div>
     </div>
 
