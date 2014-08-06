@@ -42,7 +42,8 @@
     "chai": "~1.9.1",
     "mocha-better-spec-reporter": "0.0.2",
     "mocha-unfunk-reporter": "~0.4.0",
-    "istanbul": "~0.3.0"
+    "istanbul": "~0.3.0",
+    "socket.io-client": "~1.0.6"
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --reporter mocha-unfunk-reporter",
