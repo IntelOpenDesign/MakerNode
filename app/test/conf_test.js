@@ -8,18 +8,17 @@ var rand = Math.random();
 
 //First, delete file.
 function deleteFile() {
-fs.unlink(FILE, function(err) {
-  if (err) throw err;
-});
+  fs.unlink(FILE, function(err) {
+    if (err) throw err;
+  });
 }
 
 describe('Conf.write()', function() {
   deleteFile();
   it('* Writes  ' + WRITE_FILE, function(done) {
-    // fs.createReadStream(FILE).pipe(fs.createWriteStream(FILE + '.temp'));
-    conf.write(FILE, JSON.stringify({
+    conf.write(FILE, {
       test: 'pass'
-    }))
+    })
       .then(
         function(state) {
           done();

@@ -3,5 +3,5 @@ todo.md
 app/test/coverage
 app/client/.sass-cache/*
 app/node_modules
-app/boardstate.conf
-app/appstate.conf
+app/conf/boardstate.conf
+app/conf/appstate.conf
