@@ -394,8 +394,12 @@ $pin_font_size: 25px;
     top: 0;
     left: 0;
 }
-#control-mode .pin-slider-container input[type=range] {
+
+// because chrome and firefox like to have their CSS definitions done
+// separately
+@mixin pin_slider_range() {
     -webkit-appearance: none;
+    border-width: 0;
     z-index: 4;
     position: absolute;
     top: ($pin_h - $pin_aa_h)/2;
@@ -404,19 +408,32 @@ $pin_font_size: 25px;
     width: 100%;
     background: transparent;
     border-radius: $pin_aa_h/2;
+    &:focus {
+        box-shadow: 0 0 0 transparent;
+        outline: 0 none;
+    }
 }
-#control-mode .pin-slider-container input[type=range]:focus {
-    box-shadow: 0 0 0 transparent;
-    outline: 0 none;
+#control-mode .pin-slider-container input[type=range] {
+    @include pin_slider_range();
 }
-#control-mode .pin-slider-container input[type=range]::-webkit-slider-thumb {
+#control-mode .pin-slider-container input[type=range]::-moz-range-track {
+    @include pin_slider_range();
+}
+@mixin pin_slider_thumb() {
     -webkit-appearance: none;
+    border-width: 0;
     display: block;
     width: $pin_slider_thumb_h;
     height: $pin_slider_thumb_h;
     border-radius: $pin_slider_thumb_h/2;
     background: $bright_blue;
     box-shadow: 2px 2px 0 0 $medium_blue;
+}
+#control-mode .pin-slider-container input[type=range]::-webkit-slider-thumb {
+    @include pin_slider_thumb();
+}
+#control-mode .pin-slider-container input[type=range]::-moz-range-thumb {
+    @include pin_slider_thumb();
 }
 
 // big digital actuator
