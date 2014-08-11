@@ -10,14 +10,14 @@ module.exports = function(state, wss, on_finished, on_redirect) {
     log.info('Start');
 
     wss.on('connect', function(conn) {
-      conn.on('confirm_mac', function(d) { // STEP 1
-        log.debug('got confirm_mac info', JSON.stringify(d));
-        state.network_confirmed = true;
+      conn.on('set_hostname', function(d) { // STEP 1
+        log.debug('got set_hostname info', JSON.stringify(d));
+        state.set_hostname = true;
       });
 
-      conn.on('create_user', function(d) { // STEP 2
-        log.debug('got create_user info', JSON.stringify(d));
-        state.user_password_set = true;
+      conn.on('set_root_password', function(d) { // STEP 2
+        log.debug('got set_root_password info', JSON.stringify(d));
+        state.set_root_password = true;
       });
 
       conn.on('router_setup', function(d) { // STEP 3

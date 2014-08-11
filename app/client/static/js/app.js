@@ -10,17 +10,17 @@ makernode.routes = {
     },
     // NOTE if you want a route with controller FormCtrl to be able to send its
     // data to the server, you must give it a socket_msg_type
-    confirm_network: {
-        hash: 'confirm_network',
+    set_hostname: {
+        hash: 'set_hostname',
         controller: 'FormCtrl',
-        template: 'confirm_network',
-        socket_msg_type: 'confirm_mac',
+        template: 'set_hostname',
+        socket_msg_type: 'set_hostname',
     },
-    create_user: {
-        hash: 'create_user',
+    set_root_password: {
+        hash: 'set_root_password',
         controller: 'FormCtrl',
-        template: 'create_user',
-        socket_msg_type: 'create_user',
+        template: 'set_root_password',
+        socket_msg_type: 'set_root_password',
     },
     wifi_setup: {
         hash: 'wifi_setup',
@@ -61,8 +61,8 @@ makernode.app.config(['$routeProvider', function($routeProvider) {
 
 // steps order
 makernode.setup_steps = [
-    'confirm_network',
-    'create_user',
+    'set_hostname',
+    'set_root_password',
     'wifi_setup',
     'connecting',
     'test_pin',
@@ -160,7 +160,7 @@ makernode.app.controller('InitCtrl', ['$scope', function($scope) {
     // go to the appropriate page
     $scope.ws.on('mode', function(mode) {
         if (mode === 'setup') {
-            makernode.rc.goTo(makernode.routes.confirm_network);
+            makernode.rc.goTo(makernode.routes.set_hostname);
         } else {
             makernode.rc.goTo(makernode.routes.test_pin);
         }

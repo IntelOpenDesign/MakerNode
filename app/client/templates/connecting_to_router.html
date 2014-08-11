@@ -1,31 +1,25 @@
 <div class="container">
     <div step="3" steps-pics></div>
+
     <div id="loading"></div>
-    <div class="row">
+
+    <div class="row padded">
         <div class="col-xs-12">
-            <p>
-            Galileo is connecting to your home wifi network... Please wait.
-            </p>
-            <p>
-            Make sure your computer connects back to your home wifi network.
-            </p>
-            <p>
-            This page will redirect you when everything is ready. It could take several minutes.
-            </p>
+            <p>Make sure your computer connects to your home wifi network.</p>
         </div>
     </div>
-    <div class="row bg-danger" ng-show="false">
+
+    <div class="row padded">
         <div class="col-xs-12">
-            <p>
-                Sorry, something didn't work. Please try these steps:
-            </p>
-            <ol>
-                <li>Make sure you are connected to your home network</li>
-                <li>Go to {{s.url_root}}</li>
-            </ol>
-            <p>
-                If that still doesn't work, we're very sorry. You might try contacting carlos.montesinos@intel.com for support.
-            </p>
+            <p>Galileo is connecting to your home wifi network... This could take several minutes... Please wait.</p>
         </div>
     </div>
+
+    <div class="row padded">
+        <div class="col-xs-12">
+            <p>This page will redirect you when everything is ready.</p>
+        </div>
+    </div>
+
+    <!--TODO error message -->
 </div>

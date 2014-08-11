@@ -1,32 +1,32 @@
 <div class="container setup-form">
 
-    <div step="2" steps-pics></div>
+    <!--TODO use a directive to format all forms the same way-->
+
+    <div step="1" steps-pics></div>
 
     <div class="row padded">
         <div class="col-xs-12">
-            <h1>Change your password</h1>
+            <h1>Name Your Galileo</h1>
         </div>
     </div>
 
     <div class="row padded">
         <div class="col-xs-12">
-            <input ng-model="form.username"
-              placeholder="New Password"
-              type="password">
+            <p>This is the "hostname" that you will use to connect to Galileo on your wifi network later, so remember this name.</p>
         </div>
     </div>
+
     <div class="row padded">
         <div class="col-xs-12">
-            <input ng-model="form.user_password"
-              placeholder="Confirm Password"
-              type="password">
+            <input ng-model="form.hostname"
+              placeholder="Name">
         </div>
     </div>
 
     <div class="row">
         <div class="button wide submit"
           ng-click="submit()">
-            Change Password
+            Set Hostname
         </div>
     </div>
 
