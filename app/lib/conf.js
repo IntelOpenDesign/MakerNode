@@ -2,38 +2,32 @@
 var fs = require('q-io/fs');
 var log = require('./log')('Conf');
 
-function Conf() {
-    log.info('New Conf');
-}
-
-function create() {
-    return new Conf();
-}
-
-function read(path) {
-   log.info('Reading: ' + path);
-    return fs.read(path).then(JSON.parse,
-        function(reason) {
-            log.error('Could not read file. ' + reason);
-        }
-    );
-}
-
-function write(path, content) {
-    log.info('Writing to: ' + path);
-
-    return fs.write(path, JSON.stringify(content, null, 2))
-        .then(
-            function() {
-                log.info('Write successful.');
-            },
+module.exports = function() {
+    var read = function(path) {
+        log.info('Reading:', path);
+        return fs.read(path).then(
+            JSON.parse,
             function(reason) {
-                log.error('Write failed: ' + reason);
+                log.error('Could not read file', path, 'for reason', reason);
             }
-    );
-}
+        );
+    };
 
-Conf.prototype.read = read;
-Conf.prototype.write = write;
-module.exports = Conf;
-module.exports.create = create;
+    var write = function(path, content) {
+        log.info('Writing:', path);
+        return fs.write(path, JSON.stringify(content, null, 2)).then(
+            function() {
+                log.info('Write to', path, 'successful.');
+            },
+            function() {
+                log.error('Could not write file', path, 'for reason', reason);
+            }
+        );
+    };
+
+    return {
+        read: read,
+        write: write,
+    };
+};
+

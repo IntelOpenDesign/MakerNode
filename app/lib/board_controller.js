@@ -1,5 +1,5 @@
 var log = require('./log')('BoardCtrl');
-var conf = require('./conf').create();
+var conf = require('./conf')();
 var _ = require('underscore');
 var GalileoF = require('galileo-io');
 
