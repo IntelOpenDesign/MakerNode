@@ -1,0 +1,22 @@
+<div class="pin-name intel-font">
+    {{pin.name}}
+</div>
+<div class="pin-inner">
+    <div class="pin-value-container-container">
+        <div class="pin-value-container">
+            <div class="pin-value"
+              style="width: {{pin.value}}%;">
+            </div>
+        </div>
+    </div>
+    <div ng-if="!pin.is_input"
+      class="pin-slider-container">
+        <input type="range"
+          min="0"
+          max="100"
+          step="1"
+          ng-model="pin.value"
+          value="{{pin.value}}"
+          ng-change="set_pin_val(pin.id, pin.value)">
+    </div>
+</div>

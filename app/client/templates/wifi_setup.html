@@ -1,0 +1,38 @@
+<div class="container setup-form">
+
+    <div step="3" steps-pics></div>
+
+    <div class="row padded">
+        <div class="col-xs-12">
+            <h1>Connect Galileo to Wifi</h1>
+        </div>
+    </div>
+
+    <div class="row padded">
+        <div class="col-xs-12 text-center">
+            <p>This will let Galileo connect to your home wifi network. Then you can connect with Galileo and use the internet simultaneously.</p>
+        </div>
+    </div>
+
+    <div class="row padded">
+        <div class="col-xs-12">
+            <input ng-model="form.ssid"
+              placeholder="Network">
+        </div>
+    </div>
+    <div class="row padded">
+        <div class="col-xs-12">
+            <input ng-model="form.pwd"
+              placeholder="Password"
+              type="password">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="button wide submit"
+          ng-click="submit()">
+            Connect
+        </div>
+    </div>
+
+</div>
