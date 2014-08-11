@@ -1,7 +1,0 @@
-*.DS_Store
-todo.md
-app/test/coverage
-app/client/.sass-cache/*
-app/node_modules
-app/conf/boardstate.conf
-app/conf/appstate.conf
