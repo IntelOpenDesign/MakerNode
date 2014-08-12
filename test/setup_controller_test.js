@@ -2,7 +2,7 @@ var io = require('socket.io-client');
 var exec = require('child_process').exec;
 var should = require('chai').should();
 
-var utils = require('../lib/galileo_utils')();
+var utils = require('mnutils/galileo')();
 var state = {
   "setup_state": {
     "network_confirmed": false,
