@@ -1,10 +1,8 @@
 var fs = require('fs');
-var conf = require('../lib/conf').create();
+var conf = require('../lib/conf')();
 var chai = require('chai'),
   should = chai.should();
 var FILE = 'foo.temp';
-var WRITE_FILE = '';
-var rand = Math.random();
 
 //First, delete file.
 function deleteFile() {
@@ -15,7 +13,7 @@ function deleteFile() {
 
 describe('Conf.write()', function() {
   deleteFile();
-  it('* Writes  ' + WRITE_FILE, function(done) {
+  it('* Writes  ' + FILE, function(done) {
     conf.write(FILE, {
       test: 'pass'
     })
