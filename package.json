@@ -1,16 +1,18 @@
 {
-  "name": "cat.js",
+  "name": "MakerNode",
   "preferGlobal": false,
   "version": "0.0.1",
   "author": "adampasz <adampasz@yahoo.com>",
-  "description": "NodeJS backend for Intel Connect Anything",
+  "description": "Write NodeJS for the Intel Galileo",
   "contributors": [
-    {}
+    { "name":  "Noura Howell",
+      "email": "noura.howell@gmail.com",
+      "url":   "http://nourahowell.com", }
   ],
   "main": "./index",
   "repository": {
     "type": "git",
-    "url": "https://github.com/IntelOpenDesign/ConnectAnyThing.git"
+    "url": "https://github.com/IntelOpenDesign/MakerNode"
   },
   "keywords": [
     "intel",
