@@ -7,7 +7,7 @@
   "contributors": [
     { "name":  "Noura Howell",
       "email": "noura.howell@gmail.com",
-      "url":   "http://nourahowell.com", }
+      "url":   "http://nourahowell.com" }
   ],
   "main": "./index",
   "repository": {
