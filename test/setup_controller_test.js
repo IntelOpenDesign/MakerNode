@@ -36,9 +36,9 @@ describe('setup_controller.start()', function() {
     var message_count = 0;
     client = io('http://' + HOST + ':' + PORT);
     client.on('connect', function() {
-      client.emit('confirm_mac', {mac_address:"12345"});
+      client.emit('set_hostname', {hostname:"clanton"});
       setTimeout(function() {
-        client.emit('create_user', {user_password:"boo", username:"who"});
+        client.emit('set_root_password', {user_password:"root", username:"root"});
       }, 400);
       setTimeout(function() {
         client.emit('router_setup', {ssid:"cat", pwd:"meow"});
@@ -65,8 +65,8 @@ describe('setup_controller.start()', function() {
 function on_finished(state) {
   describe('setup_controller.on_finished()', function() {
     it('* Messages should update state correctly', function(done) {
-		console.log(state.network_confirmed + "=state.network_confirmed");
-      state.network_confirmed.should.equal(true);
+		console.log(state.set_hostname + "=state.set_hostname");
+      state.set_hostname.should.equal(true);
       client.close();
 	  done();
     });
