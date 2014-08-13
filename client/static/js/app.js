@@ -62,7 +62,6 @@ makernode.app.config(['$routeProvider', function($routeProvider) {
 // steps order
 makernode.setup_steps = [
     'set_hostname',
-    'set_root_password',
     'wifi_setup',
     'connecting',
     'test_pin',
@@ -141,9 +140,12 @@ makernode.app.controller('FormCtrl', ['$scope', function($scope) {
     var my_route_key = makernode.rc.currentRouteKey();
     var my_route = makernode.routes[my_route_key];
     var my_route_i = makernode.setup_steps.indexOf(my_route_key);
-    var next_route_key = makernode.setup_steps[my_route_i + 1];
-    var next_route = makernode.routes[next_route_key];
-    $scope.submit = function() {
+    var next_route_key = "next_steps";//by default, when there is no next step, go home
+    if (my_route_i !== -1) { 
+      next_route_key = makernode.setup_steps[my_route_i + 1];
+    }
+    next_route = makernode.routes[next_route_key];
+	$scope.submit = function() {
         console.log('We are about to go to the next route', next_route.hash);
         makernode.rc.goTo(next_route);
         if (my_route.socket_msg_type) {
