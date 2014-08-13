@@ -39,7 +39,7 @@ makernode.routes = {
         template: 'test_pin',
     },
     next_steps: {
-        hash: 'next_steps',
+        hash: 'home',
         controller: 'EmptyCtrl',
         template: 'next_steps',
     },
