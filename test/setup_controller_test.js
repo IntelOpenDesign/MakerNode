@@ -36,14 +36,11 @@ describe('setup_controller.start()', function() {
     var message_count = 0;
     client = io('http://' + HOST + ':' + PORT);
     client.on('connect', function() {
-      client.emit('set_hostname', {hostname:"clanton"});
-      setTimeout(function() {
-        client.emit('set_root_password', {user_password:"root", username:"root"});
-      }, 400);
+      client.emit('set_hostname', {hostname: utils.get_hostname()});
       setTimeout(function() {
         client.emit('router_setup', {ssid:"cat", pwd:"meow"});
-      }, 800);
-      setTimeout(done, 1200); //HACK
+      }, 500);
+      setTimeout(done, 1000); //HACK
     });
     
     client.on('disconnect', function() {
