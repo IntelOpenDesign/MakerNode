@@ -39,7 +39,7 @@ makernode.routes = {
         template: 'test_pin',
     },
     next_steps: {
-        hash: 'next_steps',
+        hash: 'home',
         controller: 'EmptyCtrl',
         template: 'next_steps',
     },
@@ -62,7 +62,6 @@ makernode.app.config(['$routeProvider', function($routeProvider) {
 // steps order
 makernode.setup_steps = [
     'set_hostname',
-    'set_root_password',
     'wifi_setup',
     'connecting',
     'test_pin',
@@ -91,6 +90,8 @@ makernode.app.controller('AppCtrl', ['$scope', function($scope) {
         // TODO these timeouts are kind of sketchy, but they work.
         console.log('Server is telling us to get ready to REDIRECT');
         // wait here to let the connecting page finish loading, images and all
+        // TODO instead of guessing how long it will take to load the connecting
+        // page, do it on the jQuery "onload" event or something
         setTimeout(function(){
             console.log('We are about to reply to the server saying we are ready to redirect');
             $scope.send_server_update('redirect', {});
@@ -141,9 +142,12 @@ makernode.app.controller('FormCtrl', ['$scope', function($scope) {
     var my_route_key = makernode.rc.currentRouteKey();
     var my_route = makernode.routes[my_route_key];
     var my_route_i = makernode.setup_steps.indexOf(my_route_key);
-    var next_route_key = makernode.setup_steps[my_route_i + 1];
-    var next_route = makernode.routes[next_route_key];
-    $scope.submit = function() {
+    var next_route_key = "next_steps";//by default, when there is no next step, go home
+    if (my_route_i !== -1) { 
+      next_route_key = makernode.setup_steps[my_route_i + 1];
+    }
+    next_route = makernode.routes[next_route_key];
+	$scope.submit = function() {
         console.log('We are about to go to the next route', next_route.hash);
         makernode.rc.goTo(next_route);
         if (my_route.socket_msg_type) {
