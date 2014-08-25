@@ -5,9 +5,11 @@
   "author": "adampasz <adampasz@yahoo.com>",
   "description": "Write NodeJS for the Intel Galileo",
   "contributors": [
-    { "name":  "Noura Howell",
+    {
+      "name": "Noura Howell",
       "email": "noura.howell@gmail.com",
-      "url":   "http://nourahowell.com" }
+      "url": "http://nourahowell.com"
+    }
   ],
   "main": "./index",
   "repository": {
@@ -34,11 +36,12 @@
     "node": ">=0.8.18"
   },
   "devDependencies": {
-    "mocha": "~1.20.1",
     "chai": "~1.9.1",
+    "istanbul": "~0.3.0",
+    "mocha": "~1.20.1",
     "mocha-better-spec-reporter": "0.0.2",
     "mocha-unfunk-reporter": "~0.4.0",
-    "istanbul": "~0.3.0",
+    "socket.io": "^1.0.6",
     "socket.io-client": "~1.0.6"
   },
   "scripts": {
