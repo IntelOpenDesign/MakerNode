@@ -41,10 +41,12 @@
     "mocha-better-spec-reporter": "0.0.2",
     "mocha-unfunk-reporter": "~0.4.0",
     "socket.io": "^1.0.6",
-    "socket.io-client": "~1.0.6"
+    "socket.io-client": "~1.0.6",
+    "jsdoc": "~3.3.0-alpha9"
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --timeout 5000 --reporter mocha-unfunk-reporter",
-    "coverage": "./node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R mocha-unfunk-reporter"
+    "coverage": "./node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R mocha-unfunk-reporter",
+    "doc": "./node_modules/jsdoc/jsdoc.js -d docs -r lib"
   }
 }
