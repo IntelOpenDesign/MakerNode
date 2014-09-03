@@ -1,0 +1,13 @@
+[Unit]
+Description=Maker-Node setup and control server
+After=connman.service
+
+[Service]
+Type=simple
+ExecStart=/bin/sh /home/root/MakerNode/maker-node.sh start
+ExecStop=/bin/sh /home/root/MakerNode/maker-node.sh stop
+ExecReload=/bin/sh /home/root/MakerNode/maker-node.sh restart
+ 
+[Install]
+WantedBy=multi-user.target
+

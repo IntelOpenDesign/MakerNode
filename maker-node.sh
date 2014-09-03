@@ -2,7 +2,9 @@
 start() {
         echo "Starting MakerNode Server..."
         pushd /home/root/MakerNode
-        node ./index.js
+	systemctl stop connman
+	systemctl stop lighttpd
+	node ./index.js
         popd
 }
 
