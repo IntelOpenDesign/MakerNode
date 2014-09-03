@@ -194,6 +194,11 @@ img {
 #control-mode .sensors {
   background-color: #ececec; }
 
+.center-and-shrink {
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%; }
+
 #control-mode div[pin-button],
 #control-mode div[pin-slider] {
   height: 75px;
