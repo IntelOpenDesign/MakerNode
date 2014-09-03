@@ -8,3 +8,4 @@ conf/appstate.conf
 client/docs
 coverage
 client/coverage
+npm-debug.log
