@@ -22,7 +22,7 @@
     "arduino"
   ],
   "dependencies": {
-    "galileo-io": "~0.2.0",
+    "galileo-io": "git+https://github.com/rwaldron/galileo-io.git",
     "q": "1.0.1",
     "q-io": "1.11.1",
     "underscore": "1.6.0",
