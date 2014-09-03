@@ -1,7 +1,7 @@
 #!/bin/sh
 start() {
         echo "Starting MakerNode Server..."
-        pushd /home/root/mn_setup
+        pushd /home/root/MakerNode
         node ./index.js
         popd
 }
