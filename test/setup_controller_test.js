@@ -2,7 +2,7 @@ var io = require('socket.io-client');
 var exec = require('child_process').exec;
 var should = require('chai').should();
 
-var utils = require('mnutils/galileo')();
+var utils = require('maker-node-utils/galileo')();
 
 var state = {
   "setup_state": {

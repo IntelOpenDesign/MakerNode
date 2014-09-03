@@ -26,7 +26,7 @@
     "q": "1.0.1",
     "q-io": "1.11.1",
     "underscore": "1.6.0",
-    "mnutils": "git+https://github.com/IntelOpenDesign/MakerNodeUtils.git"
+    "maker-node-utils": "git+https://github.com/IntelOpenDesign/MakerNodeUtils.git"
   },
   "licenses": {
     "type": "MIT"
