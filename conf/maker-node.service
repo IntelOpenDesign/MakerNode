@@ -4,9 +4,11 @@ After=connman.service
 
 [Service]
 Type=simple
-ExecStart=/bin/sh /home/root/MakerNode/maker-node.sh start
-ExecStop=/bin/sh /home/root/MakerNode/maker-node.sh stop
-ExecReload=/bin/sh /home/root/MakerNode/maker-node.sh restart
+WorkingDirectory=/home/root/MakerNode/
+ExecStart=/bin/sh sh/maker-node.sh start 
+ExecStop=/bin/sh sh/maker-node.sh stop
+ExecReload=/bin/sh sh/maker-node.sh restart
+StandardOutput=tty
  
 [Install]
 WantedBy=multi-user.target
