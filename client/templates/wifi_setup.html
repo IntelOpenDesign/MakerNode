@@ -1,38 +1,76 @@
 <div class="container setup-form">
 
-    <div step="2" steps-pics></div>
+  <div step="2" steps-pics></div>
 
-    <div class="row padded">
-        <div class="col-xs-12">
-            <h1>Connect Galileo to Wifi</h1>
-        </div>
+  <div class="row padded">
+    <div class="col-xs-12">
+      <h1>Connect Galileo to Wifi</h1>
     </div>
+  </div>
 
-    <div class="row padded">
-        <div class="col-xs-12 text-center">
-            <p>This will let Galileo connect to your home wifi network. Then you can connect with Galileo and use the internet simultaneously.</p>
-        </div>
+  <div class="row padded">
+    <div class="col-xs-12 text-center">
+      <p>This will let Galileo connect to your home wifi network. Then you can connect with Galileo and use the internet simultaneously.</p>
     </div>
+  </div>
 
-    <div class="row padded">
-        <div class="col-xs-12">
-            <input ng-model="form.ssid"
-              placeholder="Network">
-        </div>
-    </div>
-    <div class="row padded">
-        <div class="col-xs-12">
-            <input ng-model="form.pwd"
-              placeholder="Password"
-              type="password">
-        </div>
-    </div>
+  <div class="row padded">
+    <div class="col-xs-12">
 
-    <div class="row">
-        <div class="button wide submit"
-          ng-click="submit()">
-            Connect
-        </div>
+		<select id="combo-01">
+        <option value="01">val 01</option>
+        <option value="02">val 02</option>
+        <option value="03">val 03</option>
+        <option value="04">val 04</option>
+        <option value="05">val 05</option>
+        <option value="06">val 06</option>
+        <option value="07">val 07</option>
+        <option value="08">val 08</option>
+        <option value="09">val 09</option>
+        <option value="10">val 10</option>
+      </select>
+      <script>
+        $(function() {
+
+          $('#combo-01').scombobox({empty: true});
+          $('#combo-01').scombobox('change', function() {
+    //        $('#result').attr('value', $('#combo-01').scombobox('val'));
+          });
+          $('.scombobox-display').attr('ng-model', 'form.ssid').attr('placeholder', 'Network');
+        });
+	  </script>
+	  <style>
+		#combo-01 {
+			z-index: 999;
+			margin-left: auto;
+			margin-right: auto;
+			left: 0;
+			right:0;
+		}
+		#combo-01 select {
+			display: none;
+		}
+		#combo-01 .scombobox-list {
+			background: #eeeeee;
+			margin-left: auto;
+			margin-right: auto;
+			width: 344px;
+			padding: 0 10px;
+		}
+	  </style>
+
     </div>
+  </div>
+  <div class="row padded">
+    <div class="col-xs-12">
+      <input ng-model="form.pwd" placeholder="Password" type="password">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="button wide submit" ng-click="submit()">
+      Connect
+    </div>
+  </div>
 
 </div>

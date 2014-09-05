@@ -1,49 +1,56 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="MakerNode">
-    <head>
-        <title>MakerNode</title>
 
-        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="/static/js/jquery.min.js"></script>
-        <script src="/static/js/underscore-min.js"></script>
-        <script src="/static/js/angular.min.js"></script>
-        <script src="/static/js/angular-route.min.js"></script>
-        <script src="/static/js/app.js"></script>
+<head>
+  <title>MakerNode</title>
 
-        <link rel="stylesheet" href="static/css/bootstrap.min.css">
-        <link rel="stylesheet" href="static/css/app.css">
-    </head>
-    <body>
-        <div id="app-container" ng-controller="AppCtrl">
-            <nav id="header" class="navbar navbar-static-top intel-font" role="navigation">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <div class="row">
-                            <div class="col-xs-8">
-                                <h1>Galileo</h1>
-                            </div>
-                            <div class="col-xs-4">
-                                <h1 id="logo-container">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/underscore-min.js"></script>
+  <script src="/static/js/angular.min.js"></script>
+  <script src="/static/js/angular-route.min.js"></script>
+  <script src="/static/js/app.js"></script>
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+  
+  <link href="/static/css/jquery.scombobox.css" rel="stylesheet" />
+  <script src="/static/js/missed.js"></script>
+  <!-- add this script for IE8 compatibility -->
+  <script src="/static/js/jquery.scombobox.min.js"></script>
+</head>
+
+<body>
+  <div id="app-container" ng-controller="AppCtrl">
+    <nav id="header" class="navbar navbar-static-top intel-font" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <div class="row">
+            <div class="col-xs-8">
+              <h1>Galileo</h1>
+            </div>
+            <div class="col-xs-4">
+              <h1 id="logo-container">
                                     <img id="logo" src="/static/img/intel_logo.jpg">
-                                </h1> <!-- putting the img inside h1 makes it so we can specify the height of the logo in em to match up with the lettering height of the title in the header bar -->
-                                <p id="labs" class="intel-font text-center">Labs</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <ng-view></ng-view>
-            <div id="footer" class="container">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <span class="text-muted pull-right"
-                          ng-click="confirm_dialog('This will reset everything and maybe break the board. This is totally a pre-beta debugging-only super-advanced hidden feature. Are you sure you want to continue?', send_server_reset);">
+                                </h1> 
+              <!-- putting the img inside h1 makes it so we can specify the height of the logo in em to match up with the lettering height of the title in the header bar -->
+              <p id="labs" class="intel-font text-center">Labs</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <ng-view></ng-view>
+    <div id="footer" class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <span class="text-muted pull-right" ng-click="confirm_dialog('This will reset everything and maybe break the board. This is totally a pre-beta debugging-only super-advanced hidden feature. Are you sure you want to continue?', send_server_reset);">
                             Send Server Reset
                         </span>
-                    </div>
-                </div>
-            </div>
         </div>
-    </body>
+      </div>
+    </div>
+  </div>
+</body>
+
 </html>
