@@ -6,3 +6,4 @@ cp libnl.so.1 /usr/lib
 cp hostapd /usr/bin
 cp hostapd_cli /usr/bin
 cp busybox-i586 /usr/bin
+cp rsync /usr/bin
