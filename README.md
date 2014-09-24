@@ -173,13 +173,13 @@ To confirm that you are on wifi, ping something
 
     git config --global http.sslVerify false
     cd
-    git clone https://github.com/IntelOpenDesign/MakerNode mn_setup
+    git clone https://github.com/IntelOpenDesign/MakerNode MakerNode
 
 If you can figure out a better way than to do that sketchy git config step, that would be awesome and please let us know.
 
 ## Step 8 - System Configuration ##
 
-    cd /home/root/mn_setup
+    cd /home/root/MakerNode
 
 Our conf files for hosting the access point, udhcp, and dns
 
@@ -197,7 +197,7 @@ So that our node server will run on startup:
 
 Add this line to the end:
 
-    mkr:5:once:/home/root/mn_setup/maker-node.sh start
+    mkr:5:once:/home/root/MakerNode/maker-node.sh start
 
 So that you will have a unique SSID for the wifi hotspot,
 
@@ -207,14 +207,14 @@ Change the line ssid=MakerNode to have the ssid name of your choice
 
 ## Step 9 - Download Node Modules ##
 
-    cd /home/root/mn_setup
+    cd /home/root/MakerNode
     npm install
 
 This could take a while because Galileo is slow and you are installing a lot.
 
 ## Step 10 - Start our Code ##
 
-    cd /home/root/mn_setup
+    cd /home/root/MakerNode
     chmod u+x *.sh
     ./restore_factory_settings
     reboot
