@@ -148,6 +148,10 @@ makernode.app.controller('FormCtrl', ['$scope', function($scope) {
     }
     next_route = makernode.routes[next_route_key];
 	$scope.submit = function() {
+    var combo_value = $('.scombobox-value');
+		if (combo_value) {
+	    $scope.form.ssid = combo_value.attr('value');
+    }
         console.log('We are about to go to the next route', next_route.hash);
         makernode.rc.goTo(next_route);
         if (my_route.socket_msg_type) {
