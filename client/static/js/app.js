@@ -85,28 +85,36 @@ makernode.app.controller('AppCtrl', ['$scope',
     // sync pins with server
     var pinsync = makernode.ws_pin_sync($scope, 'ws', 'd');
 
-    $scope.ws.on('connect', function() {
-      console.log('connected to websocket');
-
-      if (makernode.rc.currentRouteKey() == 'wifi_setup') {
+    $scope.scan_wifi = function() {
+      if (true || makernode.rc.currentRouteKey() == 'wifi_setup') {
         $scope.ws.on('networks', function(networks) {
           console.log('got wifi network list: ' + networks);
           for (var i = 0; networks && i < networks.length; i++) {
             var value = networks[i];
-         if (value.indexOf('x00\\x00') === -1) {//don't show hidden networks
-	    var element = '<option value="' + value + '">' + value + '</option>';
-            $('#combo-01').append(element);
-	 }
+            if (value.indexOf('x00\\x00') === -1) { //don't show hidden networks
+              var element = '<option value="' + value + '">' + value + '</option>';
+              $('#combo-01').append(element);
+            }
           }
           $('#combo-01').scombobox({
             empty: true
           });
           $('.scombobox-display').attr('placeholder', 'Network');
-	$('.show-on-load').css({'display':'block'});
-	$('.hide-on-load').css({'display':'none'});
+          $('.show-on-load').css({
+            'display': 'block'
+          });
+          $('.hide-on-load').css({
+            'display': 'none'
+          });
         });
         $scope.ws.emit('networks', {});
       }
+
+    }
+
+    $scope.ws.on('connect', function() {
+      console.log('connected to websocket');
+      $scope.scan_wifi();
     });
 
     $scope.ws.on('redirect', function(data) {
@@ -174,6 +182,7 @@ makernode.app.controller('FormCtrl', ['$scope',
       next_route_key = makernode.setup_steps[my_route_i + 1];
     }
     next_route = makernode.routes[next_route_key];
+    $scope.scan_wifi();
     $scope.submit = function() {
       var combo_value = $('.scombobox-value');
       if (combo_value) {
