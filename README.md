@@ -16,9 +16,9 @@ This script will install the tools and configs you need:
 
     ./install_iot_libs.sh
 
-Then to put the board into it's startup state:
+Then to put the board into it's startup state run:
     
-    ./restore_factory_settings
+    sh/restore_factory_settings.sh
     reboot
 
 The board will then restart in AP mode - at which point you can try our wifi configuration. [Here is a video demo](https://vimeo.com/107971075) of the current configuration on vimeo. 
