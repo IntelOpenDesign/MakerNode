@@ -1,33 +1,26 @@
-<div class="container setup-form">
+<form ng-submit="submit()" class="container setup-form">
+  <!--TODO use a directive to format all forms the same way-->
+  <div step="1" steps-pics></div>
 
-    <!--TODO use a directive to format all forms the same way-->
-
-    <div step="1" steps-pics></div>
-
-    <div class="row padded">
-        <div class="col-xs-12">
-            <h1>Name Your Galileo</h1>
-        </div>
+  <div class="row padded">
+    <div class="col-xs-12">
+      <h1>Name Your Galileo</h1>
     </div>
+  </div>
 
-    <div class="row padded">
-        <div class="col-xs-12">
-            <p>This is the "hostname" that you will use to connect to Galileo on your wifi network later, so remember this name.</p>
-        </div>
+  <div class="row padded">
+    <div class="col-xs-12">
+      <p>This is the "hostname" that you will use to connect to Galileo on your wifi network later, so remember this name.</p>
     </div>
+  </div>
 
-    <div class="row padded">
-        <div class="col-xs-12">
-            <input ng-model="form.hostname"
-              placeholder="Name">
-        </div>
+  <div class="row padded">
+    <div class="col-xs-12">
+      <input ng-model="form.hostname" placeholder="Name" autofocus="true" />
     </div>
+  </div>
 
-    <div class="row">
-        <div class="button wide submit"
-          ng-click="submit()">
-            Set Hostname
-        </div>
-    </div>
-
-</div>
+  <div class="row">
+    <input type="submit" class="button wide submit" value="Set Hostname" />
+  </div>
+</form>

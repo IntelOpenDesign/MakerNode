@@ -26,7 +26,7 @@
 	  display: none;
   }
 </style>
-<div class="container setup-form">
+<form class="container setup-form" ng-submit="submit()">
 
   <div step="2" steps-pics></div>
 
@@ -56,9 +56,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="button wide submit" ng-click="submit()">
-      Connect
-    </div>
+    <input type="submit" class="button wide submit" value="Connect"/>
   </div>
   </div>
-</div>
+</form>
