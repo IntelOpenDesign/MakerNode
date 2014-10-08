@@ -89,10 +89,11 @@ makernode.app.controller('AppCtrl', ['$scope',
       if (true || makernode.rc.currentRouteKey() == 'wifi_setup') {
         $scope.ws.on('networks', function(networks) {
           console.log('got wifi network list: ' + networks);
+	  $('.scombobox-list').empty();
           for (var i = 0; networks && i < networks.length; i++) {
             var value = networks[i];
             if (value.indexOf('x00\\x00') === -1) { //don't show hidden networks
-              var element = '<option value="' + value + '">' + value + '</option>';
+              var element = '<option class="wifi-network" value="' + value + '">' + value + '</option>';
               $('#combo-01').append(element);
             }
           }
