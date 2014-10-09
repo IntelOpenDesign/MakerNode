@@ -48,6 +48,11 @@ makernode.routes = {
     controller: 'EmptyCtrl',
     template: 'controller',
   },
+  dashboard: {
+    hash: 'dashboard',
+    controller: 'EmptyCtrl',
+    template: 'dashboard'
+  }
 };
 
 makernode.app.config(['$routeProvider',

@@ -1,0 +1,124 @@
+<script>
+  $('.btn-toggle').click(function() {
+    $(this).find('.btn').toggleClass('active');
+
+    if ($(this).find('.btn-primary').size() > 0) {
+      $(this).find('.btn').toggleClass('btn-primary');
+    }
+    if ($(this).find('.btn-danger').size() > 0) {
+      $(this).find('.btn').toggleClass('btn-danger');
+    }
+    if ($(this).find('.btn-success').size() > 0) {
+      $(this).find('.btn').toggleClass('btn-success');
+    }
+    if ($(this).find('.btn-info').size() > 0) {
+      $(this).find('.btn').toggleClass('btn-info');
+    }
+
+    $(this).find('.btn').toggleClass('btn-default');
+
+  });
+
+  $('form').submit(function() {
+    alert($(this["options"]).val());
+    return false;
+  });
+
+
+  $scope.ws.on('connect', function() {
+    console.log('requesting services');
+    $scope.send_server_update('service', {
+      action: 'list'
+    });
+  });
+</script>
+<style>
+  .btn-group span {
+    font-size: 24px;
+    margin: 0 12px;
+    float: right;
+  }
+  .btn-success:not(:nth-child(2)) {
+    background-color: red;
+  }
+</style>
+<div class="container">
+
+  <div class="row padded">
+    <div class="col-xs-12">
+      <h1>MakerNode Dashboard</h1>
+    </div>
+  </div>
+
+  <div class="row padded">
+    <div class="col-xs-12">
+      <h2>SYSTEM STATUS</h2>
+      <p>IP Address: 192.168.10.1</p>
+      <p>hostname: adam</p>
+      <p>mode: control</p>
+    </div>
+  </div>
+
+  <div class="row padded">
+    <div class="col-xs-12">
+      <h2>SERVICES</h2>
+      <p>
+        <div class="btn-group btn-toggle"><span>Maker-Node</span>
+          <button class="btn btn-m btn-success active">ON</button>
+          <button class="btn btn-m btn-default">OFF</button>
+        </div>
+        <button class="btn btn-m btn-default btn-restart">RESTART</button>
+      </p>
+
+
+      <p>
+        <div class="btn-group btn-toggle"><span>Avahi</span>
+          <button class="btn btn-m btn-success active">ON</button>
+          <button class="btn btn-m btn-default">OFF</button>
+        </div>
+        <button class="btn btn-m btn-default">RESTART</button>
+      </p>
+
+      <p>
+        <div class="btn-group btn-toggle"><span>Wyliodrin</span>
+          <button class="btn btn-m btn-success active">ON</button>
+          <button class="btn btn-m btn-default">OFF</button>
+        </div>
+        <button class="btn btn-m btn-default">RESTART</button>
+      </p>
+
+      <p>
+        <div class="btn-group btn-toggle"><span>XDK</span>
+          <button class="btn btn-m btn-success active">ON</button>
+          <button class="btn btn-m btn-default">OFF</button>
+        </div>
+        <button class="btn btn-m btn-default">RESTART</button>
+      </p>
+
+      <p>
+        <div class="btn-group btn-toggle"><span>Lighttpd</span>
+          <button class="btn btn-m btn-success active">ON</button>
+          <button class="btn btn-m btn-default">OFF</button>
+        </div>
+        <button class="btn btn-m btn-default">RESTART</button>
+      </p>
+
+      <p>
+        <div class="btn-group btn-toggle"><span>Redis</span>
+          <button class="btn btn-m btn-success active">ON</button>
+          <button class="btn btn-m btn-default">OFF</button>
+        </div>
+        <button class="btn btn-m btn-default">RESTART</button>
+      </p>
+
+
+    </div>
+
+    <div class="col-xs-12">
+      <h2>ACTIONS</h2>
+      <p>
+        <button class="btn btn-m btn-default">REFRESH</button>
+        <button class="btn btn-m btn-default">REBOOT</button>
+        <button class="btn btn-m btn-default">REVERT TO SETUP MODE</button>
+      </p>
+    </div>
