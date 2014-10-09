@@ -1,0 +1,10 @@
+[
+{
+    "id": "project",
+    "children":
+    [
+        {"id": "end"},
+        { "command": "example" }
+    ]
+}
+]
