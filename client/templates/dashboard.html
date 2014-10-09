@@ -23,6 +23,14 @@
     alert($(this["options"]).val());
     return false;
   });
+
+
+  $scope.ws.on('connect', function() {
+    console.log('requesting services');
+    $scope.send_server_update('service', {
+      action: 'list'
+    });
+  });
 </script>
 <style>
   .btn-group span {
