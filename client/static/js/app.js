@@ -123,6 +123,21 @@ makernode.app.controller('AppCtrl', ['$scope',
       $scope.scan_wifi();
     });
 
+    $scope.ws.on('dashboard-service', function(data) {
+      console.log(data);
+      _.each(data, function(value, key) {
+        //TODO: use an angular template here
+        if ($('#services-block #service-' + key).length == 0) {
+          var html = '<p id="service-' + key + '"><div class="btn-group btn-toggle">';
+          html += '<span>' + key + '</span>';
+          html += '<button class="btn btn-m btn-success active">ON</button>';
+          html += '<button class="btn btn-m btn-default">OFF</button></div>';
+          html += '<button class="btn btn-m btn-default btn-restart">RESTART</button></p>';
+          $('#services-block').append(html);
+        }
+      });
+    });
+
     $scope.ws.on('redirect', function(data) {
       // TODO these timeouts are kind of sketchy, but they work.
       console.log('Server is telling us to get ready to REDIRECT');
@@ -185,7 +200,7 @@ makernode.app.controller('DashboardCtrl', ['$scope',
         };
         console.log('sending service request:');
         console.log(options);
-        $scope.send_server_update('service', options);
+        $scope.send_server_update('dashboard-service', options);
         setTimeout(send_service_list_request, 3000);
       }
     }

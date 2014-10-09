@@ -24,13 +24,6 @@
     return false;
   });
 
-
-  $scope.ws.on('connect', function() {
-    console.log('requesting services');
-    $scope.send_server_update('service', {
-      action: 'list'
-    });
-  });
 </script>
 <style>
   .btn-group span {
@@ -60,57 +53,9 @@
   </div>
 
   <div class="row padded">
-    <div class="col-xs-12">
+    <div class="col-xs-12" id="services-block">
       <h2>SERVICES</h2>
-      <p>
-        <div class="btn-group btn-toggle"><span>Maker-Node</span>
-          <button class="btn btn-m btn-success active">ON</button>
-          <button class="btn btn-m btn-default">OFF</button>
-        </div>
-        <button class="btn btn-m btn-default btn-restart">RESTART</button>
-      </p>
-
-
-      <p>
-        <div class="btn-group btn-toggle"><span>Avahi</span>
-          <button class="btn btn-m btn-success active">ON</button>
-          <button class="btn btn-m btn-default">OFF</button>
-        </div>
-        <button class="btn btn-m btn-default">RESTART</button>
-      </p>
-
-      <p>
-        <div class="btn-group btn-toggle"><span>Wyliodrin</span>
-          <button class="btn btn-m btn-success active">ON</button>
-          <button class="btn btn-m btn-default">OFF</button>
-        </div>
-        <button class="btn btn-m btn-default">RESTART</button>
-      </p>
-
-      <p>
-        <div class="btn-group btn-toggle"><span>XDK</span>
-          <button class="btn btn-m btn-success active">ON</button>
-          <button class="btn btn-m btn-default">OFF</button>
-        </div>
-        <button class="btn btn-m btn-default">RESTART</button>
-      </p>
-
-      <p>
-        <div class="btn-group btn-toggle"><span>Lighttpd</span>
-          <button class="btn btn-m btn-success active">ON</button>
-          <button class="btn btn-m btn-default">OFF</button>
-        </div>
-        <button class="btn btn-m btn-default">RESTART</button>
-      </p>
-
-      <p>
-        <div class="btn-group btn-toggle"><span>Redis</span>
-          <button class="btn btn-m btn-success active">ON</button>
-          <button class="btn btn-m btn-default">OFF</button>
-        </div>
-        <button class="btn btn-m btn-default">RESTART</button>
-      </p>
-
+      
 
     </div>
 
