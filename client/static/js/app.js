@@ -50,7 +50,7 @@ makernode.routes = {
   },
   dashboard: {
     hash: 'dashboard',
-    controller: 'EmptyCtrl',
+    controller: 'DashboardCtrl',
     template: 'dashboard'
   }
 };
@@ -94,7 +94,7 @@ makernode.app.controller('AppCtrl', ['$scope',
       if (true || makernode.rc.currentRouteKey() == 'wifi_setup') {
         $scope.ws.on('networks', function(networks) {
           console.log('got wifi network list: ' + networks);
-	  $('.scombobox-list').empty();
+          $('.scombobox-list').empty();
           for (var i = 0; networks && i < networks.length; i++) {
             var value = networks[i];
             if (value.indexOf('x00\\x00') === -1) { //don't show hidden networks
@@ -175,6 +175,24 @@ makernode.app.controller('AppCtrl', ['$scope',
 makernode.app.controller('EmptyCtrl', ['$scope',
   function($scope) {}
 ]);
+
+makernode.app.controller('DashboardCtrl', ['$scope',
+  function($scope) {
+    function send_service_list_request() {
+      if (makernode.rc.currentRouteKey() == 'dashboard') {
+        var options = {
+          actions: 'list'
+        };
+        console.log('sending service request:');
+        console.log(options);
+        $scope.send_server_update('service', options);
+        setTimeout(send_service_list_request, 3000);
+      }
+    }
+    send_service_list_request();
+  }
+]);
+
 
 makernode.app.controller('FormCtrl', ['$scope',
   function($scope) {
