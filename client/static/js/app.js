@@ -181,7 +181,7 @@ makernode.app.controller('DashboardCtrl', ['$scope',
     function send_service_list_request() {
       if (makernode.rc.currentRouteKey() == 'dashboard') {
         var options = {
-          actions: 'list'
+          action: 'list'
         };
         console.log('sending service request:');
         console.log(options);
