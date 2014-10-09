@@ -127,14 +127,19 @@ makernode.app.controller('AppCtrl', ['$scope',
       console.log(data);
       _.each(data, function(value, key) {
         //TODO: use an angular template here
-        if ($('#services-block #service-' + key).length == 0) {
-          var html = '<p id="service-' + key + '"><div class="btn-group btn-toggle">';
-          html += '<span>' + key + '</span>';
-          html += '<button class="btn btn-m btn-success active">ON</button>';
-          html += '<button class="btn btn-m btn-default">OFF</button></div>';
-          html += '<button class="btn btn-m btn-default btn-restart">RESTART</button></p>';
+        var id = '#service-' + key; 
+        if ($('#services-block ' + id).length == 0) {
+          var html = '<p id="service-' + key + '" />';
           $('#services-block').append(html);
+          html = '<div class="btn-group btn-toggle">';
+          html += '<span>' + key + '</span>';
+          html += '<button class="btn btn-m btn-on">ON</button>';
+          html += '<button class="btn btn-m btn-off">OFF</button></div>';
+          html += '<button class="btn btn-m btn-default btn-restart">RESTART</button>';
+          $('#services-block ' + id).append(html);
         }
+        $(id + ' .btn-on').toggleClass('btn-success', value); 
+        $(id + ' .btn-off').toggleClass('btn-success', !value); 
       });
     });
 
