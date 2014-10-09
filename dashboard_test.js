@@ -1,4 +1,4 @@
-var utils = require('maker-node-utils/galileo')();
+var utils = require('./utils/galileo')();
   var path = require('path');
 var HOST = 'localhost';
 var PORT = 8005;
