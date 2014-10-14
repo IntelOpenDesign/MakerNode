@@ -124,7 +124,11 @@ makernode.app.controller('AppCtrl', ['$scope',
     });
 
     $scope.ws.on('dashboard-service', function(data) {
-      console.log(data);
+      function getServiceClick(name, action) {
+        return function(){
+          $scope.send_server_update('dashboard-service', {name: name, action:action});
+        }
+      }
       _.each(data, function(value, key) {
         //TODO: use an angular template here
         var id = '#service-' + key; 
@@ -133,13 +137,17 @@ makernode.app.controller('AppCtrl', ['$scope',
           $('#services-block').append(html);
           html = '<div class="btn-group btn-toggle">';
           html += '<span>' + key + '</span>';
-          html += '<button class="btn btn-m btn-on">ON</button>';
+          html += '<button class="btn btn-m btn-on" >ON</button>';
           html += '<button class="btn btn-m btn-off">OFF</button></div>';
           html += '<button class="btn btn-m btn-default btn-restart">RESTART</button>';
           $('#services-block ' + id).append(html);
+          $(id + ' .btn-restart').click(getServiceClick(key, 'restart'));
+          $(id + ' .btn-on').click(getServiceClick(key, 'start')); 
+          $(id + ' .btn-off').click(getServiceClick(key, 'stop')); 
+
         }
-        $(id + ' .btn-on').toggleClass('btn-success', value); 
-        $(id + ' .btn-off').toggleClass('btn-success', !value); 
+        $(id + ' .btn-on').toggleClass('btn-success', value);        
+        $(id + ' .btn-off').toggleClass('btn-success', !value);
       });
     });
 
@@ -174,6 +182,8 @@ makernode.app.controller('AppCtrl', ['$scope',
     });
 
     $scope.send_server_update = function(msg_type, d) {
+      console.log('sending ' + msg_type);
+      console.log(d);
       $scope.ws.emit(msg_type, d);
     };
 
