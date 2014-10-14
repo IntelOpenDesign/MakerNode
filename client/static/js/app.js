@@ -266,7 +266,7 @@ makernode.app.service('ConnectingService', function() {
   this.checkBonjour = function() { //TODO: make this work with any hostname. Server should pass down hostname when client starts.
     $.getJSON('http://clanton.local/test_connection', function() {
       _ready = true;
-      alert('bonjour connection verified');
+      console.log('bonjour connection verified');
     });
   }
 });
