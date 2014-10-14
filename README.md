@@ -1,6 +1,6 @@
 # README #
 
-Although NodeJS is included on the Galileo and Edison builds, we do not provide tools to wirelessly configure, develop, deploy and debug projects using popular text editors and web browsers. Makernode is an set of tools and examples for the IOTDK that make it easy to get started with Javascript by letting developers choose their own IDE and browser, and supporting workflow that is familiar to the NodeJS community.  
+Although NodeJS is included on the Galileo and Edison builds, it does not provide tools to wirelessly configure, develop, deploy and debug projects using popular text editors and web browsers. Makernode is an set of tools and examples for the IOTDK that make it easy to get started with Javascript by letting developers choose their own IDE and browser, and supporting workflow that is familiar to the NodeJS community.  
 
 Currently a WORK IN PROGRESS. The files here contain a working POC of wireless configuration and the binaries required to quickly convert the IOTDevkit build into a wireless configuration. 
 
