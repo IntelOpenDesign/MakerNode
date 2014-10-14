@@ -157,7 +157,10 @@ makernode.app.controller('AppCtrl', ['$scope',
           $(id + ' .btn-off').toggleClass('btn-success', !value);
         });
       } else {
-        $('#service-' + data.id + ' button').prop('disabled', (data.action == 'begin'));
+	      var element = '#service-' + data.id;
+        $(element + ' button').prop('disabled', (data.status == 'begin'));
+          $(element + ' .btn-on').toggleClass('btn-success', data.action == 'start');
+          $(element + ' .btn-off').toggleClass('btn-success', data.action == 'stop');
       }
     });
 
