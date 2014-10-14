@@ -1,8 +1,8 @@
 # README #
 
-A nodejs workflow for Galileo Gen2 and Edison for the IOTDevkit. Will provide wireless wifi configuration, project skeletons, nodejs server examples, GPIO examples using galileo-io, and sublime plugins to facilitate easy deployment and debugging of projects. Currently a WORK IN PROGRESS. 
+Although NodeJS is included on the Galileo and Edison builds, we do not provide tools to wirelessly configure, develop, deploy and debug projects using popular text editors and web browsers. Makernode is an set of tools and examples for the IOTDK that make it easy to get started with Javascript by letting developers choose their own IDE and browser, and supporting workflow that is familiar to the NodeJS community.  
 
-The current files contain a working POC of wireless configuration and the binaries required to quickly convert the IOTDevkit build into a wireless configuration. 
+Currently a WORK IN PROGRESS. The files here contain a working POC of wireless configuration and the binaries required to quickly convert the IOTDevkit build into a wireless configuration. 
 
 We are planning to provide a build with the code from this repo included because the whole point of it is to simplify setup, but for now if you want to download the IOTDK, please [see the wiki](https://github.com/IntelOpenDesign/MakerNode/wiki) for instructions of how to setup your Galileo, get the linux build, and connect to the web. 
 
