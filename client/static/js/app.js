@@ -143,6 +143,15 @@ makernode.app.controller('AppCtrl', ['$scope',
       });
     });
 
+    $scope.ws.on('dashboard-info', function(data) {
+      console.log('got dashboard-info');
+      console.log(data);
+      $('#ip_address').text(data.ip);
+      $('#host_name').text(data.hostname);
+      $('#mac_address').text(data.mac);
+
+    });
+
     $scope.ws.on('redirect', function(data) {
       // TODO these timeouts are kind of sketchy, but they work.
       console.log('Server is telling us to get ready to REDIRECT');
@@ -210,6 +219,7 @@ makernode.app.controller('DashboardCtrl', ['$scope',
       }
     }
     send_service_list_request();
+    $scope.send_server_update('dashboard-info');
   }
 ]);
 
