@@ -135,11 +135,14 @@ makernode.app.controller('AppCtrl', ['$scope',
         if ($('#services-block ' + id).length == 0) {
           var html = '<p id="service-' + key + '" />';
           $('#services-block').append(html);
-          html = '<div class="btn-group btn-toggle">';
-          html += '<span>' + key + '</span>';
+          html = '<div class="row">';
+         html += '<div class="col-xs-3 text-right"><span>' + key + '</span></div>';
+         html += '<div class="col-xs-4">';
+          html += '<div class="btn-group btn-toggle">';
           html += '<button class="btn btn-m btn-on" >ON</button>';
           html += '<button class="btn btn-m btn-off">OFF</button></div>';
           html += '<button class="btn btn-m btn-default btn-restart"><i class="fa fa-fw fa-refresh" />&nbsp;RESTART</button>';
+          html += '</div>';
           $('#services-block ' + id).append(html);
           $(id + ' .btn-restart').click(getServiceClick(key, 'restart'));
           $(id + ' .btn-on').click(getServiceClick(key, 'start')); 
