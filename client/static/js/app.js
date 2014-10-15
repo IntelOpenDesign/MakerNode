@@ -139,7 +139,7 @@ makernode.app.controller('AppCtrl', ['$scope',
           html += '<span>' + key + '</span>';
           html += '<button class="btn btn-m btn-on" >ON</button>';
           html += '<button class="btn btn-m btn-off">OFF</button></div>';
-          html += '<button class="btn btn-m btn-default btn-restart">RESTART</button>';
+          html += '<button class="btn btn-m btn-default btn-restart"><i class="fa fa-fw fa-refresh" />&nbsp;RESTART</button>';
           $('#services-block ' + id).append(html);
           $(id + ' .btn-restart').click(getServiceClick(key, 'restart'));
           $(id + ' .btn-on').click(getServiceClick(key, 'start')); 

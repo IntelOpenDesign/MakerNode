@@ -59,9 +59,10 @@
 
     <div class="col-xs-12">
       <h2>ACTIONS</h2>
-      <p>
-        <button class="btn btn-m btn-default" ng-click="send_server_update('dashboard-command', {action: 'install_updates'});">SOFTWARE UPDATE</button>
-		<button class="btn btn-m btn-default" ng-click="send_server_update('dashboard-command', {action: 'reboot'});">REBOOT</button>
-        <button class="btn btn-m btn-default" ng-click="send_server_update('dashboard-command', {action: 'setup'});">REVERT TO SETUP MODE</button>
+	  <p>
+	  		<button class="btn btn-m btn-default" ng-click="send_server_update('dashboard-command', {action: 'reboot'});"><i class="fa fa-fw fa-power-off" />&nbsp;REBOOT</button>
+	  <button class="btn btn-m btn-default" ng-click="send_server_update('dashboard-command', {action: 'install_updates'});"><i class="fa fa-fw fa-download" />&nbsp;CHECK FOR UPDATE</button>
+
+			<button class="btn btn-m btn-default" ng-click="send_server_update('dashboard-command', {action: 'setup'});"><i class="fa fa-fw fa-gear" />&nbsp;REVERT TO SETUP MODE</button>
       </p>
     </div>
