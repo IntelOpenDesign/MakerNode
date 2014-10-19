@@ -23,14 +23,6 @@
     alert($(this["options"]).val());
     return false;
   });
-
-
-  $scope.ws.on('connect', function() {
-    console.log('requesting services');
-    $scope.send_server_update('service', {
-      action: 'list'
-    });
-  });
 </script>
 <style>
   .btn-group span {
@@ -38,8 +30,16 @@
     margin: 0 12px;
     float: right;
   }
-  .btn-success:not(:nth-child(2)) {
+  .btn-success:not(:first-child) {
     background-color: red;
+  }
+  .btn-off {
+    margin-right: 10px;
+  }
+  .block {
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+    border-radius: 5px;
   }
 </style>
 <div class="container">
@@ -51,74 +51,30 @@
   </div>
 
   <div class="row padded">
-    <div class="col-xs-12">
-      <h2>SYSTEM STATUS</h2>
-      <p>IP Address: 192.168.10.1</p>
-      <p>hostname: adam</p>
-      <p>mode: control</p>
+    <div class="col-xs-12 block">
+      <h2 class="text-center">SYSTEM STATUS</h2>
+      <p>IP Address: <span id="ip_address"></span>
+      </p>
+      <p>hostname: <span id="host_name"></span>
+      </p>
+      <p>mac address: <span id="mac_address"></span>
+      </p>
     </div>
   </div>
-
   <div class="row padded">
-    <div class="col-xs-12">
-      <h2>SERVICES</h2>
-      <p>
-        <div class="btn-group btn-toggle"><span>Maker-Node</span>
-          <button class="btn btn-m btn-success active">ON</button>
-          <button class="btn btn-m btn-default">OFF</button>
-        </div>
-        <button class="btn btn-m btn-default btn-restart">RESTART</button>
-      </p>
-
-
-      <p>
-        <div class="btn-group btn-toggle"><span>Avahi</span>
-          <button class="btn btn-m btn-success active">ON</button>
-          <button class="btn btn-m btn-default">OFF</button>
-        </div>
-        <button class="btn btn-m btn-default">RESTART</button>
-      </p>
-
-      <p>
-        <div class="btn-group btn-toggle"><span>Wyliodrin</span>
-          <button class="btn btn-m btn-success active">ON</button>
-          <button class="btn btn-m btn-default">OFF</button>
-        </div>
-        <button class="btn btn-m btn-default">RESTART</button>
-      </p>
-
-      <p>
-        <div class="btn-group btn-toggle"><span>XDK</span>
-          <button class="btn btn-m btn-success active">ON</button>
-          <button class="btn btn-m btn-default">OFF</button>
-        </div>
-        <button class="btn btn-m btn-default">RESTART</button>
-      </p>
-
-      <p>
-        <div class="btn-group btn-toggle"><span>Lighttpd</span>
-          <button class="btn btn-m btn-success active">ON</button>
-          <button class="btn btn-m btn-default">OFF</button>
-        </div>
-        <button class="btn btn-m btn-default">RESTART</button>
-      </p>
-
-      <p>
-        <div class="btn-group btn-toggle"><span>Redis</span>
-          <button class="btn btn-m btn-success active">ON</button>
-          <button class="btn btn-m btn-default">OFF</button>
-        </div>
-        <button class="btn btn-m btn-default">RESTART</button>
-      </p>
-
-
+    <div class="col-xs-12 block" id="services-block">
+      <h2 class="text-center">SERVICES</h2>
     </div>
-
-    <div class="col-xs-12">
-      <h2>ACTIONS</h2>
+  </div>
+  <div class="row padded">
+    <div class="col-xs-12 block">
+      <h2 class="text-center">ACTIONS</h2>
       <p>
-        <button class="btn btn-m btn-default">REFRESH</button>
-        <button class="btn btn-m btn-default">REBOOT</button>
-        <button class="btn btn-m btn-default">REVERT TO SETUP MODE</button>
+        <button class="btn btn-m btn-default" ng-click="send_server_update('dashboard-command', {action: 'reboot'});"><i class="fa fa-fw fa-power-off" />&nbsp;REBOOT</button>
+        <button class="btn btn-m btn-default" ng-click="send_server_update('dashboard-command', {action: 'install_updates'});"><i class="fa fa-fw fa-download" />&nbsp;CHECK FOR UPDATE</button>
+
+        <button class="btn btn-m btn-default" ng-click="send_server_update('dashboard-command', {action: 'setup'});"><i class="fa fa-fw fa-gear" />&nbsp;REVERT TO SETUP MODE</button>
       </p>
     </div>
+  </div>
+</div>

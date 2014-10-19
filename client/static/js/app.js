@@ -50,7 +50,7 @@ makernode.routes = {
   },
   dashboard: {
     hash: 'dashboard',
-    controller: 'EmptyCtrl',
+    controller: 'DashboardCtrl',
     template: 'dashboard'
   }
 };
@@ -94,7 +94,7 @@ makernode.app.controller('AppCtrl', ['$scope',
       if (true || makernode.rc.currentRouteKey() == 'wifi_setup') {
         $scope.ws.on('networks', function(networks) {
           console.log('got wifi network list: ' + networks);
-	  $('.scombobox-list').empty();
+          $('.scombobox-list').empty();
           for (var i = 0; networks && i < networks.length; i++) {
             var value = networks[i];
             if (value.indexOf('x00\\x00') === -1) { //don't show hidden networks
@@ -123,6 +123,56 @@ makernode.app.controller('AppCtrl', ['$scope',
       $scope.scan_wifi();
     });
 
+    $scope.ws.on('dashboard-service', function(data) {
+      if (data.action == 'list') {
+        function getServiceClick(name, action) {
+          return function() {
+            $scope.send_server_update('dashboard-service', {
+              name: name,
+              action: action
+            });
+          }
+        }
+        _.each(data.services, function(value, key) {
+          //TODO: use an angular template here
+          var id = '#service-' + key;
+          if ($('#services-block ' + id).length == 0) {
+            var html = '<p id="service-' + key + '" />';
+            $('#services-block').append(html);
+            html = '<div class="row">';
+            html += '<div class="col-xs-3 text-right"><span>' + key + '</span></div>';
+            html += '<div class="col-xs-4">';
+            html += '<div class="btn-group btn-toggle">';
+            html += '<button class="btn btn-m btn-on" >ON</button>';
+            html += '<button class="btn btn-m btn-off">OFF</button></div>';
+            html += '<button class="btn btn-m btn-default btn-restart"><i class="fa fa-fw fa-refresh" />&nbsp;RESTART</button>';
+            html += '</div>';
+            $('#services-block ' + id).append(html);
+            $(id + ' .btn-restart').click(getServiceClick(key, 'restart'));
+            $(id + ' .btn-on').click(getServiceClick(key, 'start'));
+            $(id + ' .btn-off').click(getServiceClick(key, 'stop'));
+
+          }
+          $(id + ' .btn-on').toggleClass('btn-success', value);
+          $(id + ' .btn-off').toggleClass('btn-success', !value);
+        });
+      } else {
+	      var element = '#service-' + data.id;
+        $(element + ' button').prop('disabled', (data.status == 'begin'));
+          $(element + ' .btn-on').toggleClass('btn-success', data.action == 'start');
+          $(element + ' .btn-off').toggleClass('btn-success', data.action == 'stop');
+      }
+    });
+
+    $scope.ws.on('dashboard-info', function(data) {
+      console.log('got dashboard-info');
+      console.log(data);
+      $('#ip_address').text(data.ip);
+      $('#host_name').text(data.hostname);
+      $('#mac_address').text(data.mac);
+
+    });
+
     $scope.ws.on('redirect', function(data) {
       // TODO these timeouts are kind of sketchy, but they work.
       console.log('Server is telling us to get ready to REDIRECT');
@@ -145,6 +195,8 @@ makernode.app.controller('AppCtrl', ['$scope',
     });
 
     $scope.send_server_update = function(msg_type, d) {
+      console.log('sending ' + msg_type);
+      console.log(d);
       $scope.ws.emit(msg_type, d);
     };
 
@@ -175,6 +227,25 @@ makernode.app.controller('AppCtrl', ['$scope',
 makernode.app.controller('EmptyCtrl', ['$scope',
   function($scope) {}
 ]);
+
+makernode.app.controller('DashboardCtrl', ['$scope',
+  function($scope) {
+    function send_service_list_request() {
+      if (makernode.rc.currentRouteKey() == 'dashboard') {
+        var options = {
+          action: 'list'
+        };
+        console.log('sending service request:');
+        console.log(options);
+        $scope.send_server_update('dashboard-service', options);
+        setTimeout(send_service_list_request, 3000);
+      }
+    }
+    send_service_list_request();
+    $scope.send_server_update('dashboard-info');
+  }
+]);
+
 
 makernode.app.controller('FormCtrl', ['$scope',
   function($scope) {
