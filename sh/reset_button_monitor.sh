@@ -4,7 +4,7 @@ echo "Reset button mapped to reset Wifi to AP mode after a 5 second long press..
 
 declare -i count=0
 declare -i max=4
-declare -i wait=20
+declare -i waitL=20
 declare -i waitCount=0
 
 inWaitMode=false
@@ -22,7 +22,7 @@ if [ "$issue" == "iot-devkit" ]; then
 	board=$(cat /sys/devices/virtual/dmi/id/board_name)
 	echo "board name is: $board"
 else
-	#method for standard version of linux dist. by NDG 
+	#method for standard version of linux dist. by NDG
 	type dmidecode > /dev/null 2>&1 || die "dmidecode not installed"
 	board=$(dmidecode -s baseboard-product-name)
 	echo "board name is: $board"
@@ -49,9 +49,9 @@ startAPMode()
 }
 
 #output the pid of this process to file (no longer needed)
-#echo $$ > reset.pid
+echo $$ > reset.pid
 
-#make sure the GPIO is exported
+#make sure the GPIO is exported, on the iotdk only R3 pins are exported
 echo -n $output_reset_gpio > /sys/class/gpio/export
 echo -n $input_reset_gpio > /sys/class/gpio/export
 
@@ -61,11 +61,11 @@ while $keepgoing
 
 do
 	if [ "$inWaitMode" == false ]; then
-		
-		
+
+
 		gpioIn=`cat /sys/class/gpio/gpio${output_reset_gpio}/value`
 		gpioOut=`cat /sys/class/gpio/gpio${input_reset_gpio}/value`
-	
+
 		if [[ "$gpioIn" = "$gpioPressed" ]] && [[ "$gpioOut" = "$gpioPressed" ]]; then
 			echo "Reset Button press"
 			count=$((count+1))
@@ -78,16 +78,16 @@ do
 			count=$((0))
 			inWaitMode=true
 		fi
-		
+
 	else
 		waitCount=$((waitCount+1))
-		if [ "$waitCount" -ge "$wait" ]; then
+		if [ "$waitCount" -ge "$waitL" ]; then
 			waitCount=$((0))
 			inWaitMode=false
 		fi
-		
+
 	fi
-	
+
 	sleep 1
 
 done
