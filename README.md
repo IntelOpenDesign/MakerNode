@@ -1,12 +1,12 @@
 # README #
 
-A set of tools to wirelessly configure, develop, deploy and debug projects on Galileo Gen2 and Edison using popular text editors and web browsers. Makernode is an set of tools and examples for the IOTDK that make it easy to get started with Javascript by letting developers choose their own text editor and web browser, and supporting workflow that is familiar to the NodeJS community.  
+A set of tools to wirelessly configure, develop, deploy and debug projects on Galileo Gen2 and Edison using standard text editors and web browsers. Makernode is an set of tools and examples for the Intel IOTDK that make it easy to get started with Javascript or Python by letting developers choose customize their existing toolsets.  
 
-The files here contain a work in progress POC of wireless configuration and the binaries required to quickly convert the IOTDevkit build into a wireless configuration. 
+The files here contain a work-in-progress POC of wireless configuration and the binaries required to quickly convert the IOTDevkit build into a wirelessly configured build. 
 
-We have tested primarily on OSX and Linux which have bonjour services preinstalled. For Windows please install [Bonjour for Windows from here](http://support.apple.com/kb/dl999). 
+So far have tested primarily on OSX and Linux which have bonjour services preinstalled. For Windows please install [Bonjour for Windows from here](http://support.apple.com/kb/dl999). 
 
-We are planning to provide a build with the code from this repo included because the whole point of it is to simplify setup, but for now if you want to download the IOTDK, please [see the wiki](https://github.com/IntelOpenDesign/MakerNode/wiki) for instructions of how to setup your Galileo, get the linux build, and connect to the web. The login and password defaults for the boards are "root" and "root". 
+We are planning to provide a build with the code from this repo included because the whole point of it is to simplify setup, but for now if you want to try it, download the IOTDK, please [see the wiki](https://github.com/IntelOpenDesign/MakerNode/wiki) for instructions of how to setup your Galileo, get the linux build, and connect to the web. The login and password defaults for the boards are "root" and "root". 
 
 Once your galileo is connected to the web, go to the home directory on the console and:
 
@@ -41,5 +41,3 @@ Issues:
 * carlos.montesinos@intel.com - developer and project manager
 * adampasz@gmail.com  - nodejs lead programmer
 * noura.howell@gmail.com  - front end developer
-
-
