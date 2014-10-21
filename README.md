@@ -22,7 +22,7 @@ This script will install the tools and configs you need:
 
 To put the board back into startup mode, call the following script inside the `sh/` folder. 
     
-    restore_factory_settings.sh
+    ./restore_factory_settings.sh
 
 The board will then restart in AP mode - at which point you can try our wifi configuration. To do this, select the wifi network Makernode-5char (5char will be replaced by the last 5 char of your Mac address, printed on a sticker on the top of your Ethernet port on the board). This is to distiguish it from other boards at hackathons. 
 
