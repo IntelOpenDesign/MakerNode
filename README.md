@@ -1,6 +1,6 @@
 # README #
 
-A set of tools to wirelessly configure, develop, deploy and debug projects on Galileo Gen2 and Edison using standard text editors and web browsers. Makernode is an set of tools and examples for the Intel IOTDK that make it easy to get started with Javascript or Python by letting developers choose customize their existing toolsets.  
+A set of tools to wirelessly configure, develop, deploy and debug projects on Galileo Gen2 and Edison using standard text editors and web browsers. Makernode is an set of tools and examples for the Intel IOTDK that make it easy to get started with Javascript or Python development by suppriting developers who want to customize their existing toolsets.  
 
 The files here contain a work-in-progress POC of wireless configuration and the binaries required to quickly convert the IOTDevkit build into a wirelessly configured build. 
 
