@@ -2,7 +2,7 @@
 
 A set of tools to wirelessly configure, develop, deploy and debug projects on Galileo Gen2 and Edison using standard text editors and web browsers. Makernode is designed for the Intel IOTDK to make it easy to get started with Javascript or Python development by suppriting developers who want to customize their existing toolsets - and want to have a completely wireless workflow. 
 
-The files here contain a work-in-progress POC of wireless configuration and the binaries required to quickly convert the IOTDevkit build into a wirelessly configured build. 
+The files here contain a work-in-progress POC of wireless configuration with a dashboard manager. The binaries required to quickly convert the IOTDevkit build into a wirelessly configured build are provided in the repo.
 
 So far have tested primarily on OSX and Linux which have bonjour services preinstalled. For Windows please install [Bonjour for Windows](http://support.apple.com/kb/dl999). 
 
