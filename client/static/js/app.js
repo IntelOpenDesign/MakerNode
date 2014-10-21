@@ -30,7 +30,7 @@ makernode.routes = {
   },
   connecting: {
     hash: 'connecting',
-    controller: 'EmptyCtrl',
+    controller: 'ConnectingCtrl',
     template: 'connecting_to_router',
   },
   test_pin: {
@@ -228,6 +228,38 @@ makernode.app.controller('EmptyCtrl', ['$scope',
   function($scope) {}
 ]);
 
+makernode.app.controller('ConnectingCtrl',
+  function($scope, SSIDService) {
+    console.log('Connecting');
+    var current = 0;
+    var DURATION = 60000; //milliseconds
+    var INCREMENT = 200;
+    $scope.ssid = SSIDService.get();
+
+    function updateProgress() {
+
+      current += INCREMENT;
+      var percent = 100;
+      if (current < DURATION) {
+        percent = (current / DURATION) * 100;
+        setTimeout(updateProgress, INCREMENT);
+      }
+      $('.progress-bar').width(percent + '%');
+    }
+    updateProgress();
+  }
+);
+
+makernode.app.service('SSIDService', function() {
+  var _ssid;
+  this.get = function() {
+    return _ssid;
+  }
+  this.set = function(ssid) {
+    _ssid = ssid;
+  }
+});
+
 makernode.app.controller('DashboardCtrl', ['$scope',
   function($scope) {
     function send_service_list_request() {
@@ -246,9 +278,8 @@ makernode.app.controller('DashboardCtrl', ['$scope',
   }
 ]);
 
-
-makernode.app.controller('FormCtrl', ['$scope',
-  function($scope) {
+makernode.app.controller('FormCtrl',
+  function($scope, SSIDService) {
     $scope.form = {};
     var my_route_key = makernode.rc.currentRouteKey();
     var my_route = makernode.routes[my_route_key];
@@ -264,6 +295,7 @@ makernode.app.controller('FormCtrl', ['$scope',
       var combo_value = $('.scombobox-value');
       if (combo_value) {
         $scope.form.ssid = combo_value.attr('value');
+        SSIDService.set($scope.form.ssid);
       }
       console.log('We are about to go to the next route', next_route.hash);
       makernode.rc.goTo(next_route);
@@ -271,11 +303,14 @@ makernode.app.controller('FormCtrl', ['$scope',
         console.log('We are about to send the server a msg of type',
           my_route.socket_msg_type, 'with data',
           JSON.stringify($scope.form, null, 2));
+
+
+
         $scope.send_server_update(my_route.socket_msg_type, $scope.form);
       }
     };
   }
-]);
+);
 
 makernode.app.controller('InitCtrl', ['$scope',
   function($scope) {

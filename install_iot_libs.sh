@@ -17,3 +17,4 @@ cp conf/hostapd.conf /etc
 cp conf/udhcpd.conf /etc
 cp conf/dnsd.conf /etc
 cp conf/maker-node.service /etc/systemd/system/multi-user.target.wants
+cp conf/reset-ap.service /etc/systemd/system/multi-user.target.wants
