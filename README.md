@@ -34,6 +34,8 @@ Issues:
 
 -Access point mode works well in most cases, during hackathons we have found that there are two many overlapping channels in the 2.4 ghz range. We are looking into using the 5 ghz bandwidth on the centrino cards. 
 
+-The makernode utilitiy has not been optimized to lower CPU on the Galileo. We are working to reduce this and let you toggle it on and off. 
+
 
 ### Who do I talk to? ###
 
