@@ -4,7 +4,7 @@ A set of tools to wirelessly configure, develop, deploy and debug projects on Ga
 
 The files here contain a work-in-progress POC of wireless configuration and the binaries required to quickly convert the IOTDevkit build into a wirelessly configured build. 
 
-So far have tested primarily on OSX and Linux which have bonjour services preinstalled. For Windows please install [Bonjour for Windows from here](http://support.apple.com/kb/dl999). 
+So far have tested primarily on OSX and Linux which have bonjour services preinstalled. For Windows please install [Bonjour for Windows](http://support.apple.com/kb/dl999). 
 
 We are planning to provide a build with the code from this repo included because the whole point of it is to simplify setup, but for now if you want to try it, download the IOTDK, please [see the wiki](https://github.com/IntelOpenDesign/MakerNode/wiki) for instructions of how to setup your Galileo, get the linux build, and connect to the web. The login and password defaults for the boards are "root" and "root". 
 
