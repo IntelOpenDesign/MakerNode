@@ -1,25 +1,27 @@
-<div class="container">
-    <div step="2" steps-pics></div>
-
-    <div id="loading"></div>
-
-    <div class="row padded">
-        <div class="col-xs-12">
-            <p>Please rejoin your wifi network now.</p>
-        </div>
+<div class="container" ng-controller="ConnectingCtrl">
+  <div step="2" steps-pics></div>
+  <div class="progress" style="margin-top: 40px;">
+    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%; background-color: #0860a8;">
     </div>
+  </div>
 
-    <div class="row padded">
-        <div class="col-xs-12">
-            <p>Your Galileo is rebooting and attempting to join your wifi network. This will take approximately 2 minutes.</p>
-        </div>
+  <div class="row padded">
+    <div class="col-xs-12">
+      <p>Please rejoin the <span ng-bind="ssid" style="color: #0860a8;"></span> network now!</p>
     </div>
+  </div>
 
-    <div class="row padded">
-        <div class="col-xs-12">
-            <p>This page will redirect you when everything is ready.</p>
-        </div>
+  <div class="row padded">
+    <div class="col-xs-12">
+      <p>Your Galileo is rebooting and attempting to join your wifi network. This will take approximately 1 minute.</p>
     </div>
+  </div>
 
-    <!--TODO error message -->
+  <div class="row padded">
+    <div class="col-xs-12">
+      <p>This page will redirect you when everything is ready.</p>
+    </div>
+  </div>
+
+  <!--TODO error message -->
 </div>
