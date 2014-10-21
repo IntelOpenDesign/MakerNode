@@ -30,7 +30,7 @@ In the future you can simply press the "reset" button on the galileo board for 5
 
 [Here is a video demo](https://vimeo.com/107971075) of the configuration from Oct 4 on vimeo. 
 
-Issues: 
+### Issues: ###
 
 -Access point mode works well in most cases, during hackathons we have found that there are two many overlapping channels in the 2.4 ghz range. We are looking into using the 5 ghz bandwidth on the centrino cards. 
 
