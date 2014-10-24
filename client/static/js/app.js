@@ -157,10 +157,10 @@ makernode.app.controller('AppCtrl', ['$scope',
           $(id + ' .btn-off').toggleClass('btn-success', !value);
         });
       } else {
-	      var element = '#service-' + data.id;
+        var element = '#service-' + data.id;
         $(element + ' button').prop('disabled', (data.status == 'begin'));
-          $(element + ' .btn-on').toggleClass('btn-success', data.action == 'start');
-          $(element + ' .btn-off').toggleClass('btn-success', data.action == 'stop');
+        $(element + ' .btn-on').toggleClass('btn-success', data.action == 'start');
+        $(element + ' .btn-off').toggleClass('btn-success', data.action == 'stop');
       }
     });
 
@@ -229,12 +229,13 @@ makernode.app.controller('EmptyCtrl', ['$scope',
 ]);
 
 makernode.app.controller('ConnectingCtrl',
-  function($scope, SSIDService) {
+  function($scope, ConnectingService) {
     console.log('Connecting');
     var current = 0;
     var DURATION = 60000; //milliseconds
     var INCREMENT = 200;
-    $scope.ssid = SSIDService.get();
+    $scope.ssid = ConnectingService.getSSID();
+    $scope.bonjourReady = ConnectingService.bonjourReady();
 
     function updateProgress() {
 
@@ -250,13 +251,23 @@ makernode.app.controller('ConnectingCtrl',
   }
 );
 
-makernode.app.service('SSIDService', function() {
+makernode.app.service('ConnectingService', function() {
   var _ssid;
-  this.get = function() {
+  var _ready = false;
+  this.getSSID = function() {
     return _ssid;
   }
-  this.set = function(ssid) {
+  this.setSSID = function(ssid) {
     _ssid = ssid;
+  }
+  this.bonjourReady = function() {
+    return _ready;
+  }
+  this.checkBonjour = function() { //TODO: make this work with any hostname. Server should pass down hostname when client starts.
+    $.getJSON('http://clanton.local/test_connection', function() {
+      _ready = true;
+      alert('bonjour connection verified');
+    });
   }
 });
 
@@ -279,7 +290,7 @@ makernode.app.controller('DashboardCtrl', ['$scope',
 ]);
 
 makernode.app.controller('FormCtrl',
-  function($scope, SSIDService) {
+  function($scope, ConnectingService) {
     $scope.form = {};
     var my_route_key = makernode.rc.currentRouteKey();
     var my_route = makernode.routes[my_route_key];
@@ -295,7 +306,7 @@ makernode.app.controller('FormCtrl',
       var combo_value = $('.scombobox-value');
       if (combo_value) {
         $scope.form.ssid = combo_value.attr('value');
-        SSIDService.set($scope.form.ssid);
+        ConnectingService.setSSID($scope.form.ssid);
       }
       console.log('We are about to go to the next route', next_route.hash);
       makernode.rc.goTo(next_route);
@@ -303,30 +314,26 @@ makernode.app.controller('FormCtrl',
         console.log('We are about to send the server a msg of type',
           my_route.socket_msg_type, 'with data',
           JSON.stringify($scope.form, null, 2));
-
-
-
         $scope.send_server_update(my_route.socket_msg_type, $scope.form);
       }
     };
   }
 );
 
-makernode.app.controller('InitCtrl', ['$scope',
-  function($scope) {
-    // when we get a reply about what mode we are in,
-    // go to the appropriate page
-    $scope.ws.on('mode', function(mode) {
-      if (mode === 'setup') {
-        makernode.rc.goTo(makernode.routes.set_hostname);
-      } else {
-        makernode.rc.goTo(makernode.routes.test_pin);
-      }
-    });
-    // ask what mode we are in
-    $scope.ws.emit('mode', {});
-  }
-]);
+makernode.app.controller('InitCtrl', function($scope, ConnectingService) {
+  // when we get a reply about what mode we are in,
+  // go to the appropriate page
+  $scope.ws.on('mode', function(mode) {
+    if (mode === 'setup') {
+      ConnectingService.checkBonjour();
+      makernode.rc.goTo(makernode.routes.set_hostname);
+    } else {
+      makernode.rc.goTo(makernode.routes.test_pin);
+    }
+  });
+  // ask what mode we are in
+  $scope.ws.emit('mode', {});
+});
 
 makernode.app.directive('stepsPics', function($document) {
   function link($scope, $el, attrs) {
