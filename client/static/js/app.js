@@ -91,7 +91,7 @@ makernode.app.controller('AppCtrl', ['$scope',
     var pinsync = makernode.ws_pin_sync($scope, 'ws', 'd');
 
     $scope.scan_wifi = function() {
-      if (true || makernode.rc.currentRouteKey() == 'wifi_setup') {
+      if (true || makernode.rc.currentRouteKey() == 'wifi_setup') { //TODO: Scan should not happen on every page...
         $scope.ws.on('networks', function(networks) {
           console.log('got wifi network list: ' + networks);
           $('.scombobox-list').empty();
@@ -237,6 +237,19 @@ makernode.app.controller('ConnectingCtrl',
     $scope.ssid = ConnectingService.getSSID();
     $scope.bonjourReady = ConnectingService.bonjourReady();
 
+    function getOS() {
+      var os = "win";
+      if (navigator.appVersion.indexOf("Win") != -1) os = "win";
+      else if (navigator.platform.match(/(iPhone|iPod|iPad)/i)) os = "ios";
+      else if (navigator.userAgent.match(/Android/i)) os = "android";
+      else if (navigator.appVersion.indexOf("Mac") != -1) os = "mac";
+      //else if (navigator.appVersion.indexOf("X11") != -1) os = "unix";
+      //else if (navigator.appVersion.indexOf("Linux") != -1) os = "linux";
+      return os;
+    }
+    if (!$('.wifi-select-image').children().length) { //TODO: figure out why this gets called twice
+    $('.wifi-select-image').append('<img src="/static/img/wifi_select_' + getOS() + '.png" />');
+    }
     function updateProgress() {
 
       current += INCREMENT;
