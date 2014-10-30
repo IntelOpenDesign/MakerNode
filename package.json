@@ -25,7 +25,11 @@
     "galileo-io": "git+https://github.com/rwaldron/galileo-io.git",
     "q": "1.0.1",
     "q-io": "1.11.1",
-    "underscore": "1.6.0"
+    "underscore": "1.6.0",
+    "cylon-i2c": "~0.16.1",
+    "cylon-gpio": "~0.19.0",
+    "cylon": "~0.19.1",
+    "cylon-intel-iot": "~0.2.2"
   },
   "licenses": {
     "type": "MIT"
