@@ -1,0 +1,14 @@
+[Unit]
+Description=Button-Monitor-for-AP-Reset
+After=maker-node.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/root/MakerNode/
+ExecStart=/bin/sh sh/reset_AP_service.sh start
+ExecStop=/bin/sh sh/reset_AP_service.sh stop
+ExecReload=/bin/sh sh/reset_AP_service.sh restart
+StandardOutput=tty
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,38 @@
+{
+  "name": "cat.js",
+  "preferGlobal": false,
+  "version": "0.0.1",
+  "author": "adampasz <adampasz@yahoo.com>",
+  "description": "NodeJS backend for Intel Connect Anything",
+  "contributors": [
+    {}
+  ],
+  "main": "./index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IntelOpenDesign/ConnectAnyThing.git"
+  },
+  "keywords": [
+    "intel",
+    "galileo",
+    "arduino"
+  ],
+  "dependencies": {
+    "cli-color": "0.3.2",
+    "galileo-io": "^0.4.0",
+    "http-server": "0.6.1",
+    "q": "1.0.1",
+    "q-io": "1.11.1",
+    "underscore": "1.6.0",
+    "ws": "0.4.31",
+    "nodejs-websocket": "~1.0.0",
+    "docopt-js-shim": "git+https://github.com/adampasz/docopt-js-shim.git"
+  },
+  "licenses": {
+    "type": "UNLICENSE",
+    "url": "https://github.com/IntelOpenDesign/ConnectAnyThing/blob/master/LICENSE"
+  },
+  "engines": {
+    "node": ">=0.8.18"
+  }
+}

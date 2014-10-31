@@ -1,0 +1,375 @@
+$yellow: rgb(247, 193, 40);
+$bright_yellow: rgb(255, 238, 40);
+$dark_yellow: rgb(159, 122, 35);
+$green: rgb(45, 104, 84);
+$black: rgb(44, 38, 33);
+$gray: rgb(157, 160, 173);
+$chatbox_color: rgb(198, 188, 175);
+$intel_blue: rgb(30, 96, 181);
+$bright_blue: rgb(58, 158, 233);
+
+@mixin tap_feedback($color) {
+    background-color: $color;
+    box-shadow: 4px 4px 4px $gray;
+
+    &:active {
+        @if lightness($color) > 16 {
+            background-color: darken($color, 10%);
+        } @else {
+            background-color: lighten($color, 10%);
+        }
+        box-shadow: 2px 2px 2px $gray;
+        position: relative;
+        top: 2px;
+        left: 2px;
+    }
+}
+
+@font-face {
+    font-family: 'Neo Sans Intel';
+    font-weight: normal;
+    font-style: normal;
+    src: url('../fonts/NeoSansIntel/NeoSansIntel.ttf');
+}
+
+@font-face {
+    font-family: 'Droid Sans';
+    font-weight: normal;
+    font-style: normal;
+    src: url('../fonts/droid-sans/DroidSans.ttf');
+}
+.intel-font {
+    font-family: 'Neo Sans Intel';
+}
+.droid-font {
+    font-family: 'Droid Sans';
+}
+.pin-name {
+    font-family: 'Neo Sans Intel';
+}
+.pin-label {
+    font-family: 'Droid Sans';
+}
+
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 42px;
+    font-family: 'Droid Sans';
+}
+
+h1 {
+    font-size: 150%;
+    line-height: 1.5em;
+}
+
+p {
+    font-size: 95%;
+    line-height: 1.2em;
+}
+
+.navbar {
+    background: $intel_blue;
+    color: white;
+}
+
+.hide {
+    display: none;
+}
+
+.row.padded {
+    padding-bottom: .5em;
+}
+
+#loading {
+    background: rgb(255, 255, 255) url('../img/loading.gif') center center no-repeat;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+}
+
+/* APP CONTAINER AND HEADER */
+#app-container {
+    position: relative;
+    padding-bottom: 50px;
+}
+#header .navbar-header {
+    width: 100%;
+}
+#header table {
+    width: 100%;
+}
+
+/* SETUP FORM */
+.setup-form h1 {
+    color: $intel_blue;
+    text-align: center;
+}
+.setup-form input {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+.setup-form .button.submit {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 375px;
+}
+@mixin step_inactive($n) {
+    background-image: url('/static/img/step_' + $n + '_inactive.jpg');
+    background-position-x: center;
+    background-position-y: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 375px;
+}
+@mixin step_active($n) {
+    background-image: url('/static/img/step_' + $n + '_active.jpg');
+    box-shadow: 15px 15px 5px rgb(230, 230, 230);
+}
+div[steps-pics] .step-pic[data-step="1"] {
+    @include step_inactive(1);
+}
+div[steps-pics] .step-pic[data-step="2"] {
+    @include step_inactive(2);
+}
+div[steps-pics] .step-pic[data-step="3"] {
+    @include step_inactive(3);
+}
+div[steps-pics][step="1"] .step-pic[data-step="1"] {
+    @include step_active(1);
+}
+div[steps-pics][step="2"] .step-pic[data-step="2"] {
+    @include step_active(2);
+}
+div[steps-pics][step="3"] .step-pic[data-step="3"] {
+    @include step_active(3);
+}
+
+
+.pin-label {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    cursor: default;
+}
+
+/* BUTTONS */
+
+.button {
+    min-height: 60px;
+    margin: 20px;
+    padding: 0;
+    color: white;
+    text-align: center;
+    line-height: 60px;
+    cursor: default;
+    position: relative;
+    @include tap_feedback($intel_blue);
+}
+.button.square {
+    max-width: 60px;
+    width: 100%;
+}
+.button.wide {
+    max-width: 300px;
+    width: 100%;
+}
+.button.danger {
+    @include tap_feedback(rgb(189, 42, 42));
+}
+.button.secondary {
+    @include tap_feedback($gray);
+}
+
+/* CONTROL MODE */
+
+// TODO colors
+// TODO real tap feedback for digital pin buttons
+
+$pin_button_h: 70px;
+$pin_slider_h: 70px;
+$pin_border_w: 15px;
+
+#control-mode div[pin-button],
+#control-mode div[pin-slider] {
+    margin: 30px 5% 60px;
+    height: $pin_button_h;
+    box-sizing: border-box;
+}
+#control-mode div[pin-button] .pin-name,
+#control-mode div[pin-button] .pin-label {
+    height: 100%;
+    line-height: $pin_button_h;
+    text-align: center;
+}
+#control-mode .pin.digital.sensor div[pin-button] .pin-name,
+#control-mode .pin.digital.sensor div[pin-button] .pin-label {
+    line-height: $pin_button_h - (2 * $pin_border_w);
+}
+#control-mode div[pin-slider] .pin-name,
+#control-mode div[pin-slider] .pin-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    text-align: center;
+}
+#control-mode .pin.analog.sensor div[pin-slider] .pin-name,
+#control-mode .pin.analog.sensor div[pin-slider] .pin-label {
+    line-height: $pin_slider_h - (2 * $pin_border_w);
+}
+#control-mode .pin.analog.actuator div[pin-slider] .pin-name,
+#control-mode .pin.analog.actuator div[pin-slider] .pin-label {
+    line-height: $pin_slider_h;
+}
+
+// digital sensors
+#control-mode .pin.sensor.digital .pin-box {
+    border-width: $pin_border_w;
+    border-color: $gray;
+    border-style: solid;
+    height: 100%;
+    background-color: white;
+    box-sizing: border-box;
+}
+#control-mode .pin.sensor.digital.pressed .pin-box {
+    background-color: $bright_yellow;
+}
+
+// analog sensors
+#control-mode .pin.sensor.analog .pin-box {
+    border-width: $pin_border_w;
+    border-style: solid;
+    border-color: $gray;
+    height: $pin_slider_h;
+    box-sizing: border-box;
+    position: relative;
+}
+
+// digital actuators
+#control-mode .pin.digital.actuator .pin-box {
+    height: 100%;
+    @include tap_feedback($bright_blue);
+}
+#control-mode .pin.digital.actuator.pressed .pin-box {
+    @include tap_feedback($bright_yellow);
+}
+
+// analog actuators
+#control-mode .pin.analog.actuator div[pin-slider] {
+    position: relative;
+}
+#control-mode .pin.analog.actuator .pin-box {
+    position: relative;
+    top: 0;
+    height: $pin_slider_h;
+    background-color: $bright_blue;
+}
+
+
+
+
+#control-mode .pin-value-container {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: transparent;
+    position: absolute;
+    z-index: 0;
+}
+#control-mode .pin-value {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background: $bright_yellow;
+    z-index: 0;
+    border-width: 0;
+    height: 100%;
+}
+
+$pin_slider_thumb_w: 35px;
+#control-mode .pin-slider-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: -$pin_slider_thumb_w;
+    padding: 0 $pin_slider_thumb_w;
+    box-sizing: content-box;
+}
+#control-mode .pin-slider-container input[type=range] {
+    z-index: 4;
+    position: absolute;
+    top: 0;
+    left: 0;
+    -webkit-appearance: none;
+    background: transparent;
+    height: 100%;
+    width: 100%;
+}
+#control-mode .pin-slider-container input[type=range]:focus {
+    box-shadow: 0 0 0 transparent;
+    outline: 0 none;
+}
+#control-mode .pin-slider-container input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    display: block;
+    background: transparent;
+    width: 0;
+    height: 0;
+    border-left: 35px solid transparent;
+    border-right: 35px solid transparent;
+    border-bottom: 56px solid white;
+    -webkit-background-clip: content-box;
+    position: relative;
+    top: 50px;
+}
+#control-mode .pin-slider-container input[type=range]::-webkit-slider-thumb:before {
+    width: 0;
+    height: 0;
+    display: block;
+    content: "\A";
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    border-bottom: 50px solid $bright_blue;
+    position: absolute;
+    top: 3px;
+    left: -30px;
+    box-shadow: 0 8px 4px -4px $gray;
+}
+
+/* SMALL DEVICES */
+@media (max-device-width: 4in) {
+
+}
+
+@media (max-device-width: 4in) and (min-resolution: 100dpi) {
+
+    html, body {
+        font-size: 60px;
+    }
+    .button {
+        min-height: 100px;
+        margin: 10px;
+        line-height: 100px;
+    }
+    .button.square {
+        max-width: 100px;
+        width: 100%;
+    }
+    .button.wide {
+        max-width: 500px;
+    }
+
+}

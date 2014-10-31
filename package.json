@@ -26,7 +26,7 @@
     "q": "1.0.1",
     "q-io": "1.11.1",
     "underscore": "1.6.0",
-    "maker-node-utils": "git+https://github.com/IntelOpenDesign/MakerNodeUtils.git"
+    "docopt-js-shim": "git+https://github.com/adampasz/docopt-js-shim.git"
   },
   "licenses": {
     "type": "MIT"
@@ -43,8 +43,9 @@
     "socket.io": "^1.0.6",
     "socket.io-client": "~1.0.6",
     "jsdoc": "~3.3.0-alpha9",
-    "bower": "~1.3.12",
-    "less": "~1.7.5"
+    "less": "~1.7.5",
+    "cli-color": "~0.3.2",
+    "express": "~4.9.6"
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --timeout 5000 --reporter mocha-unfunk-reporter",

@@ -9,10 +9,9 @@
   #combo-01 select {
     display: none;
   }
-  #combo-01 option { 
+  #combo-01 option {
     display: none;
   }
-
   #combo-01 .scombobox-list {
     background: #eeeeee;
     margin-left: auto;
@@ -23,10 +22,13 @@
     cursor: pointer;
   }
   .show-on-load {
-	  display: none;
+    display: none;
+  }
+  input {
+    margin-bottom: 4px;
   }
 </style>
-<form class="container setup-form" ng-submit="submit()">
+<form class="container setup-form" ng-submit="submit()" name="sff" ng-app="MakerNode">
 
   <div step="2" steps-pics></div>
 
@@ -42,21 +44,25 @@
     </div>
   </div>
   <div class="row padded text-center col-xs-12 hide-on-load">
-  SCANNING WIFI NETWORKS...
+    <i class="fa fa-circle-o-notch fa-fw fa-spin"></i>&nbsp;SCANNING WIFI NETWORKS...
   </div>
   <div class="show-on-load">
-  <div class="row padded">
-    <div class="col-xs-12">
-      <select id="combo-01"></select>
+    <div class="row padded">
+      <div class="col-xs-12">
+        <select id="combo-01"></select>
+      </div>
     </div>
-  </div>
-  <div class="row padded">
-    <div class="col-xs-12">
-      <input ng-model="form.pwd" placeholder="Password" type="password">
+    <div class="row padded">
+      <div class="col-xs-12">
+        <input ng-model="form.pwd" placeholder="Password" type="password" name="pwd" />
+        <input ng-model="form.confirm" type="password" data-match="form.pwd" placeholder="Confirm Password" name="confirm" />
+	</div>
+	        <p class="text-center" ng-show="sff.confirm.$error.match">Fields do not match!</p>
+        <p class="text-center">Leave blank if you have an unsecured network.
+        </p>
     </div>
-  </div>
-  <div class="row">
-    <input type="submit" class="button wide submit" value="Connect"/>
-  </div>
+    <div class="row">
+      <input type="submit" class="button wide submit" value="Connect" />
+    </div>
   </div>
 </form>

@@ -30,7 +30,7 @@ makernode.routes = {
   },
   connecting: {
     hash: 'connecting',
-    controller: 'EmptyCtrl',
+    controller: 'ConnectingCtrl',
     template: 'connecting_to_router',
   },
   test_pin: {
@@ -38,16 +38,16 @@ makernode.routes = {
     controller: 'FormCtrl',
     template: 'test_pin',
   },
-  next_steps: {
-    hash: 'home',
-    controller: 'EmptyCtrl',
-    template: 'next_steps',
-  },
   controller: {
     hash: 'pin_monitor',
     controller: 'EmptyCtrl',
     template: 'controller',
   },
+  dashboard: {
+    hash: 'dashboard',
+    controller: 'DashboardCtrl',
+    template: 'dashboard'
+  }
 };
 
 makernode.app.config(['$routeProvider',
@@ -67,7 +67,7 @@ makernode.setup_steps = [
   'wifi_setup',
   'connecting',
   'test_pin',
-  'next_steps',
+  'dashboard',
 ];
 
 // The highest level app controller from which all others inherit
@@ -86,14 +86,14 @@ makernode.app.controller('AppCtrl', ['$scope',
     var pinsync = makernode.ws_pin_sync($scope, 'ws', 'd');
 
     $scope.scan_wifi = function() {
-      if (true || makernode.rc.currentRouteKey() == 'wifi_setup') {
+      if (true || makernode.rc.currentRouteKey() == 'wifi_setup') { //TODO: Scan should not happen on every page...
         $scope.ws.on('networks', function(networks) {
           console.log('got wifi network list: ' + networks);
-          $('#combo-01 option').remove();
+          $('.scombobox-list').empty();
           for (var i = 0; networks && i < networks.length; i++) {
             var value = networks[i];
             if (value.indexOf('x00\\x00') === -1) { //don't show hidden networks
-              var element = '<option value="' + value + '">' + value + '</option>';
+              var element = '<option class="wifi-network" value="' + value + '">' + value + '</option>';
               $('#combo-01').append(element);
             }
           }
@@ -118,6 +118,61 @@ makernode.app.controller('AppCtrl', ['$scope',
       $scope.scan_wifi();
     });
 
+    $scope.ws.on('dashboard-service', function(data) {
+      if (data.action == 'list') {
+        function getServiceClick(name, action) {
+          return function() {
+            $scope.send_server_update('dashboard-service', {
+              name: name,
+              action: action
+            });
+          }
+        }
+        _.each(data.services, function(value, key) {
+          //TODO: use an angular template here
+          var id = '#service-' + key;
+          if ($('#services-block ' + id).length == 0) {
+            var html = '<p id="service-' + key + '" />';
+            $('#services-block').append(html);
+            html = '<div class="row">';
+            html += '<div class="col-xs-3 text-right">'
+            html += '<span title="' + gDashboardTooltips[key] + '">';
+           // html += '<i class="fa fa-info-circle fa-fw"></i>'; //TODO: Implement fancier tooltips via plugin, and add on-click here..?
+            html += key + '</span></div>';
+            html += '<div class="col-xs-4">';
+            html += '<div class="btn-group btn-toggle">';
+            html += '<button class="btn btn-m btn-on" >ON</button>';
+            html += '<button class="btn btn-m btn-off">OFF</button></div>';
+            html += '<button class="btn btn-m btn-default btn-restart"><i class="fa fa-fw fa-refresh" />&nbsp;RESTART</button>';
+            html += '</div>';
+            $('#services-block ' + id).append(html);
+            $(id + ' .btn-restart').click(getServiceClick(key, 'restart'));
+            $(id + ' .btn-on').click(getServiceClick(key, 'start'));
+            $(id + ' .btn-off').click(getServiceClick(key, 'stop'));
+
+          }
+          $(id + ' .btn-on').toggleClass('btn-success', value);
+          $(id + ' .btn-off').toggleClass('btn-success', !value);
+        });
+      } else {
+        var element = '#service-' + data.id;
+        $(element + ' button').prop('disabled', (data.status == 'begin'));
+        $(element + ' .btn-on').toggleClass('btn-success', data.action == 'start');
+        $(element + ' .btn-off').toggleClass('btn-success', data.action == 'stop');
+      }
+    });
+
+    $scope.ws.on('dashboard-info', function(data) {
+      console.log('got dashboard-info');
+      console.log(data);
+      $('#node_version').text(data.node_version);
+      $('#mraa_version').text(data.mraa_version);
+      $('#ip_address').text(data.ip);
+      $('#host_name').text(data.hostname);
+      $('#mac_address').text(data.mac);
+      $('#online').text(data.online ? 'yes' : 'no');
+    });
+
     $scope.ws.on('redirect', function(data) {
       // TODO these timeouts are kind of sketchy, but they work.
       console.log('Server is telling us to get ready to REDIRECT');
@@ -140,6 +195,8 @@ makernode.app.controller('AppCtrl', ['$scope',
     });
 
     $scope.send_server_update = function(msg_type, d) {
+      console.log('sending ' + msg_type);
+      console.log(d);
       $scope.ws.emit(msg_type, d);
     };
 
@@ -160,10 +217,6 @@ makernode.app.controller('AppCtrl', ['$scope',
         f();
       };
     };
-
-    $scope.send_server_reset = function() {
-      $scope.send_server_update('reset', null);
-    };
   }
 ]);
 
@@ -171,13 +224,107 @@ makernode.app.controller('EmptyCtrl', ['$scope',
   function($scope) {}
 ]);
 
-makernode.app.controller('FormCtrl', ['$scope',
+makernode.app.controller('ConnectingCtrl',
+  function($scope, ConnectingService) {
+    console.log('Connecting');
+    var current = 0;
+    var DURATION = 60000; //milliseconds
+    var INCREMENT = 200;
+    $scope.ssid = ConnectingService.getSSID();
+    $scope.bonjourReady = ConnectingService.bonjourReady();
+
+    function getOS() {
+      var os = "win";
+      if (navigator.appVersion.indexOf("Win") != -1) os = "win";
+      else if (navigator.platform.match(/(iPhone|iPod|iPad)/i)) os = "ios";
+      else if (navigator.userAgent.match(/Android/i)) os = "android";
+      else if (navigator.appVersion.indexOf("Mac") != -1) os = "mac";
+      //else if (navigator.appVersion.indexOf("X11") != -1) os = "unix";
+      //else if (navigator.appVersion.indexOf("Linux") != -1) os = "linux";
+      return os;
+    }
+    if (!$('.wifi-select-image').children().length) { //TODO: figure out why this gets called twice
+      $('.wifi-select-image').append('<img src="/static/img/wifi_select_' + getOS() + '.png" />');
+    }
+
+    function updateProgress() {
+
+      current += INCREMENT;
+      var percent = 100;
+      if (current < DURATION) {
+        percent = (current / DURATION) * 100;
+        setTimeout(updateProgress, INCREMENT);
+      }
+      $('.progress-bar').width(percent + '%');
+    }
+    updateProgress();
+  }
+);
+
+makernode.app.service('ConnectingService', function() {
+  var _ssid;
+  var _ready = false;
+  this.getSSID = function() {
+    return _ssid;
+  }
+  this.setSSID = function(ssid) {
+    _ssid = ssid;
+  }
+  this.bonjourReady = function() {
+    return _ready;
+  }
+  this.checkBonjour = function() { //TODO: make this work with any hostname. Server should pass down hostname when client starts.
+    $.getJSON('http://clanton.local/test_connection', function() {
+      _ready = true;
+      console.log('bonjour connection verified');
+    });
+  }
+});
+
+//from https://github.com/TheSharpieOne/angular-input-match/blob/master/match.js
+makernode.app.directive('match', function() {
+  return {
+    require: 'ngModel',
+    restrict: 'A',
+    scope: {
+      match: '='
+    },
+    link: function(scope, elem, attrs, ctrl) {
+      scope.$watch(function() {
+        var modelValue = ctrl.$modelValue || ctrl.$$invalidModelValue;
+        return (ctrl.$pristine && angular.isUndefined(modelValue)) || scope.match === modelValue;
+      }, function(currentValue) {
+        ctrl.$setValidity('match', currentValue);
+      });
+    }
+  };
+});
+
+makernode.app.controller('DashboardCtrl', ['$scope',
   function($scope) {
+    function send_service_list_request() {
+      if (makernode.rc.currentRouteKey() == 'dashboard') {
+        var options = {
+          action: 'list'
+        };
+        console.log('sending service request:');
+        console.log(options);
+        $scope.send_server_update('dashboard-service', options);
+        setTimeout(send_service_list_request, 3000);
+      }
+    }
+    send_service_list_request();
+    $scope.send_server_update('dashboard-info');
+  }
+]);
+
+makernode.app.controller('FormCtrl',
+  function($scope, ConnectingService) {
     $scope.form = {};
     var my_route_key = makernode.rc.currentRouteKey();
     var my_route = makernode.routes[my_route_key];
     var my_route_i = makernode.setup_steps.indexOf(my_route_key);
-    var next_route_key = "next_steps"; //by default, when there is no next step, go home
+    var next_route_key = ""; //by default, when there is no next step, go home
 
     if (my_route_i !== -1) {
       next_route_key = makernode.setup_steps[my_route_i + 1];
@@ -186,9 +333,12 @@ makernode.app.controller('FormCtrl', ['$scope',
     $scope.scan_wifi();
     $scope.submit = function() {
       var combo_value = $('.scombobox-value');
-      if (combo_value) {
+      if (combo_value && combo_value.attr('value')) {
         $scope.form.ssid = combo_value.attr('value');
+      } else {
+        $scope.form.ssid = $('.scombobox-display').val();
       }
+      ConnectingService.setSSID($scope.form.ssid);
       console.log('We are about to go to the next route', next_route.hash);
       makernode.rc.goTo(next_route);
       if (my_route.socket_msg_type) {
@@ -199,23 +349,22 @@ makernode.app.controller('FormCtrl', ['$scope',
       }
     };
   }
-]);
+);
 
-makernode.app.controller('InitCtrl', ['$scope',
-  function($scope) {
-    // when we get a reply about what mode we are in,
-    // go to the appropriate page
-    $scope.ws.on('mode', function(mode) {
-      if (mode === 'setup') {
-        makernode.rc.goTo(makernode.routes.set_hostname);
-      } else {
-        makernode.rc.goTo(makernode.routes.test_pin);
-      }
-    });
-    // ask what mode we are in
-    $scope.ws.emit('mode', {});
-  }
-]);
+makernode.app.controller('InitCtrl', function($scope, ConnectingService) {
+  // when we get a reply about what mode we are in,
+  // go to the appropriate page
+  $scope.ws.on('mode', function(mode) {
+    if (mode === 'setup') {
+      ConnectingService.checkBonjour();
+      makernode.rc.goTo(makernode.routes.set_hostname);
+    } else {
+      makernode.rc.goTo(makernode.routes.test_pin); //TODO: Go to dashbaord after initial visit to test pin
+    }
+  });
+  // ask what mode we are in
+  $scope.ws.emit('mode', {});
+});
 
 makernode.app.directive('stepsPics', function($document) {
   function link($scope, $el, attrs) {
