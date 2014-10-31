@@ -10,4 +10,4 @@ coverage
 client/coverage
 npm-debug.log
 *.log
-sh/reset.pid
+**/reset.pid
