@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>MakerNode - Hello World</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var ws = io();
+    function handleLoad() {
+      ws.on('connect', function() {
+        console.log('connected to websocket');
+      });
+    }
+
+    function handleClick() {
+      console.log('click');
+      ws.emit('toggle_13');
+    }
+  </script>
+</head>
+
+<body onload="handleLoad()">
+  <button type="button" onclick="handleClick()">SAY HELLO</button>
+</body>
+
+</html>
