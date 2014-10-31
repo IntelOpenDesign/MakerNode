@@ -162,6 +162,8 @@ makernode.app.controller('AppCtrl', ['$scope',
     $scope.ws.on('dashboard-info', function(data) {
       console.log('got dashboard-info');
       console.log(data);
+      $('#node_version').text(data.node_version);
+      $('#mraa_version').text(data.mraa_version);
       $('#ip_address').text(data.ip);
       $('#host_name').text(data.hostname);
       $('#mac_address').text(data.mac);
