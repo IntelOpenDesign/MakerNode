@@ -1,5 +1,5 @@
-var utils = require('./utils/galileo')();
-var sh = require('./utils/command_queue')();
+var utils = require('../lib/utils/galileo')();
+var sh = require('../lib/utils/command_queue')();
 utils.stop_service('connman', function() {
 console.log('stopped connman');
 	utils.start_access_point(function() {
