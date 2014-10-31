@@ -2,7 +2,6 @@
 todo.md
 test/coverage
 client/.sass-cache/*
-client/static/css/app.css
 node_modules
 conf/boardstate.conf
 conf/appstate.conf

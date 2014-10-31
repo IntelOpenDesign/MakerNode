@@ -1,0 +1,477 @@
+/* IMPORTANT: Do not edit client/static/css/app.css directly!
+ * CSS can be compiled by running 
+ * `npm run css`
+ * from the root of MakerNode/
+ */
+@font-face {
+  font-family: 'Neo Sans Intel';
+  font-weight: normal;
+  font-style: normal;
+  src: url('../fonts/NeoSansIntel/NeoSansIntel.ttf');
+}
+@font-face {
+  font-family: 'Droid Sans';
+  font-weight: normal;
+  font-style: normal;
+  src: url('../fonts/droid-sans/DroidSans.ttf');
+}
+.intel-font {
+  font-family: 'Neo Sans Intel';
+}
+.droid-font {
+  font-family: 'Droid Sans';
+}
+.text-muted {
+  font-size: 12px;
+  line-height: 1em;
+  display: inherit;
+  color: #9da0ad;
+  word-wrap: break-word;
+}
+.pin-name {
+  font-family: 'Neo Sans Intel';
+}
+.pin-label {
+  font-family: 'Droid Sans';
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 30px;
+  font-family: 'Droid Sans';
+}
+h1 {
+  font-size: 150%;
+  line-height: 1.5em;
+  color: #0860a8;
+  text-align: center;
+}
+p {
+  font-size: 95%;
+  line-height: 1.2em;
+}
+p.narrow {
+  padding-left: 100px;
+  padding-right: 100px;
+}
+img {
+  max-width: 100%;
+}
+.navbar {
+  background: #0860a8;
+  color: white;
+  border-bottom: 5px solid #184c9c;
+}
+.navbar h1 {
+  color: white;
+  text-align: left;
+}
+.hide {
+  display: none;
+}
+.padded {
+  padding-bottom: .5em;
+}
+#loading {
+  background: #ffffff url('../img/loading.gif') center center no-repeat;
+  width: 300px;
+  height: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.error-msg {
+  text-align: center;
+}
+/* APP CONTAINER, HEADER, FOOTER */
+#app-container {
+  position: relative;
+  padding-bottom: 50px;
+}
+#header .navbar-header {
+  width: 100%;
+}
+#logo-container {
+  padding-bottom: 0;
+  padding-top: 0;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+#logo {
+  height: 2em;
+  position: relative;
+  float: none;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+#labs {
+  font-size: 60%;
+  line-height: 1em;
+  position: relative;
+  top: -0.75em;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+#footer {
+  padding-top: 2em;
+}
+/* SETUP FORM */
+.setup-form input {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+.setup-form .button.submit {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 375px;
+}
+.steps-pics-container {
+  margin-left: auto;
+  margin-right: auto;
+}
+.step-pic {
+  max-width: 100%;
+}
+.step-pic.active {
+  box-shadow: 15px 15px 5px #e6e6e6;
+}
+.pin-label {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  cursor: default;
+}
+/* BUTTONS */
+.button {
+  min-height: 60px;
+  margin: 20px;
+  padding: 0;
+  color: white;
+  text-align: center;
+  line-height: 60px;
+  cursor: default;
+  position: relative;
+  background-color: #0860a8;
+  box-shadow: 4px 4px 4px #9da0ad;
+}
+.button:active {
+  background-color: #0a7cd9;
+  box-shadow: 2px 2px 2px #9da0ad;
+  position: relative;
+  top: 2px;
+  left: 2px;
+}
+.button:active {
+  background-color: #064477;
+}
+.button.square {
+  max-width: 60px;
+  width: 100%;
+}
+.button.wide {
+  max-width: 300px;
+  width: 100%;
+}
+.button.danger {
+  background-color: #bd2a2a;
+  box-shadow: 4px 4px 4px #9da0ad;
+}
+.button.danger:active {
+  background-color: #d64444;
+  box-shadow: 2px 2px 2px #9da0ad;
+  position: relative;
+  top: 2px;
+  left: 2px;
+}
+.button.danger:active {
+  background-color: #932121;
+}
+.button.secondary {
+  background-color: #9da0ad;
+  box-shadow: 4px 4px 4px #9da0ad;
+}
+.button.secondary:active {
+  background-color: #b9bbc4;
+  box-shadow: 2px 2px 2px #9da0ad;
+  position: relative;
+  top: 2px;
+  left: 2px;
+}
+.button.secondary:active {
+  background-color: #818596;
+}
+/* CONTROL MODE */
+.test-pin img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+#control-mode .sensors {
+  background-color: #ececec;
+}
+.center-and-shrink {
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
+}
+#control-mode div[pin-button],
+#control-mode div[pin-slider] {
+  height: 75px;
+  position: relative;
+}
+#control-mode .pin-name {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 70px;
+  line-height: 75px;
+  text-align: right;
+  padding-right: 1em;
+  box-sizing: border-box;
+  font-size: 25px;
+  font-weight: 600;
+  color: #0860a8;
+}
+#control-mode .pin-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-left: 70px solid transparent;
+  box-sizing: border-box;
+}
+#control-mode .pin.sensor .pin-value-container-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+#control-mode .pin.sensor .pin-value-container {
+  position: absolute;
+  top: 18.75px;
+  left: 0;
+  height: 37.5px;
+  width: 100%;
+  background-color: #9da0ad;
+  border-radius: 18.75px;
+  overflow: hidden;
+}
+#control-mode .pin.sensor .pin-value {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 18.75px;
+  background-color: #399ceb;
+  border-right: 5px solid #12448d;
+  box-sizing: border-box;
+}
+#control-mode .pin.sensor.off .pin-value {
+  border-right-width: 0;
+}
+#control-mode .pin.actuator .pin-value-container-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+#control-mode .pin.actuator .pin-value-container {
+  position: absolute;
+  top: 15px;
+  left: 0;
+  height: 45px;
+  width: 100%;
+  background-color: #9da0ad;
+  border-radius: 22.5px;
+  overflow: hidden;
+  border-right: 30px solid #9da0ad;
+}
+#control-mode .pin.actuator .pin-value {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-top-left-radius: 22.5px;
+  border-bottom-left-radius: 22.5px;
+  background-color: #12448d;
+  border-right: 20px solid #12448d;
+  box-sizing: content-box;
+}
+#control-mode .pin-switch {
+  position: absolute;
+  top: 7.5px;
+  left: 0;
+  height: 60px;
+  width: 150px;
+  user-select: none;
+  cursor: pointer;
+}
+#control-mode .pin-switch [class$="container"] {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+}
+#control-mode .pin-switch .on-container {
+  left: 0;
+}
+#control-mode .pin-switch .off-container {
+  left: 50%;
+}
+#control-mode .pin-switch [class$="box"] {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  font-size: 25px;
+  text-align: center;
+  line-height: 60px;
+}
+#control-mode .pin.on .pin-switch .on-box {
+  top: -4px;
+  left: -4px;
+  background-color: #399ceb;
+  box-shadow: 4px 4px #195cbb;
+  color: white;
+}
+#control-mode .pin.off .pin-switch .off-box {
+  top: -4px;
+  left: 4px;
+  background-color: #bebebe;
+  box-shadow: -4px 4px #858585;
+  color: white;
+}
+#control-mode .pin.off .pin-switch .on-box,
+.off-box {
+  top: 0;
+  left: 0;
+  background-color: #dddddd;
+  color: #bebebe;
+}
+#control-mode .pin-slider-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#control-mode .pin-slider-container input[type=range] {
+  -webkit-appearance: none;
+  border-width: 0;
+  z-index: 4;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  height: 45px;
+  width: 100%;
+  background: transparent;
+  border-radius: 22.5px;
+}
+#control-mode .pin-slider-container input[type=range]:focus {
+  box-shadow: 0 0 0 transparent;
+  outline: 0 none;
+}
+#control-mode .pin-slider-container input[type=range]::-moz-range-track {
+  -webkit-appearance: none;
+  border-width: 0;
+  z-index: 4;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  height: 45px;
+  width: 100%;
+  background: transparent;
+  border-radius: 22.5px;
+}
+#control-mode .pin-slider-container input[type=range]::-moz-range-track:focus {
+  box-shadow: 0 0 0 transparent;
+  outline: 0 none;
+}
+#control-mode .pin-slider-container input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border-width: 0;
+  display: block;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  background: #399ceb;
+  box-shadow: 2px 2px 0 0 #195cbb;
+}
+#control-mode .pin-slider-container input[type=range]::-moz-range-thumb {
+  -webkit-appearance: none;
+  border-width: 0;
+  display: block;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  background: #399ceb;
+  box-shadow: 2px 2px 0 0 #195cbb;
+}
+#control-mode .big div[pin-button] {
+  height: 300px;
+}
+#control-mode .big .pin-name {
+  width: 100%;
+  height: 50px;
+  line-height: 1em;
+  font-size: 50px;
+  text-align: center;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-width: 0 !important;
+}
+#control-mode .testing .pin-name:before {
+  content: "Test Pin";
+}
+#control-mode .big .pin-inner {
+  border-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  top: 50px;
+}
+#control-mode .big .pin-switch {
+  top: 30px;
+  height: 240px;
+  width: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-width: 4px;
+  box-sizing: border-box;
+}
+#control-mode .big .pin-switch [class$="box"] {
+  font-size: 50px;
+  line-height: 232px;
+}
+/* SMALL DEVICES */
+@media (max-device-width: 4in) and (min-resolution: 100dpi) {
+  html,
+  body {
+    font-size: 60px;
+  }
+  .button {
+    min-height: 100px;
+    margin: 10px;
+    line-height: 100px;
+  }
+  .button.square {
+    max-width: 100px;
+    width: 100%;
+  }
+  .button.wide {
+    max-width: 500px;
+  }
+}
+/* BOOTSTRAP OVERRIDES */
+.container-fluid .row {
+  padding-left: 50px;
+  padding-right: 50px;
+}
