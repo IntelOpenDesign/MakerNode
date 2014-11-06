@@ -25,7 +25,8 @@
     "galileo-io": "git+https://github.com/rwaldron/galileo-io.git",
     "q": "1.0.1",
     "q-io": "1.11.1",
-    "underscore": "1.6.0"
+    "underscore": "1.6.0",
+    "docopt-js-shim": "git+https://github.com/adampasz/docopt-js-shim.git"
   },
   "licenses": {
     "type": "MIT"
