@@ -38,11 +38,6 @@ makernode.routes = {
     controller: 'FormCtrl',
     template: 'test_pin',
   },
-  next_steps: {
-    hash: 'home',
-    controller: 'EmptyCtrl',
-    template: 'next_steps',
-  },
   controller: {
     hash: 'pin_monitor',
     controller: 'EmptyCtrl',
@@ -72,7 +67,7 @@ makernode.setup_steps = [
   'wifi_setup',
   'connecting',
   'test_pin',
-  'next_steps',
+  'dashboard',
 ];
 
 // The highest level app controller from which all others inherit
@@ -327,7 +322,7 @@ makernode.app.controller('FormCtrl',
     var my_route_key = makernode.rc.currentRouteKey();
     var my_route = makernode.routes[my_route_key];
     var my_route_i = makernode.setup_steps.indexOf(my_route_key);
-    var next_route_key = "next_steps"; //by default, when there is no next step, go home
+    var next_route_key = ""; //by default, when there is no next step, go home
 
     if (my_route_i !== -1) {
       next_route_key = makernode.setup_steps[my_route_i + 1];

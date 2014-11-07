@@ -11,4 +11,4 @@ coverage
 client/coverage
 npm-debug.log
 *.log
-
+**/reset.pid
