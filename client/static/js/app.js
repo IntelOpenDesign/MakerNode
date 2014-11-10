@@ -212,10 +212,6 @@ makernode.app.controller('AppCtrl', ['$scope',
         f();
       };
     };
-
-    $scope.send_server_reset = function() {
-      $scope.send_server_update('reset', null);
-    };
   }
 ]);
 
