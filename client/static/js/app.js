@@ -165,7 +165,7 @@ makernode.app.controller('AppCtrl', ['$scope',
       $('#ip_address').text(data.ip);
       $('#host_name').text(data.hostname);
       $('#mac_address').text(data.mac);
-
+      $('#online').text(data.online ? 'yes' : 'no');
     });
 
     $scope.ws.on('redirect', function(data) {
