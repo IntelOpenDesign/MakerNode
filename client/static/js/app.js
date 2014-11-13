@@ -165,7 +165,7 @@ makernode.app.controller('AppCtrl', ['$scope',
       $('#ip_address').text(data.ip);
       $('#host_name').text(data.hostname);
       $('#mac_address').text(data.mac);
-
+      $('#online').text(data.online ? 'yes' : 'no');
     });
 
     $scope.ws.on('redirect', function(data) {
@@ -354,7 +354,7 @@ makernode.app.controller('InitCtrl', function($scope, ConnectingService) {
       ConnectingService.checkBonjour();
       makernode.rc.goTo(makernode.routes.set_hostname);
     } else {
-      makernode.rc.goTo(makernode.routes.test_pin);
+      makernode.rc.goTo(makernode.routes.test_pin); //TODO: Go to dashbaord after initial visit to test pin
     }
   });
   // ask what mode we are in
