@@ -327,10 +327,13 @@ makernode.app.controller('FormCtrl',
     $scope.scan_wifi();
     $scope.submit = function() {
       var combo_value = $('.scombobox-value');
-      if (combo_value) {
+      if (combo_value && combo_value.attr('value')) {
         $scope.form.ssid = combo_value.attr('value');
-        ConnectingService.setSSID($scope.form.ssid);
       }
+      else {
+        $scope.form.ssid = $('.scombobox-display').val();
+      }
+      ConnectingService.setSSID($scope.form.ssid);
       console.log('We are about to go to the next route', next_route.hash);
       makernode.rc.goTo(next_route);
       if (my_route.socket_msg_type) {
