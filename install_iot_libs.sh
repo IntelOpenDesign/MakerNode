@@ -2,14 +2,14 @@
 
 # Tools
 echo "installing hostapd, libnl 1.1, rsync, vim, and busybox-i586 binaries"
-pushd iotkd_libs/
+cd iotkd_libs
 cp libnl.so.1 /usr/lib
 cp hostapd /usr/bin
 cp hostapd_cli /usr/bin
 cp busybox-i586 /usr/bin
 cp rsync /usr/bin
-cp vim /usr/local/bin
-popd
+cp vim /usr/bin
+cd ..
 
 # Access point configuration
 echo "Configuring device to act as wifi access point."
