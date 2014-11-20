@@ -135,7 +135,10 @@ makernode.app.controller('AppCtrl', ['$scope',
             var html = '<p id="service-' + key + '" />';
             $('#services-block').append(html);
             html = '<div class="row">';
-            html += '<div class="col-xs-3 text-right"><span>' + key + '</span></div>';
+            html += '<div class="col-xs-3 text-right">'
+            html += '<span title="' + gDashboardTooltips[key] + '">';
+           // html += '<i class="fa fa-info-circle fa-fw"></i>'; //TODO: Implement fancier tooltips via plugin, and add on-click here..?
+            html += key + '</span></div>';
             html += '<div class="col-xs-4">';
             html += '<div class="btn-group btn-toggle">';
             html += '<button class="btn btn-m btn-on" >ON</button>';
@@ -241,8 +244,9 @@ makernode.app.controller('ConnectingCtrl',
       return os;
     }
     if (!$('.wifi-select-image').children().length) { //TODO: figure out why this gets called twice
-    $('.wifi-select-image').append('<img src="/static/img/wifi_select_' + getOS() + '.png" />');
+      $('.wifi-select-image').append('<img src="/static/img/wifi_select_' + getOS() + '.png" />');
     }
+
     function updateProgress() {
 
       current += INCREMENT;
@@ -331,8 +335,7 @@ makernode.app.controller('FormCtrl',
       var combo_value = $('.scombobox-value');
       if (combo_value && combo_value.attr('value')) {
         $scope.form.ssid = combo_value.attr('value');
-      }
-      else {
+      } else {
         $scope.form.ssid = $('.scombobox-display').val();
       }
       ConnectingService.setSSID($scope.form.ssid);
