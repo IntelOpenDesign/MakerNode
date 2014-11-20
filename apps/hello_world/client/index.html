@@ -4,23 +4,32 @@
 <head>
   <title>MakerNode - Hello World</title>
   <script src="/socket.io/socket.io.js"></script>
-  <script>
+  <script language="javascript">
     var ws = io();
+
     function handleLoad() {
       ws.on('connect', function() {
         console.log('connected to websocket');
       });
     }
 
-    function handleClick() {
-      console.log('click');
-      ws.emit('toggle_13');
+    function handleClickOn() {
+      console.log('click on');
+      ws.emit('pin_on');
+    }
+
+    function handleClickOff() {
+      console.log('click off');
+      ws.emit('pin_off');
     }
   </script>
 </head>
 
 <body onload="handleLoad()">
-  <button type="button" onclick="handleClick()">SAY HELLO</button>
+	<h3>MakerNode - Hello World</h3>
+	<p>Click a button to turn the test pin on or off.</p>
+  <button type="button" onclick="handleClickOn()">Pin On</button>
+  <button type="button" onclick="handleClickOff()">Pin Off</button>
 </body>
 
 </html>
