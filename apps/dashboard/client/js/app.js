@@ -1,9 +1,18 @@
+var gDashboardTooltips = {
+  'avahi-daemon': "Networking system that allows discovery of your board via [hostname].local address. A.K.A. Bonjour",
+  'bluetooth': "Blutooth wireless services.",
+  'connman': "Network manager. Warning: stopping Connman may make your device inaccessible over the network.",
+  'lighttpd': "Web server used by IoT Dev Kit",
+  'maker-node': "Node JS server for setting up and managing your device.",
+  'redis': "Key-value store used by IoT Dev Kit",
+  'xdk-daemon': "Server used by IoT Dev Kit"
+};
+
 var send_server_update;
 
 $(function() {
   var ws;
   ws = io();
-
   ws.on('connect', function() {
     console.log('connected to websocket');
   });
@@ -51,6 +60,7 @@ $(function() {
     }
   });
 
+  //TODO: Modify this so we are not looking for hard-coded fields, and can display any dynamic status data from server.
   ws.on('dashboard-info', function(data) {
     console.log('got dashboard-info');
     console.log(data);
@@ -80,7 +90,6 @@ $(function() {
   send_service_list_request();
   send_server_update('dashboard-info');
 
-
   $('.btn-toggle').click(function() {
     $(this).find('.btn').toggleClass('active');
 
@@ -96,23 +105,7 @@ $(function() {
     if ($(this).find('.btn-info').size() > 0) {
       $(this).find('.btn').toggleClass('btn-info');
     }
-
     $(this).find('.btn').toggleClass('btn-default');
-
   });
 
-  $('form').submit(function() {
-    alert($(this["options"]).val());
-    return false;
-  });
-
-  var gDashboardTooltips = {
-    'avahi-daemon': "Networking system that allows discovery of your board via [hostname].local address. A.K.A. Bonjour",
-    'bluetooth': "Blutooth wireless services.",
-    'connman': "Network manager. Warning: stopping Connman may make your device inaccessible over the network.",
-    'lighttpd': "Web server used by IoT Dev Kit",
-    'maker-node': "Node JS server for setting up and managing your device.",
-    'redis': "Key-value store used by IoT Dev Kit",
-    'xdk-daemon': "Server used by IoT Dev Kit"
-  }
 });
