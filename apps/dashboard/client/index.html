@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="MakerNode">
+
+<head>
+  <title>MakerNode</title>
+
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="/css/font-awesome.css">
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/underscore-min.js"></script>
+  <script src="/js/app.js"></script>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/app.css">
+  <style>
+    .btn-group span {
+      font-size: 24px;
+      margin: 0 12px;
+      float: right;
+    }
+    .btn-success:not(:first-child) {
+      background-color: red;
+    }
+    .btn-off {
+      margin-right: 10px;
+    }
+    .block {
+      border: 1px solid #ccc;
+      margin-bottom: 5px;
+      border-radius: 5px;
+      font-size: 80%;
+    }
+    .block .fa {
+      color: #0860a8;
+      /*Intel Blue*/
+    }
+    .fa-info-circle {
+      font-size: 78%;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div id="app-container">
+      <div class="container">
+        <div class="row padded">
+          <div class="col-xs-12">
+            <h1>MakerNode Dashboard</h1>
+          </div>
+        </div>
+
+        <div class="row padded">
+          <div class="col-xs-12 block">
+            <h2 class="text-center">ACTIONS</h2>
+            <p>
+			<a href="/#/pin_monitor" class="btn btn-m btn-default" title="Monitor input pins and control output pins."><i class="fa fa-fw fa-eye"></i>&nbsp;PIN MONITOR</a>
+			<a href="/#/set_hostname" class="btn btn-m btn-default" title="Change the name of your board."><i class="fa fa-fw fa-user"></i>&nbsp;SET HOSTNAME</a>
+			<a href="/#/wifi_setup" class="btn btn-m btn-default" title="Configure the board to connect to a wifi network."><i class="fa fa-fw fa-wifi"></i>&nbsp;WIFI SETUP</a>
+			<a href="/#/set_root_password" class="btn btn-m btn-default" title="Change the root Password of your Galileo when you log in using a terminal. You should do this to secure your board if you are working in a public place."><i class="fa fa-fw fa-lock"></i>&nbsp;CHANGE ROOT PASSWORD</a>
+			<button class="btn btn-m btn-default" onclick="send_server_update('dashboard-command', {action: 'reboot'});"><i class="fa fa-fw fa-power-off"></i>&nbsp;REBOOT</button>
+			<button class="btn btn-m btn-default" onclick="send_server_update('dashboard-command', {action: 'install_updates'});"><i class="fa fa-fw fa-download"></i>&nbsp;CHECK FOR UPDATES</button>
+
+			<button class="btn btn-m btn-default" onclick="send_server_update('dashboard-command', {action: 'setup'});" title="Reboots the board into SETUP mode. Use this action to switch to a new WIFI network. (Or you can hold down the RESET button for 5 seconds.)"><i class="fa fa-fw fa-gear"></i>&nbsp;REVERT TO SETUP MODE</button>
+
+            </p>
+            <div class="row padded">
+              <div class="col-xs-12">
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="row padded">
+          <div class="col-xs-12 block" id="services-block">
+            <h2 class="text-center">SERVICES</h2>
+          </div>
+        </div>
+        <div class="row padded">
+          <div class="col-xs-12 block">
+            <h2 class="text-center">SYSTEM STATUS</h2>
+            <p>Online: <span id="online"></span>
+            </p>
+            <p>IP Address: <span id="ip_address"></span>
+            </p>
+            <p>hostname: <span id="host_name"></span>
+            </p>
+            <p>mac address: <span id="mac_address"></span>
+            </p>
+            <p>NodeJS version: <span id="node_version"></span>
+            </p>
+            <p>MRAA version: <span id="mraa_version"></span>
+            </p>
+          </div>
+        </div>
+      </div>
+  </div>
+</body>
+
+
+
+
+</html>
