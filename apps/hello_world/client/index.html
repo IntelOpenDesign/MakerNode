@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>MakerNode - Hello World</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script language="javascript">
+    //Initialize socket-io web socket.
+    var ws = io();
+
+    function handleLoad() {
+      ws.on('connect', function() {
+        //called when this client connects to the socket
+        console.log('connected to websocket');
+      });
+    }
+
+    function handleClickOn() {
+      //send message to socket server to turn on the led
+      ws.emit('pin_on');
+      console.log('click on');
+    }
+
+    function handleClickOff() {
+      //send message to socket server to turn off the led
+      ws.emit('pin_off');
+      console.log('click off');
+    }
+  </script>
+</head>
+
+<body onload="handleLoad()">
+  <h3>MakerNode - Hello World</h3>
+  <p>Click a button to turn the test pin on or off.</p>
+  <button type="button" onclick="handleClickOn()">Pin On</button>
+  <button type="button" onclick="handleClickOff()">Pin Off</button>
+</body>
+
+</html>

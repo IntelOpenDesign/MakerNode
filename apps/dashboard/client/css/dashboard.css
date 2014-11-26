@@ -1,0 +1,27 @@
+    .btn-group span {
+      font-size: 24px;
+      margin: 0 12px;
+      float: right;
+    }
+    .btn-success:not(:first-child) {
+      background-color: red;
+    }
+    .btn-off {
+      margin-right: 10px;
+    }
+    .block {
+      border: 1px solid #ccc;
+      margin-bottom: 5px;
+      border-radius: 5px;
+      font-size: 80%;
+    }
+    .block .fa {
+      color: #0860a8;
+      /*Intel Blue*/
+    }
+    .fa-info-circle {
+      font-size: 78%;
+    }
+    .btn {
+      margin-bottom: 5px;
+    }

@@ -3,8 +3,8 @@
  **/
 
 "use strict";
-var log = require('./utils/log')('dashboard_controller');
-var utils = require('./utils/galileo')();
+var log = require('../../lib/utils/log')('dashboard_controller');
+var utils = require('../../lib/utils/galileo')();
 var mraa_version = 'unknown';
 try {
   mraa_version = require("mraa").getVersion().substr(1);
