@@ -43,12 +43,14 @@
     "socket.io": "^1.0.6",
     "socket.io-client": "~1.0.6",
     "jsdoc": "~3.3.0-alpha9",
+    "less": "~1.7.5",
     "cli-color": "~0.3.2",
     "express": "~4.9.6"
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --timeout 5000 --reporter mocha-unfunk-reporter",
     "coverage": "./node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- --timeout 5000 -R mocha-unfunk-reporter && mv coverage/lcov-report/ client/coverage/",
-    "doc": "./node_modules/jsdoc/jsdoc.js -d client/docs/server -r lib"
+    "doc": "./node_modules/jsdoc/jsdoc.js -d client/docs/server -r lib", 
+    "css": "./node_modules/less/bin/lessc client/app.less > client/static/css/app.css"
   }
 }

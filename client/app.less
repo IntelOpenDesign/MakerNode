@@ -1,32 +1,37 @@
-$yellow: rgb(247, 193, 40);
-$bright_yellow: rgb(255, 238, 40);
-$dark_yellow: rgb(159, 122, 35);
-$green: rgb(45, 104, 84);
-$black: rgb(44, 38, 33);
-$gray: rgb(157, 160, 173);
-$bg_gray: rgb(236, 236, 236);
-$chatbox_color: rgb(198, 188, 175);
-//$intel_blue: rgb(0, 113, 197);
-$intel_blue: rgb(8, 96, 168);
-$bright_blue: rgb(57, 156, 235);
-$medium_blue: rgb(25, 92, 187);
-$dark_blue: rgb(18, 68, 141);
+/* IMPORTANT: Do not edit client/static/css/app.css directly!
+ * CSS can be compiled by running 
+ * `npm run css`
+ * from the root of MakerNode/
+ */
+@yellow: rgb(247, 193, 40);
+@bright_yellow: rgb(255, 238, 40);
+@dark_yellow: rgb(159, 122, 35);
+@green: rgb(45, 104, 84);
+@black: rgb(44, 38, 33);
+@gray: rgb(157, 160, 173);
+@bg_gray: rgb(236, 236, 236);
+@chatbox_color: rgb(198, 188, 175);
+//@intel_blue: rgb(0, 113, 197);
+@intel_blue: rgb(8, 96, 168);
+@bright_blue: rgb(57, 156, 235);
+@medium_blue: rgb(25, 92, 187);
+@dark_blue: rgb(18, 68, 141);
 
-@mixin tap_feedback($color) {
-    background-color: $color;
-    box-shadow: 4px 4px 4px $gray;
+.mixin_tap_feedback(@color) {
+    background-color: @color;
+    box-shadow: 4px 4px 4px @gray;
 
     &:active {
-        @if lightness($color) > 16 {
-            background-color: darken($color, 10%);
-        } @else {
-            background-color: lighten($color, 10%);
-        }
-        box-shadow: 2px 2px 2px $gray;
+        background-color: lighten(@color, 10%);
+        box-shadow: 2px 2px 2px @gray;
         position: relative;
         top: 2px;
         left: 2px;
     }
+
+	&:active when (lightness(@color) > 16) {
+ 		background-color: darken(@color, 10%);
+	}
 }
 
 @font-face {
@@ -52,7 +57,7 @@ $dark_blue: rgb(18, 68, 141);
     font-size: 12px;
     line-height: 1em;
     display: inherit;
-    color: $gray;
+    color: @gray;
     word-wrap: break-word;
 }
 .pin-name {
@@ -74,7 +79,7 @@ html, body {
 h1 {
     font-size: 150%;
     line-height: 1.5em;
-    color: $intel_blue;
+    color: @intel_blue;
     text-align: center;
 }
 
@@ -92,7 +97,7 @@ img {
 }
 
 .navbar {
-    background: $intel_blue;
+    background: @intel_blue;
     color: white;
     border-bottom: 5px solid #184c9c;
 }
@@ -197,7 +202,7 @@ img {
     line-height: 60px;
     cursor: default;
     position: relative;
-    @include tap_feedback($intel_blue);
+    .mixin_tap_feedback(@intel_blue);
 }
 .button.square {
     max-width: 60px;
@@ -208,10 +213,10 @@ img {
     width: 100%;
 }
 .button.danger {
-    @include tap_feedback(rgb(189, 42, 42));
+    .mixin_tap_feedback(rgb(189, 42, 42));
 }
 .button.secondary {
-    @include tap_feedback($gray);
+    .mixin_tap_feedback(@gray);
 }
 
 /* CONTROL MODE */
@@ -223,7 +228,7 @@ img {
 }
 
 #control-mode .sensors {
-    background-color: $bg_gray;
+    background-color: @bg_gray;
 }
 
 .center-and-shrink {
@@ -232,19 +237,19 @@ img {
     width: 40%;
 }
 
-$pin_h: 75px;
-$pin_button_h: 0.8 * $pin_h;
-$pin_button_w: 150px;
-$pin_slider_h: 0.5 * $pin_h; // sensors slider height
-$pin_name_w: 70px;
-$pin_aa_h: 0.6 * $pin_h; // analog actuators slider height
-$pin_slider_thumb_h: 0.8 * $pin_h;
-$pin_button_shadow: 4px;
-$pin_font_size: 25px;
+@pin_h: 75px;
+@pin_button_h: 0.8 * @pin_h;
+@pin_button_w: 150px;
+@pin_slider_h: 0.5 * @pin_h; // sensors slider height
+@pin_name_w: 70px;
+@pin_aa_h: 0.6 * @pin_h; // analog actuators slider height
+@pin_slider_thumb_h: 0.8 * @pin_h;
+@pin_button_shadow: 4px;
+@pin_font_size: 25px;
 
 #control-mode div[pin-button],
 #control-mode div[pin-slider] {
-    height: $pin_h;
+    height: @pin_h;
     position: relative;
 }
 // all pins
@@ -253,14 +258,14 @@ $pin_font_size: 25px;
     top: 0;
     left: 0;
     height: 100%;
-    width: $pin_name_w;
-    line-height: $pin_h;
+    width: @pin_name_w;
+    line-height: @pin_h;
     text-align: right;
     padding-right: 1em;
     box-sizing: border-box;
-    font-size: $pin_font_size;
+    font-size: @pin_font_size;
     font-weight: 600;
-    color: $intel_blue;
+    color: @intel_blue;
 }
 #control-mode .pin-inner {
     position: absolute;
@@ -268,7 +273,7 @@ $pin_font_size: 25px;
     left: 0;
     width: 100%;
     height: 100%;
-    border-left: $pin_name_w solid transparent;
+    border-left: @pin_name_w solid transparent;
     box-sizing: border-box;
 }
 
@@ -282,12 +287,12 @@ $pin_font_size: 25px;
 }
 #control-mode .pin.sensor .pin-value-container {
     position: absolute;
-    top: ($pin_h - $pin_slider_h)/2;
+    top: (@pin_h - @pin_slider_h)/2;
     left: 0;
-    height: $pin_slider_h;
+    height: @pin_slider_h;
     width: 100%;
-    background-color: $gray;
-    border-radius: $pin_slider_h/2;
+    background-color: @gray;
+    border-radius: @pin_slider_h/2;
     overflow: hidden;
 }
 #control-mode .pin.sensor .pin-value {
@@ -295,9 +300,9 @@ $pin_font_size: 25px;
     top: 0;
     left: 0;
     height: 100%;
-    border-radius: $pin_slider_h/2;
-    background-color: $bright_blue;
-    border-right: 5px solid $dark_blue;
+    border-radius: @pin_slider_h/2;
+    background-color: @bright_blue;
+    border-right: 5px solid @dark_blue;
     box-sizing: border-box;
 }
 #control-mode .pin.sensor.off .pin-value {
@@ -311,30 +316,30 @@ $pin_font_size: 25px;
     left: 0;
     width: 100%;
     height: 100%;
-    //border-left: $pin_slider_thumb_h/2 solid transparent;
-    //border-right: $pin_slider_thumb_h/2 solid transparent;
+    //border-left: @pin_slider_thumb_h/2 solid transparent;
+    //border-right: @pin_slider_thumb_h/2 solid transparent;
     box-sizing: border-box;
 }
 #control-mode .pin.actuator .pin-value-container {
     position: absolute;
-    top: ($pin_h - $pin_aa_h)/2;
+    top: (@pin_h - @pin_aa_h)/2;
     left: 0;
-    height: $pin_aa_h;
+    height: @pin_aa_h;
     width: 100%;
-    background-color: $gray;
-    border-radius: $pin_aa_h/2;
+    background-color: @gray;
+    border-radius: @pin_aa_h/2;
     overflow: hidden;
-    border-right: $pin_slider_thumb_h/2 solid $gray;
+    border-right: @pin_slider_thumb_h/2 solid @gray;
 }
 #control-mode .pin.actuator .pin-value {
     position: absolute;
     top: 0;
     left: 0;
     height: 100%;
-    border-top-left-radius: $pin_aa_h/2;
-    border-bottom-left-radius: $pin_aa_h/2;
-    background-color: $dark_blue;
-    border-right: $pin_slider_thumb_h/3 solid $dark_blue;
+    border-top-left-radius: @pin_aa_h/2;
+    border-bottom-left-radius: @pin_aa_h/2;
+    background-color: @dark_blue;
+    border-right: @pin_slider_thumb_h/3 solid @dark_blue;
     box-sizing: content-box;
 }
 
@@ -344,10 +349,12 @@ $pin_font_size: 25px;
 // and vice versa
 #control-mode .pin-switch {
     position: absolute;
-    top: ($pin_h - $pin_button_h)/2;
+    top: (@pin_h - @pin_button_h)/2;
     left: 0;
-    height: $pin_button_h;
-    width: $pin_button_w;
+    height: @pin_button_h;
+    width: @pin_button_w;
+    user-select: none;
+    cursor: pointer;
 }
 #control-mode .pin-switch [class$="container"] {
     position: absolute;
@@ -365,26 +372,25 @@ $pin_font_size: 25px;
     position: absolute;
     width: 100%;
     height: 100%;
-    font-size: $pin_font_size;
+    font-size: @pin_font_size;
     text-align: center;
-    line-height: $pin_button_h;
+    line-height: @pin_button_h;
 }
 #control-mode .pin.on .pin-switch .on-box {
-    top: -$pin_button_shadow;
-    left: -$pin_button_shadow;
-    background-color: $bright_blue;
-    box-shadow: $pin_button_shadow $pin_button_shadow $medium_blue;
+    top: -@pin_button_shadow;
+    left: -@pin_button_shadow;
+    background-color: @bright_blue;
+    box-shadow: @pin_button_shadow @pin_button_shadow @medium_blue;
     color: white;
 }
 #control-mode .pin.off .pin-switch .off-box {
-    top: -$pin_button_shadow;
-    left: $pin_button_shadow;
+    top: -@pin_button_shadow;
+    left: @pin_button_shadow;
     background-color: rgb(190, 190, 190);
-    box-shadow: -$pin_button_shadow $pin_button_shadow rgb(133, 133, 133);
+    box-shadow: -@pin_button_shadow @pin_button_shadow rgb(133, 133, 133);
     color: white;
 }
-#control-mode .pin.off .pin-switch .on-box,
-#control-mode .pin.on .pin-switch .off-box {
+#control-mode .pin.off .pin-switch .on-box, .off-box {
     top: 0;
     left: 0;
     background-color: rgb(221, 221, 221);
@@ -403,43 +409,43 @@ $pin_font_size: 25px;
 
 // because chrome and firefox like to have their CSS definitions done
 // separately
-@mixin pin_slider_range() {
+.mixin_pin_slider_range() {
     -webkit-appearance: none;
     border-width: 0;
     z-index: 4;
     position: absolute;
-    top: ($pin_h - $pin_aa_h)/2;
+    top: (@pin_h - @pin_aa_h)/2;
     left: 0;
-    height: $pin_aa_h;
+    height: @pin_aa_h;
     width: 100%;
     background: transparent;
-    border-radius: $pin_aa_h/2;
+    border-radius: @pin_aa_h/2;
     &:focus {
         box-shadow: 0 0 0 transparent;
         outline: 0 none;
     }
 }
 #control-mode .pin-slider-container input[type=range] {
-    @include pin_slider_range();
+    .mixin_pin_slider_range();
 }
 #control-mode .pin-slider-container input[type=range]::-moz-range-track {
-    @include pin_slider_range();
+    .mixin_pin_slider_range();
 }
-@mixin pin_slider_thumb() {
+.mixin_pin_slider_thumb() {
     -webkit-appearance: none;
     border-width: 0;
     display: block;
-    width: $pin_slider_thumb_h;
-    height: $pin_slider_thumb_h;
-    border-radius: $pin_slider_thumb_h/2;
-    background: $bright_blue;
-    box-shadow: 2px 2px 0 0 $medium_blue;
+    width: @pin_slider_thumb_h;
+    height: @pin_slider_thumb_h;
+    border-radius: @pin_slider_thumb_h/2;
+    background: @bright_blue;
+    box-shadow: 2px 2px 0 0 @medium_blue;
 }
 #control-mode .pin-slider-container input[type=range]::-webkit-slider-thumb {
-    @include pin_slider_thumb();
+    .mixin_pin_slider_thumb();
 }
 #control-mode .pin-slider-container input[type=range]::-moz-range-thumb {
-    @include pin_slider_thumb();
+    .mixin_pin_slider_thumb();
 }
 
 // big digital actuator
@@ -472,12 +478,12 @@ $pin_font_size: 25px;
     width: 100%;
     margin: 0 !important;
     padding: 0 !important;
-    border-width: $pin_button_shadow;
+    border-width: @pin_button_shadow;
     box-sizing: border-box;
 }
 #control-mode .big .pin-switch [class$="box"] {
     font-size: 50px;
-    line-height: 240px - 2 * $pin_button_shadow;
+    line-height: 240px - 2 * @pin_button_shadow;
 }
 
 /* SMALL DEVICES */
@@ -510,3 +516,4 @@ $pin_font_size: 25px;
     padding-left: 50px;
     padding-right: 50px;
 }
+
