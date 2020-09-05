@@ -17,27 +17,25 @@
   <div class="row padded">
     <div class="col-xs-12">
 
-		<select id="combo-01">
-        <option value="01">val 01</option>
-        <option value="02">val 02</option>
-        <option value="03">val 03</option>
-        <option value="04">val 04</option>
-        <option value="05">val 05</option>
-        <option value="06">val 06</option>
-        <option value="07">val 07</option>
-        <option value="08">val 08</option>
-        <option value="09">val 09</option>
-        <option value="10">val 10</option>
-      </select>
+		<select id="combo-01"> </select>
       <script>
         $(function() {
-
-          $('#combo-01').scombobox({empty: true});
-          $('#combo-01').scombobox('change', function() {
-    //        $('#result').attr('value', $('#combo-01').scombobox('val'));
-          });
-          $('.scombobox-display').attr('ng-model', 'form.ssid').attr('placeholder', 'Network');
-        });
+		setTimeout(function(){	
+		$scope.ws.on('networks', function(networks){
+          console.log('got wifi network list:\n' + networks);
+	  for (var i = 0; i < networks.length; i++){
+		  var value = networks[i];
+		  var element = '<option value="' + value + '">' + value + '</option>'; 
+		  $('#combo-01').append(element);
+	     
+	  } 
+			$('#combo-01').scombobox({empty: true});
+          $('.scombobox-display').attr('placeholder', 'Network');
+	  $('.scombobox-value').attr('ng-model', 'form.ssid');
+		});
+		$scope.ws.emit('networks', {});
+		}, 4000); 
+		});
 	  </script>
 	  <style>
 		#combo-01 {
