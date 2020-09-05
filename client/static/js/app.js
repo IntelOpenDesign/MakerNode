@@ -93,14 +93,17 @@ makernode.app.controller('AppCtrl', ['$scope',
           console.log('got wifi network list: ' + networks);
           for (var i = 0; networks && i < networks.length; i++) {
             var value = networks[i];
-            var element = '<option value="' + value + '">' + value + '</option>';
+         if (value.indexOf('x00\\x00') === -1) {//don't show hidden networks
+	    var element = '<option value="' + value + '">' + value + '</option>';
             $('#combo-01').append(element);
-
+	 }
           }
           $('#combo-01').scombobox({
             empty: true
           });
           $('.scombobox-display').attr('placeholder', 'Network');
+	$('.show-on-load').css({'display':'block'});
+	$('.hide-on-load').css({'display':'none'});
         });
         $scope.ws.emit('networks', {});
       }
