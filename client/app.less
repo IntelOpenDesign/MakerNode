@@ -361,7 +361,7 @@ img {
 #control-mode .pin-switch .off-container {
     left: 50%;
 }
-#control-mode [class$="box"] {
+#control-mode .pin-switch [class$="box"] {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -369,22 +369,21 @@ img {
     text-align: center;
     line-height: @pin_button_h;
 }
-#control-mode .on-box {
+#control-mode .pin.on .pin-switch .on-box {
     top: -@pin_button_shadow;
     left: -@pin_button_shadow;
     background-color: @bright_blue;
     box-shadow: @pin_button_shadow @pin_button_shadow @medium_blue;
     color: white;
 }
-#control-mode .off-box {
+#control-mode .pin.off .pin-switch .off-box {
     top: -@pin_button_shadow;
     left: @pin_button_shadow;
     background-color: rgb(190, 190, 190);
     box-shadow: -@pin_button_shadow @pin_button_shadow rgb(133, 133, 133);
     color: white;
 }
-.on-box,
-.off-box {
+#control-mode .pin.off .pin-switch .on-box, .off-box {
     top: 0;
     left: 0;
     background-color: rgb(221, 221, 221);
