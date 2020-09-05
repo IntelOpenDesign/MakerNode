@@ -12,6 +12,7 @@ cp vim /usr/local/bin
 popd
 
 # Access point configuration
+echo "Configuring device to act as wifi access point."
 cp conf/hostapd.conf /etc
 cp conf/udhcpd.conf /etc
 cp conf/dnsd.conf /etc

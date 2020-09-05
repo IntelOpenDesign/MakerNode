@@ -1,5 +1,5 @@
 #!/bin/sh
-# Deprecated. Use sh/set_hostname
+
 # Steve's configure_edison.py commands for setting hostname
 # def changeName(newName):
 #   #mDNS later
