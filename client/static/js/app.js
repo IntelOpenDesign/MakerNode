@@ -99,7 +99,7 @@ makernode.app.controller('AppCtrl', ['$scope',
           $('#combo-01').scombobox({
             empty: true
           });
-          $('.scombobox-display').attr('placeholder', 'Network');
+          $('.scombobox-display').focus().attr('placeholder', 'Network');
           $('.show-on-load').css({
             'display': 'block'
           });
