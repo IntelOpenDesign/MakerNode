@@ -143,6 +143,25 @@ makernode.app.controller('FormCtrl', ['$scope', function($scope) {
     var my_route = makernode.routes[my_route_key];
     var my_route_i = makernode.setup_steps.indexOf(my_route_key);
     var next_route_key = "next_steps";//by default, when there is no next step, go home
+
+if (my_route_key == 'wifi_setup') {
+setTimeout(function(){	
+			$scope.ws.on('networks', function(networks){
+				          console.log('got wifi network list: ' + networks);
+					  	  for (var i = 0; networks && i < networks.length; i++){
+							  		  var value = networks[i];
+									  		  var element = '<option value="' + value + '">' + value + '</option>'; 
+											  		  $('#combo-01').append(element);
+													  	     
+													  	  } 
+						  			$('#combo-01').scombobox({empty: true});
+									          $('.scombobox-display').attr('placeholder', 'Network');
+										  		});
+					$scope.ws.emit('networks', {});
+							}, 4000); 
+
+}
+
     if (my_route_i !== -1) { 
       next_route_key = makernode.setup_steps[my_route_i + 1];
     }
