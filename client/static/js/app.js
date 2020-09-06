@@ -89,7 +89,7 @@ makernode.app.controller('AppCtrl', ['$scope',
       if (true || makernode.rc.currentRouteKey() == 'wifi_setup') {
         $scope.ws.on('networks', function(networks) {
           console.log('got wifi network list: ' + networks);
-          $('#combo-01').empty();
+          $('#combo-01 option').remove();
           for (var i = 0; networks && i < networks.length; i++) {
             var value = networks[i];
             if (value.indexOf('x00\\x00') === -1) { //don't show hidden networks
