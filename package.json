@@ -42,7 +42,9 @@
     "mocha-unfunk-reporter": "~0.4.0",
     "socket.io": "^1.0.6",
     "socket.io-client": "~1.0.6",
-    "jsdoc": "~3.3.0-alpha9"
+    "jsdoc": "~3.3.0-alpha9",
+    "bower": "~1.3.12",
+    "less": "~1.7.5"
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --timeout 5000 --reporter mocha-unfunk-reporter",
